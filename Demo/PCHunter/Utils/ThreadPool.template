@@ -1,0 +1,176 @@
+#include "StdAfx.h"
+/*#include "ThreadPool.h"*/
+/*******************************************************************/
+/**	说明：线程池管理类实现代码													 **/
+/**	作者：Unique																			 **/
+/**    时间：2014-11-24																	 **/
+/*******************************************************************/
+#define		MULITIPLE_THREAD_POOL			_T("MultiplePool")
+#define		MAX_THREAD_NUM					200
+
+template<class CTaskType, class CResultType>
+CThreadPoolMgr<CTaskType,CResultType>::CThreadPoolMgr(UINT nThreadNum,ThreadPoolTaskFun pTaskFun,BOOL bStartNow/* =TRUE*/)
+:m_bStoped(FALSE)
+,m_uThreadNum(nThreadNum)
+,m_bStartNow(bStartNow)
+,m_pTaskNotify(NULL)
+,m_pFinshNotify(NULL)
+,m_lParam(NULL)
+{
+	InitializeCriticalSection(&m_CriticalSection);
+
+	m_pThreadParam = new ThreadParam;
+	m_pThreadParam->pTaskFun = pTaskFun;
+
+	m_hTaskEvent = CreateEvent(NULL,FALSE,FALSE,MULITIPLE_THREAD_POOL);
+	m_phThread = (HANDLE*)new HANDLE[nThreadNum];
+	for (UINT nIndex=0;nIndex<nThreadNum;++nIndex)
+	{
+		HANDLE hThread = CreateThread(NULL,0,pTaskFun,this,NULL,NULL);
+		if (hThread != NULL)
+			m_phThread[nIndex] = hThread;
+	}
+
+	for (UINT nIndex=0;nIndex<nThreadNum;++nIndex)
+	{
+		const HANDLE& hThread = m_phThread[nIndex];
+		ResumeThread(hThread);
+	}
+}
+
+template<class CTaskType, class CResultType>
+CThreadPoolMgr<CTaskType,CResultType>::~CThreadPoolMgr()
+{
+	StopAllTask();
+	if (m_pThreadParam != NULL)
+	{
+		delete m_pThreadParam;
+		m_pThreadParam = NULL;
+	}
+	if (m_hTaskEvent != NULL)
+		CloseHandle(m_hTaskEvent);
+
+	for (UINT nIndex=0;nIndex<m_uThreadNum;++nIndex)
+		CloseHandle(m_phThread[nIndex]);
+
+	DeleteCriticalSection(&m_CriticalSection);
+}
+
+template<class CTaskType, class CResultType>
+BOOL CThreadPoolMgr<CTaskType,CResultType>::AddJob(CTaskType& TaskInfo)
+{
+	if (m_pThreadParam == NULL)
+		return FALSE;
+		
+	m_bStoped = FALSE;
+	EnterCriticalSection(&m_CriticalSection);
+	m_pThreadParam->TaskList.AddTail(TaskInfo);
+	LeaveCriticalSection(&m_CriticalSection);
+	if (m_bStartNow)
+		PulseEvent(m_hTaskEvent);
+	return TRUE;
+}
+
+/***************************************/
+/* 函数功能: 从任务列表中获取一个任务  */
+/* 函数参数: CTaskType类型参数			  */
+/* 返  回 值:  获取成功返回TRUE			  */
+/* 返  回 值:  失败返回FALSE					  */
+/***************************************/
+template<class CTaskType, class CResultType>
+BOOL CThreadPoolMgr<CTaskType,CResultType>::GetJobInfo(CTaskType& TaskInfo)
+{
+	BOOL bSuccess = FALSE;
+	EnterCriticalSection(&m_CriticalSection);
+	if (m_pThreadParam->TaskList.GetHeadPosition() != NULL)
+	{
+		TaskInfo = m_pThreadParam->TaskList.RemoveHead();
+		bSuccess = TRUE;
+	}
+	LeaveCriticalSection(&m_CriticalSection);
+	return bSuccess;
+}
+
+//获取当前任务个数
+template<class CTaskType, class CResultType>
+UINT CThreadPoolMgr<CTaskType,CResultType>::GetJobCount()
+{
+	EnterCriticalSection(&m_CriticalSection);
+	DWORD dwCount = m_pThreadParam->TaskList.GetCount();
+	LeaveCriticalSection(&m_CriticalSection);
+	return dwCount;
+}
+
+template<class CTaskType, class CResultType>
+BOOL CThreadPoolMgr<CTaskType,CResultType>::AddResult(CResultType& ResultInfo)
+{
+	if (m_pThreadParam == NULL)
+		return FALSE;
+
+	EnterCriticalSection(&m_CriticalSection);
+	m_pThreadParam->ResultList.AddTail(ResultInfo);
+	//回调结果处理函数
+	if (m_pTaskNotify != NULL)
+		m_pTaskNotify(m_lParam);
+	LeaveCriticalSection(&m_CriticalSection);
+	return TRUE;
+}
+
+template<class CTaskType, class CResultType>
+BOOL CThreadPoolMgr<CTaskType,CResultType>::GetResultInfo(CResultType& ResultInfo)
+{
+	BOOL bSuccess = FALSE;
+	EnterCriticalSection(&m_CriticalSection);
+	if (m_pThreadParam->ResultList.IsEmpty() == FALSE)
+	{
+		ResultInfo = m_pThreadParam->ResultList.RemoveHead();
+		bSuccess = TRUE;
+	}
+	LeaveCriticalSection(&m_CriticalSection);
+	return bSuccess;
+}
+
+template<class CTaskType, class CResultType>
+BOOL CThreadPoolMgr<CTaskType,CResultType>::StopAllTask()
+{
+	if (m_hTaskEvent != NULL)
+	{
+		m_bStoped = TRUE;
+		//设置事件有信号
+		SetEvent(m_hTaskEvent);
+		if (WaitForMultipleObjects(m_uThreadNum,m_phThread,TRUE,100) == WAIT_TIMEOUT)
+			for (UINT nIndex=0;nIndex<m_uThreadNum;++nIndex)
+				TerminateThread(m_phThread[nIndex], 0);
+	}
+	
+	return TRUE;
+}
+
+template<class CTaskType, class CResultType>
+BOOL CThreadPoolMgr<CTaskType,CResultType>::IsStoped()
+{
+	return m_bStoped;
+}
+
+template<class CTaskType, class CResultType>
+HANDLE CThreadPoolMgr<CTaskType,CResultType>::GetJobEvent()
+{
+	return m_hTaskEvent;
+}
+
+template<class CTaskType, class CResultType>
+BOOL CThreadPoolMgr<CTaskType,CResultType>::RegisterNotify(
+									LPTASKJOBRESULT_NOTIFY lpTaskJobNotify, 
+									LPTASKJOBFINSH_NOTIFY lpTaskFinshNotify, 
+									LPVOID lpParameter)
+{
+	BOOL bSuccess = FALSE;
+	do
+	{
+		m_pTaskNotify = lpTaskJobNotify;
+		m_pFinshNotify = lpTaskFinshNotify;
+		m_lParam = lpParameter;
+	}while(FALSE);
+
+	return bSuccess;
+}

@@ -1,0 +1,50 @@
+由于系统的变化，托盘图标可能存在于2个地方
+1、存在于托盘控件ToolBarWindow32(不包含系统时间区域)
+2、在Vista系统以后新添加的NotifyIconOverflowWindow控件(溢出区)
+
+获取系统托盘控件ToolBarWindow32的方法？
+1、得到系统任务栏句柄Shell_TrayWnd
+2、获取任务栏句柄右下角区域TrayNotifyWnd
+3、如果当前系统不是Win2000，那么需要获取系统分页SysPager
+4、获取托盘区域ToolBarWindow32
+
+
+获取系统溢出区域
+1、直接获取溢出通知区域NotifyIconOverflowWindow；
+
+获取托盘窗口按钮个数
+1、向最终句柄发送TB_BUTTONCOUNT消息得到托盘窗口TBBUTTON个数
+2、通过按钮总数，遍历所有按钮
+3、向每个按钮发送TB_GETBUTTON消息获取按钮
+4、使用ReadProcessMemory读取每个TBBUTTON结构
+5、通过TBBUTTON.dwData得到TRAYDATA结构
+
+TRAYDATA结构如下
+struct TRAYDATA
+{
+HWND hwnd;
+UINT uID;
+UINT uCallbackMessage;
+DWORD Reserved[2];
+HICON hIcon;
+};
+
+怎么获取到TRAYDATA结构呢？
+这个结构的信息存在于TBBUTTON结构体的dwData中
+typedef struct {
+  int       iBitmap;
+  int       idCommand;
+  BYTE      fsState;
+  BYTE      fsStyle;
+#ifdef _WIN64
+  BYTE      bReserved[6];
+#else 
+#if defined(_WIN32)
+  BYTE      bReserved[2];
+#endif 
+#endif 
+  DWORD_PTR dwData;
+  INT_PTR   iString;
+} TBBUTTON, *PTBBUTTON, *LPTBBUTTON;
+
+可以根据这个结构体的信息来填充NotiFyIconData结构体的内容

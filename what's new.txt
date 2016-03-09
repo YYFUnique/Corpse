@@ -1,0 +1,9 @@
+2016-03-09 星期三
+1、完善PCHunter主机扫描功能，获取主机IP
+2、使用SSE4指令集获取二进制中1的个数，_mm_popcnt_u32(MSDN封装)
+
+修改时间  2015-01-14
+1、添加解析ICON资源
+修改时间  2014-09-24
+1、在UIManager.h中申明获取当前窗口是否具有透明属性的函数，并在UIManager.cpp中实现
+2、在UIDesigner工具中添加配置XML文件具有bktrans属性
