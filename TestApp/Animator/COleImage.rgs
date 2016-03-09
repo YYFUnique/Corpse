@@ -1,0 +1,31 @@
+HKCR
+{
+	Animator.COleImage.1 = s 'COleImage Class'
+	{
+		CLSID = s '{02AA7116-DD46-4360-8304-832B99196591}'
+	}
+	Animator.COleImage = s 'COleImage Class'
+	{
+		CLSID = s '{02AA7116-DD46-4360-8304-832B99196591}'
+		CurVer = s 'Animator.COleImage.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {02AA7116-DD46-4360-8304-832B99196591} = s 'COleImage Class'
+		{
+			ProgID = s 'Animator.COleImage.1'
+			VersionIndependentProgID = s 'Animator.COleImage'
+			ForceRemove 'Programmable'
+			LocalServer32 = s '%MODULE%'
+			val AppID = s '%APPID%'
+			ForceRemove 'Control'
+			ForceRemove 'ToolboxBitmap32' = s '%MODULE%, 104'
+			'MiscStatus' = s '0'
+			{
+			    '1' = s '%OLEMISC%'
+			}
+			'TypeLib' = s '{FB0899FE-A666-4481-B1EE-F285351957B6}'
+			'Version' = s '1.0'
+		}
+	}
+}

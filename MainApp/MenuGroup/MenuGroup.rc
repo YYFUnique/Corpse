@@ -1,0 +1,233 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 中文(中华人民共和国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
+    "LANGUAGE 4, 2\r\n"
+    "#pragma code_page(936)\r\n"
+    "#include ""res\\MenuGroup.rc2""  // 非 Microsoft Visual C++ 编辑的资源\r\n"
+    "#include ""l.CHS\\afxres.rc""      // 标准组件\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\MenuGroup.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_MENUGROUP_DIALOG DIALOGEX 0, 0, 135, 200
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "右键菜单快捷组"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "生成菜单",IDC_BTN_CREATE,14,179,50,14
+    PUSHBUTTON      "移除菜单",IDC_BTN_REMOVE,70,179,50,14
+    CONTROL         "",IDC_TREE_MENU_GROUP,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_EDITLABELS | WS_BORDER | WS_HSCROLL | WS_TABSTOP,7,7,121,167
+END
+
+IDD_DIALOG_ADD_ITEM DIALOGEX 0, 0, 175, 204
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "添加项目"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "保存",IDOK,8,75,50,14
+    PUSHBUTTON      "关闭",IDCANCEL,118,75,50,14
+    LTEXT           "名称:",IDC_STATIC,15,17,20,8
+    EDITTEXT        IDC_EDIT_ITEM_NAME,35,15,92,14,ES_AUTOHSCROLL
+    LTEXT           "命令:",IDC_STATIC,15,34,20,8
+    EDITTEXT        IDC_EDIT_RUN_CMD,35,32,92,14,ES_AUTOHSCROLL
+    LTEXT           "图标:",IDC_STATIC,15,51,20,8
+    EDITTEXT        IDC_EDIT_ITEM_ICON,35,49,92,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "浏览",IDC_BTN_LOOKUP,131,50,31,14
+    PUSHBUTTON      "预设",IDC_BTN_PREV_SET,63,75,50,14
+    GROUPBOX        "预设菜单",IDC_STATIC,7,94,161,100
+    CONTROL         "计算机",IDC_RADIO_COMPUTER,"Button",BS_AUTORADIOBUTTON | WS_GROUP,16,107,40,10
+    CONTROL         "CMD",IDC_RADIO_CMD,"Button",BS_AUTORADIOBUTTON,64,107,31,10
+    CONTROL         "计算器",IDC_RADIO_CACL,"Button",BS_AUTORADIOBUTTON,112,107,40,10
+    CONTROL         "控制面板",IDC_RADIO_CONTROL,"Button",BS_AUTORADIOBUTTON,16,126,48,10
+    CONTROL         "任务管理器",IDC_RADIO_TASK,"Button",BS_AUTORADIOBUTTON,112,126,56,10
+    CONTROL         "注册表",IDC_RADIO_REG,"Button",BS_AUTORADIOBUTTON,64,126,40,10
+    CONTROL         "画图",IDC_RADIO_PAINT,"Button",BS_AUTORADIOBUTTON,16,145,32,10
+    CONTROL         "设备管理器",IDC_RADIO_DEV,"Button",BS_AUTORADIOBUTTON,112,145,56,10
+    CONTROL         "放大镜",IDC_RADIO_BIG,"Button",BS_AUTORADIOBUTTON,64,145,40,10
+    CONTROL         "网络",IDC_RADIO_NET,"Button",BS_AUTORADIOBUTTON,16,164,32,10
+    CONTROL         "管理",IDC_RADIO_MANAGE,"Button",BS_AUTORADIOBUTTON,64,164,32,10
+    CONTROL         "服务管理器",IDC_RADIO_SERVICE,"Button",BS_AUTORADIOBUTTON,112,164,56,10
+    CONTROL         "关机",IDC_RADIO_SHUTDOWN,"Button",BS_AUTORADIOBUTTON,16,183,32,10
+    CONTROL         "重启",IDC_RADIO_REBOOT,"Button",BS_AUTORADIOBUTTON,64,183,32,10
+    CONTROL         "分隔符",IDC_RADIO_OUT,"Button",BS_AUTORADIOBUTTON,112,183,40,10
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080403a8"
+        BEGIN
+            VALUE "CompanyName", "四川龙信信息技术有限责任公司"
+            VALUE "FileDescription", "右键菜单快捷组"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "MenuGroup.exe"
+            VALUE "LegalCopyright", "四川龙信信息技术有限责任公司。保留所有权利。"
+            VALUE "OriginalFilename", "MenuGroup.exe"
+            VALUE "ProductName", "右键菜单快捷组"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 936
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_MENUGROUP_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 128
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 193
+    END
+
+    IDD_DIALOG_ADD_ITEM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 168
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 197
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU_GROUP MENU 
+BEGIN
+    POPUP "RMenu"
+    BEGIN
+        MENUITEM "添加",                          ID_RMENU_ADD
+        MENUITEM "编辑",                          ID_RMENU_EDIT
+        MENUITEM "删除",                          ID_RMENU_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "上移",                          ID_RMENU_UP
+        MENUITEM "下移",                          ID_RMENU_DOWN
+    END
+END
+
+#endif    // 中文(中华人民共和国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE 4, 2
+#pragma code_page(936)
+#include "res\MenuGroup.rc2"  // 非 Microsoft Visual C++ 编辑的资源
+#include "l.CHS\afxres.rc"      // 标准组件
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

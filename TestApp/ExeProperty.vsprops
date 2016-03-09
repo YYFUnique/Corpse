@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="Property"
+	OutputDirectory="$(SolutionDir)Temp\$(ProjectName)_$(PlatformName)_$(ConfigurationName)"
+	IntermediateDirectory="$(SolutionDir)Temp\$(ProjectName)_$(PlatformName)_$(ConfigurationName)"
+	>
+	<Tool
+		Name="VCLibrarianTool"
+		OutputFile="$(SolutionDir)Temp\$(ProjectName)_$(PlatformName)_$(ConfigurationName)\$(ProjectName).lib"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		OutputFile="$(SolutionDir)Bin\$(PlatformName)_$(ConfigurationName)\$(ProjectName).exe"
+		ImportLibrary="$(SolutionDir)Temp\$(ProjectName)_$(PlatformName)_$(ConfigurationName)\$(ProjectName).lib"
+	/>
+</VisualStudioPropertySheet>

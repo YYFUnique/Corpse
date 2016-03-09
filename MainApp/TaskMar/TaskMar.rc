@@ -1,0 +1,489 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 中文(中华人民共和国) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
+    "LANGUAGE 4, 2\r\n"
+    "#pragma code_page(936)\r\n"
+    "#include ""res\\TaskMar.rc2""  // 非 Microsoft Visual C++ 编辑的资源\r\n"
+    "#include ""l.CHS\\afxres.rc""          // 标准组件\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\TaskMar.ico"
+IDR_TaskMarTYPE         ICON                    "res\\TaskMarDoc.ico"
+IDI_ICON_DEFAULT        ICON                    "res\\Default.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU 
+BEGIN
+    POPUP "文件(&F)"
+    BEGIN
+        MENUITEM "新建任务(运行..)(&N)\tCtrl+N",      ID_RUN_SYSTEM_DLG
+        MENUITEM SEPARATOR
+        MENUITEM "以系统权限运行(&O)...\tCtrl+O",      ID_RUN_EXE_IN_SYSTEM
+        MENUITEM "以服务权限运行(&S)...\tCtrl+S",      ID_RUN_EXE_IN_SERVICE
+        MENUITEM "以受限用户运行(&A)...\tCtrl+L",      ID_RUN_EXE_IN_LIMITED
+        MENUITEM SEPARATOR
+        MENUITEM "保存(&S)\tCtrl+S",              ID_FILE_SAVE
+        MENUITEM SEPARATOR
+        MENUITEM "退出(&X)\tCtrl+X",              ID_APP_EXIT
+    END
+    POPUP "视图(&V)"
+    BEGIN
+        MENUITEM "状态栏(&S)",                     ID_VIEW_STATUS_BAR
+    END
+    POPUP "查看(&V)"
+    BEGIN
+        MENUITEM "以列表方式查看",                     ID_32780
+        MENUITEM "以树状方式查看",                     ID_32781
+    END
+    POPUP "帮助(&H)"
+    BEGIN
+        MENUITEM "关于 TaskMar(&A)...",           ID_APP_ABOUT
+    END
+END
+
+IDR_MENU_TASKMAR_LIST MENU 
+BEGIN
+    POPUP "列表框菜单"
+    BEGIN
+        MENUITEM "刷新进程列表",                      ID_Menu32792
+        POPUP "查看..."
+        BEGIN
+            MENUITEM "查看进程信息(&P)",                  ID_LOOKUP_PROCESS_DETAIL
+            MENUITEM "查看进程模块(&M)",                  ID_LOOKUP_PROCESS_MODULE
+            MENUITEM "查看进程窗口(&W)",                  ID_LOOKUP_PROCESS_WINDOW
+            MENUITEM "查看进程内存(&R)",                  ID_LOOKUP_PROCESS_MEMERY
+            MENUITEM "查看进程句柄(&H)",                  ID_LOOKUP_PROCESS_HANDLE
+            MENUITEM "查看进程线程(&T)",                  ID_LOOKUP_PROCESS_THREAD
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "结束进程",                        ID_KILL_PROCESS
+        MENUITEM "结束进程树",                       ID_KILL_PROCESS_TREE
+        MENUITEM "强制结束进程",                      ID_32793
+        MENUITEM "结束进程后删除文件",                   ID_32802
+        MENUITEM SEPARATOR
+        MENUITEM "复制进程名",                       ID_COPY_PROCESS_NAME
+        MENUITEM "复制进程路径",                      ID_COPY_PROCESS_PATH
+        MENUITEM SEPARATOR
+        MENUITEM "暂停进程运行",                      ID_SUSPEND_PROCESS
+        MENUITEM "恢复进程运行",                      ID_RESUME_PROCESS
+        MENUITEM SEPARATOR
+        MENUITEM "浏览文件",                        ID_LOOKUP_PROCESS
+        MENUITEM "查看文件属性",                      ID_LOOKUP_FILE_PROPERTY
+        MENUITEM "窗口置顶",                        ID_MENU_TOPMOST_WND
+        MENUITEM SEPARATOR
+        POPUP "在线搜索进程"
+        BEGIN
+            MENUITEM "使用百度搜索进程",                    ID_32803
+            MENUITEM "使用谷歌搜索进程",                    ID_32804
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "导出进程列表",                      ID_MENU_EXPORT_PROCESS
+    END
+END
+
+IDR_MENU_PROCESS_INFO MENU 
+BEGIN
+    POPUP "基本信息"
+    BEGIN
+        MENUITEM "复制(&C)",                      ID_32784
+    END
+    POPUP "模块信息"
+    BEGIN
+        MENUITEM "浏览文件",                        ID_LOOKUP_THREAD_FILE
+        MENUITEM "查看文件属性",                      ID_LOOKUP_THREAD_FILE_PROPERTY
+        MENUITEM SEPARATOR
+        MENUITEM "复制文件路径",                      ID_COPY_THREAD_FILEPATH
+        MENUITEM "删除模块文件",                      ID_Menu
+        MENUITEM SEPARATOR
+        MENUITEM "卸载选中模块",                      ID_UNLOAD_MODULE
+        MENUITEM SEPARATOR
+        MENUITEM "导出模块列表",                      ID_32788
+    END
+    POPUP "窗口信息"
+    BEGIN
+        MENUITEM "刷新",                          ID_32844
+        MENUITEM "转到窗口",                        ID_Menu32852
+        MENUITEM "显示所有窗口",                      ID_32845
+        MENUITEM SEPARATOR
+        MENUITEM "关闭窗口",                        ID_32847
+        MENUITEM "最大化窗口",                       ID_32848
+        MENUITEM "最小化窗口",                       ID_32849
+        MENUITEM "窗口置顶",                        ID_32846
+        MENUITEM SEPARATOR
+        MENUITEM "禁用窗口",                        ID_32850
+        MENUITEM "启用窗口",                        ID_32851
+    END
+    POPUP "内存"
+    BEGIN
+        MENUITEM "复制",                          ID_32835
+    END
+    POPUP "句柄"
+    BEGIN
+        MENUITEM "关闭句柄",                        ID_32836
+    END
+    POPUP "线程"
+    BEGIN
+        MENUITEM "结束线程",                        ID_32837
+        MENUITEM "强制结束线程",                      ID_32838
+        MENUITEM SEPARATOR
+        MENUITEM "暂停线程",                        ID_32839
+        MENUITEM "恢复线程",                        ID_32840
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS 
+BEGIN
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于 TaskMar"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
+    LTEXT           "TaskMar，1.0 版",IDC_STATIC,42,14,114,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2014",IDC_STATIC,42,26,114,8
+    DEFPUSHBUTTON   "确定",IDOK,113,41,50,14,WS_GROUP
+END
+
+IDD_TABBEDTOOLBAR_FORM DIALOGEX 0, 0, 430, 115
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_TAB_PROCESS_INFO,"SysTabControl32",0x0,0,0,429,114
+END
+
+IDD_DIALOG_CLIENT_PAGE DIALOGEX 0, 0, 278, 100
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LIST_REPORT_INFO,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,0,0,278,100
+END
+
+IDD_DIALOG_LIST_INFO DIALOGEX 0, 0, 280, 104
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_SYSMENU
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LIST_INFO,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,0,0,280,104
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080403a8"
+        BEGIN
+            VALUE "CompanyName", "飞逸无限"
+            VALUE "FileDescription", "飞逸无限--进程查看器"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "TaskMar.exe"
+            VALUE "LegalCopyright", "飞逸无限。保留所有权利。"
+            VALUE "OriginalFilename", "TaskMar.exe"
+            VALUE "ProductName", "飞逸无限"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 936
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 163
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 55
+    END
+
+    IDD_TABBEDTOOLBAR_FORM, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 114
+    END
+
+    IDD_DIALOG_CLIENT_PAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        TOPMARGIN, 7
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP_TABCTRLICON  BITMAP                  "res\\TabCtrlIcon.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDR_MAINFRAME           "TaskMar\n\nTaskMar\n\n\nTaskMar.Document\nTaskMar.Document"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "TaskMar"
+    AFX_IDS_IDLEMESSAGE     "就绪"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_INDICATOR_EXT        "EXT"
+    ID_INDICATOR_CAPS       "CAP"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "SCRL"
+    ID_INDICATOR_OVR        "OVR"
+    ID_INDICATOR_REC        "REC"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_NEW             "创建新文档\n新建"
+    ID_FILE_OPEN            "打开现有文档\n打开"
+    ID_FILE_CLOSE           "关闭活动文档\n关闭"
+    ID_FILE_SAVE            "保存活动文档\n保存"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_APP_ABOUT            "显示程序信息、版本号和版权\n关于"
+    ID_APP_EXIT             "退出应用程序；按住Ctrl可以重启"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "打开此文档"
+    ID_FILE_MRU_FILE2       "打开此文档"
+    ID_FILE_MRU_FILE3       "打开此文档"
+    ID_FILE_MRU_FILE4       "打开此文档"
+    ID_FILE_MRU_FILE5       "打开此文档"
+    ID_FILE_MRU_FILE6       "打开此文档"
+    ID_FILE_MRU_FILE7       "打开此文档"
+    ID_FILE_MRU_FILE8       "打开此文档"
+    ID_FILE_MRU_FILE9       "打开此文档"
+    ID_FILE_MRU_FILE10      "打开此文档"
+    ID_FILE_MRU_FILE11      "打开此文档"
+    ID_FILE_MRU_FILE12      "打开此文档"
+    ID_FILE_MRU_FILE13      "打开此文档"
+    ID_FILE_MRU_FILE14      "打开此文档"
+    ID_FILE_MRU_FILE15      "打开此文档"
+    ID_FILE_MRU_FILE16      "打开此文档"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_NEXT_PANE            "切换到下一个窗格\n下一窗格"
+    ID_PREV_PANE            "切换回上一个窗格\n上一窗格"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_WINDOW_SPLIT         "将活动窗口拆分为多个窗格\n拆分"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_EDIT_CLEAR           "清除选定内容\n清除"
+    ID_EDIT_CLEAR_ALL       "清除全部内容\n全部清除"
+    ID_EDIT_COPY            "复制选定内容并将其放到剪贴板上\n复制"
+    ID_EDIT_CUT             "剪切选定内容并将其放到剪贴板上\n剪切"
+    ID_EDIT_FIND            "查找指定的文本\n查找"
+    ID_EDIT_PASTE           "插入剪贴板内容\n粘贴"
+    ID_EDIT_REPEAT          "重复上一操作\n重复"
+    ID_EDIT_REPLACE         "用其他文本替换特定的文本\n替换"
+    ID_EDIT_SELECT_ALL      "选定整个文档\n全选"
+    ID_EDIT_UNDO            "撤消上一操作\n撤消"
+    ID_EDIT_REDO            "恢复上次撤消的操作\n重做"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_VIEW_STATUS_BAR      "显示或隐藏状态栏\n切换状态栏"
+    ID_VIEW_AUTOARRANGE     "以网格方式排列图标。"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "更改窗口大小"
+    AFX_IDS_SCMOVE          "更改窗口位置"
+    AFX_IDS_SCMINIMIZE      "将窗口缩小为图标"
+    AFX_IDS_SCMAXIMIZE      "使窗口最大化显示"
+    AFX_IDS_SCNEXTWINDOW    "切换到下一个文档窗口"
+    AFX_IDS_SCPREVWINDOW    "切换到前一个文档窗口"
+    AFX_IDS_SCCLOSE         "关闭活动窗口并提示保存文档"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "将窗口恢复到正常大小"
+    AFX_IDS_SCTASKLIST      "激活任务列表"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_VIEW_SMALLICON       "使用小图标显示各项。\n小图标"
+    ID_VIEW_LARGEICON       "使用大图标显示各项。\n大图标"
+    ID_VIEW_LIST            "以列表方式显示各项。\n列表"
+    ID_VIEW_DETAILS         "显示窗口中每一项的相关详细信息。\n详细信息"
+    ID_VIEW_LINEUP          "以网格方式排列图标。"
+    ID_VIEW_BYNAME          "按字母顺序对图标排序。"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_RUN_SYSTEM_DLG       "打开'运行'对话框"
+    ID_RUN_EXE_IN_SYSTEM    "创建系统权限进程"
+    ID_RUN_EXE_IN_SERVICE   "创建系统最高权限进程"
+    ID_RUN_EXE_IN_LIMITED   "创建受限进程"
+    ID_SAVE_PROCESS_LIST    "保存当前进程列表信息"
+END
+
+#endif    // 中文(中华人民共和国) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+LANGUAGE 4, 2
+#pragma code_page(936)
+#include "res\TaskMar.rc2"  // 非 Microsoft Visual C++ 编辑的资源
+#include "l.CHS\afxres.rc"          // 标准组件
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

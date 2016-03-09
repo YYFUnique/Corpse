@@ -1,0 +1,10 @@
+; ImageOle.def : 定义模块参数。
+
+LIBRARY      "ImageOle.DLL"
+
+EXPORTS
+	DllCanUnloadNow		PRIVATE
+	DllGetClassObject	PRIVATE
+	DllRegisterServer	PRIVATE
+	DllUnregisterServer	PRIVATE
+	DllInstall		PRIVATE

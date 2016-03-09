@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="gb2312"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="ExeProperty"
+	OutputDirectory="$(SolutionDir)Temp\$(ProjectName)_$(PlatformName)_$(ConfigurationName)"
+	IntermediateDirectory="$(SolutionDir)Temp\$(ProjectName)_$(PlatformName)_$(ConfigurationName)"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="&quot;$(SolutionDir)Library&quot;"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		OutputFile="$(SolutionDir)Bin\$(PlatformName)_$(ConfigurationName)\$(ProjectName).exe"
+	/>
+</VisualStudioPropertySheet>
