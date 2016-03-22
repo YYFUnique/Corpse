@@ -964,6 +964,7 @@ namespace DuiLib
 				nLen = 0;
 			GlobalUnlock(hMem);
 
+			m_pManager->SendNotify(this,DUI_MSGTYPE_TEXTCHANGED);
 		} while (FALSE);
 
 		if (bSuccess)
@@ -994,6 +995,8 @@ namespace DuiLib
 			CDuiString strCutText;
 			strCutText.Format(_T("%s%s"),(LPCTSTR)strLeft,(LPCTSTR)strRight);
 			SetText(strCutText);
+
+			m_pManager->SendNotify(this,DUI_MSGTYPE_TEXTCHANGED);
 
 			LPTSTR lpText = (LPTSTR)GlobalLock(hMem);
 			CDuiString strSrcText = CDuiString((LPCTSTR)m_sText+nPos,nLen);
