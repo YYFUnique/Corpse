@@ -50,6 +50,8 @@ protected:
 	
 	CVirtualWnd* FindObjectByName(LPCTSTR lpszVirtualWndName);
 
+	void OnRemoteDesktop(CListTextElementUI* pItem);
+	void OnPing(CListTextElementUI* pItem);
 	void OnHostScanMenu(CControlUI* pControl);
 	void OnRangeMenu(CControlUI* pControl);
 protected:

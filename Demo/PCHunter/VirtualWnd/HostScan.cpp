@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "../Utils/AdapterInfo.h"
 #include "../Wnd/StaticArpDialog.h"
+#include "../Wnd/IPTools.h"
 #include <Icmpapi.h>
 #include <nmmintrin.h>
 #pragma comment(lib,"Iphlpapi.lib")
@@ -48,16 +49,20 @@ void CHostScan::OnPaint()
 
 void CHostScan::OnClick(TNotifyUI& msg)
 {
-	if (msg.pSender == m_pPaintManager->FindControl(_T("BtnBeginScan")))
+	//CControlUI* pSender = m_pPaintManager->FindControl(msg.)
+	CDuiString strSender = msg.pSender->GetName();
+	if (strSender == _T("BtnBeginScan"))
 		StartScan();
-	else if (msg.pSender == m_pPaintManager->FindControl(_T("DeleteAllArp")))
+	else if (strSender == _T("DeleteAllArp"))
 		DeleteAllArp();
-	else if (msg.pSender == m_pPaintManager->FindControl(_T("DeleteDynamicArp")))
+	else if (strSender == _T("DeleteDynamicArp"))
 		DeleteDynamicArp();
-	else if (msg.pSender == m_pPaintManager->FindControl(_T("AddStaticArp")))
+	else if (strSender == _T("AddStaticArp"))
 		AddStaticArp();
-	else if (msg.pSender == m_pPaintManager->FindControl(_T("BtnIpRange")))
+	else if (strSender == _T("BtnIpRange"))
 		OnIpRange(msg);
+	else if (strSender == _T("IPTools"))
+		OnIpTools(msg);
 }
 
 void CHostScan::OnMenu(TNotifyUI& msg)
@@ -233,6 +238,15 @@ void CHostScan::OnIpRange(TNotifyUI& msg)
 
 	//动态添加删除菜单后，需手动重置布局
 	pMenu->ResizeMenu();
+}
+
+void CHostScan::OnIpTools(TNotifyUI& msg)
+{
+	CIPTools* pIPTools = new CIPTools(m_pPaintManager->GetPaintWindow());
+	if (pIPTools == NULL)
+		return;
+
+	pIPTools->ShowModal();
 }
 
 void CHostScan::AddStaticArp()
