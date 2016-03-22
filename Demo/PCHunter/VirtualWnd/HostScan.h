@@ -79,6 +79,7 @@ protected:
 	void DeleteDynamicArp();
 	void AddStaticArp();
 	void OnIpRange(TNotifyUI& msg);
+	void OnIpTools(TNotifyUI& msg);
 
 	static UINT TaskThread(LPVOID lParam);
 	static void OnTaskResult(LPVOID lParam);

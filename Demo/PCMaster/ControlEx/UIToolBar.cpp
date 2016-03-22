@@ -183,7 +183,7 @@ void CToolBarUI::PaintForeImage(HDC hDC)
 
 void CToolBarUI::DrawHBitmap(HDC hDC)
 {
-
+	//CRenderEngine::DrawImage(hDC,)
 }
 
 void CToolBarUI::DrawIcon(HDC hDC)

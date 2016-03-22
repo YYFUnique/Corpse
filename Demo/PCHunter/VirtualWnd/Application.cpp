@@ -33,7 +33,6 @@ BOOL CApplication::EnumWindowsProc(HWND hWnd,LPARAM lParam)
 
 		CListTextElementUI* pListElementUI = new CListTextElementUI;
 		pList->Add(pListElementUI);
-
 		/*CDuiString strProcessPath, strBkImage;
 		GetProcessPathByHwnd(hWnd, strProcessPath);
 		SHFILEINFO shFileInfo;
@@ -43,9 +42,6 @@ BOOL CApplication::EnumWindowsProc(HWND hWnd,LPARAM lParam)
 		TCHAR szWindowTitle[1024];
 		GetWindowText(hWnd,szWindowTitle,_countof(szWindowTitle));
 		pListElementUI->SetText(0,szWindowTitle);
-		//pListElementUI->SetBkImage(strBkImage);
-		//DestroyIcon(shFileInfo.hIcon);
-
 		pListElementUI->SetText(1,IsHungAppWindow(hWnd) ? _T("未响应") :_T("正在运行"));
 	}
 

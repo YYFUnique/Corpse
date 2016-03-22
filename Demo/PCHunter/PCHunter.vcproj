@@ -392,6 +392,10 @@
 				Name="Wnd"
 				>
 				<File
+					RelativePath=".\Wnd\IPTools.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Wnd\StaticArpDialog.cpp"
 					>
 				</File>
@@ -541,6 +545,10 @@
 			<Filter
 				Name="Wnd"
 				>
+				<File
+					RelativePath=".\Wnd\IPTools.h"
+					>
+				</File>
 				<File
 					RelativePath=".\Wnd\StaticArpDialog.h"
 					>
