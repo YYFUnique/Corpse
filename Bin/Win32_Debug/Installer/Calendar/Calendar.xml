@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="540,500" sizebox="4,4,6,6" caption="0,0,0,40" mininfo="540,410" roundcorner="5,5">
+    <Font name="微软雅黑" size="14" bold="false" italic="false" />
+    <Font name="微软雅黑" size="19" bold="false" italic="false" />
+    <Default name="ListHeaderItem" value="dragable=&quot;false&quot; font=&quot;0&quot;" />
+    <Default name="Button" value="normalimage=&quot;file=&apos;InstallBtn.png&apos; dest=&apos;0,0,164,38&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;&quot; hotimage=&quot;file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;&quot; pushedimage=&quot;file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;&quot;" />
+    <Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+    <Default name="Combo" value="textpadding=&quot;5,0,0,0&quot; itemfont=&quot;0&quot; normalimage=&quot;file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;&quot; hotimage=&quot;file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;&quot; pushedimage=&quot;file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot; " />
+    <VerticalLayout name="VLayout" bkcolor="#FFFFFFFF">
+        <VerticalLayout name="Border" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos; mask=&apos;0xffffffff&apos;">
+            <HorizontalLayout name="HLayoutHead" pos="0,0,0,40" height="40">
+                <HorizontalLayout name="HLayoutTitle">
+                    <Label name="LabelTitle" text="万年历日历工具" float="true" pos="26,5,167,35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="1" />
+                </HorizontalLayout>
+                <HorizontalLayout name="HLayoutSys" pos="0,0,67,0" width="67">
+                    <Button name="BtnMin" tooltip="最小化" float="true" pos="0,0,28,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnMin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMin.png&apos; source=&apos;56,0,84,20&apos;" />
+                    <Button name="BtnClose" tooltip="关闭" float="true" pos="28,0,67,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
+                </HorizontalLayout>
+            </HorizontalLayout>
+            <HorizontalLayout name="HLayoutCenter">
+                <VerticalLayout name="VerticalLayoutUI1">
+                    <HorizontalLayout name="HLayoutFunc" pos="0,0,0,45" height="45">
+                        <Combo name="Year" text="2015" float="true" pos="16,7,81,37" dropbox="font=&quot;0&quot;"/>
+                        <Button name="BtnPrev" text="<" float="true" pos="103,7,118,37" bordersize="1" bordercolor="#FF999999" bkcolor="#FFFAFAFA" textcolor="#FF7A7A7A" disabledtextcolor="#FFA7A6AA" align="center" normalimage="" hotimage="" pushedimage=""/>
+                        <Combo name="Month" text="2" float="true" pos="117,7,163,37" dropbox="font=&quot;0&quot;"/>
+                        <Button name="BtnNext" text=">" float="true" pos="162,7,177,37" bordersize="1" bordercolor="#FF999999" bkcolor="#FFFAFAFA" textcolor="#FF7A7A7A" disabledtextcolor="#FFA7A6AA" align="center" normalimage="" hotimage="" pushedimage=""/>
+                        <Combo name="HolidayPlan" text="放假时间安排" float="true" pos="195,7,308,37" dropbox="font=&quot;0&quot;">
+                            <ListLabelElement name="ListLabelElementUI1" text="放假时间安排" height="23" selected="true" />
+                            <ListLabelElement name="ListLabelElementUI2" text="元旦节" height="23" />
+                            <ListLabelElement name="ListLabelElementUI3" text="春节" height="23" />
+                            <ListLabelElement name="ListLabelElementUI4" text="清明节" height="23" />
+                            <ListLabelElement name="ListLabelElementUI5" text="劳动节" height="23" />
+                            <ListLabelElement name="ListLabelElementUI6" text="端午节" height="23" />
+                            <ListLabelElement name="ListLabelElementUI7" text="中秋节" height="23" />
+                            <ListLabelElement name="ListLabelElementUI8" text="国庆节" height="23" />
+                        </Combo>
+                        <Button name="BtnToday" text="返回今天" float="true" pos="320,7,400,37" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" align="center" normalimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,164,38&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" />
+                    </HorizontalLayout>
+                    <Control name="ControlUI1" pos="0,0,0,1" height="1" bkcolor="#FFF55C4E" />
+                    <VerticalLayout name="VLayoutCalendar">
+						<ListHeader height="30">
+							<ListHeaderItem name="Mon" text="星期一" />
+							<ListHeaderItem name="Tues" text="星期二" />
+							<ListHeaderItem name="Wen" text="星期三" />
+							<ListHeaderItem name="Thurs" text="星期四" />
+							<ListHeaderItem name="Fir" text="星期五" />
+							<ListHeaderItem name="Sat" text="星期六" textcolor="#FFE02D2D"/>
+							<ListHeaderItem name="Sun" text="星期日" textcolor="#FFE02D2D"/>
+						</ListHeader>
+						<Control name="Line" pos="0,0,0,1" height="1" bkcolor="#FFC8CACC" />
+						<CalendarUI name="Calendar"/>
+                    </VerticalLayout>					
+                </VerticalLayout>
+                <HorizontalLayout name="HorizontalLayoutUI6" pos="0,0,130,0" width="130" padding="0,0,1,0" bkcolor="#FFCB1C18" />
+            </HorizontalLayout>
+            <HorizontalLayout name="HLayoutFoot" pos="0,0,0,40" height="40">
+                <Label name="LabelTip" text="2月18日至2月24日放假调休，共7天。2月15日(星期天)、2月28日(星期六)上班。" float="true" pos="5,5,533,35" textpadding="3,0,0,0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" />
+            </HorizontalLayout>
+        </VerticalLayout>
+    </VerticalLayout>
+</Window>

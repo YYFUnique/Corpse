@@ -50,6 +50,7 @@ protected:
 	
 	CVirtualWnd* FindObjectByName(LPCTSTR lpszVirtualWndName);
 
+	//主机扫描相关菜单
 	void OnRemoteDesktop(CListTextElementUI* pItem);
 	void OnPing(CListTextElementUI* pItem);
 	void OnHostScanMenu(CControlUI* pControl);

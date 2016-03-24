@@ -1,0 +1,12 @@
+readme.txt
+    [!if PRE_COMPILED_HEADER]
+stdafx.h
+stdafx.cpp
+    [!endif]
+
+root.cpp
+root.h
+main.cpp
+
+CopyOnly | root.ico
+	

@@ -267,6 +267,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "image3d", "Library\Image3D\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestApp", "TestApp\TestApp\TestApp.vcproj", "{B4D4C4AC-4382-4E46-88F0-D0A31A1103C6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "duilib_test", "Demo\duilib_test\duilib_test.vcproj", "{CE0944CF-4A05-4467-A41F-90FBEE357130}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E106ACD7-4E53-4AEE-942B-D0DD426DB34E} = {E106ACD7-4E53-4AEE-942B-D0DD426DB34E}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -835,6 +840,15 @@ Global
 		{B4D4C4AC-4382-4E46-88F0-D0A31A1103C6}.Static_Release|Win32.ActiveCfg = Static_Release|Win32
 		{B4D4C4AC-4382-4E46-88F0-D0A31A1103C6}.Static_Release|Win32.Build.0 = Static_Release|Win32
 		{B4D4C4AC-4382-4E46-88F0-D0A31A1103C6}.Static_Release|x64.ActiveCfg = Release|Win32
+		{CE0944CF-4A05-4467-A41F-90FBEE357130}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CE0944CF-4A05-4467-A41F-90FBEE357130}.Debug|Win32.Build.0 = Debug|Win32
+		{CE0944CF-4A05-4467-A41F-90FBEE357130}.Debug|x64.ActiveCfg = Debug|Win32
+		{CE0944CF-4A05-4467-A41F-90FBEE357130}.Release|Win32.ActiveCfg = Release|Win32
+		{CE0944CF-4A05-4467-A41F-90FBEE357130}.Release|Win32.Build.0 = Release|Win32
+		{CE0944CF-4A05-4467-A41F-90FBEE357130}.Release|x64.ActiveCfg = Release|Win32
+		{CE0944CF-4A05-4467-A41F-90FBEE357130}.Static_Release|Win32.ActiveCfg = Release|Win32
+		{CE0944CF-4A05-4467-A41F-90FBEE357130}.Static_Release|Win32.Build.0 = Release|Win32
+		{CE0944CF-4A05-4467-A41F-90FBEE357130}.Static_Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -902,5 +916,6 @@ Global
 		{F2004E39-7293-4CBB-8C57-F1FE515A2615} = {94CDA5C1-640C-4D9D-BC33-DFD77E716C72}
 		{A0F17301-4AFD-4AE9-AFCA-11F5A33EB842} = {94CDA5C1-640C-4D9D-BC33-DFD77E716C72}
 		{AD819740-6D94-4E67-A670-B964CCA4128F} = {94CDA5C1-640C-4D9D-BC33-DFD77E716C72}
+		{CE0944CF-4A05-4467-A41F-90FBEE357130} = {94CDA5C1-640C-4D9D-BC33-DFD77E716C72}
 	EndGlobalSection
 EndGlobal

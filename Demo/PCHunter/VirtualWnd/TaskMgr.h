@@ -7,6 +7,9 @@ public:
 	CTaskMgr();
 	~CTaskMgr();
 	
+public:
+	void OnApplication(CControlUI* pControl);
+
 protected:
 	DUI_DECLARE_MESSAGE_MAP()
 	virtual void OnSelectChanged(TNotifyUI& msg);

@@ -369,78 +369,12 @@ LRESULT CPCHunter::OnMenuClick(WPARAM wParam, LPARAM lParam)
 	if (pControl == NULL)
 		return FALSE;
 
-	CDuiString strName = pControl->GetManager()->GetRoot()->GetName();
-	//主机扫描菜单响应
-	if (strName == _T("ScanResultMenu"))
-		OnHostScanMenu(pControl);
-	else if (strName == _T("RangeMenu"))
-		OnRangeMenu(pControl);
+	CDuiString strMenuName = pControl->GetManager()->GetRoot()->GetName();
+	if (strMenuName == _T("AppMenu"))
+		m_TaskMgr.OnApplication(pControl);
+	else if (strMenuName == _T("ScanResultMenu"))
+		m_NetMgr.OnHostScanMenu(pControl);
+	else if (strMenuName == _T("RangeMenu"))
+		m_NetMgr.OnRangeMenu(pControl);
 	return TRUE;
-}
-
-void CPCHunter::OnHostScanMenu(CControlUI* pControl)
-{
-	CListUI* pList = (CListUI*)m_PaintManager.FindControl(_T("Scan"));
-	if (pList->GetCurSel() == -1)
-		return;
-
-	CDuiString strName = pControl->GetName();
-	CListTextElementUI* pItem = (CListTextElementUI*)pList->GetItemAt(pList->GetCurSel());
-		//pList->GetCurSel();
-	if (strName == _T("CopyIPAddress"))
-		CopyDataToClipboard(CF_UNICODETEXT, m_hWnd, pItem->GetText(0));
-	else if (strName == _T("CopyMacAddress"))
-		CopyDataToClipboard(CF_UNICODETEXT, m_hWnd, pItem->GetText(1));
-	else if (strName == _T("CopyUserName"))
-		CopyDataToClipboard(CF_UNICODETEXT, m_hWnd, pItem->GetText(5));
-	else if (strName == _T("RemoteDesk"))
-		OnRemoteDesktop(pItem);
-	else if (strName == _T("Ping"))
-		OnPing(pItem);
-}
-
-void CPCHunter::OnRemoteDesktop(CListTextElementUI* pItem)
-{
-	//格式化远程桌面参数
-	CDuiString strCmdLine;
-	strCmdLine.Format(_T("/v %s"), pItem->GetText(0));
-	//启动远程桌面
-	DWORD dwRet = (DWORD)ShellExecute(m_hWnd, _T("open"), _T("mstsc"), strCmdLine, NULL, SW_SHOW);
-
-	if (dwRet <= 32)
-	{
-		MessageBox(m_hWnd, _T("远程桌面启动失败"), _T("提示"), MB_OK);
-		return;
-	}
-}
-
-void CPCHunter::OnPing(CListTextElementUI* pItem)
-{
-	CDuiString strCmdLine;
-	strCmdLine.Format(_T("%s -t"), pItem->GetText(0));
-
-	//启动远程桌面
-	DWORD dwRet = (DWORD)ShellExecute(m_hWnd, _T("open"), _T("ping"), strCmdLine, NULL, SW_SHOW);
-
-	if (dwRet <= 32)
-	{
-		MessageBox(m_hWnd, _T("启动Ping命令失败！"), _T("提示"), MB_OK);
-		return;
-	}
-}
-
-void CPCHunter::OnRangeMenu(CControlUI* pControl)
-{
-	CDuiString strMenuText = pControl->GetName();
-	if (strMenuText.IsEmpty())
-		return;
-
-	CEditUI2* pStartIP = (CEditUI2*)m_PaintManager.FindControl(_T("EditStartIP"));
-	CEditUI2* pEndIP = (CEditUI2*)m_PaintManager.FindControl(_T("EditEndIP"));
-
-	TCHAR szNetIP[20], szBroadcastIP[20];
-	_stscanf(strMenuText, _T("%[^|]|%s"), szNetIP, szBroadcastIP);
-
-	pStartIP->SetText(szNetIP);
-	pEndIP->SetText(szBroadcastIP);
 }

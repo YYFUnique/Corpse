@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window>
+  <Font name="微软雅黑" size="12" bold="false" default="true" />
+  <Font name="微软雅黑" size="12" bold="true"/>
+  <Default name="Menu" value="inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='menu_bk.png' corner='30,8,8,8'&quot; mask=&quot;#FFFFFFFF&quot; hole=&quot;false&quot;" />
+  <Menu name="ScanResultMenu">
+	<MenuElement text="添加备注名字" name="AddUserName" bkimage="file='mute.png' dest='6,6,17,17'"/>
+    <MenuElement text="绑定静态MAC地址" name="StaticMac" bkimage="file='imonline.png' dest='6,6,17,17'"/>
+	<MenuElement text="删除ARP缓存项" name="DeleteArp" bkimage="file='Qme.png' dest='6,6,17,17'"/>
+	<MenuElement fixedheight="2" line="true"/>
+	<MenuElement text="阻断网络" name="BlockNet" bkimage="file='busy.png' dest='6,6,17,17'"/>
+	<MenuElement text="启动PING命令" name="Ping" bkimage="file='imoffline.png' dest='6,6,17,17'"/>
+	<MenuElement text="HTTP访问" name="HttpRequest" bkimage="file='busy.png' dest='6,6,17,17'"/>
+	<MenuElement fixedheight="2" line="true" enabled="false"/>
+	<MenuElement text="复制IP地址" name="CopyIPAddress" bkimage="file='mute.png' dest='6,6,17,17'"/>
+	<MenuElement text="复制MAC地址" name="CopyMacAddress" bkimage="file='invisible.png' dest='6,6,17,17'"/>
+	<MenuElement text="复制备注名字" name="CopyUserName" bkimage="file='invisible.png' dest='6,6,17,17'"/>
+  </Menu>
+</Window>

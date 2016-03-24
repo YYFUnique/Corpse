@@ -65,6 +65,83 @@ void CHostScan::OnClick(TNotifyUI& msg)
 		OnIpTools(msg);
 }
 
+void CHostScan::OnHostScanMenu(CControlUI* pControl)
+{
+	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("Scan"));
+	if (pList->GetCurSel() == -1)
+		return;
+
+	CDuiString strName = pControl->GetName();
+	CListTextElementUI* pItem = (CListTextElementUI*)pList->GetItemAt(pList->GetCurSel());
+	
+	//获取应用程序句柄
+	HWND hWnd = m_pPaintManager->GetPaintWindow();
+
+	if (strName == _T("CopyIPAddress"))
+		CopyDataToClipboard(CF_UNICODETEXT, hWnd, pItem->GetText(0));
+	else if (strName == _T("CopyMacAddress"))
+		CopyDataToClipboard(CF_UNICODETEXT, hWnd, pItem->GetText(1));
+	else if (strName == _T("CopyUserName"))
+		CopyDataToClipboard(CF_UNICODETEXT, hWnd, pItem->GetText(5));
+	else if (strName == _T("RemoteDesk"))
+		OnRemoteDesktop(pItem);
+	else if (strName == _T("Ping"))
+		OnPing(pItem);
+}
+
+void CHostScan::OnRemoteDesktop(CListTextElementUI* pItem)
+{
+	//格式化远程桌面参数
+	CDuiString strCmdLine;
+	strCmdLine.Format(_T("/v %s"), pItem->GetText(0));
+
+	//获取应用程序句柄
+	HWND hWnd = m_pPaintManager->GetPaintWindow();
+
+	//启动远程桌面
+	DWORD dwRet = (DWORD)ShellExecute(hWnd, _T("open"), _T("mstsc"), strCmdLine, NULL, SW_SHOW);
+
+	if (dwRet <= 32)
+	{
+		MessageBox(hWnd, _T("远程桌面启动失败"), _T("提示"), MB_OK);
+		return;
+	}
+}
+
+void CHostScan::OnPing(CListTextElementUI* pItem)
+{
+	CDuiString strCmdLine;
+	strCmdLine.Format(_T("%s -t"), pItem->GetText(0));
+
+	//获取应用程序句柄
+	HWND hWnd = m_pPaintManager->GetPaintWindow();
+
+	//启动远程桌面
+	DWORD dwRet = (DWORD)ShellExecute(hWnd, _T("open"), _T("ping"), strCmdLine, NULL, SW_SHOW);
+
+	if (dwRet <= 32)
+	{
+		MessageBox(hWnd, _T("启动Ping命令失败！"), _T("提示"), MB_OK);
+		return;
+	}
+}
+
+void CHostScan::OnRangeMenu(CControlUI* pControl)
+{
+	CDuiString strMenuText = pControl->GetName();
+	if (strMenuText.IsEmpty())
+		return;
+
+	CEditUI2* pStartIP = (CEditUI2*)m_pPaintManager->FindControl(_T("EditStartIP"));
+	CEditUI2* pEndIP = (CEditUI2*)m_pPaintManager->FindControl(_T("EditEndIP"));
+
+	TCHAR szNetIP[20], szBroadcastIP[20];
+	_stscanf(strMenuText, _T("%[^|]|%s"), szNetIP, szBroadcastIP);
+
+	pStartIP->SetText(szNetIP);
+	pEndIP->SetText(szBroadcastIP);
+}
+
 void CHostScan::OnMenu(TNotifyUI& msg)
 {
 	if (msg.pSender->GetName() == _T("Scan"))

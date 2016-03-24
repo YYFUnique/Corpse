@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include <Psapi.h>
+#include <Winuser.h>
 #pragma comment(lib,"Psapi.lib")
+
+
 CApplication::CApplication()
 {
 	m_bTimer = TRUE;
@@ -11,6 +14,16 @@ CApplication::~CApplication()
 
 }
 
+void CApplication::Notify(TNotifyUI& msg)
+{
+	if (msg.sType == DUI_MSGTYPE_ITEMACTIVATE)
+		OnItemClick(msg);
+	else if (msg.sType == DUI_MSGTYPE_MENU)
+		OnMenu(msg);
+	else
+		CBase::Notify(msg);
+}
+
 void CApplication::OnPaint()
 {
 	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("App"));
@@ -18,6 +31,32 @@ void CApplication::OnPaint()
 		pList->RemoveAll();
 
 	EnumDesktopWindows(NULL,EnumWindowsProc,NULL);
+}
+
+void CApplication::OnItemClick(TNotifyUI& msg)
+{
+	HWND hWnd = (HWND)msg.pSender->GetTag();
+	if (hWnd == NULL)
+		return;
+
+	//前置显示窗口
+	SetForegroundWindow(hWnd);
+}
+
+void CApplication::OnMenu(TNotifyUI& msg)
+{
+	if (msg.pSender->GetName() == _T("App"))
+	{
+		CListUI* pList = (CListUI*)msg.pSender;
+		if (pList->GetCurSel() == -1)
+			return;
+
+		CMenuWnd* pMenu = new CMenuWnd;
+		CPoint pt = msg.ptMouse;
+		ClientToScreen(m_pPaintManager->GetPaintWindow(), &pt);
+		STRINGorID strXmlFile(_T("AppMenu.xml"));
+		pMenu->Init(NULL,strXmlFile, pt,m_pPaintManager);
+	}
 }
 
 BOOL CApplication::EnumWindowsProc(HWND hWnd,LPARAM lParam)
@@ -41,6 +80,7 @@ BOOL CApplication::EnumWindowsProc(HWND hWnd,LPARAM lParam)
 
 		TCHAR szWindowTitle[1024];
 		GetWindowText(hWnd,szWindowTitle,_countof(szWindowTitle));
+		pListElementUI->SetTag((UINT_PTR)hWnd);
 		pListElementUI->SetText(0,szWindowTitle);
 		pListElementUI->SetText(1,IsHungAppWindow(hWnd) ? _T("未响应") :_T("正在运行"));
 	}
@@ -104,4 +144,54 @@ bool CApplication::DosPathToNtPath(LPCTSTR lpszDosPath, CDuiString& strNtPath)
 	}
 	strNtPath = lpszDosPath;
 	return FALSE;
+}
+
+void CApplication::OnAppMenu(CControlUI* pControl)
+{
+	CListUI* pAppList = (CListUI*)m_pPaintManager->FindControl(_T("App"));
+	if (pAppList->GetCurSel() == -1)
+		return;
+
+	CListTextElementUI* pItem = (CListTextElementUI*)pAppList->GetItemAt(pAppList->GetCurSel());
+	HWND hWnd = (HWND)pItem->GetTag();
+	if (IsWindow(hWnd) == FALSE)
+		return;
+
+	CDuiString strItemName = pControl->GetName();
+
+	if (strItemName == _T("Switch"))
+	{
+		//隐藏任务管理器
+		ShowWindow(m_pPaintManager->GetPaintWindow(), SW_SHOWMINNOACTIVE);
+		//前置目标任务
+		if (IsIconic(hWnd))
+			ShowWindow(hWnd, SW_RESTORE);
+		SetForegroundWindow(hWnd);
+	}
+	else if (strItemName == _T("Advanced"))
+	{
+		if (IsIconic(hWnd))
+			ShowWindow(hWnd, SW_RESTORE);
+		SetForegroundWindow(hWnd);
+	}
+	else if (strItemName == _T("Maximized"))
+		::ShowWindow(hWnd, SW_MAXIMIZE);
+	else if (strItemName == _T("Minimized"))
+		::ShowWindow(hWnd, SW_MINIMIZE);
+	else if (strItemName == _T("Terminate"))
+	{	//结束一个任务
+		DWORD_PTR dwResult = 0;
+		LRESULT lRet = SendMessageTimeout(hWnd, WM_SYSCOMMAND, SC_CLOSE, 0, SMTO_BLOCK|SMTO_ABORTIFHUNG, 250, &dwResult);
+		if (lRet == ERROR_TIMEOUT )
+		{
+			DWORD dwPid = 0;
+			GetWindowThreadProcessId(hWnd,&dwPid);
+			HANDLE  hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, dwPid);
+			if (hProcess != NULL)
+			{
+				TerminateProcess(hProcess, 0);
+				CloseHandle(hProcess);
+			}
+		}
+	}
 }

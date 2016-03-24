@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+	<CalendarUI bordersize="3" selectedimage="file='btn_hover.png' corner='3,3,3,3'" hotimage="file='btn_hover.png' corner='3,3,3,3'" pushedimage="file='btn_press.png' corner='3,3,3,3'">
+		<Control name="Holiday" float="true" pos="3,3,19,19"/>
+		<Label name="Solar" float="true" pos="1,10,58,35" font="1" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+		<Label name="Lunar" float="true" font="2" pos="1,35,58,60" align="center" />
+	</CalendarUI>
+</Window>

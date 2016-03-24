@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="540,510" sizebox="4,4,4,4" caption="0,0,0,27" mininfo="540,510" roundcorner="5,4" >
+    <Font name="MS Shell Dlg 2" size="12" bold="false" italic="false" default="true" />
+    <Font name="MS Shell Dlg 2" size="11" bold="true" italic="false" />
+    <Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+    <HorizontalLayout name="bg" bkimage="file=&apos;bg0.png&apos; corner=&apos;40,86,153,155&apos;">
+        <VerticalLayout name="VerticalLayoutUI1" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;" inset="1,0,1,0">
+            <HorizontalLayout name="HorizontalLayoutUI1" pos="0,0,0,45" height="45">
+                <VerticalLayout name="VerticalLayoutUI2" pos="0,0,40,0" width="40" inset="0,1,0,0">
+                    <Button name="logo" float="true" pos="8,6,40,38" bkimage="file=&apos;qq.png&apos; corner=&apos;5,5,5,5&apos; dest=&apos;2,2,30,30&apos;" maxheight="32" maxwidth="32" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;aio_head_normal.png&apos;" hotimage="file=&apos;aio_head_normal.png&apos;" pushedimage="file=&apos;aio_head_normal.png&apos;" />
+                </VerticalLayout>
+                <VerticalLayout name="VerticalLayoutUI3" inset="2,6,2,0">
+                    <Label name="txtBuddyName" text="倚天(43156150)" pos="0,0,200,16" width="200" height="16" textpadding="2,0,2,0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="1" />
+                    <RichEdit name="txtBuddySign" text="敬畏理想，相信未来..." pos="0,0,200,18" width="200" height="18" inset="2,0,0,0" readonly="true" return="true" rich="true" />
+                </VerticalLayout>
+                <VerticalLayout name="VerticalLayoutUI4" pos="0,0,95,0" width="95">
+                    <Button name="BtnMin" tooltip="最小化" float="true" pos="1,0,29,20" bkimage="file=&apos;BtnMin.png&apos; source=&apos;0,0,28,20&apos;" maxheight="20" maxwidth="28" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnMin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMin.png&apos; source=&apos;56,0,84,20&apos;" />
+                    <Button name="BtnMax" tooltip="最大化" float="true" pos="29,0,57,20" maxheight="20" maxwidth="28" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnMax.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMax.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMax.png&apos; source=&apos;56,0,84,20&apos;" />
+                    <Button name="BtnRestore" tooltip="还原" visible="false" float="true" pos="29,0,57,20" maxheight="20" maxwidth="28" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnRestor.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnRestor.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnRestor.png&apos; source=&apos;56,0,84,20&apos;" />
+                    <Button name="BtnClose" tooltip="关闭" float="true" pos="57,0,96,20" maxheight="20" maxwidth="39" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
+                </VerticalLayout>
+            </HorizontalLayout>
+            <HorizontalLayout name="HorizontalLayoutUI2">
+                <VerticalLayout name="VerticalLayoutUI5">
+                    <HorizontalLayout name="TopBtnList" pos="0,0,0,44" height="44" inset="4,2,2,2">
+                        <Button name="home" pos="0,0,40,40" width="40" height="40" bkimage="file=&apos;video.png&apos; dest=&apos;6,6,34,34&apos;" maxheight="40" maxwidth="40" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                        <Control name="ControlUI1" pos="0,0,2,0" width="2" />
+                        <Button name="hide" pos="0,0,40,40" width="40" height="40" bkimage="file=&apos;audio.png&apos; dest=&apos;6,6,34,34&apos;" maxheight="40" maxwidth="40" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                        <Control name="ControlUI2" pos="0,0,2,0" width="2" />
+                        <Button name="ButtonUI1" pos="0,0,40,40" width="40" height="40" bkimage="file=&apos;sendfile.png&apos; dest=&apos;6,5,34,33&apos;" maxheight="40" maxwidth="40" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                        <Control name="ControlUI3" pos="0,0,2,0" width="2" />
+                        <Button name="ButtonUI2" pos="0,0,40,40" width="40" height="40" bkimage="file=&apos;sendsms.png&apos; dest=&apos;6,6,34,34&apos;" maxheight="40" maxwidth="40" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                        <Control name="ControlUI4" pos="0,0,2,0" width="2" />
+                        <Button name="ButtonUI3" pos="0,0,40,40" width="40" height="40" bkimage="file=&apos;app.png&apos; dest=&apos;6,6,34,34&apos;" maxheight="40" maxwidth="40" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                        <Control name="ControlUI5" pos="0,0,2,0" width="2" />
+                        <Button name="ButtonUI4" pos="0,0,40,40" width="40" height="40" bkimage="file=&apos;remote_assistance.png&apos; dest=&apos;5,6,31,32&apos;" maxheight="40" maxwidth="40" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                    </HorizontalLayout>
+                    <HorizontalLayout name="HorizontalLayoutUI3" bordercolor="#FF999933" inset="5,0,0,0">
+                        <RichEdit name="RichRecv" readonly="true" return="true" rich="true" vscrollbar="true" />
+                    </HorizontalLayout>
+                    <HorizontalLayout name="FontBar" pos="0,0,0,30" height="30" bkimage="file=&apos;font_bk.bmp&apos; corner=&apos;0,1,1,0&apos;" inset="4,4,4,4" visible="true" visible="false">
+                        <Combo name="FontName" text="宋体" pos="0,0,100,22" width="100" height="22" normalimage="file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;" hotimage="file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;" pushedimage="file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;" dropboxsize="0,150" itemtextcolor="#FF000000" itemselectedtextcolor="#FF000000" itemselectedbkcolor="#FFC1E3FF" itemhottextcolor="#FF000000" itemhotbkcolor="#FFE9F5FF" itemdisabledtextcolor="#FFCCCCCC" itemdisabledbkcolor="#FFFFFFFF" textpadding="4,1,1,1">
+                            <ListLabelElement name="ListLabelElementUI1" text="方正舒体" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI2" text="方正姚体" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI3" text="仿宋_GB2312" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI4" text="黑体" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI5" text="华文彩云" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI6" text="华文仿宋" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI7" text="华文琥珀" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI8" text="华文楷体" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI9" text="华文隶书" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI10" text="华文宋体" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI11" text="华文细黑" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI12" text="华文新魏" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI13" text="华文行楷" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI14" text="华文中宋" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI15" text="楷体_GB2312" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI16" text="隶书" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI17" text="宋体" pos="0,0,0,23" height="23" selected="true" />
+                            <ListLabelElement name="ListLabelElementUI18" text="宋体方正超大" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI19" text="微软雅黑" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI20" text="新宋体" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI21" text="幼圆" pos="0,0,0,23" height="23" />
+                        </Combo>
+                        <Combo name="FontSize" text="9" pos="0,0,50,22" width="50" height="22" normalimage="file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;" hotimage="file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;" pushedimage="file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;" dropboxsize="0,150" itemtextcolor="#FF000000" itemselectedtextcolor="#FF000000" itemselectedbkcolor="#FFC1E3FF" itemhottextcolor="#FF000000" itemhotbkcolor="#FFE9F5FF" itemdisabledtextcolor="#FFCCCCCC" itemdisabledbkcolor="#FFFFFFFF" textpadding="4,1,1,1">
+                            <ListLabelElement name="ListLabelElementUI22" text="8" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI23" text="9" pos="0,0,0,23" height="23" selected="true" />
+                            <ListLabelElement name="ListLabelElementUI24" text="10" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI25" text="11" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI26" text="12" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI27" text="13" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI28" text="14" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI29" text="15" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI30" text="16" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI31" text="17" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI32" text="18" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI33" text="19" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI34" text="20" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI35" text="21" pos="0,0,0,23" height="23" />
+                            <ListLabelElement name="ListLabelElementUI36" text="22" pos="0,0,0,23" height="23" />
+                        </Combo>
+                        <Control name="ControlUI6" pos="0,0,5,0" width="5" />
+                        <Option name="BtnBold" text="{i Bold.png}{/i}" pos="0,0,26,22" width="26" height="22" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" showhtml="true" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" selectedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                        <Option name="BtnItalic" text="{i Italic.png}{/i}" pos="0,0,26,22" width="26" height="22" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" showhtml="true" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" selectedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                        <Option name="BtnUnderLine" text="{i underline.png}{/i}" pos="0,0,26,22" width="26" height="22" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" showhtml="true" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" selectedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                        <Button name="BtnColor" pos="0,0,26,22" width="26" height="22" bkimage="file=&apos;color.png&apos; dest=&apos;5,3,21,19&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                    </HorizontalLayout>
+                    <HorizontalLayout name="HorizontalLayoutUI4" pos="0,0,0,27" height="27" bkimage="file=&apos;MidToolBarBg.png&apos;" inset="2,3,2,4">
+                        <Option name="BtnFont" pos="0,0,24,20" width="24" height="20" bkimage="file=&apos;icon_font.png&apos; dest=&apos;2,0,22,20&apos;" maxheight="20" maxwidth="24" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" selectedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                        <Control name="ControlUI7" pos="0,0,5,0" width="5" />
+                        <Option name="BtnFace" pos="0,0,24,20" width="24" height="20" bkimage="file=&apos;icon_face.png&apos; dest=&apos;2,0,22,20&apos;" maxheight="20" maxwidth="24" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" selectedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                        <Control name="ControlUI8" pos="0,0,5,0" width="5" />
+                        <Button name="BtnImage" pos="0,0,24,20" width="24" height="20" bkimage="file=&apos;icon_pic.png&apos; dest=&apos;2,0,22,20&apos;" maxheight="20" maxwidth="24" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                        <Control name="ControlUI9" pos="0,0,5,0" width="5" />
+                        <Button name="BtnShock" pos="0,0,24,20" width="24" height="20" bkimage="file=&apos;icon_shark.png&apos; dest=&apos;2,0,22,20&apos;" maxheight="20" maxwidth="24" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                        <Control name="ControlUI10" pos="0,0,5,0" width="5" />
+                        <Button name="BtnScreenShots" pos="0,0,24,20" width="24" height="20" bkimage="file=&apos;icon_screenshots.png&apos; dest=&apos;2,0,22,20&apos;" maxheight="20" maxwidth="24" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
+                    </HorizontalLayout>
+                    <HorizontalLayout name="HorizontalLayoutUI5" pos="0,0,0,95" height="95" bkcolor="#FFFEFDFC" inset="5,0,0,0">
+                        <RichEdit name="RichSend" return="true" rich="true" vscrollbar="true" autovscroll="true" />
+                    </HorizontalLayout>
+					<HorizontalLayout name="HorizontalLayoutUI6" pos="0,0,0,33" height="33">
+                        <HorizontalLayout name="HLayoutEmpty" />
+                        <HorizontalLayout name="HLayoutSend" pos="0,0,100,0" width="100">
+                            <Button name="BtnSend" text="发送(&amp;S)" float="true" pos="9,6,70,30" padding="0,4,0,0" maxheight="22" maxwidth="69" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;sendbtnleft.png&apos; source=&apos;0,0,61,24&apos; corner=&apos;3,3,0,0&apos;" hotimage="file=&apos;sendbtnleft.png&apos; source=&apos;61,0,122,24&apos; corner=&apos;3,3,0,0&apos;" pushedimage="file=&apos;sendbtnleft.png&apos; source=&apos;122,0,183,24&apos; corner=&apos;3,3,0,0&apos;" />
+                            <Button name="BtnSendOption" float="true" pos="68,6,88,30" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;sendbtnright.png&apos; source=&apos;0,0,20,24&apos; corner=&apos;0,0,3,3&apos;" hotimage="file=&apos;sendbtnright.png&apos; source=&apos;20,0,40,24&apos; corner=&apos;0,0,0,3&apos;" pushedimage="file=&apos;sendbtnright.png&apos; source=&apos;40,0,60,24&apos; corner=&apos;0,0,3,3&apos;" />
+                        </HorizontalLayout>
+                    </HorizontalLayout>
+                </VerticalLayout>
+                <VerticalLayout name="right_part" pos="0,0,152,0" width="152" />
+            </HorizontalLayout>
+            <HorizontalLayout name="HorizontalLayoutUI7" pos="0,0,0,1" height="1" />
+        </VerticalLayout>
+    </HorizontalLayout>
+</Window>

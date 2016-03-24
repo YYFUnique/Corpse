@@ -37,3 +37,8 @@ void CTaskMgr::OnSelectChanged(TNotifyUI& msg)
 			pTabLayout->SelectItem(_ttoi(msg.pSender->GetUserData()));
 	}
 }
+
+void CTaskMgr::OnApplication(CControlUI* pControl)
+{
+	m_App.OnAppMenu(pControl);
+}
