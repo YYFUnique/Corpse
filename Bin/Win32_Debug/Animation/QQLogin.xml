@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="380,290" sizebox="4,4,6,6" caption="0,0,0,30" maxbox="false" roundcorner="5,5" bktrans="true">
+	<Font name="微软雅黑" size="12" bold="false" italic="false" />
+    <Font name="微软雅黑" size="16" bold="false" italic="false" />
+    <Font name="楷体" size="16" bold="false" italic="false" />
+    <Font name="微软雅黑" size="12" bold="true" italic="false" />
+	<Default name="Edit2" value="normalimage=&quot;file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;3,3,3,3&apos; &quot; focusedimage=&quot;file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;3,3,3,3&apos; &quot; hotimage=&quot;file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;3,3,3,3&apos;&quot; " />
+	<Default name="Option" value="normalimage=&quot;file=&apos;LoginCheckBox.png&apos; source=&apos;0,0,17,17&apos; dest=&apos;0,0,17,17&apos;&quot; hotimage=&quot;file=&apos;LoginCheckBox.png&apos; source=&apos;17,0,34,17&apos; dest=&apos;0,0,17,17&apos;&quot; focusedimage=&quot;file=&apos;LoginCheckBox.png&apos; source=&apos;17,0,34,17&apos; dest=&apos;0,0,17,17&apos; corner=&apos;3,3,3,3&apos; &quot; selectedimage=&quot;file=&apos;LoginCheckBox.png&apos; source=&apos;34,0,51,17&apos; dest=&apos;0,0,17,17&apos;&quot; pushedimage=&quot;file=&apos;LoginCheckBox.png&apos; source=&apos;18,0,34,17&apos; dest=&apos;0,0,17,17&apos;&quot; selectedimage=&quot;file=&apos;LoginCheckBox.png&apos; source=&apos;34,0,51,17&apos; dest=&apos;0,0,17,17&apos;&quot; selectedhotimage=&quot;file=&apos;LoginCheckBox.png&apos; source=&apos;68,0,85,17&apos; dest=&apos;0,0,17,17&apos;&quot; selectedpressimage=&quot;file=&apos;LoginCheckBox.png&apos; source=&apos;68,0,85,17&apos; dest=&apos;0,0,17,17&apos; &quot; textpadding=&quot;5,1,0,0&quot; "/>
+    <VerticalLayout name="VLayoutTotal" pos="0,0,380,290" width="380" height="290" bkimage="file=&apos;noon_.jpg&apos;">
+        <VerticalLayout name="WinBorder" pos="0,0,380,290" width="380" height="290" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;" relativepos="0,0,0,0">
+			<TabLayout name="Waizd">
+				<VerticalLayout name="login">
+					<ActiveX name="flashActiveX" mouse="false" float="true" pos="1,1,379,289" clsid="{D27CDB6E-AE6D-11CF-96B8-444553540000}" />
+					<VerticalLayout name="VLayoutHead" pos="0,0,380,40" width="380" height="40">
+						<HorizontalLayout name="HLayoutTitle" pos="0,0,0,40" height="40">
+							<HorizontalLayout name="HLayoutHeadCenter" />
+							<HorizontalLayout name="HLayoutSys" pos="0,0,96,40" width="96" height="40">
+								<Button name="BtnSet" tooltip="设置" float="true" pos="1,0,29,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnSet.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnSet.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnSet.png&apos; source=&apos;56,0,84,20&apos;" />
+								<Button name="BtnMin" tooltip="最小化" float="true" pos="29,0,57,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnMin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMin.png&apos; source=&apos;56,0,84,20&apos;" />
+								<Button name="BtnClose" tooltip="关闭" float="true" pos="57,0,96,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
+							</HorizontalLayout>
+						</HorizontalLayout>
+					</VerticalLayout>
+					<VerticalLayout name="VLayoutBody" bkimage="file=&apos;main_bottom_bkg.png&apos; source=&apos;0,44,50,111&apos; corner=&apos;20,20,20,20&apos;">
+						<HorizontalLayout name="HorizontalLayoutUI1" pos="0,0,0,100" height="100" />
+						<HorizontalLayout name="HorizontalLayoutUI2">
+							<HorizontalLayout name="HorizontalLayoutUI3" pos="0,0,100,0" width="100">
+								<Container name="ContainerUI1" float="true" pos="7,7,94,94" bkimage="head_bkg.png">
+									<Label name="LabelUI2" float="true" pos="1,1,85,85" bkimage="file=&apos;HEAD_100.png&apos; dest=&apos;1,1,85,85&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+								</Container>
+							</HorizontalLayout>
+							<HorizontalLayout name="HorizontalLayoutUI4">
+								<Edit2 name="Accout" font="1" float="true" pos="12,10,185,38" />
+								<Edit2 name="Password" font="1" float="true" pos="12,42,185,70" password="true" />
+								<Button name="BtnStatus" float="true" pos="10,77,35,96" bkimage="file=&apos;imonline.png&apos; dest=&apos;4,4,15,15&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;imonline.png&apos; dest=&apos;4,4,15,15&apos;" hotimage="file=&apos;btn_hover.png&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;btn_press.png&apos; corner=&apos;3,3,3,3&apos;" />
+								<Option name="OptionPass" font="0" float="true" text="记住密码" pos="41,78,120,95" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+								<Option name="OptionAutoLogin" font="0" float="true" text="自动登录" pos="118,78,195,95" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+							</HorizontalLayout>
+							<HorizontalLayout name="HorizontalLayoutUI5" pos="0,0,80,0" width="80">
+								<Label name="LabelUI4" text="注册帐号" float="true" pos="13,10,68,32" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" />
+								<Label name="LabelUI5" text="找回密码" float="true" pos="13,45,68,67" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" />
+							</HorizontalLayout>
+						</HorizontalLayout>
+					</VerticalLayout>
+					<HorizontalLayout name="VLayoutFoot" pos="0,0,0,50" height="50">
+						<Button name="ButtonUI2" text="登录" font="1" float="true" pos="109,5,285,45" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;InstallBtn.png&apos; source=&apos;0,0,162,38&apos; corner=&apos;3,3,3,3&apos;" hotimage="file=&apos;InstallBtn.png&apos; source=&apos;0,38,162,76&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;InstallBtn.png&apos; source=&apos;0,76,162,114&apos; corner=&apos;3,3,3,3&apos;" />
+					</HorizontalLayout>
+				</VerticalLayout>
+				<VerticalLayout name="SetTing" bkcolor="#FF00FFFF">
+				</VerticalLayout>
+			</TabLayout>
+        </VerticalLayout>
+    </VerticalLayout>
+</Window>

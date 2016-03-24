@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+	<ListCtrlItem selectedimage="file='btn_hover.png' corner='3,3,3,3'" hotimage="file='btn_hover.png' corner='3,3,3,3'" pushedimage="file='btn_press.png' corner='3,3,3,3'">
+		<Label name="Icon" float="true" pos="15,5,63,53" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" />
+		<Label name="LabelName" text="木马防火墙" float="true" pos="10,56,70,81" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="2" align="left" />
+	</ListCtrlItem>
+</Window>

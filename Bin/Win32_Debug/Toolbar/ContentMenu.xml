@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window>
+  <Font name="微软雅黑" size="12" bold="false" default="true" />
+  <Font name="微软雅黑" size="12" bold="true"/>
+  <Default name="Menu" value="inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='menu_bk.png' corner='30,8,8,8'&quot; mask=&quot;#FFFFFFFF&quot; hole=&quot;false&quot;" />
+  <Menu>
+    <MenuElement text="剪切" name="MenuOnline" bkimage="file='imonline.png' dest='6,6,17,17'"/>
+	<MenuElement text="复制" name="MenuOnline" bkimage="file='Qme.png' dest='6,6,17,17'"/>
+	<MenuElement text="粘贴" name="MenuOut" bkimage="file='imoffline.png' dest='6,6,17,17'"/>
+  </Menu>
+</Window>

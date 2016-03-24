@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window size="122,24" mininfo="122,24" caption="0,0,0,0" sizebox="0,0,0,0" roundcorner="0,0,0,0">
+  <HorizontalLayout name="PicBar" width="122" height="24" bkimage="file='toolbar_back.png' corner='2,2,2,2'" inset="2,2,2,2">
+    <ButtonEx name="btnAddFace" width="22" height="20" maxheight="20" maxwidth="22" iconimage="file='face_add.png' dest='1,0,21,20'" hotimage="file='FaceEditTipBtn_selected.png'" pushedimage="file='FaceEditTipBtn_selected.png'" tooltip="点击添加表情"/>
+    <Control width="2"/>
+    <ButtonEx name="btnSaveAs" width="22" height="20" maxheight="20" maxwidth="22" iconimage="file='save_16.png' dest='1,0,21,20'" hotimage="file='FaceEditTipBtn_selected.png'" pushedimage="file='FaceEditTipBtn_selected.png'" tooltip="点击另存为..."/>
+    <Control width="2"/>
+    <ButtonEx name="btnEditFace" width="22" height="20" maxheight="20" maxwidth="22" iconimage="file='emotionEdit_20.png' dest='1,0,21,20'" hotimage="file='FaceEditTipBtn_selected.png'" pushedimage="file='FaceEditTipBtn_selected.png'" tooltip="点击涂鸦编辑表情"/>
+    <Control width="2"/>
+    <ButtonEx name="btnSearchFace" width="22" height="20" maxheight="20" maxwidth="22" iconimage="file='search.png' dest='1,0,21,20'" hotimage="file='FaceEditTipBtn_selected.png'" pushedimage="file='FaceEditTipBtn_selected.png'" tooltip="搜索相关表情"/>
+    <Control width="2"/>
+    <ButtonEx name="btnShareFace" width="22" height="20" maxheight="20" maxwidth="22" iconimage="file='qzonewb.png' dest='1,0,21,20'" hotimage="file='FaceEditTipBtn_selected.png'" pushedimage="file='FaceEditTipBtn_selected.png'" tooltip="分享到空间或者微博"/>
+  </HorizontalLayout>
+</Window>

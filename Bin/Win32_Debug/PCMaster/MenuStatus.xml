@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window>
+  <Font name="微软雅黑" size="12" bold="false" default="true" />
+  <Font name="微软雅黑" size="12" bold="true"/>
+  <Default name="Menu" value="inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='menu_bk.png' corner='30,8,8,8'&quot; mask=&quot;#FFFFFFFF&quot; hole=&quot;false&quot;" />
+  <Menu name="PCStatus" >
+    <MenuElement text="我在线上" name="MenuOnline" bkimage="file='imonline.png' dest='6,6,17,17'"/>
+	<MenuElement text="Q我吧" name="MenuOnline" bkimage="file='Qme.png' dest='6,6,17,17'"/>
+	<MenuElement text="离开" name="MenuOut" bkimage="file='imoffline.png' dest='6,6,17,17'"/>
+	<MenuElement text="忙碌" name="MenuBusy" bkimage="file='busy.png' dest='6,6,17,17'"/>
+	<MenuElement text="请勿打扰" name="MenuOnline" bkimage="file='mute.png' dest='6,6,17,17'"/>
+	<MenuElement text="隐身" name="MenuOff" bkimage="file='invisible.png' dest='6,6,17,17'" />
+	<MenuElement linetype="true" />
+	<MenuElement text="退出" name="MenuExit" bkimage="file='invisible.png' dest='6,6,17,17'">
+		<HorizontalLayout>
+			<Label />
+			<Label width="20" bkimage="file='tree_expand.png' source='0,0,16,16' dest='1,3,17,19'"/>
+		</HorizontalLayout>
+      <MenuElement name="test1" text="菜单测试1" />
+      <MenuElement name="test2" text="菜单测试2" />
+	</MenuElement>
+  </Menu>
+</Window>

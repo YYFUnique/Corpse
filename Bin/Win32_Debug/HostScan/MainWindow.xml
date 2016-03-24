@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="800,600" sizebox="4,4,4,4" caption="0,0,0,45" mininfo="600,400" roundcorner="5,5">
+    <Font name="微软雅黑" size="12" bold="false" italic="false" />
+    <Font name="微软雅黑" size="15" bold="true" italic="false" />
+	<Font name="微软雅黑" size="12" bold="true" italic="false" />
+    <Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="HScrollBar" value="showscrollbar=&quot;false&quot; height=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;hscrollbarthumb.png&apos; source=&apos;0,0,34,10&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;hscrollbarthumb.png&apos; source=&apos;0,10,34,20&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;hscrollbarthumb.png&apos; source=&apos;0,20,34,30&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;hscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+    <HorizontalLayout name="VLayoutTatal" bkcolor="#FFFFFFFF">
+        <VerticalLayout name="VLayoutBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;" inset="1,0,1,0">
+            <HorizontalLayout name="HLayoutHead" pos="0,0,0,45" height="45" bkimage="file=&apos;main_bkg.jpg&apos;" >
+                <HorizontalLayout name="HorizontalLayoutUI3">
+                    <Label name="LabelUI5" text="主机扫描工具" float="true" pos="56,8,162,38" disabledtextcolor="#FFA7A6AA" font="1" />
+                </HorizontalLayout>
+                <VerticalLayout name="VerticalLayoutUI4" pos="0,0,95,0" width="95">
+                    <Button name="BtnMin" tooltip="最小化" float="true" pos="1,0,29,20" maxheight="20" maxwidth="28" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnMin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMin.png&apos; source=&apos;56,0,84,20&apos;" />
+                    <Button name="BtnMax" tooltip="最大化" float="true" pos="29,0,57,20" maxheight="20" maxwidth="28" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnMax.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMax.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMax.png&apos; source=&apos;56,0,84,20&apos;" />
+                    <Button name="BtnRestore" tooltip="还原" visible="false" float="true" pos="29,0,57,20" maxheight="20" maxwidth="28" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnRestor.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnRestor.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnRestor.png&apos; source=&apos;56,0,84,20&apos;" />
+                    <Button name="BtnClose" tooltip="关闭" float="true" pos="57,0,96,20" maxheight="20" maxwidth="39" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
+                </VerticalLayout>
+            </HorizontalLayout>
+            <HorizontalLayout name="HLayoutBody">
+                <VerticalLayout name="VLayoutLeft" pos="0,0,247,0">
+					<VerticalLayout bkcolor="#FFE8F2FE">
+						<HorizontalLayout name="HLayoutScan" pos="0,0,247,209" width="247" height="209">
+							<Label name="LabelUI1" text="扫描设置" float="true"  pos="0,0,247,30" bkcolor="#FFA6CAF0" textpadding="5,0,0,0" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Label name="LabelUI2" text="扫描选项:" float="true" pos="10,70,70,92" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Label name="LabelUI3" text="起始地址:" float="true" pos="10,37,70,59" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Label name="LabelUI4" text="结束地址:" float="true" pos="10,104,70,126" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Option name="BtnOpARP" text="ARP扫描" float="true" enabled="false" pos="78,107,150,126" textpadding="16,0,0,0" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" normalimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;0,0,15,15&apos;" hotimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;15,0,30,15&apos;" pushedimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;30,0,45,15&apos;" selected="true" selectedimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;60,0,75,15&apos;" selectedhotimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;75,0,90,15&apos;" selectedpressimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;90,0,105,15&apos;" />
+							<Option name="BtnOpPING" text="PING扫描" float="true" pos="159,107,231,126" textpadding="16,0,0,0" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" normalimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;0,0,15,15&apos;" hotimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;15,0,30,15&apos;" pushedimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;30,0,45,15&apos;" selected="true" selectedimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;60,0,75,15&apos;" selectedhotimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;75,0,90,15&apos;" selectedpressimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;90,0,105,15&apos;" />
+							<Option name="BtnOpHostName" text="主机名扫描" float="true" pos="78,137,158,156" textpadding="16,0,0,0" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" normalimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;0,0,15,15&apos;" hotimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;15,0,30,15&apos;" pushedimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;30,0,45,15&apos;" selected="true" selectedimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;60,0,75,15&apos;" selectedhotimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;75,0,90,15&apos;" selectedpressimage="file=&apos;checkbox_icon.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;90,0,105,15&apos;" />
+							<Button name="BtnBeginScan" text="开始扫描" float="true" pos="155,172,235,202" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" align="center" normalimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,164,38&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" />
+							<Edit name="EditStartIP" float="true"  pos="78,37,223,60" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;"/>
+							<Edit name="EditEndIP" float="true" pos="78,70,222,93" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" />
+						</HorizontalLayout>
+					</VerticalLayout>
+					<Control height="1"/>
+                </VerticalLayout>
+				<VerticalLayout name="VLayoutCenter" pos="0,0,1,0" bkcolor="#FFCDCDCD"/>
+                <VerticalLayout name="VLayoutRight">
+					<VerticalLayout name="ScanResult">
+						<List name="ScanInfo" vscrollbar="true" hscrollbar="true" menu="true" itembkcolor="#FFF0F0F0" itemaltbk="true" itemalign="left" itemfont="2" itemtextpadding="5,0,0,0" itemhotbkcolor="#FFFFFF00" multiexpanding="true" itemtextcolor="#00000000" itemhottextcolor="#00000000" itemlinecolor="#FF939393" itemcolline="true">
+							<ListHeader name="scanheader" height="30" itemselectedimage="file=&apos;main_topmask_selected.png&apos; corner=&apos;2,2,2,2&apos;" itemhotimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;" menu="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
+							  <ListHeaderItem text="IP地址" font="0"  width="110" textcolor="#00000000" normalimage="file=&apos;ListHeadBk.png&apos; corner=&apos;5,5,5,5&apos;" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+							  <ListHeaderItem text="MAC地址" font="0" width="130" textcolor="#00000000" normalimage="file=&apos;listheadbk.png&apos; corner=&apos;5,5,5,5&apos;" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+							  <ListHeaderItem text="网卡厂商" font="0" width="80" textcolor="#00000000" normalimage="file=&apos;listheadbk.png&apos; corner=&apos;5,5,5,5&apos;" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+							  <ListHeaderItem text="PING通性" font="0" width="65" textcolor="#00000000" normalimage="file=&apos;listheadbk.png&apos; corner=&apos;5,5,5,5&apos;" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+							  <ListHeaderItem text="主机名称" font="0" width="130" textcolor="#00000000" normalimage="file=&apos;listheadbk.png&apos; corner=&apos;5,5,5,5&apos;" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+							  <ListHeaderItem text="备注信息" font="0" width="90" textcolor="#00000000" normalimage="file=&apos;listheadbk.png&apos; corner=&apos;5,5,5,5&apos;" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+							  <ListHeaderItem text="描述信息" font="0" width="170" textcolor="#00000000" normalimage="file=&apos;listheadbk.png&apos; corner=&apos;5,5,5,5&apos;" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+							</ListHeader>
+						</List>
+					</VerticalLayout>
+					<HorizontalLayout name="HLayoutInfo" pos="0,0,0,1"/>
+				</VerticalLayout>				
+				<HorizontalLayout name="HLayoutInfo" pos="0,0,1,0"/>
+            </HorizontalLayout>
+        </VerticalLayout>
+    </HorizontalLayout>
+</Window>

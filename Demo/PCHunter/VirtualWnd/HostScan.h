@@ -68,6 +68,9 @@ public:
 	void OnClick(TNotifyUI& msg);
 	void OnMenu(TNotifyUI& msg);
 
+	void OnHostScanMenu(CControlUI* pControl);
+	void OnRangeMenu(CControlUI* pControl);
+
 	BOOL GetAdapterName(LPCTSTR lpszMacAddress,LPTSTR szAdapterName,DWORD dwNameLen);
 	BOOL GetHostUserName(LPCTSTR lpszMacAddress,LPTSTR szAdapterName,DWORD dwNameLen);
 protected:
@@ -80,6 +83,9 @@ protected:
 	void AddStaticArp();
 	void OnIpRange(TNotifyUI& msg);
 	void OnIpTools(TNotifyUI& msg);
+
+	void OnPing(CListTextElementUI* pItem);
+	void OnRemoteDesktop(CListTextElementUI* pItem);
 
 	static UINT TaskThread(LPVOID lParam);
 	static void OnTaskResult(LPVOID lParam);

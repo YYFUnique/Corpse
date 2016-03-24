@@ -39,3 +39,13 @@ void CNetMgr::OnSelectChanged(TNotifyUI& msg)
 			pTabLayout->SelectItem(_ttoi(msg.pSender->GetUserData()));
 	}
 }
+
+void CNetMgr::OnHostScanMenu(CControlUI* pControl)
+{
+	m_Scan.OnHostScanMenu(pControl);
+}
+
+void CNetMgr::OnRangeMenu(CControlUI* pControl)
+{
+	m_Scan.OnRangeMenu(pControl);
+}
