@@ -439,6 +439,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Control\RollTextUI.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Control\UIActiveX.cpp"
 					>
 				</File>
@@ -677,6 +681,10 @@
 				>
 				<File
 					RelativePath=".\Control\EditUI2.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Control\RollTextUI.h"
 					>
 				</File>
 				<File

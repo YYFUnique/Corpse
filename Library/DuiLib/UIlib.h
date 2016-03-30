@@ -93,6 +93,7 @@
 #include "Control/UIChartView.h"
 
 #include "Control/UILabel.h"
+#include "Control/RollTextUI.h"
 #include "Control/UIText.h"
 #include "Control/UIEdit.h"
 #include "Control/EditUI2.h"
