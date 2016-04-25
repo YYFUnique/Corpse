@@ -63,6 +63,7 @@ public:
     virtual int GetCurSel() const = 0;
     virtual bool SelectItem(int iIndex, bool bTakeFocus = false) = 0;
     virtual void DoEvent(TEventUI& event) = 0;
+	virtual bool IsMultiSelect() = 0;
 };
 
 class IListUI : public IListOwnerUI
@@ -110,6 +111,12 @@ public:
     void SetScrollSelect(bool bScrollSelect);
     int GetCurSel() const;
     bool SelectItem(int iIndex, bool bTakeFocus = false);
+	void SeleteRangeItems(int nStart, int nIndex);
+	void SelectAllItems();
+	void DeselectAllItems();
+
+	void SetMultiSelect(bool bMultiSel);
+	bool IsMultiSelect();
 
     CListHeaderUI* GetHeader() const;  
     CContainerUI* GetList() const;
@@ -202,8 +209,11 @@ public:
     BOOL SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData);
 protected:
     bool m_bScrollSelect;
-    int m_iCurSel;
+	bool m_bMultiSel;
+    int m_iCurSel;							//在单击模式下选择项，多选模式下，最后选择的项目
+	int m_iFirstSel;							//在多选模式下，开始选择的项目
     int m_iExpandedItem;
+	CStdPtrArray m_aSelItems;
     IListCallbackUI* m_pCallback;
     CListBodyUI* m_pList;
     CListHeaderUI* m_pHeader;

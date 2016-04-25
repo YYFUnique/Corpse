@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include <wchar.h>
 #include <oledlg.h>
-
+#include <ctype.h>
 #pragma comment(lib,"OleDlg.lib")
 // These constants are for backward compatibility. They are the 
 // sizes used for initialization and reset in RichEdit 1.0
@@ -2317,9 +2317,9 @@ bool CRichEditUI::LineScroll(int nLines, int nChars)
     return (BOOL)lResult == TRUE;
 }
 
-CPoint CRichEditUI::GetCharPos(long lChar) const
+CDuiPoint CRichEditUI::GetCharPos(long lChar) const
 { 
-    CPoint pt; 
+    CDuiPoint pt; 
     TxSendMessage(EM_POSFROMCHAR, (WPARAM)&pt, (LPARAM)lChar, 0); 
     return pt;
 }
@@ -2332,14 +2332,14 @@ long CRichEditUI::LineFromChar(long nIndex) const
     return (long)lResult;
 }
 
-CPoint CRichEditUI::PosFromChar(UINT nChar) const
+CDuiPoint CRichEditUI::PosFromChar(UINT nChar) const
 { 
     POINTL pt; 
     TxSendMessage(EM_POSFROMCHAR, (WPARAM)&pt, nChar, 0); 
-    return CPoint(pt.x, pt.y); 
+    return CDuiPoint(pt.x, pt.y); 
 }
 
-int CRichEditUI::CharFromPos(CPoint pt) const
+int CRichEditUI::CharFromPos(CDuiPoint pt) const
 { 
     POINTL ptl = {pt.x, pt.y}; 
     if( !m_pTwh ) return 0;
@@ -2440,6 +2440,16 @@ HRESULT CRichEditUI::TxSendMessage(UINT msg, WPARAM wparam, LPARAM lparam, LRESU
                 return S_OK;
             }
         }
+		if (msg == WM_KEYDOWN){
+			CControlUI* pFocus = m_pManager->GetFocus();
+			TEventUI event = { 0 };
+			event.Type = UIEVENT_KEYDOWN;
+			event.chKey = (TCHAR)wparam;
+			event.pSender = pFocus;
+			event.dwTimestamp = ::GetTickCount();
+			pFocus->Event(event);
+		}
+
         return m_pTwh->GetTextServices()->TxSendMessage(msg, wparam, lparam, plresult);
     }
     return S_FALSE;
@@ -3048,6 +3058,9 @@ void CRichEditUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     else if( _tcscmp(pstrName, _T("password")) == 0 ) {
 		if( _tcscmp(pstrValue, _T("true")) == 0 ) m_lTwhStyle |= ES_PASSWORD;
     }
+	else if( _tcscmp(pstrName, _T("numberonly")) == 0 ) {
+		if( _tcscmp(pstrValue, _T("true")) == 0 ) m_lTwhStyle |= ES_NUMBER;
+	}
     else if( _tcscmp(pstrName, _T("align")) == 0 ) {
         if( _tcsstr(pstrValue, _T("left")) != NULL ) {
             m_lTwhStyle &= ~(ES_CENTER | ES_RIGHT);
@@ -3183,6 +3196,8 @@ LRESULT CRichEditUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, boo
 
 	if(WM_CHAR == uMsg)
 	{
+		if (m_lTwhStyle & ES_NUMBER && isdigit(wParam) == false)
+			return false;
 #ifndef _UNICODE
 		// check if we are waiting for 2 consecutive WM_CHAR messages
 		if ( IsAccumulateDBCMode() )

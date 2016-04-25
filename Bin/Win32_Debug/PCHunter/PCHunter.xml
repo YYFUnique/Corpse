@@ -45,10 +45,11 @@
 					<!--<Text text="系统修复" float="true" pos="380,100,500,400" textcolor="#FF000000" font="2" />-->
 				</VerticalLayout>
 				<VerticalLayout name="3" >
-					<Text text="电脑清理" float="true" pos="380,100,500,400" textcolor="#FF000000" font="2" />
+					<!--<Text text="电脑清理" float="true" pos="380,100,500,400" textcolor="#FF000000" font="2" />-->
+					<RollText name="showtext" rolltype="right" overstop="false" text="电脑清理电脑清理电脑清理电脑清理电脑清理电脑清理电脑清理" float="true" pos="100,100,400,400" bkcolor="#FFFF0000" textcolor="#FF000000" font="2" />
 				</VerticalLayout>
-				<VerticalLayout name="4" >
-					<Text text="优化加速" float="true" pos="380,100,500,400" textcolor="#FF000000" font="2" />
+				<VerticalLayout name="4" virtualwnd="sysinfo">
+					<Include source="SysInfo.xml" />
 				</VerticalLayout>
 				<VerticalLayout name="5" >
 					<Text text="电脑专家" float="true" pos="380,100,500,400" textcolor="#FF000000" font="2" />

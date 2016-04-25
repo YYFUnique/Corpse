@@ -21,13 +21,13 @@ namespace DuiLib
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
-	class UILIB_API CPoint : public tagPOINT
+	class UILIB_API CDuiPoint : public tagPOINT
 	{
 	public:
-		CPoint();
-		CPoint(const POINT& src);
-		CPoint(int x, int y);
-		CPoint(LPARAM lParam);
+		CDuiPoint();
+		CDuiPoint(const POINT& src);
+		CDuiPoint(int x, int y);
+		CDuiPoint(LPARAM lParam);
 	};
 
 
@@ -218,6 +218,7 @@ namespace DuiLib
 
 		void SetAt(int nIndex, TCHAR ch);
 		operator LPCTSTR() const;
+		operator LPCTSTR();
 
 		TCHAR operator[] (int nIndex) const;
 		const CDuiString& operator=(const CDuiString& src);

@@ -6,7 +6,7 @@ namespace DuiLib {
 //
 //
 
-CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m_iExpandedItem(-1)
+CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m_iExpandedItem(-1), m_bMultiSel(false), m_iFirstSel(-1)
 {
     m_pList = new CListBodyUI(this);
     m_pHeader = new CListHeaderUI;
@@ -177,6 +177,10 @@ bool CListUI::Remove(CControlUI* pControl)
 
     if (!m_pList->RemoveAt(iIndex)) return false;
 
+	int nIndex = m_aSelItems.Find(pControl);
+	if (nIndex != -1)
+		m_aSelItems.Remove(nIndex);
+
     for(int i = iIndex; i < m_pList->GetCount(); ++i) {
         CControlUI* p = m_pList->GetItemAt(i);
         IListItemUI* pListItem = static_cast<IListItemUI*>(p->GetInterface(_T("ListItem")));
@@ -196,6 +200,12 @@ bool CListUI::Remove(CControlUI* pControl)
 
 bool CListUI::RemoveAt(int iIndex)
 {
+	//int nIndex = m_aSelItems.Find()
+	CControlUI* pControl = GetItemAt(iIndex);
+	int nIndex = m_aSelItems.Find(pControl);
+	if (nIndex != -1)
+		m_aSelItems.Remove(nIndex);
+
     if (!m_pList->RemoveAt(iIndex)) return false;
 
     for(int i = iIndex; i < m_pList->GetCount(); ++i) {
@@ -218,6 +228,7 @@ void CListUI::RemoveAll()
     m_iCurSel = -1;
     m_iExpandedItem = -1;
     m_pList->RemoveAll();
+	m_aSelItems.Empty();
 }
 
 void CListUI::SetPos(RECT rc)
@@ -264,57 +275,89 @@ void CListUI::DoEvent(TEventUI& event)
         return;
     }
 
-    if( event.Type == UIEVENT_SETFOCUS ) 
-    {
+    if( event.Type == UIEVENT_SETFOCUS ) {
         m_bFocused = true;
         return;
     }
-    if( event.Type == UIEVENT_KILLFOCUS ) 
-    {
+
+    if( event.Type == UIEVENT_KILLFOCUS ){
         m_bFocused = false;
         return;
     }
-    switch( event.Type ) {
-		case UIEVENT_KEYDOWN:
-			switch( event.chKey ) {
-			case VK_UP:
+
+	if (event.Type == UIEVENT_BUTTONDOWN)
+	{
+		if( IsEnabled() ){
+			IListItemUI* pListItem = (IListItemUI*)event.pSender->GetInterface(DUI_CTR_LISTITEM);
+			if (pListItem)
+			{
+				int nIndex = pListItem->GetIndex();
+				if (event.wKeyState & MK_SHIFT)
+					SeleteRangeItems(nIndex, m_iCurSel);
+				else if (event.wKeyState & MK_CONTROL)
+					pListItem->Select(pListItem->IsSelected() == false);
+				else if (pListItem->IsSelected())
+					SelectItem(nIndex);
+				else
+					pListItem->Select(true);
+			}
+		}
+		return;
+	}
+
+	if (event.Type == UIEVENT_KEYDOWN){	
+		switch( event.chKey ) {
+		case VK_UP:
+			if (IsMultiSelect() && event.wKeyState & MK_SHIFT)
+				SeleteRangeItems(m_iFirstSel, m_iCurSel -1);
+			else
 				SelectItem(FindSelectable(m_iCurSel - 1, false), true);
-				return;
-			case VK_DOWN:
+			return;
+		case VK_DOWN:
+			if (IsMultiSelect() && event.wKeyState & MK_SHIFT)
+				SeleteRangeItems(m_iFirstSel,m_iCurSel + 1);
+			else
 				SelectItem(FindSelectable(m_iCurSel + 1, true), true);
+			return;
+		case VK_PRIOR:
+			PageUp();
+			return;
+		case VK_NEXT:
+			PageDown();
+			return;
+		case VK_HOME:
+			SelectItem(FindSelectable(0, false), true);
+			return;
+		case VK_END:
+			SelectItem(FindSelectable(GetCount() - 1, true), true);
+			return;
+		case VK_RETURN:
+			if( m_iCurSel != -1 ) GetItemAt(m_iCurSel)->Activate();
+			return;
+		case 0x41:	//'A'
+			{
+				if (m_bMultiSel && event.wKeyState & MK_CONTROL)
+					SelectAllItems();
+			}
+			return;
+		 }
+       return;
+	}
+
+	if (event.Type == UIEVENT_SCROLLWHEEL){
+		switch( LOWORD(event.wParam) ) {
+			case SB_LINEUP:
+				if( m_bScrollSelect ) SelectItem(FindSelectable(m_iCurSel - 1, false), true);
+				else LineUp();
 				return;
-			case VK_PRIOR:
-				PageUp();
+			case SB_LINEDOWN:
+				if( m_bScrollSelect ) SelectItem(FindSelectable(m_iCurSel + 1, true), true);
+				else LineDown();
 				return;
-			case VK_NEXT:
-				PageDown();
-				return;
-			case VK_HOME:
-				SelectItem(FindSelectable(0, false), true);
-				return;
-			case VK_END:
-				SelectItem(FindSelectable(GetCount() - 1, true), true);
-				return;
-			case VK_RETURN:
-				if( m_iCurSel != -1 ) GetItemAt(m_iCurSel)->Activate();
-				return;
-          }
-        break;
-    case UIEVENT_SCROLLWHEEL:
-        {
-            switch( LOWORD(event.wParam) ) {
-            case SB_LINEUP:
-                if( m_bScrollSelect ) SelectItem(FindSelectable(m_iCurSel - 1, false), true);
-                else LineUp();
-                return;
-            case SB_LINEDOWN:
-                if( m_bScrollSelect ) SelectItem(FindSelectable(m_iCurSel + 1, true), true);
-                else LineDown();
-                return;
-            }
-        }
-        break;
-    }
+		}
+		return;
+	}
+
     CVerticalLayoutUI::DoEvent(event);
 }
 
@@ -345,16 +388,13 @@ int CListUI::GetCurSel() const
 
 bool CListUI::SelectItem(int iIndex, bool bTakeFocus)
 {
-    if( iIndex == m_iCurSel ) return true;
-
+	DWORD dwCtrlShiftKey = GetKeyState(VK_CONTROL) <0 || GetKeyState(VK_SHIFT) <0;
     int iOldSel = m_iCurSel;
+
     // We should first unselect the currently selected item
-    if( m_iCurSel >= 0 ) {
-        CControlUI* pControl = GetItemAt(m_iCurSel);
-        if( pControl != NULL) {
-            IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
-            if( pListItem != NULL ) pListItem->Select(false);
-        }
+	BOOL bClearAll = (m_bMultiSel == false || dwCtrlShiftKey == false);
+    if (bClearAll && m_aSelItems.GetSize() ) {
+		DeselectAllItems();
 
         m_iCurSel = -1;
     }
@@ -365,20 +405,112 @@ bool CListUI::SelectItem(int iIndex, bool bTakeFocus)
     if( !pControl->IsVisible() ) return false;
     if( !pControl->IsEnabled() ) return false;
 
+	//如果返回值!= -1 说明已经存在这个对象
+	if (m_aSelItems.Find(pControl) != -1) return true;
+
     IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
     if( pListItem == NULL ) return false;
-    m_iCurSel = iIndex;
-    if( !pListItem->Select(true) ) {
+	
+	//单选模式下，这两个值相同
+	m_iFirstSel = m_iCurSel = iIndex;
+
+    if (!pListItem->Select(true) ) {
         m_iCurSel = -1;
         return false;
     }
-    EnsureVisible(m_iCurSel);
+
+	m_aSelItems.Add((LPVOID)pControl);
+
+    EnsureVisible(iIndex);
     if( bTakeFocus ) pControl->SetFocus();
     if( m_pManager != NULL ) {
-        m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMSELECT, m_iCurSel, iOldSel);
+        m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMSELECT, iIndex, iOldSel);
     }
 
     return true;
+}
+
+void CListUI::SeleteRangeItems(int iIndex, int iCurSel)
+{
+	if (IsMultiSelect() == false)
+		return;
+
+	int iOldSel = iCurSel;
+
+	DeselectAllItems();
+	//获取2者中的大小顺序
+	int nMin = min(iIndex, iCurSel);
+	int nMax = max(iIndex, iCurSel);
+
+	CDuiString strTipInfo;
+	strTipInfo.Format(_T("%d~%d"),nMin,nMax);
+	OutputDebugString(strTipInfo);
+
+	CControlUI* pControl = NULL;
+	for (int n=nMin; n<=nMax; ++n)
+	{
+		pControl = GetItemAt(n);
+		if (pControl == NULL)
+			continue;
+		if (pControl->IsVisible() == false || pControl->IsEnabled() == false)
+			continue;
+
+		IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
+		if( pListItem == NULL )
+			continue;
+
+		if( !pListItem->Select(true) )
+			continue;	
+	}
+
+	m_iCurSel = iOldSel;
+	m_iFirstSel = iIndex;
+}
+
+void CListUI::SelectAllItems()
+{
+	if (m_bMultiSel == false)
+		return ;
+
+	CControlUI* pControl = NULL;
+	for (int n = 0; n < GetCount(); ++n)
+	{
+		pControl = GetItemAt(n);
+		if (pControl == NULL)
+			continue;
+		if (pControl->IsVisible() == false || pControl->IsEnabled() == false)
+			continue;
+
+		IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
+		if( pListItem == NULL )
+			continue;
+
+		if( !pListItem->Select(true) )
+			continue;		
+
+		m_aSelItems.Add((LPVOID)pControl);
+	}
+}
+
+void CListUI::DeselectAllItems()
+{
+	CControlUI* pControl = NULL;
+	for (int n = 0; n < m_aSelItems.GetSize(); ++n)
+	{
+		pControl = (CControlUI*)m_aSelItems.GetAt(n);
+		if (pControl == NULL)
+			continue;
+		if (pControl->IsVisible() == false || pControl->IsEnabled() == false)
+			continue;
+
+		IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
+		if( pListItem == NULL )
+			continue;
+
+		if( !pListItem->Select(false) )
+			continue;	
+	}
+	m_aSelItems.Empty();
 }
 
 TListInfoUI* CListUI::GetListInfo()
@@ -597,6 +729,18 @@ void CListUI::SetItemShowHtml(bool bShowHtml)
     NeedUpdate();
 }
 
+bool CListUI::IsMultiSelect()
+{
+	return m_bMultiSel;
+}
+
+void CListUI::SetMultiSelect(bool bMultiSel)
+{
+	if (m_bMultiSel == bMultiSel)
+		return;
+	m_bMultiSel = bMultiSel;
+}
+
 void CListUI::SetMultiExpanding(bool bMultiExpandable)
 {
     m_ListInfo.bMultiExpandable = bMultiExpandable;
@@ -759,6 +903,7 @@ void CListUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	else if( _tcsicmp(pstrName, _T("itemrowline")) == 0 ) SetItemShowRowLine(_tcsicmp(pstrValue, _T("true")) == 0);
 	else if( _tcscmp(pstrName,_T("itemcolumnline")) == 0)	SetItemShowColumnLine(_tcscmp(pstrValue,_T("true")) == 0);
     else if( _tcscmp(pstrName, _T("itemshowhtml")) == 0 ) SetItemShowHtml(_tcscmp(pstrValue, _T("true")) == 0);
+	else if( _tcsicmp(pstrName, _T("multiselect")) == 0 )	 SetMultiSelect(_tcsicmp(pstrValue, _T("true")) == 0);
     else CVerticalLayoutUI::SetAttribute(pstrName, pstrValue);
 }
 
@@ -1825,14 +1970,16 @@ void CListLabelElementUI::DoEvent(TEventUI& event)
     if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_RBUTTONDOWN )
     {
         if( IsEnabled() ) {
-            Select();
+			if (m_pOwner->IsMultiSelect())
+				m_pOwner->DoEvent(event);
+			else
+				Select();
             Invalidate();
         }
         return;
     }
     if( event.Type == UIEVENT_MOUSEMOVE ) 
     {
-
 	     return;
     }
     if( event.Type == UIEVENT_BUTTONUP )
@@ -2233,7 +2380,7 @@ bool CListContainerElementUI::IsSelected() const
 bool CListContainerElementUI::Select(bool bSelect)
 {
     if( !IsEnabled() ) return false;
-    if( bSelect == m_bSelected ) return true;
+	if (bSelect == m_bSelected)	return true;
     m_bSelected = bSelect;
     if( bSelect && m_pOwner != NULL ) m_pOwner->SelectItem(m_iIndex);
     Invalidate();
@@ -2278,7 +2425,11 @@ void CListContainerElementUI::DoEvent(TEventUI& event)
     if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_RBUTTONDOWN )
     {
         if( IsEnabled() ){
-            Select();
+			//如果是多选模式，那么将EVENT转移给ListUI
+			if (m_pOwner->IsMultiSelect())
+				m_pOwner->DoEvent(event);
+			else
+				Select();
             Invalidate();
         }
         return;

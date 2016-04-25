@@ -151,7 +151,7 @@ void CHostScan::OnMenu(TNotifyUI& msg)
 			return;
 
 		CMenuWnd* pMenu = new CMenuWnd;
-		CPoint pt = msg.ptMouse;
+		CDuiPoint pt = msg.ptMouse;
 		ClientToScreen(m_pPaintManager->GetPaintWindow(), &pt);
 		STRINGorID strXmlFile(_T("HostMenu.xml"));
 		pMenu->Init(NULL,strXmlFile, pt,m_pPaintManager);
@@ -263,7 +263,7 @@ void CHostScan::OnIpRange(TNotifyUI& msg)
 {
 	CMenuWnd* pMenu = new CMenuWnd();
 	const RECT& rcPos = msg.pSender->GetPos();
-	CPoint pt(rcPos.left, rcPos.bottom);
+	CDuiPoint pt(rcPos.left, rcPos.bottom);
 	ClientToScreen(m_pPaintManager->GetPaintWindow(), &pt);
 	STRINGorID strXmlFile(_T("Range.xml"));
 	pMenu->Init(NULL,strXmlFile, pt, m_pPaintManager);

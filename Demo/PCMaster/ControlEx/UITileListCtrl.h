@@ -16,6 +16,7 @@ namespace DuiLib
 		virtual void DoEvent(TEventUI& event);
 		virtual bool Add(CControlUI* pControl);
 		virtual bool AddNode(LPARAM lParam);
+		virtual bool IsMultiSelect();
 		virtual bool SelectItem(int iIndex, bool bTakeFocus = false);
 
 		void EnsureVisible(int iIndex);

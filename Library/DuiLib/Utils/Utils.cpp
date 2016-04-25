@@ -8,24 +8,24 @@ namespace DuiLib
 	//
 	//
 
-	CPoint::CPoint()
+	CDuiPoint::CDuiPoint()
 	{
 		x = y = 0;
 	}
 
-	CPoint::CPoint(const POINT& src)
+	CDuiPoint::CDuiPoint(const POINT& src)
 	{
 		x = src.x;
 		y = src.y;
 	}
 
-	CPoint::CPoint(int _x, int _y)
+	CDuiPoint::CDuiPoint(int _x, int _y)
 	{
 		x = _x;
 		y = _y;
 	}
 
-	CPoint::CPoint(LPARAM lParam)
+	CDuiPoint::CDuiPoint(LPARAM lParam)
 	{
 		x = GET_X_LPARAM(lParam);
 		y = GET_Y_LPARAM(lParam);
@@ -407,6 +407,11 @@ namespace DuiLib
 	{ 
 		return m_pstr; 
 	}
+
+	 CDuiString::operator LPCTSTR()
+	 {
+		 return m_pstr;
+	 }
 
 	void CDuiString::Append(LPCTSTR pstr)
 	{

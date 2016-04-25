@@ -42,8 +42,9 @@ namespace DuiLib
 
 		LPCTSTR GetClass() const;
 		LPVOID GetInterface(LPCTSTR pstrName);
-
+		
 	public:
+		bool IsMultiSelect();
 		virtual void DoEvent(TEventUI& event);
 		bool AddNode(LPARAM lParam);
 	};

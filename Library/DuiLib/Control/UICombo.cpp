@@ -260,6 +260,11 @@ int CComboUI::GetCurSel() const
     return m_iCurSel;
 }
 
+bool CComboUI::IsMultiSelect()
+{
+	return false;
+}
+
 bool CComboUI::SelectItem(int iIndex, bool bTakeFocus)
 {
     if( iIndex == m_iCurSel ) return true;

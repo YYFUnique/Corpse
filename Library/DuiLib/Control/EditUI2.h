@@ -7,9 +7,10 @@ namespace DuiLib
 {
 	typedef enum tagCALC_CARET_TYPE
 	{
-		CAC_CARET_TYPE_NONE = 0,
+		CALC_CARET_TYPE_NONE = 0,
 		CALC_CARET_TYPE_POS = 1,						//计算点击左键后光标的位置
 		CALC_CARET_TYPE_SELECT_MODE = 2,		//计算选择文字的范围
+		CALC_CARET_TYPE_SELECT_ALL = 4,			//全选模式
 	}CALC_CARET_TYPE;
 
 	class UILIB_API CEditUI2 : public CLabelUI
@@ -52,7 +53,7 @@ namespace DuiLib
 		void OnCut(int nPos,int nLen);
 		int OnPaste(int nMin,int nMax);
 		void OnCopy(int nPos,int nLen);
-		void OnCheckAll();
+		void OnSelectAll();
 
 		bool CanPaste();
 
@@ -73,6 +74,11 @@ namespace DuiLib
 		void RestartCaretBlinkTimer();
 		void DrawText(HDC hDC,const RECT& rc,const CDuiString& sText);
 		void DrawSelectionText(HDC hDC,const RECT& rc,const CDuiString& sText);
+		/************************************************************************/
+		/* 函数名称：CalcTextRect                                                                         */
+		/* 函数功能：在字符串strText中从nStart位置开始取nLen个字符，			   */
+		/*                  并计算占用位置																	   */
+		/************************************************************************/
 		void CalcTextRect(HDC hDC,const CDuiString& strText,RECT& rcSelection,int nStart,int nLen);
 
 	protected:
@@ -88,7 +94,7 @@ namespace DuiLib
 		bool m_bCaretOn;								//显示输入标记
 		bool m_bDeleteKeyDown;					//删除键已经按下
 		CALC_CARET_TYPE CalcCaretType;		//计算输入标记的方式
-		UINT	m_nLimitText;								//文字限制个数
+		UINT	m_nLimitText;							//文字限制个数
 		int	m_nCaretOffset;							//文字相对于编辑框的偏移量
 		POINT  m_szCaretPt;							//鼠标在编辑框点击时的位置
 		RECT     m_rcCaret;								//输入标记所在位置

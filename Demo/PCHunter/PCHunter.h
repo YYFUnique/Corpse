@@ -62,8 +62,9 @@ protected:
 	CControlUI* m_pLastPage;
 	CControlUI* m_pCurrentPage;
 
-	CTaskMgr	m_TaskMgr;
-	CNetMgr		m_NetMgr;
+	CTaskMgr		m_TaskMgr;
+	CNetMgr			m_NetMgr;
+	CSysInfoMgr	m_SysInfoMgr;
 	CStdPtrArray	m_SubNotifys;
 
 	CUITrayIcon m_Tray;
