@@ -313,7 +313,7 @@ namespace DuiLib
 
 		SIZE szInit = m_pm.GetInitSize();
 		CDuiRect rc;
-		CPoint point = m_BasedPoint;
+		CDuiPoint point = m_BasedPoint;
 		rc.left = point.x;
 		rc.top = point.y;
 		rc.right = rc.left + szInit.cx;
@@ -821,7 +821,7 @@ namespace DuiLib
 		param.wParam = 2;
 		CMenuWnd::GetGlobalContextMenuObserver().RBroadcast(param);
 
-		m_pWindow->Init(static_cast<CMenuElementUI*>(this), _T(""), CPoint(), NULL);
+		m_pWindow->Init(static_cast<CMenuElementUI*>(this), _T(""), CDuiPoint(), NULL);
 	}
 
 	void CMenuElementUI::SetLineType()

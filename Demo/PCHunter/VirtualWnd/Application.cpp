@@ -20,6 +20,13 @@ void CApplication::Notify(TNotifyUI& msg)
 		OnItemClick(msg);
 	else if (msg.sType == DUI_MSGTYPE_MENU)
 		OnMenu(msg);
+	/*else if (msg.sType == DUI_MSGTYPE_ITEMSELECT)
+	{
+		CDuiString strTipInfo;
+		CListUI* pListText = (CListUI*)msg.pSender->GetInterface(DUI_CTR_LIST);
+		CListTextElementUI* pControl = (CListTextElementUI*)pListText->GetItemAt(msg.wParam);
+		OutputDebugString(pControl->GetText(0));
+	}*/
 	else
 		CBase::Notify(msg);
 }
@@ -27,6 +34,9 @@ void CApplication::Notify(TNotifyUI& msg)
 void CApplication::OnPaint()
 {
 	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("App"));
+	if (pList == NULL)
+		return;
+
 	if (pList->GetCount())
 		pList->RemoveAll();
 
@@ -52,7 +62,7 @@ void CApplication::OnMenu(TNotifyUI& msg)
 			return;
 
 		CMenuWnd* pMenu = new CMenuWnd;
-		CPoint pt = msg.ptMouse;
+		CDuiPoint pt = msg.ptMouse;
 		ClientToScreen(m_pPaintManager->GetPaintWindow(), &pt);
 		STRINGorID strXmlFile(_T("AppMenu.xml"));
 		pMenu->Init(NULL,strXmlFile, pt,m_pPaintManager);
@@ -72,11 +82,13 @@ BOOL CApplication::EnumWindowsProc(HWND hWnd,LPARAM lParam)
 
 		CListTextElementUI* pListElementUI = new CListTextElementUI;
 		pList->Add(pListElementUI);
+
 		/*CDuiString strProcessPath, strBkImage;
 		GetProcessPathByHwnd(hWnd, strProcessPath);
 		SHFILEINFO shFileInfo;
 		SHGetFileInfo(strProcessPath,0,&shFileInfo,sizeof(shFileInfo),SHGFI_ICON|SHGFI_SMALLICON);
-		strBkImage.Format(_T("file='%s'"),shFileInfo.hIcon);*/
+		//strBkImage.Format(_T("file='%s'"),shFileInfo.hIcon);
+		*/
 
 		TCHAR szWindowTitle[1024];
 		GetWindowText(hWnd,szWindowTitle,_countof(szWindowTitle));

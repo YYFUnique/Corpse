@@ -191,7 +191,7 @@
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LS_STATIC_LIB_CALL"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
@@ -210,8 +210,8 @@
 				Name="VCLinkerTool"
 				LinkIncremental="1"
 				IgnoreAllDefaultLibraries="false"
-				IgnoreDefaultLibraryNames="libcmt.lib"
-				GenerateDebugInformation="true"
+				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -340,6 +340,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\VirtualWnd\OsInfo.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\VirtualWnd\Process.cpp"
 					>
 				</File>
@@ -353,6 +357,10 @@
 				</File>
 				<File
 					RelativePath=".\VirtualWnd\Services.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\VirtualWnd\SysInfoMgr.cpp"
 					>
 				</File>
 				<File
@@ -389,6 +397,10 @@
 				</File>
 				<File
 					RelativePath=".\Utils\TextTools.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\WMITools.cpp"
 					>
 				</File>
 			</Filter>
@@ -486,6 +498,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\VirtualWnd\OsInfo.h"
+					>
+				</File>
+				<File
 					RelativePath=".\VirtualWnd\Process.h"
 					>
 				</File>
@@ -499,6 +515,10 @@
 				</File>
 				<File
 					RelativePath=".\VirtualWnd\Services.h"
+					>
+				</File>
+				<File
+					RelativePath=".\VirtualWnd\SysInfoMgr.h"
 					>
 				</File>
 				<File
@@ -547,6 +567,10 @@
 				</File>
 				<File
 					RelativePath=".\Utils\ThreadPool.template"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\WMITools.h"
 					>
 				</File>
 			</Filter>

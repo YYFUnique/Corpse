@@ -1282,5 +1282,4 @@ namespace DuiLib
 		}
 		else CListUI::SetAttribute(pstrName,pstrValue);
 	}
-
 }

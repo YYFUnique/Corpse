@@ -118,3 +118,5 @@
 /*#include "Control/UIPicture.h"*/
 /*#include "Control/UICrack.h"*/
 #include "Control/UIMenu.h"
+#include "Control/UIColorPalette.h"
+#include "Control/UIIPAddress.h"

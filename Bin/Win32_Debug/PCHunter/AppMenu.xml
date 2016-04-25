@@ -4,16 +4,16 @@
   <Font name="微软雅黑" size="12" bold="true"/>
   <Default name="Menu" value="inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='menu_bk.png' corner='30,8,8,8'&quot; mask=&quot;#FFFFFFFF&quot; hole=&quot;false&quot;" />
   <Menu name="AppMenu">
-  	<MenuElement text="切换至" name="Switch" bkimage="file='mute.png' dest='6,6,17,17'"/>
-	<MenuElement text="前置" name="Advanced" bkimage="file='invisible.png' dest='6,6,17,17'"/>
+  	<MenuElement text="切换至" name="Switch" />
+	<MenuElement text="前置" name="Advanced" />
 	<MenuElement linetype="true" />
-	<MenuElement text="最大化" name="Maximized" bkimage="file='invisible.png' dest='6,6,17,17'"/>
-	<MenuElement text="最小化" name="Minimized" bkimage="file='mute.png' dest='6,6,17,17'"/>
-	<MenuElement text="层叠" name="Cascade" visible="false" bkimage="file='mute.png' dest='6,6,17,17'"/>
-    <MenuElement text="横向平铺" name="Horizontal" visible="false" bkimage="file='imonline.png' dest='6,6,17,17'"/>
-	<MenuElement text="纵向平铺" name="Verizontal" visible="false" bkimage="file='imonline.png' dest='6,6,17,17'"/>
+	<MenuElement text="最大化" name="Maximized" />
+	<MenuElement text="最小化" name="Minimized" />
+	<MenuElement text="层叠" name="Cascade" visible="false" />
+    <MenuElement text="横向平铺" name="Horizontal" visible="false" />
+	<MenuElement text="纵向平铺" name="Verizontal" visible="false" />
 	<MenuElement linetype="true" />
-	<MenuElement text="结束任务" name="Terminate" bkimage="file='rdp.png' dest='2,3,21,20'"/>
-	<MenuElement text="转到进程" name="SwitchProcess" bkimage="file='busy.png' dest='6,6,17,17'"/>
+	<MenuElement text="结束任务" name="Terminate"/>
+	<MenuElement text="转到进程" name="SwitchProcess" />
   </Menu>
 </Window>

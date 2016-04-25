@@ -409,6 +409,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
                 else if( _tcscmp(pstrClass, DUI_CTR_TABLAYOUT) == 0 )         pControl = new CTabLayoutUI;
                 else if( _tcscmp(pstrClass, DUI_CTR_SCROLLBAR) == 0 )			pControl = new CScrollBarUI; 
 				else if( _tcscmp(pstrClass, DUI_CTR_CHARTVIEW) == 0 )			pControl = new CChartViewUI;
+				else if( _tcsicmp(pstrClass, DUI_CTR_IPADDRESS) == 0)			pControl = new CIPAddressUI;
                 break;
             case 10:
                 if( _tcscmp(pstrClass, DUI_CTR_LISTHEADER) == 0 )					pControl = new CListHeaderUI;
@@ -421,6 +422,9 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				else if(_tcscmp(pstrClass,DUI_CTR_SLIDERRANGE) == 0)			pControl = new CSliderRangeUI;
 				else if(_tcscmp(pstrClass,DUI_CTR_MENUELEMENT) == 0)		pControl = new CMenuElementUI;
 				else if(_tcscmp(pstrClass,DUI_CTR_GROUPLAYOUT) == 0)		pControl = new CGroupLayoutUI;
+				break;
+			case 12:
+				if (_tcscmp(pstrClass, DUI_CTR_COLORPALETTE) == 0)			pControl = new CColorPaletteUI;
 				break;
             case 14:
                 if( _tcscmp(pstrClass, DUI_CTR_VERTICALLAYOUT) == 0 )       pControl = new CVerticalLayoutUI;

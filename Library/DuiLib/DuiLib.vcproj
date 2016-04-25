@@ -463,6 +463,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Control\UIColorPalette.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Control\UICombo.cpp"
 					>
 				</File>
@@ -480,6 +484,10 @@
 				</File>
 				<File
 					RelativePath=".\Control\UIFlash.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Control\UIIPAddress.cpp"
 					>
 				</File>
 				<File
@@ -708,6 +716,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Control\UIColorPalette.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Control\UICombo.h"
 					>
 				</File>
@@ -725,6 +737,10 @@
 				</File>
 				<File
 					RelativePath=".\Control\UIFlash.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Control\UIIPAddress.h"
 					>
 				</File>
 				<File

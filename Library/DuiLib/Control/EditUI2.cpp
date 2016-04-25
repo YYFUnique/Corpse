@@ -23,7 +23,7 @@ namespace DuiLib
 		,m_dwSelectTextColor(0xFFFFFFFF)
 		,m_dwSelectbkColor(0xFF3399FF)
 		,m_dwWaterColor(0xFFBAC0C5)
-		,CalcCaretType(CAC_CARET_TYPE_NONE)
+		,CalcCaretType(CALC_CARET_TYPE_NONE)
 	{
 		SetRect(&m_rcTextPadding,5,4,5,2);
 		ZeroMemory(&m_rcCaret,sizeof(RECT));
@@ -276,7 +276,7 @@ namespace DuiLib
 		if (event.Type == UIEVENT_BUTTONUP){
 			if (IsEnabled()){
 				m_nEditState &= ~UISTATE_PUSHED;
-				CalcCaretType = CAC_CARET_TYPE_NONE;
+				CalcCaretType = CALC_CARET_TYPE_NONE;
 				Invalidate();
 			}			
 			return;
@@ -355,13 +355,18 @@ namespace DuiLib
 		{
 			m_nCaretPos = GetCaretPos(hDC,sText);
 			m_nSelStart = m_nCaretPos;
-			CalcCaretType = CAC_CARET_TYPE_NONE;
 		}
 		else if ((CalcCaretType & CALC_CARET_TYPE_SELECT_MODE) == CALC_CARET_TYPE_SELECT_MODE)
 		{
 			m_nCaretPos = GetCaretPos(hDC,sText);
-			CalcCaretType = CAC_CARET_TYPE_NONE;
+		}		
+		else if (CalcCaretType & CALC_CARET_TYPE_SELECT_ALL)
+		{
+			m_nSelStart = 0;
+			m_nCaretPos = sText.GetLength();
 		}
+
+		CalcCaretType = CALC_CARET_TYPE_NONE;
 
 		if (m_nEditState & UISTATE_FOCUSED)
 			CalcCaretRect(hDC,sText);
@@ -374,6 +379,9 @@ namespace DuiLib
 			DrawSelectionText(hDC,rc,sText);
 	}
 
+	/************************************************************************/
+	/* 显示编辑框文本内容                                                                     */
+	/************************************************************************/
 	void CEditUI2::DrawText(HDC hDC,const RECT& rc,const CDuiString& sText)
 	{
 		RECT rcTextRange = {0};
@@ -405,6 +413,9 @@ namespace DuiLib
 		DeleteObject(hBitmap);
 	}
 
+	/************************************************************************/
+	/* 绘制选择区域文字                                                                     */
+	/************************************************************************/
 	void CEditUI2::DrawSelectionText(HDC hDC,const RECT& rc,const CDuiString& sText)
 	{
 		//绘制选择区域文本
@@ -582,6 +593,9 @@ namespace DuiLib
 		return m_bWaterMode;
 	}
 
+	/************************************************************************/
+	/* 是否显示水印文字，如果不需要显示水印文字，需要保存水印文字内容     */
+	/************************************************************************/
 	void CEditUI2::SetWaterMode(bool bWaterMode)
 	{
 		m_bWaterMode = bWaterMode;
@@ -596,9 +610,17 @@ namespace DuiLib
 
 		m_sTextBak = pstrText;
 		SetWaterMode(m_sTextBak.IsEmpty() == TRUE);
+		
+		CDuiString strText;
+		GetEditText(strText);
+		
+		m_nSelStart = m_nCaretPos = strText.GetLength();
 		Invalidate();
 	}
 
+	/************************************************************************/
+	/* 暂时废弃的函数                                                                     */
+	/************************************************************************/
 	void CEditUI2::SaveEditText(LPCTSTR lpszEditText)
 	{
 		if (IsWaterMode() == false && m_sTextBak == lpszEditText)
@@ -606,6 +628,9 @@ namespace DuiLib
 		m_sTextBak = lpszEditText;
 	}
 
+	/************************************************************************/
+	/* 根据文字计算文字应该占用的宽度                                                            */
+	/************************************************************************/
 	void CEditUI2::CalcTextRect(HDC hDC,const CDuiString& strText,RECT& rcSelection,int nStart,int nLen)
 	{
 		ZeroMemory(&rcSelection,sizeof(RECT));
@@ -617,9 +642,11 @@ namespace DuiLib
 
 		CRenderEngine::DrawText(hDC,m_pManager,rcSelection,strSelectionText,0,m_iFont,DT_CALCRECT|DT_NOPREFIX);
 
+		//计算出的文字占用矩形
 		UINT nWidth = rcSelection.right - rcSelection.left;
 		UINT nHeight = rcSelection.bottom - rcSelection.top;
 
+		//还需要除去选择文字前面所占空间
 		if (nStart != 0)
 		{
 			RECT rcSelectionOffset = {0};
@@ -637,35 +664,37 @@ namespace DuiLib
 
 	int CEditUI2::GetCaretPos(HDC hDC,const CDuiString& sText)
 	{
+		//鼠标在第几个文字后面
 		int nCaretPos = 0;
-		do 
+
+		RECT rcCaretPos = {0};
+		//测试鼠标点击命中位置，该算法是否有待优化
+		for (int n=0;n<sText.GetLength();++n)
 		{
-			RECT rcCaretPos = {0};
-			for (int n=0;n<sText.GetLength();++n)
+			CalcTextRect(hDC,sText,rcCaretPos,n,1);
+			int nWidth = rcCaretPos.right-rcCaretPos.left;
+			rcCaretPos.left -= m_nCaretOffset;
+			rcCaretPos.right = rcCaretPos.left + nWidth;
+			//测试鼠标点击是命中目标文字
+			if (PtInRect(&rcCaretPos,m_szCaretPt))
 			{
-				CalcTextRect(hDC,sText,rcCaretPos,n,1);
-				int nWidth = rcCaretPos.right-rcCaretPos.left;
-				rcCaretPos.left -= m_nCaretOffset;
-				rcCaretPos.right = rcCaretPos.left + nWidth;
-				if (PtInRect(&rcCaretPos,m_szCaretPt))
-				{
-					int nLeft = m_szCaretPt.x - rcCaretPos.left;
-					int nRight = rcCaretPos.right - m_szCaretPt.x;
-					int nMin = __min(nLeft,nRight);
-					int nPos = nMin == nLeft ? n : n+1;
-					if (nPos > sText.GetLength())
-						nCaretPos = sText.GetLength();
-					else
-						nCaretPos = nPos;
-					break;
-				}
-			}
-			if (rcCaretPos.right != rcCaretPos.left && rcCaretPos.top != rcCaretPos.bottom)
-			{
-				if (rcCaretPos.right <= m_szCaretPt.x)
+				int nLeft = m_szCaretPt.x - rcCaretPos.left;
+				int nRight = rcCaretPos.right - m_szCaretPt.x;
+				int nMin = __min(nLeft,nRight);
+				int nPos = nMin == nLeft ? n : n+1;
+				if (nPos > sText.GetLength())
 					nCaretPos = sText.GetLength();
+				else
+					nCaretPos = nPos;
+				break;
 			}
-		} while (FALSE);
+		}
+
+		if (rcCaretPos.right != rcCaretPos.left && rcCaretPos.top != rcCaretPos.bottom)
+		{
+			if (rcCaretPos.right <= m_szCaretPt.x)
+				nCaretPos = sText.GetLength();
+		}
 
 		return nCaretPos;
 	}
@@ -705,6 +734,7 @@ namespace DuiLib
 						else	++nMax;
 					}
 
+					//重新构造编辑框内容
 					CDuiString strRight = m_sText.Right(m_sText.GetLength()-nMax);
 					CDuiString strLeft = m_sText.Left(nMin);
 					CDuiString strValue;
@@ -745,7 +775,7 @@ namespace DuiLib
 				break;
 			case 'A':
 				if ((event.wKeyState & MK_CONTROL) == MK_CONTROL)
-					OnCheckAll();
+					OnSelectAll();
 				break;
 			default:
 					bValidKey = false;
@@ -820,6 +850,9 @@ namespace DuiLib
 		m_rcCaret.right = m_rcCaret.left + m_nCaretWidth;
 	}
 
+	/************************************************************************/
+	/* 计算选择文字开始位置			                                                                   */
+	/************************************************************************/
 	void CEditUI2::CalcStartSelRect(HDC hDC,const CDuiString& sText,int nPos,RECT& rcRange)
 	{
 		if (nPos == 0 ||sText.IsEmpty())
@@ -841,9 +874,19 @@ namespace DuiLib
 
 		if (m_nCaretPos == 0 ||sText.IsEmpty())
 		{
-			CDuiString strText = _T("EditUI");
+			/*CDuiString strText = _T("EditUI");
 			CalcTextRect(hDC,strText,m_rcCaret,0,1);
+			m_rcCaret.right = m_rcCaret.left + m_nCaretWidth;*/
+			RECT rcText=m_rcItem;
+			rcText.left += m_rcTextPadding.left;
+			rcText.top += m_rcTextPadding.top;
+			rcText.right -= m_rcTextPadding.right;
+			rcText.bottom -= m_rcTextPadding.bottom;
+			CRenderEngine::DrawText(hDC,m_pManager,rcText,sText,0,m_iFont,m_uTextStyle|DT_CALCRECT);
+			m_rcCaret.left = rcText.left;
 			m_rcCaret.right = m_rcCaret.left + m_nCaretWidth;
+			m_rcCaret.top = rcText.top;
+			m_rcCaret.bottom = rcText.bottom;
 		}
 		else
 		{
@@ -898,9 +941,10 @@ namespace DuiLib
 		return IsReadOnly() == false;
 	}
 
-	void CEditUI2::OnCheckAll()
+	void CEditUI2::OnSelectAll()
 	{
-		
+		CalcCaretType = CALC_CARET_TYPE_SELECT_ALL;
+		Invalidate();
 	}
 
 	void CEditUI2::OnCopy(int nPos,int nLen)

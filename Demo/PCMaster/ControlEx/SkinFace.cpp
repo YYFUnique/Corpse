@@ -130,6 +130,11 @@ namespace DuiLib
 			return CTileLayoutUI::GetInterface(pstrName);
 	}
 
+	bool CSkinDescribeUI::IsMultiSelect()
+	{
+		return false;
+	}
+
 	void CSkinDescribeUI::DoEvent(TEventUI& event)
 	{
 		if( !IsMouseEnabled() && event.Type > UIEVENT__MOUSEBEGIN && event.Type < UIEVENT__MOUSEEND ) {

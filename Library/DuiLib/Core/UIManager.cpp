@@ -643,6 +643,7 @@ bool CPaintManagerUI::PreMessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam,
            }
         }
         break;
+	case WM_SYSKEYUP:
     case WM_SYSKEYDOWN:
         {
            if( m_pFocus != NULL ) {
@@ -1152,6 +1153,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             TEventUI event = { 0 };
             event.Type = UIEVENT_CHAR;
             event.chKey = (TCHAR)wParam;
+			event.pSender = m_pFocus;
             event.ptMouse = m_ptLastMousePos;
             event.wKeyState = MapKeyState();
             event.dwTimestamp = ::GetTickCount();

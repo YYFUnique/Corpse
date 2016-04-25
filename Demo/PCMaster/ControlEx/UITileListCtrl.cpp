@@ -83,6 +83,11 @@ namespace DuiLib
 		return true;
 	}
 
+	bool CTileListCtrlUI::IsMultiSelect()
+	 {
+		 return false;
+	 }
+
 	bool CTileListCtrlUI::SelectItem(int iIndex, bool bTakeFocus/* = false*/)
 	{
 		if( iIndex == m_iCurSel ) return true;

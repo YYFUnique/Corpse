@@ -137,7 +137,7 @@ void CSkinPickerDialog::OnChoseSkin(TNotifyUI& msg)
 void CSkinPickerDialog::OnBtnTrans(TNotifyUI& msg,LPCTSTR lpszFilePath,SLIDER_TYPE Type)
 {
  	CPopupWidget* pWidget = new CPopupWidget;
- 	CPoint point;
+ 	CDuiPoint point;
  	RECT rc	= msg.pSender->GetPos();
  	point.x = rc.left;
  	point.y = rc.top;			

@@ -17,7 +17,7 @@ CPCHunter::CPCHunter()
 {
 	AddVirtualWnd(_T("task"),&m_TaskMgr);
 	AddVirtualWnd(_T("network"),&m_NetMgr);
-
+	AddVirtualWnd(_T("sysinfo"),&m_SysInfoMgr);
 	m_pMsgTip = NULL;
 }
 
@@ -25,6 +25,7 @@ CPCHunter::~CPCHunter()
 {
 	RemoveVirtualWnd(_T("task"));
 	RemoveVirtualWnd(_T("network"));
+	RemoveVirtualWnd(_T("sysinfo"));
 
 	if (m_pDropTarget)
 		m_pDropTarget->DragDropRevoke(m_hWnd);
@@ -141,9 +142,14 @@ void CPCHunter::InitWindow()
 
 	m_SubNotifys.Add(&m_TaskMgr);
 	m_SubNotifys.Add(&m_NetMgr);
+	m_SubNotifys.Add(&m_SysInfoMgr);
 
 	CHorizontalLayoutUI* pControl = (CHorizontalLayoutUI*)m_PaintManager.FindControl(_T("TabSwitch"));
 	m_PaintManager.SendNotify(pControl->GetItemAt(0), DUI_MSGTYPE_SELECTCHANGED);
+
+	/*CIPAddressUI* pIPAddr = (CIPAddressUI*)m_PaintManager.FindControl(_T("IPAddr"));
+	if (pIPAddr)
+		MessageBox(m_hWnd,pIPAddr->GetText(),_T("ÌבÊ¾"),MB_OK);*/
 }
 
 CPaintManagerUI* CPCHunter::GetMainWndPaintManager()
@@ -202,7 +208,7 @@ void CPCHunter::OnClick(TNotifyUI& msg)
 	{
 		CMenuWnd* pMenu = new CMenuWnd();
 		const RECT& rcPos = msg.pSender->GetPos();
-		CPoint pt(rcPos.left,rcPos.bottom);
+		CDuiPoint pt(rcPos.left,rcPos.bottom);
 		ClientToScreen(m_hWnd, &pt);
 		STRINGorID strXmlFile(_T("Menu.xml"));
 		pMenu->Init(NULL,strXmlFile, pt,&m_PaintManager);
@@ -329,7 +335,7 @@ LRESULT CPCHunter::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 	if (uMsgId==WM_RBUTTONUP)
 	{
 		CMenuWnd* pMenu = new CMenuWnd();
-		CPoint pt;
+		CDuiPoint pt;
 		GetCursorPos(&pt);
 		STRINGorID strXmlFile(_T("MenuStatus.xml"));
 		pMenu->Init(NULL,strXmlFile, pt,&m_PaintManager);
