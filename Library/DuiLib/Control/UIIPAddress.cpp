@@ -44,7 +44,7 @@ namespace DuiLib
 		if (IsEnabled() == FALSE)
 			return 0;
 		else
-			return UIFLAG_TABSTOP|UIFLAG_SETCURSOR|UIFLAG_WANTRETURN;
+			return UIFLAG_SETCURSOR|UIFLAG_WANTRETURN;
 	}
 
 	LPVOID CIPAddressUI::GetInterface(LPCTSTR pstrName)
@@ -74,6 +74,17 @@ namespace DuiLib
 				Invalidate();
 			}
 			return;
+		}else if( event.Type == UIEVENT_SETFOCUS){
+			if (IsEnabled()){
+				m_bFocused = true;
+				Invalidate();
+			}
+			return ;
+		}else if (event.Type == UIEVENT_KILLFOCUS){
+			if (IsEnabled()){
+				m_bFocused = false;
+				Invalidate();
+			}
 		}
 
 		CHorizontalLayoutUI::DoEvent(event);
@@ -234,6 +245,18 @@ namespace DuiLib
 		}
 
 		return strText.TrimRight(_T("."));
+	}
+
+	bool CIPAddressUI::IsBlank()
+	{
+		for (int n=0; n<ADDRESS_IPV4; ++n)
+		{
+			LPCTSTR lpszFiled = m_pBlock[n]->GetText();
+			if (lpszFiled != NULL && *lpszFiled != NULL)
+				return false;
+		}
+		
+		return true;
 	}
 
 	void CIPAddressUI::SetNormalImage(LPCTSTR lpszNormalImage)

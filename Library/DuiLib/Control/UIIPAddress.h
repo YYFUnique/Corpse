@@ -19,6 +19,8 @@ namespace DuiLib
 			virtual void SetText(LPCTSTR pstrText);
 			virtual CDuiString GetText() const;
 			virtual void PaintStatusImage(HDC hDC);
+		public:
+			bool IsBlank();
 		protected:
 			bool DoEvent(LPVOID lParam);
 

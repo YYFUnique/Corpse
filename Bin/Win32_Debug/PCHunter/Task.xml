@@ -2,13 +2,14 @@
 <Window>
 	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
 	<Default name="List" value="vscrollbar=&quot;true&quot; hscrollbar=&quot;true&quot; itemalign=&quot;left&quot; itemaltbk=&quot;false&quot; itemrowline=&quot;true&quot; itemtextpadding=&quot;5,0,0,0&quot; itemlinecolor=&quot;#FF939393&quot;" />
+	<Style name="OptionTab" value="normalimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;0,0,109,32&apos; &quot; hotimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;109,0,218,32&apos; &quot; selectedimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;218,0,327,32&apos;&quot;" />
 	<VerticalLayout name="VLayout" >
-		<VerticalLayout name="VLayoutTask" height="30" bkcolor="#FFDEDEDE" >
-			<Option name="OptionUI1" font="0"  text="应用程序" tooltip="应用程序" userdata="0" float="true" pos="15,2,85,30" group="task" selected="true"/>
-			<Option name="OptionUI2" font="0" text="进程" tooltip="进程" userdata="1" float="true" pos="97,2,167,30" group="task" />
-			<Option name="OptionUI3" font="0" text="win32服务" tooltip="win32服务" userdata="2" float="true" pos="179,2,249,30" group="task"/>
-			<Option name="OptionUI4" font="0" text="核心服务" tooltip="核心服务" userdata="3" float="true" pos="261,2,331,30" group="task" />
-			<Option name="OptionUI5" font="0" text="用户" tooltip="用户" userdata="4" float="true" pos="343,2,413,30" group="task" />
+		<VerticalLayout name="VLayoutTask" height="30" bkimage="subtab_bg.png" >
+			<Option name="OptionUI1" font="0"  text="应用程序" tooltip="应用程序" userdata="0" style="OptionTab" float="true" pos="8,0,92,29" group="task" selected="true"/>
+			<Option name="OptionUI2" font="0" text="进程" tooltip="进程" userdata="1" float="true" style="OptionTab" pos="90,0,174,29" group="task" />
+			<Option name="OptionUI3" font="0" text="win32服务" tooltip="win32服务" userdata="2" style="OptionTab" float="true" pos="172,0,256,29" group="task"/>
+			<Option name="OptionUI4" font="0" text="核心服务" tooltip="核心服务" userdata="3" style="OptionTab" float="true" pos="254,0,338,29" group="task" />
+			<Option name="OptionUI5" font="0" text="用户" tooltip="用户" userdata="4" float="true" style="OptionTab" pos="336,0,420,29" group="task" />
 		</VerticalLayout>
 		<TabLayout name="TaskWizard" showanimate="false" > 
 			<VerticalLayout name="VLayoutApp" virtualwnd="app">
