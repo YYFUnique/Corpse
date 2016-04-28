@@ -707,6 +707,127 @@ namespace DuiLib
 		return (int)(p - m_pstr);
 	}
 
+	CDuiString& CDuiString::Trim( _In_ TCHAR szTarget)
+	{
+		return( TrimRight( szTarget ).TrimLeft( szTarget ) );
+	}
+
+	CDuiString& CDuiString::Trim(_In_ LPCTSTR lpszTarget)
+	{
+		return( TrimRight( lpszTarget ).TrimLeft( lpszTarget ) );
+	}
+
+	CDuiString& CDuiString::TrimRight( _In_ TCHAR szTarget )
+	{
+		LPCTSTR psz = GetData();
+		LPCTSTR pszLast = NULL;
+
+		while( *psz != 0 )
+		{
+			if( *psz == szTarget )
+			{
+				if( pszLast == NULL )
+				{
+					pszLast = psz;
+				}
+			}
+			else
+			{
+				pszLast = NULL;
+			}
+			psz = CharNext( psz );
+		}
+
+		if( pszLast != NULL )
+		{
+			// truncate at left-most matching character  
+			int iLast = int( pszLast-GetData() );
+			Assign(GetData(), iLast );
+		}
+
+		return( *this );
+	}
+
+	CDuiString& CDuiString::TrimRight(LPCTSTR lpszTarget)
+	{
+		if ((lpszTarget == NULL) || (*lpszTarget == 0))
+			return( *this );
+
+		LPCTSTR psz = GetData();
+		LPCTSTR pszLast = NULL;
+
+		while (*psz != NULL)
+		{
+			if (_tcschr( lpszTarget, *psz ) != NULL )
+			{
+				if( pszLast == NULL )
+				{
+					pszLast = psz;
+				}
+			}
+			else
+			{
+				pszLast = NULL;
+			}
+			psz = ::CharNext( psz );
+		}
+
+		if( pszLast != NULL )
+		{
+			// truncate at left-most matching character  
+			int iLast = int( pszLast-GetData() );
+			Assign(GetData(), iLast );
+		}
+
+		return( *this );
+	}
+
+	CDuiString& CDuiString::TrimLeft( _In_ TCHAR szTarget )
+	{
+		LPCTSTR psz = GetData();
+
+		while( szTarget == *psz )
+		{
+			psz = ::CharNext( psz );
+		}
+
+		if( psz != GetData() )
+		{
+			// fix up data and length
+			int iFirst = int( psz-GetData() );
+			LPCTSTR pszBuffer = GetData();
+			psz = pszBuffer+iFirst;
+			int nDataLength = GetLength()-iFirst;
+			::memmove_s( (LPVOID)(LPTSTR)pszBuffer, (GetLength()+1)*sizeof( TCHAR ), 
+				psz, (nDataLength+1)*sizeof( TCHAR ) );
+		}
+
+		return( *this );
+	}
+
+	CDuiString& CDuiString::TrimLeft( _In_ LPCTSTR lpszTarget )
+	{
+		if( (lpszTarget == NULL) || (*lpszTarget == 0) )
+			return( *this );
+
+		LPCTSTR psz = GetData();
+		while( (*psz != 0) && (_tcschr( lpszTarget, *psz ) != NULL) )
+			psz = ::CharNext( psz );
+
+		if( psz != GetData() )
+		{
+			// fix up data and length
+			int iFirst = int( psz-GetData() );
+			LPCTSTR pszBuffer = GetData();
+			psz = pszBuffer+iFirst;
+			int nDataLength = GetLength()-iFirst;
+			::memmove_s( (LPVOID)(LPTSTR)pszBuffer, (GetLength()+1)*sizeof( TCHAR ), 
+				psz, (nDataLength+1)*sizeof( TCHAR ) );
+		}
+
+		return( *this );
+	}
+
 	int CDuiString::Replace(LPCTSTR pstrFrom, LPCTSTR pstrTo)
 	{
 		CDuiString sTemp;

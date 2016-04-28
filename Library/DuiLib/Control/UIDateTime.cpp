@@ -170,6 +170,7 @@ namespace DuiLib
 		m_nDTUpdateFlag=DT_UPDATE;
 		UpdateText();		// add by:daviyang35 初始化界面时显示时间
 		m_nDTUpdateFlag = DT_NONE;
+		m_CursorType = IDC_IBEAM;
 	}
 
 	LPCTSTR CDateTimeUI::GetClass() const
@@ -226,11 +227,6 @@ namespace DuiLib
 			return;
 		}
 
-		if( event.Type == UIEVENT_SETCURSOR && IsEnabled() )
-		{
-			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_IBEAM)));
-			return;
-		}
 		if( event.Type == UIEVENT_WINDOWSIZE )
 		{
 			if( m_pWindow != NULL ) m_pManager->SetFocusNeeded(this);

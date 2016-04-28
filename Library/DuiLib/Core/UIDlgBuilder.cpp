@@ -288,8 +288,8 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
     CControlUI* pReturn = NULL;
     for( CMarkupNode node = pRoot->GetChild() ; node.IsValid(); node = node.GetSibling() ) {
         LPCTSTR pstrClass = node.GetName();
-        if( _tcscmp(pstrClass, _T("Image")) == 0 || _tcscmp(pstrClass, _T("Font")) == 0 \
-            || _tcscmp(pstrClass, _T("Default")) == 0 ) continue;
+        if( _tcscmp(pstrClass, _T("Image")) == 0 || _tcscmp(pstrClass, _T("Font")) == 0 
+            || _tcscmp(pstrClass, _T("Default")) == 0 || _tcscmp(pstrClass, _T("Style")) == 0) continue;
 
         CControlUI* pControl = NULL;
         if( _tcscmp(pstrClass, _T("Include")) == 0 ) {

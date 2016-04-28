@@ -77,6 +77,8 @@ public:
 	void SetDropEnabled(bool bEnable);
 	bool IsDropEnabled();
 
+	void SetCursor(LPCTSTR lpszCursorType);
+
     // Œª÷√œ‡πÿ
     virtual const RECT& GetPos() const;
     virtual void SetPos(RECT rc);
@@ -235,6 +237,7 @@ protected:
 	//Added by gechunping  on 2014-3-14
 	bool  m_bDragEnabled;
 	//////////////////////////////////////////////////////////////////////////
+	LPCTSTR m_CursorType;
 };
 
 } // namespace DuiLib

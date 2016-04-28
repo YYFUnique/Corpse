@@ -254,6 +254,13 @@ namespace DuiLib
 		CDuiString Mid(int iPos, int nLength = -1) const;
 		CDuiString Right(int nLength) const;
 
+		CDuiString& Trim( _In_ TCHAR szTarget);
+		CDuiString& Trim(_In_ LPCTSTR lpszTarget);
+		CDuiString& TrimRight( _In_ TCHAR szTarget );
+		CDuiString& TrimLeft( _In_ TCHAR szTarget );
+		CDuiString& TrimRight( _In_ LPCTSTR lpszTarget );
+		CDuiString& TrimLeft( _In_ LPCTSTR lpszTarget );
+
 		int Find(TCHAR ch, int iPos = 0) const;
 		int Find(LPCTSTR pstr, int iPos = 0) const;
 		int ReverseFind(TCHAR ch) const;

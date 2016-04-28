@@ -10,6 +10,7 @@ namespace DuiLib
 		, m_dwFocusedTextColor(0)
 		,m_dwHotBkColor(0)
 	{
+		m_CursorType = IDC_HAND;
 		m_uTextStyle = DT_SINGLELINE | DT_VCENTER | DT_CENTER;
 	}
 
@@ -119,10 +120,6 @@ namespace DuiLib
 				Invalidate();
 			}
 			// return;
-		}
-		if( event.Type == UIEVENT_SETCURSOR ) {
-			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_HAND)));
-			return;
 		}
 		CLabelUI::DoEvent(event);
 	}

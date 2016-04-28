@@ -29,6 +29,7 @@ m_nTooltipWidth(300),
 m_bDragEnabled(false),
 m_dwCaretColor(0xFF000000)
 {
+	m_CursorType = IDC_ARROW;
     m_cXY.cx = m_cXY.cy = 0;
     m_cxyFixed.cx = m_cxyFixed.cy = 0;
     m_cxyMin.cx = m_cxyMin.cy = 0;
@@ -694,7 +695,10 @@ void CControlUI::DoEvent(TEventUI& event)
 {
     if( event.Type == UIEVENT_SETCURSOR )
     {
-        ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
+		LPCTSTR CursorType = IDC_ARROW;
+		if (IsEnabled())
+			CursorType = m_CursorType;
+        ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(CursorType)));
         return;
     }
     if( event.Type == UIEVENT_SETFOCUS ) 
@@ -896,6 +900,7 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	else if( _tcscmp(pstrName, _T("virtualwnd")) == 0 ) SetVirtualWnd(pstrValue);
 	else if( _tcscmp(pstrName, _T("style")) == 0) SetStyle(pstrValue);
 	else if( _tcscmp(pstrName, _T("droptarget")) == 0 ) SetDropEnabled(_tcscmp(pstrValue, _T("true")) == 0);
+	else if( _tcscmp(pstrName, _T("cursor")) == 0 )	 SetCursor(pstrValue);
 }
 
 CControlUI* CControlUI::ApplyAttributeList(LPCTSTR pstrList)
@@ -1264,5 +1269,37 @@ void  CControlUI::OnDrop(IDataObject *pDataObj, DWORD grfKeyState, POINT pt, DWO
 		*pdwEffect = DROPEFFECT_NONE;
 		if( m_pParent != NULL )m_pParent->OnDrop(pDataObj,grfKeyState,pt,pdwEffect);
 	}
+}
+
+void CControlUI::SetCursor(LPCTSTR pstrValue)
+{
+	if (_tcsicmp(pstrValue, _T("arrow")) == 0)
+		m_CursorType = IDC_ARROW;
+	else if (_tcsicmp(pstrValue, _T("ibeam")) == 0)
+		m_CursorType = IDC_IBEAM;
+	else if (_tcsicmp(pstrValue, _T("wait")) == 0)
+		m_CursorType = IDC_WAIT;
+	else if (_tcsicmp(pstrValue, _T("cross")) == 0)
+		m_CursorType = IDC_CROSS;
+	else if (_tcsicmp(pstrValue, _T("uparrow")) == 0)
+		m_CursorType = IDC_UPARROW;
+	else if (_tcsicmp(pstrValue, _T("size")) == 0)
+		m_CursorType = IDC_SIZE;
+	else if (_tcsicmp(pstrValue, _T("icon")) == 0)
+		m_CursorType = IDC_ICON;
+	else if (_tcsicmp(pstrValue, _T("sizenwse")) == 0)
+		m_CursorType = IDC_SIZENWSE;
+	else if (_tcsicmp(pstrValue, _T("sizenesw")) == 0)
+		m_CursorType = IDC_SIZENESW;
+	else if (_tcsicmp(pstrValue, _T("sizewe")) == 0)
+		m_CursorType = IDC_SIZEWE;
+	else if (_tcsicmp(pstrValue, _T("sizens")) == 0)
+		m_CursorType = IDC_SIZENS;
+	else if (_tcsicmp(pstrValue, _T("sizeall")) == 0)
+		m_CursorType = IDC_SIZEALL;
+	else if (_tcsicmp(pstrValue, _T("no")) == 0)
+		m_CursorType = IDC_NO;
+	else if (_tcsicmp(pstrValue, _T("hand")) == 0)
+		m_CursorType = IDC_HAND;
 }
 } // namespace DuiLib

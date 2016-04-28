@@ -18,6 +18,7 @@ namespace DuiLib
 		~CLabelUI();
 
 		LPCTSTR GetClass() const;
+		UINT GetControlFlags() const;
 		LPVOID GetInterface(LPCTSTR pstrName);
 
 		void SetTextStyle(UINT uStyle);

@@ -13,10 +13,11 @@ namespace DuiLib
 		public:
 			virtual LPCTSTR GetClass() const;
 			virtual LPVOID GetInterface(LPCTSTR pstrName);
+			virtual UINT GetControlFlags() const;
 			virtual void DoEvent(TEventUI& event);
 			virtual void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 			virtual void SetText(LPCTSTR pstrText);
-			virtual CDuiString CIPAddressUI::GetText();
+			virtual CDuiString GetText() const;
 			virtual void PaintStatusImage(HDC hDC);
 		protected:
 			bool DoEvent(LPVOID lParam);
