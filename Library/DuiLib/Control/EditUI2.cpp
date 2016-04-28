@@ -25,6 +25,7 @@ namespace DuiLib
 		,m_dwWaterColor(0xFFBAC0C5)
 		,CalcCaretType(CALC_CARET_TYPE_NONE)
 	{
+		m_CursorType = IDC_IBEAM;
 		SetRect(&m_rcTextPadding,5,4,5,2);
 		ZeroMemory(&m_rcCaret,sizeof(RECT));
 		ZeroMemory(&m_szCaretPt,sizeof(POINT));
@@ -97,12 +98,6 @@ namespace DuiLib
 		if( !IsMouseEnabled() && event.Type > UIEVENT__MOUSEBEGIN && event.Type < UIEVENT__MOUSEEND ) {
 			if( m_pParent != NULL ) m_pParent->DoEvent(event);
 			else CLabelUI::DoEvent(event);
-			return;
-		}
-
-		if (event.Type == UIEVENT_SETCURSOR)
-		{
-			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_IBEAM)));
 			return;
 		}
 

@@ -161,6 +161,7 @@ namespace DuiLib
 	{
 		SetTextPadding(CDuiRect(4, 3, 4, 3));
 		SetBkColor(0xFFFFFFFF);
+		m_CursorType = IDC_IBEAM;
 	}
 
 	LPCTSTR CEditUI::GetClass() const
@@ -189,11 +190,6 @@ namespace DuiLib
 			return;
 		}
 
-		if( event.Type == UIEVENT_SETCURSOR && IsEnabled() )
-		{
-			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_IBEAM)));
-			return;
-		}
 		if( event.Type == UIEVENT_WINDOWSIZE )
 		{
 			if( m_pWindow != NULL ) m_pManager->SetFocusNeeded(this);

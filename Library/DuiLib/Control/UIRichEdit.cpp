@@ -2445,6 +2445,7 @@ HRESULT CRichEditUI::TxSendMessage(UINT msg, WPARAM wparam, LPARAM lparam, LRESU
 			TEventUI event = { 0 };
 			event.Type = UIEVENT_KEYDOWN;
 			event.chKey = (TCHAR)wparam;
+			event.wKeyState = CPaintManagerUI::MapKeyState();
 			event.pSender = pFocus;
 			event.dwTimestamp = ::GetTickCount();
 			pFocus->Event(event);

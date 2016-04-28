@@ -5,6 +5,7 @@ namespace DuiLib
 	CIPAddressUI::CIPAddressUI()
 		:m_nButtonState(0)
 	{
+		m_CursorType = IDC_IBEAM;
 		for (int n=0; n<ADDRESS_IPV4; ++n)
 		{
 			m_pBlock[n] = new CRichEditUI;
@@ -14,6 +15,7 @@ namespace DuiLib
 			m_pBlock[n]->SetAttribute(_T("multiline"), _T("false"));
 			m_pBlock[n]->SetAttribute(_T("maxchar"), _T("3")); 
 			m_pBlock[n]->SetAttribute(_T("font"), _T("0"));
+			m_pBlock[n]->SetAttribute(_T("wanttab"),_T("true"));
 			m_pBlock[n]->OnEvent += MakeDelegate(this, &CIPAddressUI::DoEvent);
 		}
 		//1一个IP地址控件，由4个编辑框和3个小黑点组成
@@ -24,9 +26,9 @@ namespace DuiLib
 			else
 			{
 				CLabelUI* pDot = new CLabelUI;
-				//pDot->OnEvent += MakeDelegate(this, &CIPAddressUI::DoEvent);
 				pDot->SetText(_T("."));
 				pDot->SetAutoCalcWidth(true);
+				pDot->SetAttribute(_T("cursor"),_T("ibeam"));
 				Add(pDot);
 			}
 		}
@@ -35,6 +37,14 @@ namespace DuiLib
 	LPCTSTR CIPAddressUI::GetClass() const
 	{
 		return _T("IPAddressUI");
+	}
+
+	UINT CIPAddressUI::GetControlFlags() const
+	{
+		if (IsEnabled() == FALSE)
+			return 0;
+		else
+			return UIFLAG_TABSTOP|UIFLAG_SETCURSOR|UIFLAG_WANTRETURN;
 	}
 
 	LPVOID CIPAddressUI::GetInterface(LPCTSTR pstrName)
@@ -90,36 +100,69 @@ namespace DuiLib
 			}
 		}
 		//WM_KEYDOWN RichEdit控件默认没有转发，需要手动转发
-		else if (pEvent->Type == UIEVENT_KEYDOWN)	
+		else if (pEvent->Type == UIEVENT_KEYDOWN )
 		{	
 			if (IsEnabled()){
-				if (pEvent->chKey != VK_LEFT && pEvent->chKey != VK_RIGHT)
+				//如果是方向键
+				if (pEvent->chKey == VK_LEFT || pEvent->chKey == VK_RIGHT){
+					if ((pEvent->chKey == VK_LEFT && pEvent->pSender == m_pBlock[0]) ||
+						(pEvent->chKey == VK_RIGHT && pEvent->pSender == m_pBlock[3]))
+						return false;
+
+					//判断当前是否需要切换焦点，目前以光标是否在开头或者末尾为准
+					CRichEditUI* pRichedit = (CRichEditUI*)GetManager()->GetFocus();
+					if (pRichedit->GetInterface(DUI_CTR_RICHEDIT) != pRichedit)
+						return false;
+
+					LONG lStart=0, lEnd=0;
+					pRichedit->GetSel(lStart, lEnd);
+					//获取RichEdit文本长度
+					LONG lTextLen = pRichedit->GetTextLength();
+					if ((pEvent->chKey == VK_LEFT && lStart != 0) ||
+						(pEvent->chKey == VK_RIGHT && lEnd != lTextLen))
+						return false;
+
+					pEvent->pSender->GetManager()->SetNextTabControl(pEvent->chKey == VK_RIGHT);
+
+					m_bFocused = true;
 					return false;
+				}
+				//如果是回退键
+				else if (pEvent->chKey == VK_BACK){
+					CRichEditUI* pRichedit = (CRichEditUI*)GetManager()->GetFocus();
+					if (pRichedit->GetInterface(DUI_CTR_RICHEDIT) != pRichedit)
+						return false;
 
-				if ((pEvent->chKey == VK_LEFT && pEvent->pSender == m_pBlock[0]) ||
-					(pEvent->chKey == VK_RIGHT && pEvent->pSender == m_pBlock[3]))
+					LONG lStart=0, lEnd=0;
+					pRichedit->GetSel(lStart, lEnd);
+					if (lStart != 0)
+						return false;
+
+					pEvent->pSender->GetManager()->SetNextTabControl(pEvent->chKey == VK_RIGHT);
+
+					m_bFocused = true;
 					return false;
-
-				//判断当前是否需要切换焦点，目前以光标是否在开头或者末尾为准
-				CRichEditUI* pRichedit = (CRichEditUI*)GetManager()->GetFocus();
-				if (pRichedit->GetInterface(DUI_CTR_RICHEDIT) != pRichedit)
-					return false;
-
-				LONG lStart=0, lEnd=0;
-				pRichedit->GetSel(lStart, lEnd);
-				//获取RichEdit文本长度
-				LONG lTextLen = pRichedit->GetTextLength();
-				if ((pEvent->chKey == VK_LEFT && lStart != 0) ||
-					(pEvent->chKey == VK_RIGHT && lEnd != lTextLen))
-					return false;
-
-				pEvent->pSender->GetManager()->SetNextTabControl(pEvent->chKey == VK_RIGHT);
-
-				m_bFocused = true;
-				return false;
+				}
+				else if (pEvent->chKey == VK_TAB){
+					BOOL bForward = (pEvent->wKeyState & MK_SHIFT) == MK_SHIFT ? TRUE : FALSE;
+					do 
+					{
+						GetManager()->SetNextTabControl(bForward == FALSE);
+					} while (GetManager()->GetFocus()->GetParent() == this);
+				}
 			}
 		}
-
+		else if (pEvent->Type == UIEVENT_SETFOCUS){
+			m_bFocused = true;
+			Invalidate();
+		}
+		else if (pEvent->Type == UIEVENT_KILLFOCUS){
+			m_bFocused = false;
+			Invalidate();
+		}else if( pEvent->Type == UIEVENT_SETCURSOR && IsEnabled()){
+			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_IBEAM)));
+			return false;
+		}
 		return true;
 	}
 
@@ -178,15 +221,19 @@ namespace DuiLib
 			m_pBlock[n]->SetText(szIPByte[n]);
 	}
 	
-	CDuiString CIPAddressUI::GetText()
+	CDuiString CIPAddressUI::GetText() const
 	{
 		CDuiString strText;
-		strText.Format(_T("%s.%s.%s.%s"), (LPCTSTR)m_pBlock[0]->GetText(), 
-																(LPCTSTR)m_pBlock[1]->GetText(), 
-																(LPCTSTR)m_pBlock[2]->GetText(), 
-																(LPCTSTR)m_pBlock[3]->GetText());
+		for (int n=0; n<ADDRESS_IPV4; ++n)
+		{
+			LPCTSTR lpszFiled = m_pBlock[n]->GetText();
+			if (*lpszFiled == NULL)
+				lpszFiled = _T("0");
 
-		return strText;
+			strText.AppendFormat(_T("%s."),lpszFiled);
+		}
+
+		return strText.TrimRight(_T("."));
 	}
 
 	void CIPAddressUI::SetNormalImage(LPCTSTR lpszNormalImage)

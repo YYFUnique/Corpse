@@ -41,6 +41,7 @@ namespace DuiLib
 		m_GradientLength(0),
 		m_bMultiLine(false)
 	{
+		m_CursorType = IDC_ARROW;
 		m_uTextStyle = DT_SINGLELINE|DT_LEFT|DT_VCENTER;
 		m_ShadowOffset.X		= 0.0f;
 		m_ShadowOffset.Y		= 0.0f;
@@ -74,6 +75,11 @@ namespace DuiLib
 	LPCTSTR CLabelUI::GetClass() const
 	{
 		return _T("LabelUI");
+	}
+
+	UINT CLabelUI::GetControlFlags() const
+	{
+		return UIFLAG_SETCURSOR;
 	}
 
 	LPVOID CLabelUI::GetInterface(LPCTSTR pstrName)
