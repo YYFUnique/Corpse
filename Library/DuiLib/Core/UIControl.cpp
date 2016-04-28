@@ -693,12 +693,9 @@ void CControlUI::Event(TEventUI& event)
 
 void CControlUI::DoEvent(TEventUI& event)
 {
-    if( event.Type == UIEVENT_SETCURSOR )
+    if( event.Type == UIEVENT_SETCURSOR && IsEnabled())
     {
-		LPCTSTR CursorType = IDC_ARROW;
-		if (IsEnabled())
-			CursorType = m_CursorType;
-        ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(CursorType)));
+        ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(m_CursorType)));
         return;
     }
     if( event.Type == UIEVENT_SETFOCUS ) 
