@@ -180,11 +180,17 @@ void CHostScan::StartScan()
 			break;
 		}
 
-		CControlUI* pStart = m_pPaintManager->FindControl(_T("EditStartIP"));
-		CControlUI* pEnd = m_pPaintManager->FindControl(_T("EditEndIP"));
-		if (pStart->GetText().IsEmpty() || pEnd->GetText().IsEmpty())
+		CIPAddressUI* pStart = (CIPAddressUI*)m_pPaintManager->FindControl(_T("EditStartIP"));
+		CIPAddressUI* pEnd = (CIPAddressUI*)m_pPaintManager->FindControl(_T("EditEndIP"));
+		if (pStart == NULL || pEnd == NULL)
 		{
-			strTipInfo = _T("请输入扫描范围");
+			strTipInfo = _T("IP地址控件初始化失败，请检查资源是否损坏");
+			break;
+		}
+
+		if (pStart->IsBlank() || pEnd->IsBlank() )
+		{
+			strTipInfo = _T("扫描范围不能为空，请输入扫描范围");
 			break;
 		}
 
@@ -204,6 +210,12 @@ void CHostScan::StartScan()
 		if (TaskInfo.HostScanType == HOST_SCAN_TYPE_NONE)
 		{
 			strTipInfo = _T("请至少选择一项进行扫描");
+			break;
+		}
+
+		if (pStart->GetText() == pEnd->GetText())
+		{
+			strTipInfo = _T("起始地址和结束地址一样，请重新输入");
 			break;
 		}
 
