@@ -79,7 +79,7 @@ namespace DuiLib
 
 	UINT CLabelUI::GetControlFlags() const
 	{
-		return UIFLAG_SETCURSOR;
+		return IsEnabled() ? UIFLAG_SETCURSOR : 0;
 	}
 
 	LPVOID CLabelUI::GetInterface(LPCTSTR pstrName)
