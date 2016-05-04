@@ -134,7 +134,7 @@ void CPCHunter::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
 
-	//m_Tray.CreateTrayIcon(m_hWnd,IDI_MAINFRAME,_T("系统信息查看工具 V1.0"),WM_TRAYICON);
+	m_Tray.CreateTrayIcon(m_hWnd,IDI_MAINFRAME,_T("系统信息查看工具 V1.0"),WM_TRAYICON);
 	m_pDropTarget = new CDropTargetEx;
 	m_pDropTarget->DragDropRegister(&m_PaintManager,m_hWnd);
 
@@ -150,6 +150,24 @@ void CPCHunter::InitWindow()
 	/*CIPAddressUI* pIPAddr = (CIPAddressUI*)m_PaintManager.FindControl(_T("IPAddr"));
 	if (pIPAddr)
 		MessageBox(m_hWnd,pIPAddr->GetText(),_T("提示"),MB_OK);*/
+
+
+	/*SetTimer(m_hWnd,1000,100,NULL);
+
+	
+	//SIZE szImg = pBmp->Size();
+	LPBYTE pData = NULL;
+	CRenderEngine::CreateARGB32Bitmap(m_PaintManager.GetPaintDC(),800,600,(LPBYTE*)&pData);
+	//LPVOID pBitSrc = pBmp->LockPixelBits();
+	//LPVOID pBitDst = m_bmpTrans->LockPixelBits();
+
+	image3d.SetImage((LPBYTE)pData,(LPBYTE)pData,800,600,24);
+	
+	_3dParam.nOffsetZ = 10000;
+	_3dParam.nRotateX = 45;
+	_3dParam.nRotateY = 70;
+	_3dParam.nRotateZ = 0;
+	image3d.Render(_3dParam);*/
 }
 
 CPaintManagerUI* CPCHunter::GetMainWndPaintManager()
@@ -185,9 +203,6 @@ void CPCHunter::SetBkImage(LPCTSTR lpszBkImage)
 void CPCHunter::OnClick(TNotifyUI& msg)
 {
 	if (msg.pSender == (CButtonUI*)m_PaintManager.FindControl(_T("BtnClose"))){
-		////m_PaintManager.SetShadow(false);
-		//m_PaintManager.SetLayered(false);
-		////AnimateWindow(m_hWnd,1000,AW_HIDE|AW_BLEND); 
 		PostQuitMessage(0);
 	}	
 	else if (msg.pSender == (CButtonUI*)m_PaintManager.FindControl(_T("BtnMin")))

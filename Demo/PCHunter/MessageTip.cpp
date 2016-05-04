@@ -2,6 +2,8 @@
 #include "MessageTip.h"
 #include "ProcessData.h"
 
+#define TRAYTIP_OFFSET  3	//托盘提示框适当偏移量
+
 typedef struct _TRAYDATA
 {	
 	HWND hwnd;
@@ -267,7 +269,7 @@ BOOL CMessageTip::GetTrayWndPosition(SIZE& size,POINT& pt)
 
 	if (AppBarData.uEdge == ABE_LEFT)
 	{
-		pt.x = rcTrayWnd.right;
+		pt.x = rcTrayWnd.right + TRAYTIP_OFFSET;
 		pt.y = rcMenuPos.top + (rcMenuPos.bottom - rcMenuPos.top)/2 - size.cy/2;
 		//这里需要适当的修正
 		if (pt.y + size.cy > rcWork.bottom)
@@ -276,13 +278,13 @@ BOOL CMessageTip::GetTrayWndPosition(SIZE& size,POINT& pt)
 	else if (AppBarData.uEdge == ABE_TOP)
 	{
 		pt.x = rcMenuPos.left + (rcMenuPos.right - rcMenuPos.left)/2 - size.cx/2;
-		pt.y = rcTrayWnd.bottom;
+		pt.y = rcTrayWnd.bottom + TRAYTIP_OFFSET;
 		if (pt.x + size.cx > rcWork.right)
 			pt.x = rcWork.right - size.cx;
 	}
 	else if (AppBarData.uEdge == ABE_RIGHT)
 	{
-		pt.x = rcTrayWnd.left - size.cx;
+		pt.x = rcTrayWnd.left - size.cx - TRAYTIP_OFFSET;
 		pt.y = rcMenuPos.top + (rcMenuPos.bottom - rcMenuPos.top)/2 - size.cy/2;
 		if (pt.y + size.cy > rcWork.bottom)
 			pt.y = rcWork.bottom - size.cy;
@@ -290,7 +292,7 @@ BOOL CMessageTip::GetTrayWndPosition(SIZE& size,POINT& pt)
 	else
 	{
 		pt.x = rcMenuPos.left + (rcMenuPos.right - rcMenuPos.left)/2 - size.cx/2;
-		pt.y = rcTrayWnd.top - size.cy;
+		pt.y = rcTrayWnd.top - size.cy - TRAYTIP_OFFSET;
 		if (pt.x + size.cx > rcWork.right)
 			pt.x = rcWork.right - size.cx;
 	}

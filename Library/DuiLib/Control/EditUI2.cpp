@@ -166,7 +166,8 @@ namespace DuiLib
 
 		if (event.Type == UIEVENT_CHAR){
 			
-			if (event.chKey == VK_BACK || event.chKey == VK_RETURN || event.chKey == VK_ESCAPE)
+			if (event.chKey == VK_BACK || event.chKey == VK_RETURN || 
+				event.chKey == VK_ESCAPE || event.chKey == VK_TAB)
 				return;
 			if (event.wKeyState && (event.wKeyState & MK_SHIFT) != MK_SHIFT)
 				return;

@@ -17,6 +17,7 @@ namespace DuiLib
 			m_pBlock[n]->SetAttribute(_T("font"), _T("0"));
 			m_pBlock[n]->SetAttribute(_T("wanttab"),_T("true"));
 			m_pBlock[n]->OnEvent += MakeDelegate(this, &CIPAddressUI::DoEvent);
+			m_pBlock[n]->OnNotify += MakeDelegate(this, &CIPAddressUI::OnNotify);
 		}
 		//1一个IP地址控件，由4个编辑框和3个小黑点组成
 		for (int n=0; n<7; ++n)
@@ -177,6 +178,17 @@ namespace DuiLib
 		return true;
 	}
 
+	bool CIPAddressUI::OnNotify(LPVOID lParam)
+	{
+		const TNotifyUI* pNotify = (TNotifyUI*)lParam;
+		if (pNotify->sType == DUI_MSGTYPE_TEXTCHANGED)
+		{
+			GetManager()->SendNotify(this,DUI_MSGTYPE_TEXTCHANGED);
+			return false;
+		}
+		return true;
+	}
+
 	void CIPAddressUI::PaintStatusImage(HDC hDC)
 	{
 		if( IsFocused() ) m_nButtonState |= UISTATE_FOCUSED;
@@ -211,7 +223,8 @@ namespace DuiLib
 
 	void CIPAddressUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
-		if (_tcsicmp(pstrName,_T("normalimage")) == 0)	SetNormalImage(pstrValue);
+		if (_tcsicmp(pstrName, _T("font")) == 0) SetFont(_ttoi(pstrValue));
+		else	if (_tcsicmp(pstrName,_T("normalimage")) == 0)	SetNormalImage(pstrValue);
 		else if (_tcsicmp(pstrName,_T("hotimage")) == 0)	SetHotImage(pstrValue);
 		else if (_tcsicmp(pstrName,_T("focusedimage")) == 0)  SetFocusedImage(pstrValue);
 		else if (_tcsicmp(pstrName,_T("disabledimage")) == 0) SetDisabledImage(pstrValue);
@@ -245,6 +258,16 @@ namespace DuiLib
 		}
 
 		return strText.TrimRight(_T("."));
+	}
+
+	void CIPAddressUI::SetFont(int iFont)
+	{
+		if (m_iFont == iFont)
+			return;
+
+		m_iFont = iFont;
+		for (int n=0; n<ADDRESS_IPV4; ++n)
+			m_pBlock[n]->SetFont(m_iFont);
 	}
 
 	bool CIPAddressUI::IsBlank()

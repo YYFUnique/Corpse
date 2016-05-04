@@ -18,11 +18,13 @@ namespace DuiLib
 			virtual void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 			virtual void SetText(LPCTSTR pstrText);
 			virtual CDuiString GetText() const;
+			virtual void SetFont(int iFont);
 			virtual void PaintStatusImage(HDC hDC);
 		public:
 			bool IsBlank();
 		protected:
 			bool DoEvent(LPVOID lParam);
+			bool OnNotify(LPVOID lParam);
 
 			void SetNormalImage(LPCTSTR lpszNormalImage);
 			void SetHotImage(LPCTSTR lpszHotImage);
@@ -32,6 +34,7 @@ namespace DuiLib
 		protected:
 			CRichEditUI* m_pBlock[ADDRESS_IPV4];
 			UINT m_nButtonState;
+			int m_iFont;
 
 			CDuiString m_sNormalImage;			//±à¼­¿òÆÕÍ¨×´Ì¬Í¼Æ¬
 			CDuiString m_sFocusedImage;			//±à¼­¿ò»ñÈ¡½¹µã×´Ì¬Í¼Æ¬
