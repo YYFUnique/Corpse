@@ -322,8 +322,6 @@ void C3DTransform::Render(const PARAM3DTRANSFORM & param3d)
 	}
 }
 
-
-
 BOOL C3DTransform::SetImage( LPBYTE pSour,LPBYTE pDest,int nWid,int nHei,int nBitsPixel )
 {
 	if(nBitsPixel!=24 && nBitsPixel!=32) //只支持24和32位

@@ -135,7 +135,7 @@ void CAdapter::OnPaint()
 		InsertNodeLabel(pSubNode2,strItemText);
 
 		CTreeNodeUI* pAdapterLineInfo = new CTreeNodeUI;
-		CString strAdapterAddr;
+		CDuiString strAdapterAddr;
 
 		for (UINT n=0;n<pAdapterInfo->PhysicalAddressLength;++n)
 			strAdapterAddr.AppendFormat(_T("%0X-"),pAdapterInfo->PhysicalAddress[n]);

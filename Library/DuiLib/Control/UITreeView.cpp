@@ -28,6 +28,9 @@ namespace DuiLib
 		pCheckBox		= new CCheckBoxUI();
 		pItemButton		= new COptionUI();
 
+		//默认往右边移动5个单位的距离
+		RECT rcInset = {5,0,0,0};
+		pHoriz->SetInset(rcInset);
 		this->SetFixedHeight(18);
 		//////////////////////////////////////////////////////////////////////////
 		///deleted by gechunping 
@@ -88,7 +91,7 @@ namespace DuiLib
 	//************************************
 	LPVOID CTreeNodeUI::GetInterface( LPCTSTR pstrName )
 	{
-		if( _tcscmp(pstrName, _T("TreeNode")) == 0 )
+		if( _tcscmp(pstrName, DUI_CTR_TREENODE) == 0 )
 			return static_cast<CTreeNodeUI*>(this);
 		return CListContainerElementUI::GetInterface(pstrName);
 	}
@@ -156,7 +159,7 @@ namespace DuiLib
 			return;
 
 		if( GetParent() ) {
-			CContainerUI* pParentContainer = static_cast<CContainerUI*>(GetParent()->GetInterface(_T("Container")));
+			CContainerUI* pParentContainer = static_cast<CContainerUI*>(GetParent()->GetInterface(DUI_CTR_CONTAINER));
 			if( pParentContainer ) {
 				RECT rc = pParentContainer->GetPos();
 				RECT rcInset = pParentContainer->GetInset();
@@ -235,7 +238,7 @@ namespace DuiLib
 	//************************************
 	bool CTreeNodeUI::AddAt( CControlUI* pControl, int iIndex )
 	{
-		if(NULL == static_cast<CTreeNodeUI*>(pControl->GetInterface(_T("TreeNode"))))
+		if(NULL == static_cast<CTreeNodeUI*>(pControl->GetInterface(DUI_CTR_TREENODE)))
 			return false;
 
 		CTreeNodeUI* pIndexNode = static_cast<CTreeNodeUI*>(mTreeNodes.GetAt(iIndex));
@@ -247,7 +250,7 @@ namespace DuiLib
 			return false;
 
 		if(!pIndexNode && pTreeView && pTreeView->GetItemAt(GetTreeIndex()+1))
-			pIndexNode = static_cast<CTreeNodeUI*>(pTreeView->GetItemAt(GetTreeIndex()+1)->GetInterface(_T("TreeNode")));
+			pIndexNode = static_cast<CTreeNodeUI*>(pTreeView->GetItemAt(GetTreeIndex()+1)->GetInterface(DUI_CTR_TREENODE));
 
 		pControl = CalLocation((CTreeNodeUI*)pControl);
 
@@ -784,7 +787,7 @@ namespace DuiLib
 	//************************************
 	LPVOID CTreeViewUI::GetInterface( LPCTSTR pstrName )
 	{
-		if( _tcscmp(pstrName, _T("TreeView")) == 0 ) return static_cast<CTreeViewUI*>(this);
+		if( _tcscmp(pstrName, DUI_CTR_TREEVIEW) == 0 ) return static_cast<CTreeViewUI*>(this);
 		return CListUI::GetInterface(pstrName);
 	}
 
@@ -801,7 +804,7 @@ namespace DuiLib
 
 		if (_tcsicmp(pControl->GetClass(), _T("TreeNodeUI")) != 0)
 			return false;
-
+	
 		pControl->OnNotify += MakeDelegate(this,&CTreeViewUI::OnDBClickItem);
 		pControl->GetFolderButton()->OnNotify += MakeDelegate(this,&CTreeViewUI::OnFolderChanged);
 		pControl->GetCheckBox()->OnNotify += MakeDelegate(this,&CTreeViewUI::OnCheckBoxChanged);

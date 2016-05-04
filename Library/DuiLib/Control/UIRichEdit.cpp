@@ -2429,6 +2429,7 @@ void CRichEditUI::DoInit()
         m_pTwh->SetTransparent(TRUE);
         LRESULT lResult;
         m_pTwh->GetTextServices()->TxSendMessage(EM_SETLANGOPTIONS, 0, 0, &lResult);
+		m_pTwh->GetTextServices()->TxSendMessage(EM_SETEVENTMASK, 0, ENM_DROPFILES|ENM_LINK|ENM_CHANGE, &lResult);
         m_pTwh->OnTxInPlaceActivate(NULL);
         m_pManager->AddMessageFilter(this);
 		if (IsEnabled() == false)
@@ -2478,8 +2479,15 @@ bool CRichEditUI::OnTxViewChanged()
 bool CRichEditUI::SetDropAcceptFile(bool bAccept) 
 {
 	LRESULT lResult;
-	TxSendMessage(EM_SETEVENTMASK, 0,ENM_DROPFILES|ENM_LINK, // ENM_CHANGE| ENM_CORRECTTEXT | ENM_DRAGDROPDONE | ENM_DROPFILES | ENM_IMECHANGE | ENM_LINK | ENM_OBJECTPOSITIONS | ENM_PROTECTED | ENM_REQUESTRESIZE | ENM_SCROLL | ENM_SELCHANGE | ENM_UPDATE,
+	DWORD dwMask = GetEventMask();
+	if (bAccept)
+		dwMask |= ENM_DROPFILES;
+	else
+		dwMask &= ~ENM_DROPFILES;
+
+	TxSendMessage(EM_SETEVENTMASK, 0, dwMask, // ENM_CHANGE| ENM_CORRECTTEXT | ENM_DRAGDROPDONE | ENM_DROPFILES | ENM_IMECHANGE | ENM_LINK | ENM_OBJECTPOSITIONS | ENM_PROTECTED | ENM_REQUESTRESIZE | ENM_SCROLL | ENM_SELCHANGE | ENM_UPDATE,
 		&lResult);
+
 	return (BOOL)lResult == FALSE;
 }
 

@@ -3,6 +3,7 @@
 #include "Task.h"
 #include "wndtask.h"
 #include "MessageTip.h"
+#include "Image3D/3dTransform.h"
 
 class CPCHunter : public WindowImplBase
 {
@@ -70,4 +71,6 @@ protected:
 	CUITrayIcon m_Tray;
 	CMessageTip* m_pMsgTip;
 	CDropTargetEx* m_pDropTarget;
+	IMAGE3D::PARAM3DTRANSFORM _3dParam;
+	IMAGE3D::C3DTransform image3d;
 };
