@@ -39,6 +39,8 @@ public:
     void SetBkColor2(DWORD dwBackColor);
     DWORD GetBkColor3() const;
     void SetBkColor3(DWORD dwBackColor);
+	DWORD GetForeColor() const;
+	void SetForeColor(DWORD dwForeColor);
     LPCTSTR GetBkImage();
     void SetBkImage(LPCTSTR pStrImage);
 	DWORD GetFocusBorderColor() const;
@@ -165,6 +167,8 @@ public:
     virtual void PaintBkColor(HDC hDC);
     virtual void PaintBkImage(HDC hDC);
     virtual void PaintStatusImage(HDC hDC);
+	virtual void PaintForeColor(HDC hDC);
+	virtual void PaintForeImage(HDC hDC);
     virtual void PaintText(HDC hDC);
     virtual void PaintBorder(HDC hDC);
 
@@ -219,6 +223,7 @@ protected:
     DWORD m_dwBackColor;
     DWORD m_dwBackColor2;
     DWORD m_dwBackColor3;
+	DWORD m_dwForeColor;
     CDuiString m_sBkImage;
 	CDuiString m_sForeImage;
     DWORD m_dwBorderColor;

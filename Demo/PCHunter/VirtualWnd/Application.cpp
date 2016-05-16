@@ -92,6 +92,7 @@ BOOL CApplication::EnumWindowsProc(HWND hWnd,LPARAM lParam)
 
 		TCHAR szWindowTitle[1024];
 		GetWindowText(hWnd,szWindowTitle,_countof(szWindowTitle));
+		//pListElementUI->SetImageList(1,24,16);
 		pListElementUI->SetTag((UINT_PTR)hWnd);
 		pListElementUI->SetText(0,szWindowTitle);
 		pListElementUI->SetText(1,IsHungAppWindow(hWnd) ? _T("未响应") :_T("正在运行"));

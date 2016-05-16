@@ -134,7 +134,9 @@ void CPCHunter::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
 
-	m_Tray.CreateTrayIcon(m_hWnd,IDI_MAINFRAME,_T("系统信息查看工具 V1.0"),WM_TRAYICON);
+	//创建系统托盘图标
+	//m_Tray.CreateTrayIcon(m_hWnd,IDI_MAINFRAME,_T("系统信息查看工具 V1.0"),WM_TRAYICON);
+	//注册应用程序拖拽功能
 	m_pDropTarget = new CDropTargetEx;
 	m_pDropTarget->DragDropRegister(&m_PaintManager,m_hWnd);
 
@@ -145,29 +147,8 @@ void CPCHunter::InitWindow()
 	m_SubNotifys.Add(&m_SysInfoMgr);
 
 	CHorizontalLayoutUI* pControl = (CHorizontalLayoutUI*)m_PaintManager.FindControl(_T("TabSwitch"));
-	m_PaintManager.SendNotify(pControl->GetItemAt(0), DUI_MSGTYPE_SELECTCHANGED);
-
-	/*CIPAddressUI* pIPAddr = (CIPAddressUI*)m_PaintManager.FindControl(_T("IPAddr"));
-	if (pIPAddr)
-		MessageBox(m_hWnd,pIPAddr->GetText(),_T("提示"),MB_OK);*/
-
-
-	/*SetTimer(m_hWnd,1000,100,NULL);
-
-	
-	//SIZE szImg = pBmp->Size();
-	LPBYTE pData = NULL;
-	CRenderEngine::CreateARGB32Bitmap(m_PaintManager.GetPaintDC(),800,600,(LPBYTE*)&pData);
-	//LPVOID pBitSrc = pBmp->LockPixelBits();
-	//LPVOID pBitDst = m_bmpTrans->LockPixelBits();
-
-	image3d.SetImage((LPBYTE)pData,(LPBYTE)pData,800,600,24);
-	
-	_3dParam.nOffsetZ = 10000;
-	_3dParam.nRotateX = 45;
-	_3dParam.nRotateY = 70;
-	_3dParam.nRotateZ = 0;
-	image3d.Render(_3dParam);*/
+	if (pControl)
+		m_PaintManager.SendNotify(pControl->GetItemAt(0), DUI_MSGTYPE_SELECTCHANGED);
 }
 
 CPaintManagerUI* CPCHunter::GetMainWndPaintManager()

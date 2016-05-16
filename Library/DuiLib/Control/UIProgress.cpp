@@ -3,7 +3,7 @@
 
 namespace DuiLib
 {
-	CProgressUI::CProgressUI() : m_bHorizontal(true), m_nMin(0), m_nMax(100), m_nValue(0), m_bStretchForeImage(true)
+	CProgressUI::CProgressUI() : m_bShowText(false), m_bHorizontal(true), m_nMin(0), m_nMax(100), m_nValue(0), m_bStretchForeImage(true)
 	{
 		m_uTextStyle = DT_SINGLELINE | DT_CENTER;
 		SetFixedHeight(12);
@@ -16,8 +16,20 @@ namespace DuiLib
 
 	LPVOID CProgressUI::GetInterface(LPCTSTR pstrName)
 	{
-		if( _tcscmp(pstrName, DUI_CTR_PROGRESS) == 0 ) return static_cast<CProgressUI*>(this);
+		if( _tcsicmp(pstrName, DUI_CTR_PROGRESS) == 0 ) return static_cast<CProgressUI*>(this);
 		return CLabelUI::GetInterface(pstrName);
+	}
+
+	bool CProgressUI::IsShowText()
+	{
+		return m_bShowText;
+	}
+
+	void CProgressUI::SetShowText(bool bShowText)
+	{
+		if( m_bShowText == bShowText ) return;
+		m_bShowText = bShowText;
+		if(!m_bShowText) SetText(_T(""));
 	}
 
 	bool CProgressUI::IsHorizontal()
@@ -62,17 +74,12 @@ namespace DuiLib
 
 	void CProgressUI::SetValue(int nValue)
 	{
-		if(nValue == m_nValue || nValue<m_nMin || nValue > m_nMax)
-		{
+		if(nValue == m_nValue || nValue<m_nMin || nValue > m_nMax) {
 			return;
 		}
 		m_nValue = nValue;
 		Invalidate();
-	}
-
-	LPCTSTR CProgressUI::GetForeImage() const
-	{
-		return m_sForeImage;
+		UpdateText();
 	}
 
 	void CProgressUI::SetForeImage(LPCTSTR pStrImage)
@@ -94,7 +101,27 @@ namespace DuiLib
 		else CLabelUI::SetAttribute(pstrName, pstrValue);
 	}
 
-	void CProgressUI::PaintStatusImage(HDC hDC)
+	void CProgressUI::PaintForeColor(HDC hDC)
+	{
+		if(m_dwForeColor == 0) return;
+
+		if( m_nMax <= m_nMin ) m_nMax = m_nMin + 1;
+		if( m_nValue > m_nMax ) m_nValue = m_nMax;
+		if( m_nValue < m_nMin ) m_nValue = m_nMin;
+
+		RECT rc = m_rcItem;
+		if( m_bHorizontal ) {
+			rc.right = m_rcItem.left + (m_nValue - m_nMin) * (m_rcItem.right - m_rcItem.left) / (m_nMax - m_nMin);
+		}
+		else {
+			rc.bottom = m_rcItem.top + (m_rcItem.bottom - m_rcItem.top) * (m_nMax - m_nValue) / (m_nMax - m_nMin);
+
+		}
+
+		CRenderEngine::DrawColor(hDC, rc, GetAdjustColor(m_dwForeColor));
+	}
+
+	void CProgressUI::PaintForeImage(HDC hDC)
 	{
 		if( m_nMax <= m_nMin ) m_nMax = m_nMin + 1;
 		if( m_nValue > m_nMax ) m_nValue = m_nMax;
@@ -136,5 +163,14 @@ namespace DuiLib
 			return;
 		m_bStretchForeImage=bStretchForeImage;
 		Invalidate();
+	}
+
+	void CProgressUI::UpdateText()
+	{
+		if(m_bShowText) {
+			CDuiString sText;
+			sText.Format(_T("%.0f%%"), (m_nValue - m_nMin) * 100.0f / (m_nMax - m_nMin));
+			SetText(sText);
+		}
 	}
 }
