@@ -2,6 +2,7 @@
 #include "../Utils/AdapterInfo.h"
 #include "../Wnd/StaticArpDialog.h"
 #include "../Wnd/IPTools.h"
+#include "../Wnd/AddUserName.h"
 #include <Icmpapi.h>
 #include <nmmintrin.h>
 #pragma comment(lib,"Iphlpapi.lib")
@@ -83,10 +84,42 @@ void CHostScan::OnHostScanMenu(CControlUI* pControl)
 		CopyDataToClipboard(CF_UNICODETEXT, hWnd, pItem->GetText(1));
 	else if (strName == _T("CopyUserName"))
 		CopyDataToClipboard(CF_UNICODETEXT, hWnd, pItem->GetText(5));
+	else if (strName == _T("AddUserName"))
+		OnAddUserName(pItem);
 	else if (strName == _T("RemoteDesk"))
 		OnRemoteDesktop(pItem);
 	else if (strName == _T("Ping"))
-		OnPing(pItem);
+		OnPingTarget(pItem);
+	else if (strName == _T(""))
+
+}
+
+void CHostScan::OnAddUserName(CListTextElementUI* pItem)
+{
+	CAddUserName* pAddUserName = new CAddUserName(m_pPaintManager->GetPaintWindow());
+	if (pAddUserName == NULL)
+		return;
+	
+	CListUI* pScanResultList = (CListUI*)m_pPaintManager->FindControl(_T("Scan"));
+	if (pScanResultList == NULL)
+		return ;
+
+	CListTextElementUI* pListTextElement = (CListTextElementUI*)pScanResultList->GetItemAt(pScanResultList->GetCurSel());
+	if (pListTextElement == NULL)
+		return;
+
+	pAddUserName->SetUserName(pListTextElement->GetText(5));
+	if (pAddUserName->ShowModal() == IDOK)
+	{
+		CDuiString strUserName = pAddUserName->GetUserName();
+		pListTextElement->SetText(5, strUserName);
+
+		CDuiString strSectionName = pListTextElement->GetText(1);
+		if (strSectionName.IsEmpty())
+			strSectionName = pListTextElement->GetText(0);
+
+		WritePrivateProfileString(strSectionName, HOST_USER_NAME, strUserName, m_szUserNameFilePath);
+	}
 }
 
 void CHostScan::OnRemoteDesktop(CListTextElementUI* pItem)
@@ -108,7 +141,7 @@ void CHostScan::OnRemoteDesktop(CListTextElementUI* pItem)
 	}
 }
 
-void CHostScan::OnPing(CListTextElementUI* pItem)
+void CHostScan::OnPingTarget(CListTextElementUI* pItem)
 {
 	CDuiString strCmdLine;
 	strCmdLine.Format(_T("%s -t"), pItem->GetText(0));
