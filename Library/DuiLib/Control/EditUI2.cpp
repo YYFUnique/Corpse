@@ -601,7 +601,7 @@ namespace DuiLib
 
 	void CEditUI2::SetText(LPCTSTR pstrText)
 	{
-		if (m_sText == pstrText)
+		if (pstrText == NULL || m_sText == pstrText)
 			return;
 
 		m_sTextBak = pstrText;

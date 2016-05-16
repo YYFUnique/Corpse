@@ -408,6 +408,10 @@
 				Name="Wnd"
 				>
 				<File
+					RelativePath=".\Wnd\AddUserName.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Wnd\IPTools.cpp"
 					>
 				</File>
@@ -577,6 +581,10 @@
 			<Filter
 				Name="Wnd"
 				>
+				<File
+					RelativePath=".\Wnd\AddUserName.h"
+					>
+				</File>
 				<File
 					RelativePath=".\Wnd\IPTools.h"
 					>

@@ -84,7 +84,8 @@ protected:
 	void OnIpRange(TNotifyUI& msg);
 	void OnIpTools(TNotifyUI& msg);
 
-	void OnPing(CListTextElementUI* pItem);
+	void OnPingTarget(CListTextElementUI* pItem);
+	void OnAddUserName(CListTextElementUI* pItem);
 	void OnRemoteDesktop(CListTextElementUI* pItem);
 
 	static UINT TaskThread(LPVOID lParam);
