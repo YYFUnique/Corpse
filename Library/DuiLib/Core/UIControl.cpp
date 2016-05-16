@@ -20,6 +20,7 @@ m_pTag(NULL),
 m_dwBackColor(0),
 m_dwBackColor2(0),
 m_dwBackColor3(0),
+m_dwForeColor(0),
 m_dwBorderColor(0),
 m_dwFocusBorderColor(0),
 m_bColorHSL(false),
@@ -153,6 +154,19 @@ void CControlUI::SetBkColor3(DWORD dwBackColor)
 
     m_dwBackColor3 = dwBackColor;
     Invalidate();
+}
+
+DWORD CControlUI::GetForeColor() const
+{
+	return m_dwForeColor;
+}
+
+void CControlUI::SetForeColor(DWORD dwForeColor)
+{
+	if( m_dwForeColor == dwForeColor ) return;
+
+	m_dwForeColor = dwForeColor;
+	Invalidate();
 }
 
 LPCTSTR CControlUI::GetBkImage()
@@ -826,6 +840,13 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
         DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
         SetBkColor3(clrColor);
     }
+	else if( _tcsicmp(pstrName, _T("forecolor")) == 0 ) {
+		while( *pstrValue > _T('\0') && *pstrValue <= _T(' ') ) pstrValue = ::CharNext(pstrValue);
+		if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
+		LPTSTR pstr = NULL;
+		DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
+		SetForeColor(clrColor);
+	}
     else if( _tcscmp(pstrName, _T("bordercolor")) == 0 ) {
         if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
         LPTSTR pstr = NULL;
@@ -1014,6 +1035,17 @@ void CControlUI::PaintBkImage(HDC hDC)
 void CControlUI::PaintStatusImage(HDC hDC)
 {
     return;
+}
+
+void CControlUI::PaintForeColor(HDC hDC)
+{
+	CRenderEngine::DrawColor(hDC, m_rcItem, GetAdjustColor(m_dwForeColor));
+}
+
+void CControlUI::PaintForeImage(HDC hDC)
+{
+	if( m_sForeImage.IsEmpty() ) return;
+	if( !DrawImage(hDC, (LPCTSTR)m_sForeImage) ) m_sForeImage.Empty();
 }
 
 void CControlUI::PaintText(HDC hDC)

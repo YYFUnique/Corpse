@@ -114,8 +114,7 @@ namespace DuiLib
 			return;
 		}
 
-		if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_DBLCLICK )
-		{
+		if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_DBLCLICK ){
 			if( IsEnabled() ) {
 				RECT rcThumb = GetThumbRect();
 				if( ::PtInRect(&rcThumb, event.ptMouse) ) {
@@ -125,8 +124,7 @@ namespace DuiLib
 			}
 			return;
 		}
-		if( event.Type == UIEVENT_BUTTONUP )
-		{
+		else if( event.Type == UIEVENT_BUTTONUP || event.Type == UIEVENT_RBUTTONUP){
 			if(!IsEnabled())
 				return;
 			int nValue;
@@ -149,49 +147,47 @@ namespace DuiLib
 				m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
 				Invalidate();
 			}
+			UpdateText();
 			return;
 		}
-		if( event.Type == UIEVENT_CONTEXTMENU )
-		{
+		else if( event.Type == UIEVENT_CONTEXTMENU ){
 			return;
 		}
-		if( event.Type == UIEVENT_SCROLLWHEEL ) 
-		{
+		else if( event.Type == UIEVENT_SCROLLWHEEL ) {
+			if (!IsEnabled())
+				return;
+
 			switch( LOWORD(event.wParam) ) {
-		case SB_LINEUP:
-			SetValue(GetValue() + GetChangeStep());
-			m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
-			return;
-		case SB_LINEDOWN:
-			SetValue(GetValue() - GetChangeStep());
-			m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
-			return;
+				case SB_LINEUP:
+					SetValue(GetValue() + GetChangeStep());
+					m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
+					return;
+				case SB_LINEDOWN:
+					SetValue(GetValue() - GetChangeStep());
+					m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
+					return;
 			}
 		}
-		if( event.Type == UIEVENT_MOUSEMOVE )
-		{
+		else if( event.Type == UIEVENT_MOUSEMOVE ){
 			if( (m_uButtonState & UISTATE_CAPTURED) != 0 ) {
+				int nValue=0;
 				if( m_bHorizontal ) {
-					int nValue=0;
 					if( event.ptMouse.x >= m_rcItem.right - m_szThumb.cx / 2 ) nValue = m_nMax;
 					else if( event.ptMouse.x <= m_rcItem.left + m_szThumb.cx / 2 ) nValue = m_nMin;
 					else nValue = m_nMin + (m_nMax - m_nMin) * (event.ptMouse.x - m_rcItem.left - m_szThumb.cx / 2 ) / (m_rcItem.right - m_rcItem.left - m_szThumb.cx);
-					if(nValue!=m_nValue){
-						m_nValue =nValue;
-						m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
-					}
 				}
 				else {
-					int nValue=0;
 					if( event.ptMouse.y >= m_rcItem.bottom - m_szThumb.cy / 2 ) nValue = m_nMin;
 					else if( event.ptMouse.y <= m_rcItem.top + m_szThumb.cy / 2  ) nValue = m_nMax;
 					else nValue = m_nMin + (m_nMax - m_nMin) * (m_rcItem.bottom - event.ptMouse.y - m_szThumb.cy / 2 ) / (m_rcItem.bottom - m_rcItem.top - m_szThumb.cy);
-					if(nValue!=m_nValue){
-						m_nValue =nValue;
-						m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
-					}
-					Invalidate();
 				}
+
+				if(nValue!=m_nValue){
+					m_nValue =nValue;
+					UpdateText();
+					m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
+				}
+				Invalidate();
 			}
 			
 			if( IsEnabled() ) {
@@ -204,28 +200,26 @@ namespace DuiLib
 			}
 			return;
 		}
-		if( event.Type == UIEVENT_SETCURSOR )
-		{
+		else if( event.Type == UIEVENT_SETCURSOR ){
 			RECT rcThumb = GetThumbRect();
 			if( IsEnabled() && ::PtInRect(&rcThumb, event.ptMouse) ) {
 				::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_HAND)));
 				return;
 			}
 		}
-		if( event.Type == UIEVENT_MOUSEENTER )
-		{
+		else if( event.Type == UIEVENT_MOUSEENTER ){
 			if( IsEnabled() ) {
 				m_uButtonState |= UISTATE_HOT;
 				Invalidate();
 			}
 			return;
 		}
-		if(event.Type==UIEVENT_MOUSELEAVE)
-		{
+		else if(event.Type==UIEVENT_MOUSELEAVE){
 			m_uButtonState &= ~UISTATE_HOT;
 			Invalidate();
 		}
-		CControlUI::DoEvent(event);
+		else
+			CControlUI::DoEvent(event);
 	}
 
 

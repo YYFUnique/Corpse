@@ -2254,6 +2254,101 @@ void CListTextElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
 //
 //
 
+CListControlElementUI::CListControlElementUI()
+	:CListTextElementUI()
+	,m_nSubItem(-1)
+	,m_nWidth(0)
+	,m_nHeight(0)
+	,m_iImage(-1)
+{
+
+}
+
+CListControlElementUI::~CListControlElementUI()
+{
+
+}
+
+LPCTSTR CListControlElementUI::GetClass() const
+{
+	return _T("ListControlElementUI");
+}
+
+LPVOID CListControlElementUI::GetInterface(LPCTSTR pstrName)
+{
+	if (_tcsicmp(pstrName,_T("ListControlElement")) == 0)
+		return static_cast<CListControlElementUI*>(this);
+	else
+		return CListTextElementUI::GetInterface(pstrName);
+}
+
+//void SetText(int iIndex, LPCTSTR pstrText);
+//void SetImage()
+void CListControlElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
+{
+	if( m_pOwner == NULL ) return;
+	TListInfoUI* pInfo = m_pOwner->GetListInfo();
+	DWORD iTextColor = pInfo->dwTextColor;
+
+	if( (m_uButtonState & UISTATE_HOT) != 0 ) {
+		iTextColor = pInfo->dwHotTextColor;
+	}
+	if( IsSelected() ) {
+		iTextColor = pInfo->dwSelectedTextColor;
+	}
+	if( !IsEnabled() ) {
+		iTextColor = pInfo->dwDisabledTextColor;
+	}
+	IListCallbackUI* pCallback = m_pOwner->GetTextCallback();
+
+	m_nLinks = 0;
+	int nLinks = lengthof(m_rcLinks);
+	for( int i = 0; i < pInfo->nColumns; i++ )
+	{
+		RECT rcItem = { pInfo->rcColumn[i].left, m_rcItem.top, pInfo->rcColumn[i].right, m_rcItem.bottom };
+		rcItem.left += pInfo->rcTextPadding.left;
+		rcItem.right -= pInfo->rcTextPadding.right;
+		rcItem.top += pInfo->rcTextPadding.top;
+		rcItem.bottom -= pInfo->rcTextPadding.bottom;
+
+		if (i == m_nSubItem)
+		{
+			RECT rc = rcItem;
+			rc.right = rc.left + m_nWidth;
+			rcItem.left += m_nWidth;
+			CRenderEngine::DrawRect(hDC,rc,1,0xFFFF0000);
+		}
+
+		CDuiString strText;//不使用LPCTSTR，否则限制太多 by cddjr 2011/10/20
+		if( pCallback ) strText = pCallback->GetItemText(this, m_iIndex, i);
+		else strText.Assign(GetText(i));
+		if( pInfo->bShowHtml )
+			CRenderEngine::DrawHtmlText(hDC, m_pManager, rcItem, strText.GetData(), iTextColor, \
+			&m_rcLinks[m_nLinks], &m_sLinks[m_nLinks], nLinks, DT_SINGLELINE | DT_END_ELLIPSIS | pInfo->uTextStyle);
+		else
+			CRenderEngine::DrawText(hDC, m_pManager, rcItem, strText.GetData(), iTextColor, \
+			pInfo->nFont, DT_SINGLELINE | DT_END_ELLIPSIS | pInfo->uTextStyle);
+
+		m_nLinks += nLinks;
+		nLinks = lengthof(m_rcLinks) - m_nLinks; 
+	}
+	for( int i = m_nLinks; i < lengthof(m_rcLinks); i++ ) {
+		::ZeroMemory(m_rcLinks + i, sizeof(RECT));
+		((CDuiString*)(m_sLinks + i))->Empty();
+	}
+}
+
+void CListControlElementUI::SetImageList(/*CImageList* pImageList,*/ int nSubItem,int nWidth,int nHeight)
+{
+	m_nSubItem = nSubItem;
+	m_nWidth = nWidth;
+	m_nHeight = nHeight;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////
+//
+//
+
 CListContainerElementUI::CListContainerElementUI() : 
 m_iIndex(-1),
 m_pOwner(NULL), 

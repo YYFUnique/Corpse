@@ -420,6 +420,31 @@ protected:
 /////////////////////////////////////////////////////////////////////////////////////
 //
 
+class UILIB_API CListControlElementUI : public CListTextElementUI
+{
+public:
+	CListControlElementUI();
+	~CListControlElementUI();
+
+	LPCTSTR GetClass() const;
+	LPVOID GetInterface(LPCTSTR pstrName);
+
+	//void SetText(int iIndex, LPCTSTR pstrText);
+	//void SetImage()
+	void DrawItemText(HDC hDC, const RECT& rcItem);
+	void SetImageList(/*CImageList* pImageList,*/ int nSubItem,int nWidth,int nHeight);
+
+protected:
+	int m_nSubItem;
+	int m_nWidth;
+	int m_nHeight;
+	int m_iImage;
+	//CImageList* m_pImageList;
+};
+
+/////////////////////////////////////////////////////////////////////////////////////
+//
+
 class UILIB_API CListContainerElementUI : public CContainerUI, public IListItemUI
 {
 public:
