@@ -31,10 +31,13 @@ namespace DuiLib
 			void SetFocusedImage(LPCTSTR lpszFocusedImage);
 			void SetDisabledImage(LPCTSTR lpszDisabledImage);
 
+			bool IsSendNotify();
+			void SetSendNotify(bool bSendNotify);
 		protected:
 			CRichEditUI* m_pBlock[ADDRESS_IPV4];
 			UINT m_nButtonState;
 			int m_iFont;
+			bool m_bSendNotify;
 
 			CDuiString m_sNormalImage;			//±à¼­¿òÆÕÍ¨×´Ì¬Í¼Æ¬
 			CDuiString m_sFocusedImage;			//±à¼­¿ò»ñÈ¡½¹µã×´Ì¬Í¼Æ¬
