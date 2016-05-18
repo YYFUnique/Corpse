@@ -90,7 +90,7 @@ void CHostScan::OnHostScanMenu(CControlUI* pControl)
 		OnRemoteDesktop(pItem);
 	else if (strName == _T("Ping"))
 		OnPingTarget(pItem);
-	else if (strName == _T(""))
+//	else if (strName == _T(""))
 
 }
 
