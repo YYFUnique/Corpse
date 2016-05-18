@@ -1969,12 +1969,8 @@ CDuiString CRichEditUI::GetText() const
 
 void CRichEditUI::SetText(LPCTSTR pstrText)
 {
-//     m_sText = pstrText;
-//     if( !m_pTwh ) return;
-// 	m_pTwh->SetColor(m_dwTextColor);
-//     SetSel(0, -1);
-//     ReplaceSel(pstrText, FALSE);
-
+	if (pstrText == NULL || m_sText == pstrText)
+		return;
 	m_sText = pstrText;
 	if( !m_pTwh ) return;
 	m_pTwh->SetColor(m_dwTextColor);

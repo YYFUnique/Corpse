@@ -5,6 +5,8 @@ namespace DuiLib
 	CIPAddressUI::CIPAddressUI()
 		:m_nButtonState(0)
 	{
+		SetSendNotify(true);
+
 		m_CursorType = IDC_IBEAM;
 		for (int n=0; n<ADDRESS_IPV4; ++n)
 		{
@@ -87,8 +89,8 @@ namespace DuiLib
 				Invalidate();
 			}
 		}
-
-		CHorizontalLayoutUI::DoEvent(event);
+		else
+			CHorizontalLayoutUI::DoEvent(event);
 	}
 
 	bool CIPAddressUI::DoEvent(LPVOID lParam)
@@ -183,7 +185,8 @@ namespace DuiLib
 		const TNotifyUI* pNotify = (TNotifyUI*)lParam;
 		if (pNotify->sType == DUI_MSGTYPE_TEXTCHANGED)
 		{
-			GetManager()->SendNotify(this,DUI_MSGTYPE_TEXTCHANGED);
+			if (IsSendNotify())
+				GetManager()->SendNotify(this,DUI_MSGTYPE_TEXTCHANGED);
 			return false;
 		}
 		return true;
@@ -234,6 +237,7 @@ namespace DuiLib
 
 	void CIPAddressUI::SetText(LPCTSTR pstrText)
 	{
+		SetSendNotify(false);
 		TCHAR szIPByte[4][10] = {0};
 		_stscanf_s(pstrText, _T("%[^.].%[^.].%[^.].%s"), szIPByte[0],_countof(szIPByte[0]),
 																					  szIPByte[1],_countof(szIPByte[1]),			
@@ -243,6 +247,8 @@ namespace DuiLib
 
 		for (int n=0; n< ADDRESS_IPV4; ++n)
 			m_pBlock[n]->SetText(szIPByte[n]);
+
+		SetSendNotify(true);
 	}
 	
 	CDuiString CIPAddressUI::GetText() const
@@ -312,5 +318,19 @@ namespace DuiLib
 			return;
 		m_sDisabledImage = lpszDisabledImage;
 		Invalidate();
+	}
+
+	//是否转发消息
+	bool CIPAddressUI::IsSendNotify()
+	{
+		return m_bSendNotify;
+	}
+
+	//设置转发消息
+	void CIPAddressUI::SetSendNotify(bool bSendNotify)
+	{
+		if (m_bSendNotify == bSendNotify)
+			return;
+		m_bSendNotify = bSendNotify;
 	}
 }
