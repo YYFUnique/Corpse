@@ -167,6 +167,13 @@ BOOL CTestAppDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
+	long dwtest1 = -86208;
+	DWORD dwtest2 = 1800;
+	BOOL bRet = FALSE;
+	if (dwtest1 < dwtest2)
+		bRet = TRUE;
+
+	return TRUE;
 	m_list.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	// TODO: 在此添加额外的初始化代码
 	m_list.InsertColumn(0, _T("计数"));

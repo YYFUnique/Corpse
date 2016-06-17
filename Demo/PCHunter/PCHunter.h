@@ -71,6 +71,6 @@ protected:
 	CUITrayIcon m_Tray;
 	CMessageTip* m_pMsgTip;
 	CDropTargetEx* m_pDropTarget;
-	IMAGE3D::PARAM3DTRANSFORM _3dParam;
-	IMAGE3D::C3DTransform image3d;
+	//IMAGE3D::PARAM3DTRANSFORM _3dParam;
+	//IMAGE3D::C3DTransform image3d;
 };
