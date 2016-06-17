@@ -31,7 +31,7 @@
                     <Option name="OptionUI8" text="软件管家" textpadding="0,45,0,0" textcolor="#00FFFFFF" tooltip="软件管家" userdata="7" float="true" pos="589,10,659,85" group="main_toolbar" foreimage="file=&apos;ico_softmgr.png&apos; dest=&apos;11,5,59,53&apos;" />
                 </HorizontalLayout>
 				<Control />
-				<Button width="148" height="62" padding="0,18,10,10" name="BtnLogo" normalimage="logo.png" hotimage="logo.png" pushedimage="logo.png" />
+				<Button name="BtnLogo" width="148" height="62" padding="0,18,10,10" name="BtnLogo" normalimage="logo.png" hotimage="logo.png" pushedimage="logo.png" />
             </HorizontalLayout>
             <TabLayout name="TabWizard" ChildPadding="1,0,1,1" bkimage="file=&apos;white.png&apos;" showanimate="false" frame="20" >
 				<VerticalLayout name="0" virtualwnd="task">

@@ -4,6 +4,7 @@
 #include "SkinPickerDialog.h"
 #include "Utils/TextTools.h"
 #include <atlstr.h>
+#include "Wnd/AboutDialog.h"
 
 #define		TIMER_PCHUNTER_ID			0x1000
 #define		WM_TRAYICON					WM_USER+0x1000
@@ -134,6 +135,20 @@ void CPCHunter::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
 
+	//CString strTipInfo;
+	//strTipInfo.Format(_T("编译时间:%s,%s"),__DATE__,__TIME__);
+	//MessageBoxA(m_hWnd,strTipInfo,"编译时间",MB_OK);
+
+	/*SYSTEMTIME BuildTime;
+	if (GetBuildSystemTime(&BuildTime) != FALSE)
+	{
+		CString strTipInfo;
+		strTipInfo.Format(_T("编译时间:%d-%02d-%02d %02d:%02d:%02d"), 
+										BuildTime.wYear, BuildTime.wMonth, BuildTime.wDay,
+										BuildTime.wHour, BuildTime.wMinute, BuildTime.wSecond);
+		MessageBox(m_hWnd,strTipInfo,_T("编译时间"),MB_OK);
+	}*/
+
 	//创建系统托盘图标
 	//m_Tray.CreateTrayIcon(m_hWnd,IDI_MAINFRAME,_T("系统信息查看工具 V1.0"),WM_TRAYICON);
 	//注册应用程序拖拽功能
@@ -214,6 +229,11 @@ void CPCHunter::OnClick(TNotifyUI& msg)
 		CSkinPickerDialog pSkinPicker(_T("SkinPickerDialog.xml"),this);
 		pSkinPicker.Create(m_hWnd,_T("皮肤与窗口调整"), UI_WNDSTYLE_DIALOG, WS_EX_WINDOWEDGE);
 		pSkinPicker.ShowModal();
+	}
+	else if (msg.pSender == (CButtonUI*)m_PaintManager.FindControl(_T("BtnLogo")))
+	{
+		CAboutDialog* pDlg = new CAboutDialog(m_hWnd);
+		pDlg->ShowModal();
 	}
 }
 
