@@ -26,10 +26,12 @@ public:
 public:
 	void SetHKEY(HKEY hKeyRoot);									/* 设置当前操作的根键							*/
 	BOOL OpenKey(LPCTSTR lpSubKey);								/* 读写的形式打开注册表							*/
+	BOOL OpenKey(LPCTSTR lpSubKey,DWORD dwExFlag);
 	BOOL IsRegOpen();
 	void Close();													/* 关闭键句柄									*/
 
 	BOOL CreateKey( LPCTSTR lpSubKey );								/* 创建的形式打开注册表							*/
+	BOOL CreateKey( LPCTSTR lpSubKey ,DWORD dwExFlag);
 	BOOL DeleteKey(LPCTSTR lpSubKey );				/* 删除相应的子键（子键为空）					*/
 	BOOL DeleteValue(LPCTSTR lpKeyName);						/* 删除子键处的相应的键值						*/	
 	BOOL SaveKey(LPCTSTR lpFileName);								/* 把当前键值保存到指定文件						*/

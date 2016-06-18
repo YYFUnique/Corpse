@@ -558,3 +558,62 @@ BOOL SaveBitmapFile(HBITMAP hBitmap,LPCTSTR lpszFileName)
 
 	return TRUE;
 }
+
+char CWowFsRedirectDisableHelper::bIs64 = -1;
+BOOL CWowFsRedirectDisableHelper::bInited = FALSE;
+CWowFsRedirectDisableHelper::Wow64DisableWow64FsRedirection CWowFsRedirectDisableHelper::f_Wow64DisableWow64FsRedirection = NULL;
+CWowFsRedirectDisableHelper::Wow64RevertWow64FsRedirection CWowFsRedirectDisableHelper::f_Wow64RevertWow64FsRedirection = NULL;  
+
+CWowFsRedirectDisableHelper::CWowFsRedirectDisableHelper(BOOL bSet) : m_bSet(bSet), m_pOldValue(NULL)
+{
+	if(bIs64==-1)
+	{
+		bIs64 = IsWow64Process() ? 1 : 0; 
+	}
+
+	if(bSet && bIs64 && Init() && f_Wow64DisableWow64FsRedirection)
+	{
+		f_Wow64DisableWow64FsRedirection(&m_pOldValue);
+	}
+}
+
+CWowFsRedirectDisableHelper::~CWowFsRedirectDisableHelper()
+{
+	RevertFsRedirect();
+}
+
+BOOL CWowFsRedirectDisableHelper::DisableFsRedirect()
+{
+	if(!m_bSet && bIs64 && Init() && f_Wow64DisableWow64FsRedirection)
+	{
+		f_Wow64DisableWow64FsRedirection(&m_pOldValue);
+		m_bSet = TRUE;
+	}
+
+	return (m_pOldValue != NULL) ? TRUE:FALSE;
+}
+
+void CWowFsRedirectDisableHelper::RevertFsRedirect()
+{
+	if(m_bSet && bIs64 && Init() && f_Wow64DisableWow64FsRedirection)
+	{
+		f_Wow64RevertWow64FsRedirection(&m_pOldValue);
+		m_bSet = FALSE;
+	}
+}
+
+BOOL CWowFsRedirectDisableHelper::Init()
+{
+	if(!bInited)
+	{
+		bInited = TRUE;
+
+		HINSTANCE hlibrary = GetModuleHandle(_T("Kernel32.dll"));
+		if(hlibrary)
+		{
+			f_Wow64DisableWow64FsRedirection = (Wow64DisableWow64FsRedirection) GetProcAddress(hlibrary,"Wow64DisableWow64FsRedirection");
+			f_Wow64RevertWow64FsRedirection = (Wow64RevertWow64FsRedirection) GetProcAddress(hlibrary,"Wow64RevertWow64FsRedirection");
+		}
+	}
+	return bInited;
+}

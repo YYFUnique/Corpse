@@ -8,6 +8,7 @@
 #include "ModifyItem.h"
 #include "LsCommon/RegClass.h"
 #include "LsCommon/TextTools.h"
+#include "LsCommon/FileTools.h"
 #include <Uxtheme.h>
 #pragma comment(lib,"uxtheme.lib")
 #ifdef _DEBUG
@@ -142,6 +143,10 @@ LRESULT CMenuGroupDlg::OnLoadMenuGroup(WPARAM wParam,LPARAM lParam)
 	if (RightMenuReg.IsRegOpen())
 		RightMenuReg.ReadKey(_T("SubCommands"),strSubItem);
 
+	DWORD dwExFlag = KEY_WOW64_32KEY;
+	if (IsWow64Process())
+		dwExFlag = KEY_WOW64_64KEY;
+
 	if (strSubItem.IsEmpty() == FALSE)
 	{
 		CStringArray strSubItemArray;
@@ -154,7 +159,7 @@ LRESULT CMenuGroupDlg::OnLoadMenuGroup(WPARAM wParam,LPARAM lParam)
 			TCHAR szItemRunCmd[MAX_PATH];
 			strItemRegPath.Format(_T("%s\\%s\\"),RIGHT_MENU_SUB_ITEM_INFO,strSubItemArray.GetAt(i));
 			PathCombine(szItemRunCmd,strItemRegPath,_T("command"));
-			if (RightMenuReg.OpenKey(strItemRegPath) == TRUE)
+			if (RightMenuReg.OpenKey(strItemRegPath,dwExFlag) == TRUE)
 			{	
 				TREEITEMINFO TreeItemInfo;
 				CString strItemName,strItemIcon,strRunCmd;
@@ -163,7 +168,7 @@ LRESULT CMenuGroupDlg::OnLoadMenuGroup(WPARAM wParam,LPARAM lParam)
 				if (RightMenuReg.ReadKey(_T("icon"),strItemIcon) == TRUE)
 					nIcon = GetFileIcon(strItemIcon);
 				POSITION pos = NULL;
-				if (RegRunCmd.OpenKey(szItemRunCmd) && RegRunCmd.ReadKey(_T(""),strRunCmd))
+				if (RegRunCmd.OpenKey(szItemRunCmd,dwExFlag) && RegRunCmd.ReadKey(_T(""),strRunCmd))
 				{
 					TreeItemInfo.strIconPath = strItemIcon;
 					TreeItemInfo.strRunCmd = strRunCmd;
@@ -342,6 +347,11 @@ HTREEITEM CMenuGroupDlg::CopyItem(HTREEITEM hItem,HTREEITEM hTreeParent,HTREEITE
 void CMenuGroupDlg::OnBnClickedBtnCreate()
 {
 	// TODO: 在此添加控件通知处理程序代码
+
+	DWORD dwExFlag = KEY_WOW64_32KEY;
+	if (IsWow64Process())
+		dwExFlag = KEY_WOW64_64KEY;
+
 	CRegClass RightMenuReg(HKEY_CLASSES_ROOT);
 	HICON hRootIcon = NULL;
 	HTREEITEM hRoot = m_TreeCtrl.GetRootItem();
@@ -363,15 +373,18 @@ void CMenuGroupDlg::OnBnClickedBtnCreate()
 			if (TreeItemInfo.strName.IsEmpty())
 				TreeItemInfo.strName.Format(_T("LsRightMenu.%d"),i);
 			strSubCommand.AppendFormat(_T("%s;"),TreeItemInfo.strName);
+			
 			PathCombine(szRegPath,RIGHT_MENU_SUB_ITEM_INFO,TreeItemInfo.strName);
-			if (RegItemInfo.CreateKey(szRegPath) != FALSE)
+
+			if (RegItemInfo.CreateKey(szRegPath,dwExFlag) != FALSE)
 			{
 				RegItemInfo.WriteKey(_T(""),m_TreeCtrl.GetItemText(hChildItem));
 				RegItemInfo.WriteKey(_T("icon"),TreeItemInfo.strIconPath);
 				PathAppend(szRegPath,_T("command"));
-				if (RegItemInfo.CreateKey(szRegPath) != FALSE)
+				if (RegItemInfo.CreateKey(szRegPath,dwExFlag) != FALSE)
 					RegItemInfo.WriteKey(_T(""),TreeItemInfo.strRunCmd);
 			}
+
 			hChildItem = m_TreeCtrl.GetNextSiblingItem(hChildItem);
 		}
 		strSubCommand.TrimRight(_T(";"));
@@ -384,19 +397,27 @@ void CMenuGroupDlg::OnBnClickedBtnCreate()
 void CMenuGroupDlg::OnBnClickedBtnRemove()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CRegClass RightMenuReg(HKEY_CLASSES_ROOT);
-	if (RightMenuReg.OpenKey(_T("Directory\\Background\\shell\\")) == TRUE)
-		if (RightMenuReg.DeleteKey(_T("LsRightMenu")) == TRUE)
+	do 
+	{
+		CRegClass RightMenuReg(HKEY_CLASSES_ROOT);
+		if (RightMenuReg.OpenKey(_T("Directory\\Background\\shell\\")) == FALSE)
+			break;
+
+		if (RightMenuReg.DeleteKey(_T("LsRightMenu")) == FALSE)
+			break;
+
+		HTREEITEM hRoot = m_TreeCtrl.GetRootItem();
+		HTREEITEM hChild = m_TreeCtrl.GetChildItem(hRoot);
+		
+		while(hChild)
 		{
-			HTREEITEM hRoot = m_TreeCtrl.GetRootItem();
-			HTREEITEM hChild = m_TreeCtrl.GetChildItem(hRoot);
-			while(hChild)
-			{
-				m_TreeCtrl.DeleteItem(hChild);
-				hChild = m_TreeCtrl.GetNextSiblingItem(hChild);
-			}
-			MessageBox(_T("移除成功"),_T("提示"),MB_OK);
+			HTREEITEM hNewChild = m_TreeCtrl.GetNextSiblingItem(hChild);
+			m_TreeCtrl.DeleteItem(hChild);
+			hChild = hNewChild;
 		}
+
+		MessageBox(_T("移除成功"),_T("提示"),MB_OK);
+	} while (FALSE);
 }
 
 void CMenuGroupDlg::RemoveItemInfo(HTREEITEM hTreeItem)
