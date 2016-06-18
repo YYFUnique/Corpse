@@ -41,6 +41,19 @@ BOOL CRegClass::OpenKey(LPCTSTR lpSubKey)
 	return TRUE;
 }
 
+BOOL CRegClass::OpenKey(LPCTSTR lpSubKey,DWORD dwExFlag)
+{
+	ASSERT(lpSubKey);
+	Close();
+	DWORD dwRet = RegOpenKeyEx(m_hKeyRoot,lpSubKey,NULL, KEY_READ|KEY_WRITE|dwExFlag,&m_hKey);
+	if (dwRet != ERROR_SUCCESS)
+	{
+		SetErrorInfo(SYSTEM_ERROR,dwRet,_T("打开注册表项%s失败"),lpSubKey);
+		return FALSE;
+	}
+	return TRUE;
+}
+
 BOOL CRegClass::IsRegOpen()
 {
 	return m_hKey != NULL ? TRUE : FALSE;
@@ -51,9 +64,15 @@ BOOL CRegClass::CreateKey( LPCTSTR lpSubKey )
 	Close();
 	DWORD dwRet = RegCreateKeyEx(m_hKeyRoot,lpSubKey,0L,NULL,REG_OPTION_VOLATILE,KEY_ALL_ACCESS,NULL,&m_hKey,NULL);
     
-	if( ERROR_SUCCESS == dwRet )
-		return TRUE;
-	return FALSE;	
+	return ERROR_SUCCESS == dwRet;
+}
+
+BOOL CRegClass::CreateKey( LPCTSTR lpSubKey ,DWORD dwExFlag)
+{
+	Close();
+	DWORD dwRet = RegCreateKeyEx(m_hKeyRoot,lpSubKey,0L,NULL,REG_OPTION_VOLATILE,KEY_ALL_ACCESS|dwExFlag,NULL,&m_hKey,NULL);
+
+	return ERROR_SUCCESS == dwRet;
 }
 
 BOOL CRegClass::DeleteKey(LPCTSTR lpSubKey)

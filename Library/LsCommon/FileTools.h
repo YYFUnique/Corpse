@@ -2,7 +2,7 @@
 #include <Shlwapi.h>
 #include "DebugInfo.h"
 #include "CommonFunc.h"
-
+#include "OsInfo.h"
 #ifdef LS_STATIC_LIB_CALL
 #define LS_COMMON_API 
 #elif defined  LS_EXPORTS
@@ -113,3 +113,26 @@ LS_COMMON_API HRESULT GetUIObjectOfAbsPidl(HWND hWnd, LPITEMIDLIST pidl, REFIID 
 LS_COMMON_API BOOL GetFilePathByLink(LPCTSTR lpszLinkName,CString& strFilePath);
 
 LS_COMMON_API BOOL SaveBitmapFile(HBITMAP hBitmap,LPCTSTR lpszFilePath);
+
+
+class LS_COMMON_API CWowFsRedirectDisableHelper
+{
+public:
+	CWowFsRedirectDisableHelper(BOOL bSet);
+	~CWowFsRedirectDisableHelper();
+	BOOL Init();
+	BOOL DisableFsRedirect();
+	void RevertFsRedirect();
+
+	BOOL m_bSet;
+	PVOID m_pOldValue;
+
+protected:
+	typedef int (__stdcall * Wow64DisableWow64FsRedirection)(LPVOID *); 
+	typedef int (__stdcall * Wow64RevertWow64FsRedirection)(LPVOID); 
+
+	static char bIs64; 
+	static BOOL bInited;
+	static Wow64DisableWow64FsRedirection f_Wow64DisableWow64FsRedirection;
+	static Wow64RevertWow64FsRedirection f_Wow64RevertWow64FsRedirection;  
+};
