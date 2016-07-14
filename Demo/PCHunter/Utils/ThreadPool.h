@@ -21,15 +21,16 @@ public:
 	BOOL AddResult(CResultType& ResultInfo);
 	BOOL GetResultInfo(CResultType& ResultInfo);
 
-	BOOL StopAllTask();
+	BOOL TerminateAll();
 	BOOL IsStoped();
 
+	BOOL RunThread();
 	HANDLE GetJobEvent();
 	UINT GetJobCount();
 	BOOL RegisterNotify(LPTASKJOBRESULT_NOTIFY lpTaskJobNotify, 
 									LPTASKJOBFINSH_NOTIFY lpTaskFinshNotify, LPVOID lpParameter);
 protected:
-	
+	BOOL m_bFinished;
 protected:
 	typedef CDuiList<CTaskType,CTaskType&> CTask;
 	typedef CDuiList<CResultType,CResultType&> CResult;

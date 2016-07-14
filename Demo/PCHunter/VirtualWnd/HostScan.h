@@ -78,6 +78,7 @@ protected:
 	CPaintManagerUI* GetPaintManager();
 
 	void StartScan();
+	void StopScan();
 	void DeleteAllArp();
 	void DeleteDynamicArp();
 	void AddStaticArp();
@@ -92,6 +93,9 @@ protected:
 	static void OnTaskResult(LPVOID lParam);
 	static void OnTaskFinsh(LPVOID lParam);
 	static BOOL PingCmd(DWORD dwIpAddress);
+
+protected:
+	void SwitchScanInfo(bool bVisible);
 protected:
 	CThreadTaskMgr* m_pThreadTaskMgr;
 	UINT					  m_uIpCount;

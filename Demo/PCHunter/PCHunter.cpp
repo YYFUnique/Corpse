@@ -135,6 +135,7 @@ void CPCHunter::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
 
+
 	//CString strTipInfo;
 	//strTipInfo.Format(_T("编译时间:%s,%s"),__DATE__,__TIME__);
 	//MessageBoxA(m_hWnd,strTipInfo,"编译时间",MB_OK);
