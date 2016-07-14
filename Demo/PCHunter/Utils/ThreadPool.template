@@ -16,6 +16,7 @@ CThreadPoolMgr<CTaskType,CResultType>::CThreadPoolMgr(UINT nThreadNum,ThreadPool
 ,m_pTaskNotify(NULL)
 ,m_pFinshNotify(NULL)
 ,m_lParam(NULL)
+,m_bFinished(TRUE)
 {
 	InitializeCriticalSection(&m_CriticalSection);
 
@@ -24,7 +25,7 @@ CThreadPoolMgr<CTaskType,CResultType>::CThreadPoolMgr(UINT nThreadNum,ThreadPool
 
 	m_hTaskEvent = CreateEvent(NULL,FALSE,FALSE,MULITIPLE_THREAD_POOL);
 	m_phThread = (HANDLE*)new HANDLE[nThreadNum];
-	for (UINT nIndex=0;nIndex<nThreadNum;++nIndex)
+	/*for (UINT nIndex=0;nIndex<nThreadNum;++nIndex)
 	{
 		HANDLE hThread = CreateThread(NULL,0,pTaskFun,this,NULL,NULL);
 		if (hThread != NULL)
@@ -35,13 +36,14 @@ CThreadPoolMgr<CTaskType,CResultType>::CThreadPoolMgr(UINT nThreadNum,ThreadPool
 	{
 		const HANDLE& hThread = m_phThread[nIndex];
 		ResumeThread(hThread);
-	}
+	}*/
+	RunThread();
 }
 
 template<class CTaskType, class CResultType>
 CThreadPoolMgr<CTaskType,CResultType>::~CThreadPoolMgr()
 {
-	StopAllTask();
+	TerminateAll();
 	if (m_pThreadParam != NULL)
 	{
 		delete m_pThreadParam;
@@ -57,11 +59,31 @@ CThreadPoolMgr<CTaskType,CResultType>::~CThreadPoolMgr()
 }
 
 template<class CTaskType, class CResultType>
+BOOL CThreadPoolMgr<CTaskType,CResultType>::RunThread()
+{
+	for (UINT nIndex=0;nIndex<m_uThreadNum;++nIndex)
+	{
+		HANDLE hThread = CreateThread(NULL,0,m_pThreadParam->pTaskFun,this,NULL,NULL);
+		if (hThread != NULL)
+			m_phThread[nIndex] = hThread;
+	}
+
+	for (UINT nIndex=0;nIndex<m_uThreadNum;++nIndex)
+	{
+		const HANDLE& hThread = m_phThread[nIndex];
+		ResumeThread(hThread);
+	}
+	
+	return TRUE;
+}
+
+template<class CTaskType, class CResultType>
 BOOL CThreadPoolMgr<CTaskType,CResultType>::AddJob(CTaskType& TaskInfo)
 {
 	if (m_pThreadParam == NULL)
 		return FALSE;
-		
+
+	InterlockedExchange((LONG*)&m_bFinished,FALSE);
 	m_bStoped = FALSE;
 	EnterCriticalSection(&m_CriticalSection);
 	m_pThreadParam->TaskList.AddTail(TaskInfo);
@@ -81,13 +103,21 @@ template<class CTaskType, class CResultType>
 BOOL CThreadPoolMgr<CTaskType,CResultType>::GetJobInfo(CTaskType& TaskInfo)
 {
 	BOOL bSuccess = FALSE;
-	EnterCriticalSection(&m_CriticalSection);
-	if (m_pThreadParam->TaskList.GetHeadPosition() != NULL)
+	
+	do
 	{
-		TaskInfo = m_pThreadParam->TaskList.RemoveHead();
-		bSuccess = TRUE;
-	}
-	LeaveCriticalSection(&m_CriticalSection);
+		if (GetJobCount() == 0)
+			break;
+		EnterCriticalSection(&m_CriticalSection);
+		if (m_pThreadParam->TaskList.GetHeadPosition() != NULL)
+		{
+			TaskInfo = m_pThreadParam->TaskList.RemoveHead();
+			bSuccess = TRUE;
+		}
+		LeaveCriticalSection(&m_CriticalSection);
+		
+	}while(FALSE);
+	
 	return bSuccess;
 }
 
@@ -98,6 +128,16 @@ UINT CThreadPoolMgr<CTaskType,CResultType>::GetJobCount()
 	EnterCriticalSection(&m_CriticalSection);
 	DWORD dwCount = m_pThreadParam->TaskList.GetCount();
 	LeaveCriticalSection(&m_CriticalSection);
+	
+	BOOL bFinished = FALSE;
+	InterlockedExchange((LONG*)&bFinished,m_bFinished);
+	
+	if (m_pFinshNotify != NULL && bFinished == FALSE && dwCount == 0)
+	{
+		m_bFinished = TRUE;
+		m_pFinshNotify(m_lParam);
+	}
+	
 	return dwCount;
 }
 
@@ -108,11 +148,16 @@ BOOL CThreadPoolMgr<CTaskType,CResultType>::AddResult(CResultType& ResultInfo)
 		return FALSE;
 
 	EnterCriticalSection(&m_CriticalSection);
-	m_pThreadParam->ResultList.AddTail(ResultInfo);
+	m_pThreadParam->ResultList.AddTail(ResultInfo);		
+	LeaveCriticalSection(&m_CriticalSection);
+		
 	//回调结果处理函数
 	if (m_pTaskNotify != NULL)
-		m_pTaskNotify(m_lParam);
-	LeaveCriticalSection(&m_CriticalSection);
+		m_pTaskNotify(m_lParam);	
+		
+	/*if (m_pFinshNotify != NULL)
+		m_pFinshNotify(m_lParam);
+	*/	
 	return TRUE;
 }
 
@@ -131,7 +176,7 @@ BOOL CThreadPoolMgr<CTaskType,CResultType>::GetResultInfo(CResultType& ResultInf
 }
 
 template<class CTaskType, class CResultType>
-BOOL CThreadPoolMgr<CTaskType,CResultType>::StopAllTask()
+BOOL CThreadPoolMgr<CTaskType,CResultType>::TerminateAll()
 {
 	if (m_hTaskEvent != NULL)
 	{
@@ -140,8 +185,15 @@ BOOL CThreadPoolMgr<CTaskType,CResultType>::StopAllTask()
 		SetEvent(m_hTaskEvent);
 		if (WaitForMultipleObjects(m_uThreadNum,m_phThread,TRUE,100) == WAIT_TIMEOUT)
 			for (UINT nIndex=0;nIndex<m_uThreadNum;++nIndex)
+			{
 				TerminateThread(m_phThread[nIndex], 0);
+				CloseHandle(m_phThread[nIndex]);
+			}
 	}
+	
+	EnterCriticalSection(&m_CriticalSection);
+	m_pThreadParam->TaskList.RemoveAll();
+	LeaveCriticalSection(&m_CriticalSection);
 	
 	return TRUE;
 }

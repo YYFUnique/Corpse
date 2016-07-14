@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <Window size="260,160" sizebox="4,4,6,6" caption="0,0,0,30" roundcorner="5,5">
     <Font name="微软雅黑" size="12" bold="false" italic="false" />
-    <VerticalLayout name="VLayoutTotal" bordersize="0" pos="282,87,342,117" width="60" height="30" bkimage="main_bkg.jpg">
-        <VerticalLayout name="VLayoutBorder" bordersize="0" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;">
-            <HorizontalLayout name="HLayoutHead" bordersize="0">
-                <HorizontalLayout name="HorizontalLayoutUI1" bordersize="0">
-                    <Label name="WinTitle" text="添加静态ARP地址" bordersize="0" float="true" pos="13,2,159,27" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
+	<Font name="微软雅黑" size="12" bold="true" italic="false" />
+	<Font name="微软雅黑" size="14" bold="false" italic="false" />
+    <VerticalLayout name="VLayoutTotal" pos="282,87,342,117" width="60" height="30" bkcolor="#FFFEFEFE">
+        <VerticalLayout name="VLayoutBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;">
+            <HorizontalLayout name="HLayoutHead" >
+                <HorizontalLayout name="HorizontalLayoutUI1" >
+                    <Label name="WinTitle" text="添加静态ARP地址" float="true" pos="13,2,159,27" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="1" />
                 </HorizontalLayout>
-                <HorizontalLayout name="HorizontalLayoutUI2" bordersize="0" pos="0,0,39,30" width="39" height="30">
-                    <Button name="BtnClose" tooltip="关闭" bordersize="0" float="true" pos="0,0,39,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
+				<Control />
+                <HorizontalLayout name="HorizontalLayoutUI2" pos="0,0,38,30" width="38" height="30">
+                    <Button name="BtnClose" tooltip="关闭" float="true" pos="0,0,38,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
                 </HorizontalLayout>
             </HorizontalLayout>
-            <HorizontalLayout name="HLayoutBody" bordersize="0" pos="0,0,260,130" width="260" height="130">
-                
-            </HorizontalLayout>
+            <VerticalLayout name="HLayoutBody"  width="260" height="130">
+                <Label name="IPAddrLabel" text="IP地址:" font="0" float="true" align="right" pos="15,15,80,40" />
+				<IPAddress name="IPAddr" font="0" inset="0,4,0,3"  float="true" pos="85,15,220,40" bkcolor="#FFFFFFFF" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;"/>
+				<Label name="MACAddrLabel" text="MAC地址:" font="0" float="true" align="right" pos="15,55,80,80" />
+				<Edit2 name="MACAddr" font="0" float="true" pos="85,55,220,80" bkcolor="#FFFFFFFF" textpadding="4,4,4,3" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;"/>
+				<Button name="BtnAddStaticArp" text="确定" tooltip="添加静态ARP地址" float="true" pos="140,90,220,120" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;InstallBtn.png&apos; source=&apos;0,0,162,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" />
+            </VerticalLayout>
         </VerticalLayout>
     </VerticalLayout>
 </Window>

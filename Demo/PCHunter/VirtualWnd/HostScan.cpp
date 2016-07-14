@@ -29,7 +29,7 @@ CHostScan::~CHostScan()
 {
 	if (m_pThreadTaskMgr != NULL)
 	{
-		m_pThreadTaskMgr->StopAllTask();
+		m_pThreadTaskMgr->TerminateAll();
 		delete m_pThreadTaskMgr;
 		m_pThreadTaskMgr = NULL;
 	}
@@ -54,6 +54,8 @@ void CHostScan::OnClick(TNotifyUI& msg)
 	CDuiString strSender = msg.pSender->GetName();
 	if (strSender == _T("BtnBeginScan"))
 		StartScan();
+	else if (strSender == _T("BtnStopScan"))
+		StopScan();
 	else if (strSender == _T("DeleteAllArp"))
 		DeleteAllArp();
 	else if (strSender == _T("DeleteDynamicArp"))
@@ -203,6 +205,10 @@ void CHostScan::StartScan()
  		if (m_pThreadTaskMgr != NULL)
  			m_pThreadTaskMgr->RegisterNotify((LPTASKJOBRESULT_NOTIFY)OnTaskResult,(LPTASKJOBFINSH_NOTIFY)OnTaskFinsh,this);
 	}
+	else
+	{
+		m_pThreadTaskMgr->RunThread();
+	}
 
 	CDuiString strTipInfo;
 	do 
@@ -266,10 +272,19 @@ void CHostScan::StartScan()
 			TaskInfo.dwIpAddress = htonl(uIp+dwStartIP);
 			m_pThreadTaskMgr->AddJob(TaskInfo);
 		}
+
+		SwitchScanInfo(false);
+
 	} while (FALSE);	
 
 	if (strTipInfo.IsEmpty() == FALSE)
 		MessageBox(m_pPaintManager->GetPaintWindow(),strTipInfo,_T("提示"),MB_OK);
+}
+
+void CHostScan::StopScan()
+{
+	m_pThreadTaskMgr->TerminateAll();
+	SwitchScanInfo(true);
 }
 
 void CHostScan::DeleteAllArp()
@@ -306,6 +321,11 @@ void CHostScan::DeleteDynamicArp()
 
 void CHostScan::OnIpRange(TNotifyUI& msg)
 {
+	WORD wVer = MAKEWORD(2,2);
+	WSADATA WSAData;
+	if (WSAStartup(wVer,&WSAData) != 0 )
+		return;
+
 	CMenuWnd* pMenu = new CMenuWnd();
 	const RECT& rcPos = msg.pSender->GetPos();
 	CDuiPoint pt(rcPos.left, rcPos.bottom);
@@ -314,43 +334,46 @@ void CHostScan::OnIpRange(TNotifyUI& msg)
 	pMenu->Init(NULL,strXmlFile, pt, m_pPaintManager);
 
 	MIB_IPADDRTABLE* pIPAddrTable = NULL;
-	if (GetIPAddrTable(pIPAddrTable) == FALSE)
-		return;
-
-	//获取菜单窗口的根结点
-	CMenuUI* pMenuRoot = pMenu->GetMenuUI();
-	if (pMenuRoot == NULL)
-		return;
-
-	for (DWORD dwItem=0; dwItem<pIPAddrTable->dwNumEntries; ++dwItem)
+	do 
 	{
-		MIB_IPADDRROW MibIpAddrRow =	pIPAddrTable->table[dwItem];
-		if (MibIpAddrRow.dwAddr == 0x100007F)	//排除 127.0.0.1 网络回环地址
-			continue;
+		if (GetIPAddrTable(pIPAddrTable) == FALSE)
+			break;
 
-		CMenuElementUI* pMenuElement = new CMenuElementUI;
-		if (pMenuElement == NULL)
-			continue;
+		//获取菜单窗口的根结点
+		CMenuUI* pMenuRoot = pMenu->GetMenuUI();
+		if (pMenuRoot == NULL)
+			break;
 
-		//计算网络地址
-		DWORD dwNetIP = MibIpAddrRow.dwAddr & MibIpAddrRow.dwMask;
-		DWORD dwMask = -1 ^ MibIpAddrRow.dwMask;
-		//计算广播地址
-		DWORD dwBroadcastIP = dwMask | dwNetIP;
-		CDuiString strNetIP, strBroadcastIP, strIPRange, strMaskRange;
-		
-		//采用MSDN封装的SSE4 指令集，计算二进制中1的个数
-		DWORD dwCount = _mm_popcnt_u32(MibIpAddrRow.dwMask);
+		for (DWORD dwItem=0; dwItem<pIPAddrTable->dwNumEntries; ++dwItem)
+		{
+			MIB_IPADDRROW MibIpAddrRow =	pIPAddrTable->table[dwItem];
+			if (MibIpAddrRow.dwAddr == 0x100007F)	//排除 127.0.0.1 网络回环地址
+				continue;
 
-		LsIpv4AddressToString(dwNetIP, strNetIP);
-		LsIpv4AddressToString(dwBroadcastIP, strBroadcastIP);
-		strIPRange.Format(_T("%s/%d"), (LPCTSTR)strNetIP, dwCount);
-		strMaskRange.Format(_T("%s|%s"), (LPCTSTR)strNetIP, (LPCTSTR)strBroadcastIP);
+			CMenuElementUI* pMenuElement = new CMenuElementUI;
+			if (pMenuElement == NULL)
+				continue;
 
-		pMenuRoot->Add(pMenuElement);
-		pMenuElement->SetText(strIPRange);
-		pMenuElement->SetName(strMaskRange);
-	}
+			//计算网络地址
+			DWORD dwNetIP = MibIpAddrRow.dwAddr & MibIpAddrRow.dwMask;
+			DWORD dwMask = -1 ^ MibIpAddrRow.dwMask;
+			//计算广播地址
+			DWORD dwBroadcastIP = dwMask | dwNetIP;
+			CDuiString strNetIP, strBroadcastIP, strIPRange, strMaskRange;
+
+			//采用MSDN封装的SSE4 指令集，计算二进制中1的个数
+			DWORD dwCount = _mm_popcnt_u32(MibIpAddrRow.dwMask);
+
+			LsIpv4AddressToString(dwNetIP, strNetIP);
+			LsIpv4AddressToString(dwBroadcastIP, strBroadcastIP);
+			strIPRange.Format(_T("%s/%d"), (LPCTSTR)strNetIP, dwCount);
+			strMaskRange.Format(_T("%s|%s"), (LPCTSTR)strNetIP, (LPCTSTR)strBroadcastIP);
+
+			pMenuRoot->Add(pMenuElement);
+			pMenuElement->SetText(strIPRange);
+			pMenuElement->SetName(strMaskRange);
+		}
+	} while (FALSE);
 
 	if (pIPAddrTable != NULL)
 	{
@@ -358,6 +381,7 @@ void CHostScan::OnIpRange(TNotifyUI& msg)
 		pIPAddrTable = NULL;
 	}
 
+	WSACleanup();
 	//动态添加删除菜单后，需手动重置布局
 	pMenu->ResizeMenu();
 }
@@ -374,7 +398,7 @@ void CHostScan::OnIpTools(TNotifyUI& msg)
 void CHostScan::AddStaticArp()
 {
 	CStaticArpDialog* pArpDialog = new CStaticArpDialog(m_pPaintManager->GetPaintWindow());
-	pArpDialog->ShowWindow();
+	pArpDialog->ShowModal();
 }
 
 CThreadTaskMgr* CHostScan::GetThreadMgr()
@@ -412,7 +436,6 @@ UINT CHostScan::TaskThread(LPVOID lParam)
 		if ((TaskJob.HostScanType & HOST_SCAN_TYPE_ARP) == HOST_SCAN_TYPE_ARP)
 		{
 			DWORD dwRet = SendARP(TaskJob.dwIpAddress,0,&ResultInfo.MacAddr,&uMacLen);
-			//InterlockedIncrement(&m_sdwTaskDown);
 			if (dwRet != NO_ERROR)
 				continue;
 		}
@@ -545,6 +568,7 @@ BOOL CHostScan::PingCmd(DWORD dwIpAddress)
 void CHostScan::OnTaskFinsh(LPVOID lParam)
 {
 	CHostScan* pHostScan = (CHostScan*)lParam;
+	pHostScan->SwitchScanInfo(true);
 }
 
 BOOL CHostScan::GetAdapterName(LPCTSTR lpszMacAddress,LPTSTR szAdapterName,DWORD dwNameLen)
@@ -559,4 +583,15 @@ BOOL CHostScan::GetAdapterName(LPCTSTR lpszMacAddress,LPTSTR szAdapterName,DWORD
 BOOL CHostScan::GetHostUserName(LPCTSTR lpszMacAddress,LPTSTR szAdapterName,DWORD dwNameLen)
 {
 	return GetPrivateProfileString(lpszMacAddress,HOST_USER_NAME,NULL,szAdapterName,dwNameLen,m_szUserNameFilePath);
+}
+
+void CHostScan::SwitchScanInfo(bool bVisible)
+{
+	CButtonUI* pBtnStart = (CButtonUI*)m_pPaintManager->FindControl(_T("BtnBeginScan"));
+	if (pBtnStart)
+		pBtnStart->SetVisible(bVisible);
+
+	CButtonUI* pBtnStop = (CButtonUI*)m_pPaintManager->FindControl(_T("BtnStopScan"));
+	if (pBtnStop)
+		pBtnStop->SetVisible(bVisible == FALSE);
 }
