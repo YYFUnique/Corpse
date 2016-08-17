@@ -52,9 +52,6 @@ CThreadPoolMgr<CTaskType,CResultType>::~CThreadPoolMgr()
 	if (m_hTaskEvent != NULL)
 		CloseHandle(m_hTaskEvent);
 
-	for (UINT nIndex=0;nIndex<m_uThreadNum;++nIndex)
-		CloseHandle(m_phThread[nIndex]);
-
 	DeleteCriticalSection(&m_CriticalSection);
 }
 
@@ -150,12 +147,13 @@ BOOL CThreadPoolMgr<CTaskType,CResultType>::AddResult(CResultType& ResultInfo)
 
 	EnterCriticalSection(&m_CriticalSection);
 	m_pThreadParam->ResultList.AddTail(ResultInfo);		
-	LeaveCriticalSection(&m_CriticalSection);
-		
+
 	//回调结果处理函数
 	if (m_pTaskNotify != NULL)
 		m_pTaskNotify(m_lParam);	
 		
+	LeaveCriticalSection(&m_CriticalSection);
+	
 	/*if (m_pFinshNotify != NULL)
 		m_pFinshNotify(m_lParam);
 	*/	

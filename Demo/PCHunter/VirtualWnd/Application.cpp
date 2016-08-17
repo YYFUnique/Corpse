@@ -79,7 +79,12 @@ BOOL CApplication::EnumWindowsProc(HWND hWnd,LPARAM lParam)
 		(GetWindowLong(hWnd, GWL_HWNDPARENT)==0))
 	{
 		CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("App"));
-
+		if (pList != NULL)
+		{
+			TListInfoUI* pListInfo = pList->GetListInfo();
+			pList->SetItemTextStyle(pListInfo->uTextStyle & ~DT_NOPREFIX);						//去掉DrawText函数中&被转义为_,比如&a会显示为'下划线a'
+		}
+		
 		CListTextElementUI* pListElementUI = new CListTextElementUI;
 		pList->Add(pListElementUI);
 
@@ -93,6 +98,8 @@ BOOL CApplication::EnumWindowsProc(HWND hWnd,LPARAM lParam)
 		TCHAR szWindowTitle[1024];
 		GetWindowText(hWnd,szWindowTitle,_countof(szWindowTitle));
 		//pListElementUI->SetImageList(1,24,16);
+		/*pListElementUI->SetStyle()*/
+		/*pListElementUI->GetOwner()->GetListInfo()*/
 		pListElementUI->SetTag((UINT_PTR)hWnd);
 		pListElementUI->SetText(0,szWindowTitle);
 		pListElementUI->SetText(1,IsHungAppWindow(hWnd) ? _T("未响应") :_T("正在运行"));

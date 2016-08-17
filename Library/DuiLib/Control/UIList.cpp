@@ -388,16 +388,17 @@ int CListUI::GetCurSel() const
 
 bool CListUI::SelectItem(int iIndex, bool bTakeFocus)
 {
+	if (m_iCurSel == iIndex)	return true;
 	DWORD dwCtrlShiftKey = GetKeyState(VK_CONTROL) <0 || GetKeyState(VK_SHIFT) <0;
     int iOldSel = m_iCurSel;
 
     // We should first unselect the currently selected item
-	BOOL bClearAll = (m_bMultiSel == false || dwCtrlShiftKey == false);
+	BOOL bClearAll = (IsMultiSelect() == false || dwCtrlShiftKey == false);
     if (bClearAll && m_aSelItems.GetSize() ) {
 		DeselectAllItems();
-
         m_iCurSel = -1;
     }
+
     if( iIndex < 0 ) return false;
 
     CControlUI* pControl = GetItemAt(iIndex);
@@ -413,7 +414,6 @@ bool CListUI::SelectItem(int iIndex, bool bTakeFocus)
 	
 	//单选模式下，这两个值相同
 	m_iFirstSel = m_iCurSel = iIndex;
-
     if (!pListItem->Select(true) ) {
         m_iCurSel = -1;
         return false;
@@ -424,7 +424,7 @@ bool CListUI::SelectItem(int iIndex, bool bTakeFocus)
     EnsureVisible(iIndex);
     if( bTakeFocus ) pControl->SetFocus();
     if( m_pManager != NULL ) {
-        m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMSELECT, iIndex, iOldSel);
+        m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMSELECT, m_iCurSel, iOldSel);
     }
 
     return true;
@@ -441,10 +441,6 @@ void CListUI::SeleteRangeItems(int iIndex, int iCurSel)
 	//获取2者中的大小顺序
 	int nMin = min(iIndex, iCurSel);
 	int nMax = max(iIndex, iCurSel);
-
-	CDuiString strTipInfo;
-	strTipInfo.Format(_T("%d~%d"),nMin,nMax);
-	OutputDebugString(strTipInfo);
 
 	CControlUI* pControl = NULL;
 	for (int n=nMin; n<=nMax; ++n)
@@ -469,7 +465,7 @@ void CListUI::SeleteRangeItems(int iIndex, int iCurSel)
 
 void CListUI::SelectAllItems()
 {
-	if (m_bMultiSel == false)
+	if (IsMultiSelect() == false)
 		return ;
 
 	CControlUI* pControl = NULL;
@@ -509,6 +505,7 @@ void CListUI::DeselectAllItems()
 
 		if( !pListItem->Select(false) )
 			continue;	
+		m_aSelItems.Remove(n);
 	}
 	m_aSelItems.Empty();
 }
@@ -1973,7 +1970,7 @@ void CListLabelElementUI::DoEvent(TEventUI& event)
 			if (m_pOwner->IsMultiSelect())
 				m_pOwner->DoEvent(event);
 			else
-				Select();
+				Select(true);
             Invalidate();
         }
         return;
@@ -2248,101 +2245,6 @@ void CListTextElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
         ::ZeroMemory(m_rcLinks + i, sizeof(RECT));
         ((CDuiString*)(m_sLinks + i))->Empty();
     }
-}
-
-/////////////////////////////////////////////////////////////////////////////////////
-//
-//
-
-CListControlElementUI::CListControlElementUI()
-	:CListTextElementUI()
-	,m_nSubItem(-1)
-	,m_nWidth(0)
-	,m_nHeight(0)
-	,m_iImage(-1)
-{
-
-}
-
-CListControlElementUI::~CListControlElementUI()
-{
-
-}
-
-LPCTSTR CListControlElementUI::GetClass() const
-{
-	return _T("ListControlElementUI");
-}
-
-LPVOID CListControlElementUI::GetInterface(LPCTSTR pstrName)
-{
-	if (_tcsicmp(pstrName,_T("ListControlElement")) == 0)
-		return static_cast<CListControlElementUI*>(this);
-	else
-		return CListTextElementUI::GetInterface(pstrName);
-}
-
-//void SetText(int iIndex, LPCTSTR pstrText);
-//void SetImage()
-void CListControlElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
-{
-	if( m_pOwner == NULL ) return;
-	TListInfoUI* pInfo = m_pOwner->GetListInfo();
-	DWORD iTextColor = pInfo->dwTextColor;
-
-	if( (m_uButtonState & UISTATE_HOT) != 0 ) {
-		iTextColor = pInfo->dwHotTextColor;
-	}
-	if( IsSelected() ) {
-		iTextColor = pInfo->dwSelectedTextColor;
-	}
-	if( !IsEnabled() ) {
-		iTextColor = pInfo->dwDisabledTextColor;
-	}
-	IListCallbackUI* pCallback = m_pOwner->GetTextCallback();
-
-	m_nLinks = 0;
-	int nLinks = lengthof(m_rcLinks);
-	for( int i = 0; i < pInfo->nColumns; i++ )
-	{
-		RECT rcItem = { pInfo->rcColumn[i].left, m_rcItem.top, pInfo->rcColumn[i].right, m_rcItem.bottom };
-		rcItem.left += pInfo->rcTextPadding.left;
-		rcItem.right -= pInfo->rcTextPadding.right;
-		rcItem.top += pInfo->rcTextPadding.top;
-		rcItem.bottom -= pInfo->rcTextPadding.bottom;
-
-		if (i == m_nSubItem)
-		{
-			RECT rc = rcItem;
-			rc.right = rc.left + m_nWidth;
-			rcItem.left += m_nWidth;
-			CRenderEngine::DrawRect(hDC,rc,1,0xFFFF0000);
-		}
-
-		CDuiString strText;//不使用LPCTSTR，否则限制太多 by cddjr 2011/10/20
-		if( pCallback ) strText = pCallback->GetItemText(this, m_iIndex, i);
-		else strText.Assign(GetText(i));
-		if( pInfo->bShowHtml )
-			CRenderEngine::DrawHtmlText(hDC, m_pManager, rcItem, strText.GetData(), iTextColor, \
-			&m_rcLinks[m_nLinks], &m_sLinks[m_nLinks], nLinks, DT_SINGLELINE | DT_END_ELLIPSIS | pInfo->uTextStyle);
-		else
-			CRenderEngine::DrawText(hDC, m_pManager, rcItem, strText.GetData(), iTextColor, \
-			pInfo->nFont, DT_SINGLELINE | DT_END_ELLIPSIS | pInfo->uTextStyle);
-
-		m_nLinks += nLinks;
-		nLinks = lengthof(m_rcLinks) - m_nLinks; 
-	}
-	for( int i = m_nLinks; i < lengthof(m_rcLinks); i++ ) {
-		::ZeroMemory(m_rcLinks + i, sizeof(RECT));
-		((CDuiString*)(m_sLinks + i))->Empty();
-	}
-}
-
-void CListControlElementUI::SetImageList(/*CImageList* pImageList,*/ int nSubItem,int nWidth,int nHeight)
-{
-	m_nSubItem = nSubItem;
-	m_nWidth = nWidth;
-	m_nHeight = nHeight;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////

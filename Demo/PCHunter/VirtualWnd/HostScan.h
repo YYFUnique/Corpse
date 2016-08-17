@@ -84,6 +84,7 @@ protected:
 	void AddStaticArp();
 	void OnIpRange(TNotifyUI& msg);
 	void OnIpTools(TNotifyUI& msg);
+	void OnShowArp(TNotifyUI& msg);
 
 	void OnPingTarget(CListTextElementUI* pItem);
 	void OnAddUserName(CListTextElementUI* pItem);
