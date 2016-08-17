@@ -3,6 +3,7 @@
 #include "../Wnd/StaticArpDialog.h"
 #include "../Wnd/IPTools.h"
 #include "../Wnd/AddUserName.h"
+#include "../Wnd/ArpList.h"
 #include <Icmpapi.h>
 #include <nmmintrin.h>
 #pragma comment(lib,"Iphlpapi.lib")
@@ -66,6 +67,8 @@ void CHostScan::OnClick(TNotifyUI& msg)
 		OnIpRange(msg);
 	else if (strSender == _T("IPTools"))
 		OnIpTools(msg);
+	else if (strSender == _T("ShowArp"))
+		OnShowArp(msg);
 }
 
 void CHostScan::OnHostScanMenu(CControlUI* pControl)
@@ -92,8 +95,6 @@ void CHostScan::OnHostScanMenu(CControlUI* pControl)
 		OnRemoteDesktop(pItem);
 	else if (strName == _T("Ping"))
 		OnPingTarget(pItem);
-//	else if (strName == _T(""))
-
 }
 
 void CHostScan::OnAddUserName(CListTextElementUI* pItem)
@@ -395,6 +396,15 @@ void CHostScan::OnIpTools(TNotifyUI& msg)
 	pIPTools->ShowModal();
 }
 
+void CHostScan::OnShowArp(TNotifyUI& msg)
+{
+	CArpList* pArpList = new CArpList(m_pPaintManager->GetPaintWindow());
+	if (pArpList == NULL)
+		return;
+
+	pArpList->ShowModal();
+}
+
 void CHostScan::AddStaticArp()
 {
 	CStaticArpDialog* pArpDialog = new CStaticArpDialog(m_pPaintManager->GetPaintWindow());
@@ -543,7 +553,7 @@ BOOL CHostScan::PingCmd(DWORD dwIpAddress)
 	{
 		DWORD dwReplySize = sizeof(ICMP_ECHO_REPLY)+sizeof(SendData);
 		pReplyBuffer = new BYTE[dwReplySize];
-		hIcmpFile=IcmpCreateFile();
+		hIcmpFile = IcmpCreateFile();
 		if (hIcmpFile == INVALID_HANDLE_VALUE)
 			break;
 

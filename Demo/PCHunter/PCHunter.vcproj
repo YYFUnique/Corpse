@@ -420,6 +420,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Wnd\ArpList.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Wnd\IPTools.cpp"
 					>
 				</File>
@@ -599,6 +603,10 @@
 				</File>
 				<File
 					RelativePath=".\Wnd\AddUserName.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wnd\ArpList.h"
 					>
 				</File>
 				<File

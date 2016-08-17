@@ -42,7 +42,6 @@ protected:
 	}ThreadParam,*PThreadParam;
 
 	BOOL					m_bStartNow;
-	HWND					m_hMainWnd;
 	UINT					m_uMsg;								//发送任务处理完毕消息
 	UINT					m_uThreadNum;					//总线程数, 不包括管理线程
 	ThreadParam*		m_pThreadParam;
