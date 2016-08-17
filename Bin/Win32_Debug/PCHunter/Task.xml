@@ -13,7 +13,7 @@
 		</VerticalLayout>
 		<TabLayout name="TaskWizard" showanimate="false" > 
 			<VerticalLayout name="VLayoutApp" virtualwnd="app">
-				<List name="App" menu="true" itemfont="0" multiexpanding="true" multiselect="true">
+				<List name="App" menu="true" itemfont="0" multiexpanding="true" multiselect="false">
 					<ListHeader menu="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
 						<ListHeaderItem text="任务" width="200" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 						<ListHeaderItem text="状态" width="60" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
