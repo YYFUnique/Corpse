@@ -393,10 +393,11 @@ bool CListUI::SelectItem(int iIndex, bool bTakeFocus)
     int iOldSel = m_iCurSel;
 
     // We should first unselect the currently selected item
-	BOOL bClearAll = (IsMultiSelect() == false || dwCtrlShiftKey == false);
+	BOOL bClearAll = (IsMultiSelect() == false && dwCtrlShiftKey == false);
     if (bClearAll && m_aSelItems.GetSize() ) {
 		DeselectAllItems();
         m_iCurSel = -1;
+		Invalidate();
     }
 
     if( iIndex < 0 ) return false;
@@ -491,7 +492,7 @@ void CListUI::SelectAllItems()
 void CListUI::DeselectAllItems()
 {
 	CControlUI* pControl = NULL;
-	for (int n = 0; n < m_aSelItems.GetSize(); ++n)
+	for (int n = m_aSelItems.GetSize()-1; n >=0 ; --n)
 	{
 		pControl = (CControlUI*)m_aSelItems.GetAt(n);
 		if (pControl == NULL)
