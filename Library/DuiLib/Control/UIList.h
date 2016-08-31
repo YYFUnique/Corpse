@@ -254,6 +254,14 @@ public:
     LPVOID GetInterface(LPCTSTR pstrName);
 
     SIZE EstimateSize(SIZE szAvailable);
+	void SetPos(RECT rc);
+	void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
+
+	void SetScaleHeader(bool bIsScale);
+	bool IsScaleHeader() const;
+
+private:
+	bool m_bIsScaleHeader;
 };
 
 
@@ -294,6 +302,8 @@ public:
     void SetFocusedImage(LPCTSTR pStrImage);
     LPCTSTR GetSepImage() const;
     void SetSepImage(LPCTSTR pStrImage);
+	void SetScale(int nScale);
+	int GetScale() const;
 
     void DoEvent(TEventUI& event);
     SIZE EstimateSize(SIZE szAvailable);
@@ -302,6 +312,7 @@ public:
 
     void PaintText(HDC hDC);
     void PaintStatusImage(HDC hDC);
+	UINT GetButtonState();
 
 protected:
     POINT ptLastMouse;
@@ -319,6 +330,7 @@ protected:
     CDuiString m_sFocusedImage;
     CDuiString m_sSepImage;
     CDuiString m_sSepImageModify;
+	int m_nScale;
 };
 
 

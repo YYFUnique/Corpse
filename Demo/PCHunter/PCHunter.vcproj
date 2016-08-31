@@ -396,6 +396,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Utils\ServiceControl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\TextTools.cpp"
 					>
 				</File>
@@ -429,6 +433,14 @@
 				</File>
 				<File
 					RelativePath=".\Wnd\StaticArpDialog.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Control"
+				>
+				<File
+					RelativePath=".\Control\UIDockPane.cpp"
 					>
 				</File>
 			</Filter>
@@ -574,6 +586,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Utils\ServiceControl.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\TextTools.h"
 					>
 				</File>
@@ -615,6 +631,14 @@
 				</File>
 				<File
 					RelativePath=".\Wnd\StaticArpDialog.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Control"
+				>
+				<File
+					RelativePath=".\Control\UIDockPane.h"
 					>
 				</File>
 			</Filter>

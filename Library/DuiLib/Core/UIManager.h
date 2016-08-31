@@ -101,9 +101,12 @@ typedef struct tagTFontInfo
 typedef struct tagTImageInfo
 {
     HBITMAP hBitmap;
+	LPBYTE pBits;
+	LPBYTE pSrcBits;
     int nX;
     int nY;
-    bool alphaChannel;
+	bool bAlpha;
+	bool bUseHSL;
     CDuiString sResType;
     DWORD dwMask;
 } TImageInfo;
