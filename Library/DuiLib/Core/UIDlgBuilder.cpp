@@ -202,9 +202,9 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
 					else if(_tcsicmp(pstrName,_T("maxbox")) == 0){
 						pManager->SetWindowMaxBox(_tcscmp(pstrValue, _T("true")) == 0);
 					}
-                    /*else if( _tcscmp(pstrName, _T("showdirty")) == 0 ) {
+                    else if( _tcscmp(pstrName, _T("showdirty")) == 0 ) {
                         pManager->SetShowUpdateRect(_tcscmp(pstrValue, _T("true")) == 0);
-                    }*/ 
+                    }
                     else if( _tcscmp(pstrName, _T("alpha")) == 0 ) {	//不能和bktrans同时使用
                         pManager->SetTransparent(_ttoi(pstrValue));
                     } 

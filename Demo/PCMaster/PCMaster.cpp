@@ -258,7 +258,7 @@ void CPCMaster::OnClick(TNotifyUI& msg)
 	else if(msg.pSender == (CButtonUI*)m_PaintManager.FindControl(_T("BtnStatus")))
 	{
 		CMenuWnd* pMenu = new CMenuWnd();
-		CPoint pt = msg.ptMouse;
+		CDuiPoint pt = msg.ptMouse;
 		ClientToScreen(m_hWnd, &pt);
 		STRINGorID strXmlFile(_T("MenuStatus.xml"));
 		pMenu->Init(NULL,strXmlFile, pt,&m_PaintManager);
@@ -301,7 +301,7 @@ void CPCMaster::OnMenu(TNotifyUI& msg)
 	if (msg.pSender->GetParent()->GetName() == _T("Tools"))
 	{
 		CMenuWnd* pMenu = new CMenuWnd();
-		CPoint pt = msg.ptMouse;
+		CDuiPoint pt = msg.ptMouse;
 		ClientToScreen(m_hWnd, &pt);
 		STRINGorID strXmlFile(_T("ListMenu.xml"));
 		pMenu->Init(NULL,strXmlFile,pt,&m_PaintManager);

@@ -647,7 +647,7 @@ TImageInfo* CRenderEngine::LoadImage(STRINGorID bitmap, LPCTSTR type, DWORD mask
     data->hBitmap = hBitmap;
     data->nX = x;
     data->nY = y;
-    data->alphaChannel = bAlphaChannel;
+    data->bAlpha = bAlphaChannel;
     return data;
 }
 
@@ -1136,7 +1136,7 @@ bool DrawImage(HDC hDC, CPaintManagerUI* pManager, const RECT& rc, const RECT& r
 	if( !::IntersectRect(&rcTemp, &rcItem, &rc) ) return true;
 	if( !::IntersectRect(&rcTemp, &rcItem, &rcPaint) ) return true;
 
-	CRenderEngine::DrawImage(hDC, data->hBitmap, rcItem, rcPaint, rcBmpPart, rcCorner, data->alphaChannel, bFade, bHole, bTiledX, bTiledY);
+	CRenderEngine::DrawImage(hDC, data->hBitmap, rcItem, rcPaint, rcBmpPart, rcCorner, data->bAlpha, bFade, bHole, bTiledX, bTiledY);
 
 	return true;
 }
@@ -1753,7 +1753,7 @@ void CRenderEngine::DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, L
                                     rcBmpPart.right = iWidth * (iImageListIndex + 1);
                                     CDuiRect rcCorner(0, 0, 0, 0);
                                     DrawImage(hDC, pImageInfo->hBitmap, rcImage, rcImage, rcBmpPart, rcCorner, \
-                                        pImageInfo->alphaChannel, 255);
+                                        pImageInfo->bAlpha, 255);
                                 }
 
                                 cyLine = MAX(iHeight, cyLine);

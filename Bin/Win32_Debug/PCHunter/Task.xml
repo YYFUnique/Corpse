@@ -36,18 +36,24 @@
 					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">			
 						<ListHeaderItem text="名称" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 						<ListHeaderItem text="显示名称" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="进程ID" sepimage="file=&apos;ListHeadSep.png&apos;" width="50" sepwidth="1"/>
+						<ListHeaderItem text="状态" sepimage="file=&apos;ListHeadSep.png&apos;" width="60" sepwidth="1"/>
+						<ListHeaderItem text="启动类型" sepimage="file=&apos;ListHeadSep.png&apos;" width="60" sepwidth="1"/>
+						<ListHeaderItem text="文件路径" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 						<ListHeaderItem text="描述" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 					</ListHeader>
 				</List>
+				<Control height="1"/>
 			</VerticalLayout>
 			<VerticalLayout name="VLayoutDriver" virtualwnd="driver">
 				<List name="Driver" menu="true" itemfont="0" multiexpanding="true" scrollstepsize="200">
-					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">		
+					<ListHeader scaleheader="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">		
 						<ListHeaderItem text="名称" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="显示名称" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="显示名称" sepimage="file=&apos;ListHeadSep.png&apos;" scale="33%" sepwidth="1"/>
 						<ListHeaderItem text="描述" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 					</ListHeader>
 				</List>
+				<Control height="1"/>
 			</VerticalLayout>
 			<VerticalLayout name="VLayoutUser" virtualwnd="user">
 				<List name="User" menu="true" itemalign="center" itemfont="0" multiexpanding="true" >

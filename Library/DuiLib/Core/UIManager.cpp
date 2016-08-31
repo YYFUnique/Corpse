@@ -505,30 +505,31 @@ void CPaintManagerUI::ShowShadow(HDC hPaint,RECT& rcPaint)
 		return;
 
 	RECT rcWnd;
-	GetWindowRect(m_hWndPaint,&rcWnd);
+	GetWindowRect(m_hWndPaint, &rcWnd);
 	if (IsZoomed(m_hWndPaint) != false)
 	{
 		CalRealRootRect(rcWnd);
 		return;
 	}
 	
-	RECT rcPos = {m_rcCorner.left,m_rcCorner.top,rcWnd.right-rcWnd.left-m_rcCorner.right,
+	RECT rcPos = {m_rcCorner.left, m_rcCorner.top, rcWnd.right-rcWnd.left-m_rcCorner.right,
 		rcWnd.bottom-rcWnd.top-m_rcCorner.bottom};
 
 	CalRealRootRect(rcPos);
 
-	RECT rcItem = {0,0,rcWnd.right-rcWnd.left,rcWnd.bottom-rcWnd.top};
+	RECT rcItem = {0, 0, rcWnd.right-rcWnd.left, rcWnd.bottom-rcWnd.top};
 
-	if (IsEqualRect(&rcPaint,&rcItem) == false)
+	if (IsEqualRect(&rcPaint, &rcItem) == false)
 		return;
 
 	TCHAR sRenderString[MAX_PATH];
 	if (IsRectNull(&m_rcCorner))
-		_stprintf(sRenderString,_T("file='%s' hole='false'"),(LPCTSTR)m_strShadowImage);
+		_stprintf(sRenderString,_T("file='%s' hole='false'"), (LPCTSTR)m_strShadowImage);
 	else
-		_stprintf(sRenderString,_T("file='%s' corner='%u,%u,%u,%u' hole='false'"),(LPCTSTR)m_strShadowImage,
-						m_rcCorner.left,m_rcCorner.top,m_rcCorner.right,m_rcCorner.bottom);
-	CRenderEngine::DrawImageString(hPaint,this,rcItem,rcPaint,sRenderString);
+		_stprintf(sRenderString,_T("file='%s' corner='%u,%u,%u,%u' hole='false'"), (LPCTSTR)m_strShadowImage,
+						m_rcCorner.left, m_rcCorner.top, m_rcCorner.right, m_rcCorner.bottom);
+
+	CRenderEngine::DrawImageString(hPaint, this, rcItem, rcPaint, sRenderString);
 }
 
 void CPaintManagerUI::CalRealRootRect(RECT& rcPos)
@@ -798,7 +799,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 
 				//按需要绘制界面阴影
 				if (IsShadow())
-					ShowShadow(m_hDcOffscreen,rcClipClient);
+					ShowShadow(m_hDcOffscreen, rcClipClient);
 
 				m_pRoot->DoPaint(m_hDcOffscreen, rcClipClient);
 
@@ -2103,7 +2104,7 @@ const TImageInfo* CPaintManagerUI::AddImage(LPCTSTR bitmap, HBITMAP hBitmap, int
     data->hBitmap = hBitmap;
     data->nX = iWidth;
     data->nY = iHeight;
-    data->alphaChannel = bAlpha;
+    data->bAlpha = bAlpha;
     //data->sResType = _T("");
     data->dwMask = 0;
     if( !m_mImageHash.Insert(bitmap, data) ) {
@@ -2163,7 +2164,7 @@ void CPaintManagerUI::ReloadAllImages()
                 data->hBitmap = pNewData->hBitmap;
                 data->nX = pNewData->nX;
                 data->nY = pNewData->nY;
-                data->alphaChannel = pNewData->alphaChannel;
+                data->bAlpha = pNewData->bAlpha;
 
                 delete pNewData;
                 bRedraw = true;

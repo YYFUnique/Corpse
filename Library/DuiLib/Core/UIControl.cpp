@@ -962,18 +962,24 @@ void CControlUI::DoPaint(HDC hDC, const RECT& rcPaint)
     if( !::IntersectRect(&m_rcPaint, &rcPaint, &m_rcItem) ) return;
 
     // »æÖÆÑ­Ðò£º±³¾°ÑÕÉ«->±³¾°Í¼->×´Ì¬Í¼->ÎÄ±¾->±ß¿ò
-    if( m_cxyBorderRound.cx > 0 || m_cxyBorderRound.cy > 0 ) {
-#ifndef RENDER_GDIPLUS
+	if (m_cxyBorderRound.cx > 0 || m_cxyBorderRound.cy > 0 ) 
+	{
 		CRenderClip roundClip;
 		CRenderClip::GenerateRoundClip(hDC, m_rcPaint,  m_rcItem, m_cxyBorderRound.cx, m_cxyBorderRound.cy, roundClip);
-#endif
-       
-    }
-	PaintBkColor(hDC);
-	PaintBkImage(hDC);
-	PaintStatusImage(hDC);
-	PaintText(hDC);
-	PaintBorder(hDC);
+		PaintBkColor(hDC);
+		PaintBkImage(hDC);
+		PaintStatusImage(hDC);
+		PaintText(hDC);
+		PaintBorder(hDC);
+	}
+	else
+	{
+		PaintBkColor(hDC);
+		PaintBkImage(hDC);
+		PaintStatusImage(hDC);
+		PaintText(hDC);
+		PaintBorder(hDC);
+	}
 }
 
 void CControlUI::PaintBkColor(HDC hDC)

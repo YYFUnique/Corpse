@@ -217,7 +217,8 @@ LRESULT WindowImplBase::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 	//避免在窗口最大化是由于窗口圆角造成问题
  	if (IsZoomed(m_hWnd))
 		szRoundCorner.cx = szRoundCorner.cy = 1;
-#if defined(WIN32) && !defined(UNDER_CE)
+	
+	//裁剪圆角
 	if( !::IsIconic(m_hWnd) && (szRoundCorner.cx != 0 || szRoundCorner.cy != 0) ) {
 		CDuiRect rcWnd;
 		::GetWindowRect(*this, &rcWnd);
@@ -227,7 +228,7 @@ LRESULT WindowImplBase::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 		::SetWindowRgn(*this, hRgn, TRUE);
 		::DeleteObject(hRgn);
 	}
-#endif
+
 	bHandled = FALSE;
 	return 0;
 }
