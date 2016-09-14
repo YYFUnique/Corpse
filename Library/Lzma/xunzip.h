@@ -8,6 +8,8 @@
 // by Lucian Wischik to simplify and extend its use in Windows/C++. Also
 // encryption and unicode filenames have been added.
 
+namespace LzMa
+{
 
 #ifndef _zip_H
 DECLARE_HANDLE(HZIP);
@@ -15,6 +17,7 @@ DECLARE_HANDLE(HZIP);
 // An HZIP identifies a zip file that has been opened
 
 typedef DWORD ZRESULT;
+
 // return codes from any of the zip functions. Listed later.
 
 typedef struct
@@ -209,6 +212,5 @@ bool IsZipHandleU(HZIP hz);
 #define FormatZipMessage FormatZipMessageU
 #endif
 
-
-
+}
 #endif // _unzip_H

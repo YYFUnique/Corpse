@@ -68,6 +68,9 @@
 // for more info about .ZIP format, see ftp://ftp.cdrom.com/pub/infozip/doc/appnote-970311-iz.zip
 //   PkWare has also a specification at ftp://ftp.pkware.com/probdesc.zip
 
+namespace LzMa
+{
+
 #define ZIP_HANDLE   1
 #define ZIP_FILENAME 2
 #define ZIP_MEMORY   3
@@ -4162,3 +4165,4 @@ bool IsZipHandleU(HZIP hz)
 }
 
 
+}

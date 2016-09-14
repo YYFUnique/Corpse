@@ -33,21 +33,21 @@ void ReleaseProcessErrorInfo()
 
 CString GetLastErrorInfo()
 {
-	CString szErrorInfo;
+	CString strErrorInfo;
 	LPVOID lpMsgBuf;
 
 	DWORD dwErrorCode=GetLastError();
 	if (!FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
 		NULL,dwErrorCode,MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),(LPTSTR) &lpMsgBuf,0,NULL))
 	{
-		szErrorInfo.Format(_T("未知错误号0x%08X."),dwErrorCode);
-		return szErrorInfo;
+		strErrorInfo.Format(_T("未知错误号0x%08X."),dwErrorCode);
+		return strErrorInfo;
 	}
 
-	szErrorInfo=(LPCTSTR)lpMsgBuf;
+	strErrorInfo=(LPCTSTR)lpMsgBuf;
 	LocalFree(lpMsgBuf);// Free the buffer.
 
-	return szErrorInfo;
+	return strErrorInfo;
 }
 
 ERROR_INFO& GetThreadErrorInfo()
@@ -66,7 +66,7 @@ CString& GetThreadErrorInfoString()
 {
 	ERROR_INFO& ErrorInfo=GetThreadErrorInfo();
 
-	return ErrorInfo.szErrorInfo;
+	return ErrorInfo.strErrorInfo;
 }
 
 BOOL IsSpecialError(DWORD dwErrorType,DWORD dwErrorCode)
@@ -137,22 +137,22 @@ DWORD SetErrorInfoV(DWORD dwErrorType,DWORD dwErrorCode,LPCTSTR lpszErrorTitle,v
 	ErrorInfo.dwErrorType=dwErrorType;
 
 	if (lpszErrorTitle)
-		ErrorInfo.szErrorInfo.FormatV(lpszErrorTitle,argList);
+		ErrorInfo.strErrorInfo.FormatV(lpszErrorTitle,argList);
 	else
-		ErrorInfo.szErrorInfo.Empty();
+		ErrorInfo.strErrorInfo.Empty();
 
 	if (dwErrorType==SYSTEM_ERROR)
 	{
 		//自动增加冒号
-		if (!ErrorInfo.szErrorInfo.IsEmpty())
-			if (ErrorInfo.szErrorInfo.Right(1).Compare(_T(":")))
-				ErrorInfo.szErrorInfo+=_T(":");
+		if (!ErrorInfo.strErrorInfo.IsEmpty())
+			if (ErrorInfo.strErrorInfo.Right(1).Compare(_T(":")))
+				ErrorInfo.strErrorInfo+=_T(":");
 
 		//当返回错误信息是RPC服务器不可用时，对该错误信息进行单独定义，以便用户理解。
 		if (dwErrorCode==RPC_S_SERVER_UNAVAILABLE)
-			ErrorInfo.szErrorInfo+=_T("后台服务未启动，建议您重启系统。如果重启系统后仍然不能正常工作，请您尝试重新安装客户端。");
+			ErrorInfo.strErrorInfo+=_T("后台服务未启动，建议您重启系统。如果重启系统后仍然不能正常工作，请您尝试重新安装客户端。");
 		else if (dwErrorCode==RPC_S_INVALID_BOUND)
-			ErrorInfo.szErrorInfo+=_T("后台服务程序版本不匹配，建议您重启系统。如果重启系统后仍然不能正常工作，请您尝试重新安装客户端。");
+			ErrorInfo.strErrorInfo+=_T("后台服务程序版本不匹配，建议您重启系统。如果重启系统后仍然不能正常工作，请您尝试重新安装客户端。");
 		else
 		{
 			HMODULE hMod = NULL;
@@ -169,13 +169,13 @@ DWORD SetErrorInfoV(DWORD dwErrorType,DWORD dwErrorCode,LPCTSTR lpszErrorTitle,v
 				if (!FormatMessage(dwFlag,hMod,dwErrorCode,
 					MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),(LPTSTR) &lpMsgBuf,0,NULL))
 				{
-					CString szErrorInfo;
-					szErrorInfo.Format(_T("未知系统错误0x%08X."),dwErrorCode);
-					ErrorInfo.szErrorInfo+=szErrorInfo;
+					CString strErrorInfo;
+					strErrorInfo.Format(_T("未知系统错误0x%08X."),dwErrorCode);
+					ErrorInfo.strErrorInfo+=strErrorInfo;
 					return dwErrorCode;
 				}
 
-				ErrorInfo.szErrorInfo+=(LPCTSTR)lpMsgBuf;
+				ErrorInfo.strErrorInfo+=(LPCTSTR)lpMsgBuf;
 				LocalFree(lpMsgBuf);
 			}
 			else 
@@ -183,11 +183,11 @@ DWORD SetErrorInfoV(DWORD dwErrorType,DWORD dwErrorCode,LPCTSTR lpszErrorTitle,v
 				TCHAR szExtendedErrorInfo[512];
 				DWORD dwExtendedErrorCode, dwInfoBufferLen = _countof(szExtendedErrorInfo);
 				InternetGetLastResponseInfo(&dwExtendedErrorCode, szExtendedErrorInfo, &dwInfoBufferLen);
-				ErrorInfo.szErrorInfo += szExtendedErrorInfo;
-				ErrorInfo.szErrorInfo.AppendFormat(_T("(错误号 %u)"), dwExtendedErrorCode);
+				ErrorInfo.strErrorInfo += szExtendedErrorInfo;
+				ErrorInfo.strErrorInfo.AppendFormat(_T("(错误号 %u)"), dwExtendedErrorCode);
 			}
 
-			ErrorInfo.szErrorInfo.TrimRight(_T("\r\n"));
+			ErrorInfo.strErrorInfo.TrimRight(_T("\r\n"));
 		}
 	}
 
@@ -205,14 +205,14 @@ DWORD SetErrorTitle(LPCTSTR lpszTitle,...)
 {
 	ERROR_INFO& ErrorInfo=GetThreadErrorInfo();
 	int nIndex=-1;
-	int nErrorInfoLen=ErrorInfo.szErrorInfo.GetLength()-1;
-	LPCTSTR lpszErrorInfo=ErrorInfo.szErrorInfo;
+	int nErrorInfoLen=ErrorInfo.strErrorInfo.GetLength()-1;
+	LPCTSTR lpstrErrorInfo=ErrorInfo.strErrorInfo;
 	for (int i=0;i<nErrorInfoLen;i++)
 	{
-		if (lpszErrorInfo[i]!=':')
+		if (lpstrErrorInfo[i]!=':')
 			continue;
 
-		if (lpszErrorInfo[i+1]=='/' || lpszErrorInfo[i+1]=='\\' || (lpszErrorInfo[i+1]>='0' && lpszErrorInfo[i+1]<='9'))
+		if (lpstrErrorInfo[i+1]=='/' || lpstrErrorInfo[i+1]=='\\' || (lpstrErrorInfo[i+1]>='0' && lpstrErrorInfo[i+1]<='9'))
 			continue;
 
 		nIndex=i;
@@ -229,9 +229,9 @@ DWORD SetErrorTitle(LPCTSTR lpszTitle,...)
 	szTitle.TrimRight(':');
 
 	if (nIndex==-1)
-		ErrorInfo.szErrorInfo = szTitle;
+		ErrorInfo.strErrorInfo = szTitle;
 	else
-		ErrorInfo.szErrorInfo=szTitle+CString((LPCTSTR)ErrorInfo.szErrorInfo+nIndex);
+		ErrorInfo.strErrorInfo=szTitle+CString((LPCTSTR)ErrorInfo.strErrorInfo+nIndex);
 
 	return ErrorInfo.dwErrorCode;
 }
@@ -240,21 +240,21 @@ void ResetErrorInfo()
 {
 	ERROR_INFO& ErrorInfo=GetThreadErrorInfo();
 	ErrorInfo.dwErrorCode = ErrorInfo.dwErrorType =0;
-	ErrorInfo.szErrorInfo.Empty();
+	ErrorInfo.strErrorInfo.Empty();
 }
 
 void AppendErrorInfo(DWORD dwErrorType,DWORD dwErrorCode,LPCTSTR lpszErrorTitle,...)
 {
 	ERROR_INFO& ErrorInfo=GetThreadErrorInfo();
 
-	CString strErrorInfo = ErrorInfo.szErrorInfo;
+	CString strErrorInfo = ErrorInfo.strErrorInfo;
 
 	va_list paralist;
 	va_start(paralist, lpszErrorTitle); 
 	SetErrorInfoV(dwErrorType,dwErrorCode,lpszErrorTitle,paralist);
 
 	if (strErrorInfo.IsEmpty() == FALSE)
-		ErrorInfo.szErrorInfo = strErrorInfo + _T("\r\n") + ErrorInfo.szErrorInfo;
+		ErrorInfo.strErrorInfo = strErrorInfo + _T("\r\n") + ErrorInfo.strErrorInfo;
 }
 
 CString GetLogModuleFileName()

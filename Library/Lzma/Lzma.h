@@ -10,6 +10,8 @@
 #define LZMA_API __declspec(dllimport)
 #endif
 
+using namespace LzMa;
+
 class LZMA_API CLzma
 {
 public:
@@ -81,4 +83,7 @@ protected:
 	DWORD GetFileSizeFromDirectory(LPCTSTR lpszDirectoryPathFile);
 
 	DWORD GetFileSize(LPCTSTR lpszPathFile);
+
+protected:
+
 };

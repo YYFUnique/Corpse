@@ -8,6 +8,8 @@
 #define YCLIB_CORE_API __declspec(dllimport)
 #endif
 
+#include <atlstr.h>
+
 #ifndef NT_SUCCESS
 #define NTSTATUS LONG
 #endif
@@ -29,7 +31,7 @@ typedef struct _ERROR_INFO
 {
 	DWORD dwErrorType;
 	DWORD dwErrorCode;
-	CString szErrorInfo;
+	CString   strErrorInfo;
 }ERROR_INFO,*PERROR_INFO;
 
 //==================================================================

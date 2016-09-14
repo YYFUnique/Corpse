@@ -8,6 +8,8 @@
 // zip.cpp. The repackaging was done by Lucian Wischik to simplify and
 // extend its use in Windows/C++. Also to add encryption and unicode.
 
+namespace LzMa
+{
 
 #ifndef _unzip_H
 DECLARE_HANDLE(HZIP);
@@ -198,6 +200,5 @@ bool IsZipHandleZ(HZIP hz);
 #define FormatZipMessage FormatZipMessageZ
 #endif
 
-
-
+}
 #endif
