@@ -39,6 +39,8 @@ UINT CEncryptFile::workThread(LPVOID lParam)
 	TCHAR szTmpFolder[MAX_PATH];
 	PathCombine(szTmpFolder, szTmpFile, _T("TxMaster"));
 
+	HWND hMainDlg = pInfoMaster->GetHWND();
+	PostMessage(hMainDlg, WM_ENCRYPT_PROGRESS_POSITION, 0, 10);
 	SHDeleteDirectory(szTmpFolder);
 
 	CWaitCursor WaitCursor;
@@ -50,11 +52,15 @@ UINT CEncryptFile::workThread(LPVOID lParam)
 	strNewCryptFile.Format(_T("%s\\META-INF\\InfoMaster"), szTmpFolder);
 	CopyFile(strCryptFile, strNewCryptFile, FALSE);
 
+	PostMessage(hMainDlg, WM_ENCRYPT_PROGRESS_POSITION, 0, 50);
+
 	Lzma.LzmaEncode(szTmpFolder, pInfoMaster->GetEncryptFilePath());
 
-	SHDeleteDirectory(szTmpFolder);
+	PostMessage(hMainDlg, WM_ENCRYPT_PROGRESS_POSITION, 0, 90);
 
-	HWND hMainDlg = pInfoMaster->GetHWND();
+	SHDeleteDirectory(szTmpFolder);
+	PostMessage(hMainDlg, WM_ENCRYPT_PROGRESS_POSITION, 0, 100);
+	
 	PostMessage(hMainDlg, WM_ENCRYPT_SUCCESS, NULL, NULL);
 
 	return TRUE;

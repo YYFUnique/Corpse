@@ -11,4 +11,5 @@
 #include "DuiLib/UIlib.h"
 using namespace DuiLib;
 
-#define WM_ENCRYPT_SUCCESS (WM_USER+0x1000)		//客户端配置文件打包成功
+#define WM_ENCRYPT_PROGRESS_POSITION			(WM_USER+0x1000)		//客户端配置文件打包进度
+#define WM_ENCRYPT_SUCCESS								(WM_USER+0x1001)		//客户端配置文件打包成功
