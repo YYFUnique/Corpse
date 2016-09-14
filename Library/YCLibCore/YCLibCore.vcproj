@@ -316,6 +316,30 @@
 					RelativePath=".\Utils\ErrorInfo.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\Utils\FileTools.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Encrypt"
+				>
+				<File
+					RelativePath=".\Encrypt\LsRc4.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Thread"
+				>
+				<File
+					RelativePath=".\Thread\LsThread.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Thread\LsThreadMgr.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -379,7 +403,31 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Utils\FileTools.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\YjList.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Encrypt"
+				>
+				<File
+					RelativePath=".\Encrypt\LsRc4.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Thread"
+				>
+				<File
+					RelativePath=".\Thread\LsThread.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Thread\LsThreadMgr.h"
 					>
 				</File>
 			</Filter>

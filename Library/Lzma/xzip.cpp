@@ -4,7 +4,6 @@
 #include <tchar.h>
 #include "xzip.h"
 
-
 // THIS FILE is almost entirely based upon code by info-zip.
 // It has been modified by Lucian Wischik. The modifications
 // were a complete rewrite of the bit of code that generates the
@@ -65,6 +64,8 @@
 //       binary releases.
 //
 
+namespace LzMa
+{
 
 typedef unsigned char uch;      // unsigned 8-bit value
 typedef unsigned short ush;     // unsigned 16-bit value
@@ -2310,7 +2311,7 @@ ZRESULT TZip::Create(void *z,unsigned int len,DWORD flags)
   }
   else if (flags==ZIP_FILENAME)
   { const TCHAR *fn = (const TCHAR*)z;
-    hfout = CreateFile(fn,GENERIC_WRITE,0,NULL,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+    hfout = CreateFile(fn,GENERIC_WRITE,0,NULL,OPEN_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
     if (hfout==INVALID_HANDLE_VALUE) {hfout=0; return ZR_NOFILE;}
     ocanseek=true;
     ooffset=0;
@@ -2830,3 +2831,4 @@ bool IsZipHandleZ(HZIP hz)
   return (han->flag==2);
 }
 
+}

@@ -4,6 +4,8 @@
 #include "xunzip.h"
 #include <Shlwapi.h>
 #include <atlstr.h>
+#include <shlobj.h>
+#pragma comment(lib,"shell32.lib")
 #pragma comment(lib,"shlwapi.lib")
 
 CLzma::CLzma()
@@ -64,6 +66,12 @@ BOOL CLzma::LzmaEncode(LPCTSTR lpszTargetFilePath,LPCTSTR lpszBinFilePath)
 	HZIP hZip = NULL;
 	do 
 	{
+		TCHAR szDirectory[MAX_PATH];
+		_tcscpy_s(szDirectory, _countof(szDirectory), lpszBinFilePath);
+		PathRemoveFileSpec(szDirectory);
+		if (PathFileExists(szDirectory) == FALSE)
+			SHCreateDirectory(NULL, szDirectory);
+
 		hZip = CreateZip(lpszBinFilePath,NULL);
 		if (hZip == NULL)
 			break;
@@ -147,10 +155,10 @@ BOOL CLzma::AddFileToZip(HZIP hZip,LPCTSTR lpszTargetFilePath,LPCTSTR lpszRelati
 		TCHAR szFilePath[MAX_PATH];
 		PathCombine(szFilePath,lpszTargetFilePath,Win32Data.cFileName);
 		
-		if (Win32Data.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY)
+		if ((Win32Data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY)
 		{
 			CString strRelativePath;
-			if (_tcsicmp(lpszRelativePath,_T("")) == 0)
+			if (lpszRelativePath[0] == _T('\0'))
 			{
 				strRelativePath = Win32Data.cFileName;
 				ZipAddFolder(hZip,Win32Data.cFileName);
@@ -164,7 +172,7 @@ BOOL CLzma::AddFileToZip(HZIP hZip,LPCTSTR lpszTargetFilePath,LPCTSTR lpszRelati
 		}
 		else
 		{
-			if (_tcsicmp(lpszRelativePath,_T("")) == 0)
+			if (lpszRelativePath[0] == _T('\0'))
 				ZipAdd(hZip,Win32Data.cFileName,szFilePath);
 			else
 			{

@@ -1,13 +1,13 @@
 #pragma once
 #include <BaseTsd.h>
 
-#ifdef LS_STATIC_LIB_CALL
+/*#ifdef LS_STATIC_LIB_CALL
 #define YCLIB_CORE_API 
 #elif defined  YCLIBCORE_EXPORTS
 #define YCLIB_CORE_API __declspec(dllexport)
 #else
 #define YCLIB_CORE_API __declspec(dllimport)
-#endif
+#endif*/
 
 class CNodeData
 {
@@ -45,7 +45,7 @@ typedef struct __POSITION
 #endif
 
 template<class TYPE, class ARG_TYPE = const TYPE&>
-class YCLIB_CORE_API CYjList /*: public CObject*/
+class /*YCLIB_CORE_API*/ CYjList /*: public CObject*/
 {
 protected:
 	struct CNode
@@ -410,7 +410,7 @@ POSITION CYjList<TYPE, ARG_TYPE>::InsertAfter(POSITION position, ARG_TYPE newEle
 template<class TYPE, class ARG_TYPE>
 void CYjList<TYPE, ARG_TYPE>::RemoveAt(POSITION position)
 {
-	ASSERT_VALID(this);
+	//ASSERT_VALID(this);
 
 	CNode* pOldNode = (CNode*) position;
 	//ASSERT(AfxIsValidAddress(pOldNode, sizeof(CNode)));

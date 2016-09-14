@@ -14,11 +14,11 @@ using namespace Json;
 #define YCLIB_CORE_API __declspec(dllimport)
 #endif
 
-typedef struct _ENUM_JSON_MEMBER_NAME 
-{
-	CString strMemberName;
-	ValueType enumType;
-}ENUM_JSON_MEMBER_NAME,*PENUM_JSON_MEMBER_NAME;
+//typedef struct _ENUM_JSON_MEMBER_NAME 
+//{
+//	CString strMemberName;
+//	ValueType enumType;
+//}ENUM_JSON_MEMBER_NAME,*PENUM_JSON_MEMBER_NAME;
 
 //typedef CList <ENUM_JSON_MEMBER_NAME,ENUM_JSON_MEMBER_NAME&> CJsonMemberNameList;
 
