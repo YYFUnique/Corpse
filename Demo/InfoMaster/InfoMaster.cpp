@@ -117,6 +117,9 @@ LRESULT CInfoMaster::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam
 	bHandled = FALSE;
 	switch (uMsg)
 	{
+		case WM_ENCRYPT_PROGRESS_POSITION:
+				
+			break;
 		case WM_ENCRYPT_SUCCESS:
 				MessageBox(m_hWnd, _T("打包配置文件成功"), _T("提示"), MB_OK|MB_ICONINFORMATION);
 				bHandled = TRUE;
@@ -362,6 +365,8 @@ BOOL CInfoMaster::OutputPackageFile()
 
 	if (m_pEncryptFile == NULL)
 		m_pEncryptFile = new CEncryptFile;
+	else
+		m_pEncryptFile->StopThread(0,0);
 
 	m_pEncryptFile->SetThreadParam(this);
 	m_pEncryptFile->StartThread();

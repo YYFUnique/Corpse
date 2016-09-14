@@ -26,7 +26,6 @@ using namespace DuiLib;
  	void OnMenuItemClick(CControlUI* pControl);
  private:
  	CMenuUI* pMenu;
- 	CUIShadow m_Shadow;
  };
 
 #endif // BaseDialog_H

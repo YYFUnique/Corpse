@@ -45,6 +45,8 @@ public:
 	BOOL IsInitComplete();
 
 protected:
+	//static BOOL CjThreadProc(LPVOID lParam);
+protected:
 
 	CLsThreadList m_LsThreadList;
 

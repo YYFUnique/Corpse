@@ -147,3 +147,30 @@ CLsThread* CLsThreadMgr::FindThreadById(YJ_THREAD_APP_ID LsThreadAppId , BOOL bR
 	LeaveCriticalSection(&m_CriticalSection);
 	return pReturnThread;
 }
+
+/*BOOL CLsThreadMgr::CjThreadProc(LPVOID lParam)
+{
+	CLsThreadMgr* pThreadMgr = (CLsThreadMgr*)lParam;
+	if (pThreadMgr == NULL)
+		return FALSE;
+
+	while(TRUE)
+	{
+		EnterCriticalSection(&m_CriticalSection);
+		POSITION pos = m_LsThreadList.GetHeadPosition();
+		while(pos)
+		{
+			DWORD dwExist = 0;
+			const CLsThread* pThread = m_LsThreadList.GetNext(pos);
+			WaitForSingleObject(pThread->m_hThread,0)
+			if (GetExitCodeThread(pThread->m_hThread,&dwExist) != FALSE)
+				//if (dwExist != STILL_ACTIVE)
+				GetLastError();
+					//pThread->StopThread()
+		}
+		LeaveCriticalSection(&m_CriticalSection);
+		Sleep(500);
+	}
+
+	return TRUE;
+}*/

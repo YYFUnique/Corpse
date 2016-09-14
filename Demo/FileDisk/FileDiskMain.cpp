@@ -47,10 +47,10 @@
  		SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
  	else if (strCtlName == _T("MenuBtn"))
  	{
- 		CMenuWnd* pMenu = new CMenuWnd(m_hWnd);
- 		CPoint point = msg.ptMouse;
+ 		CMenuWnd* pMenu = new CMenuWnd();
+ 		CDuiPoint point = msg.ptMouse;
  		ClientToScreen(m_hWnd, &point);
- 		pMenu->Init(NULL, _T("menu.xml"), point);
+ 		pMenu->Init(NULL, _T("menu.xml"),point,&m_PaintManager);
  	}
  
  	if (msg.sType == _T("setfocus"))

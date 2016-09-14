@@ -7,7 +7,7 @@
 	<Default name="Picture" value="hotimage=&quot;file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;&quot; pushedimage=&quot;file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;&quot;" />
     <VerticalLayout name="VLayoutTotal" borderround="5,5">
         <VerticalLayout name="WinBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;">
-			<HorizontalLayout name="HLayoutHead" pos="0,0,0,40" height="40" >
+			<HorizontalLayout name="HLayoutHead" pos="0,0,0,40" height="40">
 				<Control />
 				<HorizontalLayout name="HLayoutSys" pos="0,0,39,40" width="39" height="40">
 					<Button name="BtnClose" tooltip="关闭" float="true" pos="0,0,39,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
