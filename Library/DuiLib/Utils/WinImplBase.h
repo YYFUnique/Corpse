@@ -27,6 +27,11 @@ namespace DuiLib
 		WindowImplBase(){};
 		virtual ~WindowImplBase(){};
 		virtual void InitWindow(){};
+		/************************************************************************/
+		/* 使用说明：																							   */
+		/*               继承该函数时,请先调用 WindowImplBase::OnFinalMessage(); */
+		/*				 然后在执行delete this;否则在xp下将出现对话框异常退出错误   	*/
+		/************************************************************************/
 		virtual void OnFinalMessage( HWND hWnd );
 		virtual void Notify(TNotifyUI& msg);
 		

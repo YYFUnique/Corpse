@@ -348,6 +348,13 @@ public:
     static bool TranslateMessage(const LPMSG pMsg);
 	static void Term();
 
+	/*
+	CDPI* GetDPIObj();
+	void ResetDPIAssets();
+	void RebuildFont(TFontInfo* pFontInfo);
+	void SetDPI(int iDPI);
+	static void SetAllDPI(int iDPI);
+*/
     bool MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lRes);
     bool PreMessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lRes);
 	void UsedVirtualWnd(bool bUsed);
@@ -377,6 +384,8 @@ private:
 	bool m_bMaxSizeBox;
 	bool m_bEnableDrop;
 
+	//对高像素设备支持
+	//CDPI* m_pDPI;
     //
     CControlUI* m_pRoot;
     CControlUI* m_pFocus;

@@ -10,6 +10,10 @@ typedef DWORD ZRESULT;
 extern HZIP OpenZipU(void *z,unsigned int len,DWORD flags);
 extern ZRESULT CloseZipU(HZIP hz);
 
+#ifndef CLEARTYPE_QUALITY
+#define CLEARTYPE_QUALITY 5
+#endif
+
 namespace DuiLib {
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -1406,6 +1410,84 @@ void CPaintManagerUI::Term()
         m_hResourceZip = NULL;
     }
 }
+
+/*
+CDPI * DuiLib::CPaintManagerUI::GetDPIObj()
+{
+	if (m_pDPI == NULL)
+		m_pDPI = new CDPI;
+
+	return m_pDPI;
+}
+
+void DuiLib::CPaintManagerUI::SetDPI(int iDPI)
+{
+	int scale1 = GetDPIObj()->GetScale();
+	GetDPIObj()->SetScale(iDPI);
+	int scale2 = GetDPIObj()->GetScale();
+	ResetDPIAssets();
+	RECT rcWnd = {0};
+	::GetWindowRect(GetPaintWindow(), &rcWnd);
+	RECT*  prcNewWindow = &rcWnd;
+	if (!::IsZoomed(GetPaintWindow())) {
+		RECT rc = rcWnd;
+		rc.right = rcWnd.left + (rcWnd.right - rcWnd.left) * scale2 / scale1;
+		rc.bottom = rcWnd.top + (rcWnd.bottom - rcWnd.top) * scale2 / scale1;
+		prcNewWindow = &rc;
+	}
+	SetWindowPos(GetPaintWindow(), NULL, prcNewWindow->left, prcNewWindow->top, prcNewWindow->right - prcNewWindow->left, prcNewWindow->bottom - prcNewWindow->top, SWP_NOZORDER | SWP_NOACTIVATE);
+	if (GetRoot() != NULL) GetRoot()->NeedUpdate();
+	::PostMessage(GetPaintWindow(), WM_USER_SET_DPI, 0, 0);
+}
+
+void DuiLib::CPaintManagerUI::SetAllDPI(int iDPI)
+{
+	for (int i = 0; i < m_aPreMessages.GetSize(); i++) {
+		CPaintManagerUI* pManager = static_cast<CPaintManagerUI*>(m_aPreMessages[i]);
+		pManager->SetDPI(iDPI);
+	}
+}
+
+void DuiLib::CPaintManagerUI::ResetDPIAssets()
+{
+	//RemoveAllDrawInfos();
+	RemoveAllImages();
+
+	for (int it = 0; it < m_aCustomFonts.GetSize(); it++) {
+		TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[it]);
+		RebuildFont(pFontInfo);
+	}
+	RebuildFont(&m_DefaultFontInfo);
+
+	/for (int it = 0; it < m_SharedResInfo.m_CustomFonts.GetSize(); it++) {
+	//	TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_SharedResInfo.m_CustomFonts.Find(m_SharedResInfo.m_CustomFonts[it]));
+	//	RebuildFont(pFontInfo);
+	//}
+	//RebuildFont(&m_SharedResInfo.m_DefaultFontInfo);
+}
+
+void DuiLib::CPaintManagerUI::RebuildFont(TFontInfo * pFontInfo)
+{
+	::DeleteObject(pFontInfo->hFont);
+	LOGFONT lf = { 0 };
+	::GetObject(::GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &lf);
+	_tcsncpy(lf.lfFaceName, pFontInfo->sFontName, LF_FACESIZE);
+	lf.lfCharSet = DEFAULT_CHARSET;
+	lf.lfHeight = -GetDPIObj()->Scale(pFontInfo->iSize);
+	lf.lfQuality = CLEARTYPE_QUALITY;
+	if (pFontInfo->bBold) lf.lfWeight += FW_BOLD;
+	if (pFontInfo->bUnderline) lf.lfUnderline = TRUE;
+	if (pFontInfo->bItalic) lf.lfItalic = TRUE;
+	HFONT hFont = ::CreateFontIndirect(&lf);
+	pFontInfo->hFont = hFont;
+	::ZeroMemory(&(pFontInfo->tm), sizeof(pFontInfo->tm));
+	if (m_hDcPaint) {
+		HFONT hOldFont = (HFONT) ::SelectObject(m_hDcPaint, hFont);
+		::GetTextMetrics(m_hDcPaint, &pFontInfo->tm);
+		::SelectObject(m_hDcPaint, hOldFont);
+	}
+}
+*/
 
 CControlUI* CPaintManagerUI::GetFocus() const
 {

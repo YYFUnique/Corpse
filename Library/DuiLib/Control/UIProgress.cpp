@@ -82,11 +82,12 @@ namespace DuiLib
 		UpdateText();
 	}
 
-	void CProgressUI::SetForeImage(LPCTSTR pStrImage)
+	void CProgressUI::SetForeImage(LPCTSTR lpszForeImage)
 	{
-		if( m_sForeImage == pStrImage ) return;
+		if (m_sForeImage == lpszForeImage)
+			return;
 
-		m_sForeImage = pStrImage;
+		m_sForeImage = lpszForeImage;
 		Invalidate();
 	}
 
@@ -99,6 +100,12 @@ namespace DuiLib
 		else if( _tcscmp(pstrName, _T("value")) == 0 ) SetValue(_ttoi(pstrValue));
 		else if( _tcscmp(pstrName, _T("isstretchfore"))==0) SetStretchForeImage(_tcscmp(pstrValue, _T("true")) == 0? true : false);
 		else CLabelUI::SetAttribute(pstrName, pstrValue);
+	}
+
+	void CProgressUI::PaintStatusImage(HDC hDC)
+	{
+		PaintForeColor(hDC);
+		PaintForeImage(hDC);
 	}
 
 	void CProgressUI::PaintForeColor(HDC hDC)

@@ -28,9 +28,9 @@ namespace DuiLib
 		int GetValue() const;
 		void SetValue(int nValue);
 
-		void SetForeImage(LPCTSTR pStrImage);
-
+		void SetForeImage(LPCTSTR lpszForeImage);
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
+		void PaintStatusImage(HDC hDC);
 		void PaintForeColor(HDC hDC);
 		void PaintForeImage(HDC hDC);
 	
@@ -47,7 +47,6 @@ namespace DuiLib
 		SIZE m_szThumb;
 		UINT m_uButtonState;
 
-		CDuiString m_sForeImage;
 		CDuiString m_sForeImageModify;
 	};
 
