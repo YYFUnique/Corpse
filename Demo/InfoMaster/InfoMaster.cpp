@@ -20,6 +20,7 @@
 CInfoMaster::CInfoMaster()
 {
 	m_pEncryptFile = NULL;
+	m_pEncryptProcess = NULL;
 }
 
 CInfoMaster::~CInfoMaster()
@@ -29,12 +30,18 @@ CInfoMaster::~CInfoMaster()
 		delete m_pEncryptFile;
 		m_pEncryptFile = NULL;
 	}
+
+	if (m_pEncryptProcess != NULL)
+	{
+		delete m_pEncryptProcess;
+		m_pEncryptProcess = NULL;
+	}
 }
 
 void CInfoMaster::OnFinalMessage(HWND hWnd)
 {
+	WindowImplBase::OnFinalMessage(hWnd);
 	delete this;
-	__super::OnFinalMessage(hWnd);
 }
 
 LPCTSTR CInfoMaster::GetWindowClassName() const
@@ -78,10 +85,6 @@ void CInfoMaster::Notify(TNotifyUI& msg)
 
 void CInfoMaster::InitWindow()
 {
-	//CEncryptDlg* pEncrypt = new CEncryptDlg(m_hWnd);
-	//pEncrypt->SetZipFileInfo(pApkFile->GetText(), SaveFileName.lpstrFile);
-	//pEncrypt->ShowModal();
-
 	SetIcon(IDI_MAINFRAME);
 	//从注册表中读取上次保存路径
 	HKEY hKey = NULL;
@@ -118,7 +121,16 @@ LRESULT CInfoMaster::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam
 	switch (uMsg)
 	{
 		case WM_ENCRYPT_PROGRESS_POSITION:
-				
+				if (m_pEncryptProcess != NULL)
+				{
+					m_pEncryptProcess->SetEncryptProcess(lParam);
+					if (lParam == 100)
+					{
+						m_pEncryptProcess->Close(IDOK);
+						m_pEncryptProcess = NULL;
+					}
+				}
+				bHandled = TRUE;
 			break;
 		case WM_ENCRYPT_SUCCESS:
 				MessageBox(m_hWnd, _T("打包配置文件成功"), _T("提示"), MB_OK|MB_ICONINFORMATION);
@@ -171,6 +183,7 @@ void CInfoMaster::OnSave(TNotifyUI& msg)
 
 	do 
 	{
+		//判断是否是APK文件
 		CString strCryptString;
 		if (GetCryptContext(strCryptString) == FALSE)
 		{
@@ -317,7 +330,7 @@ void CInfoMaster::OnLookUpApkFile(TNotifyUI& msg)
 		HKEY hKey = NULL;
 		do 
 		{
-			DWORD dwRet = RegCreateKeyEx(HKEY_LOCAL_MACHINE, MAIN_REG_PATH, NULL, NULL,REG_OPTION_VOLATILE, KEY_WRITE,NULL, &hKey, NULL);
+			DWORD dwRet = RegCreateKeyEx(HKEY_LOCAL_MACHINE, MAIN_REG_PATH, NULL, NULL,REG_OPTION_NON_VOLATILE, KEY_WRITE,NULL, &hKey, NULL);
 			if (dwRet != ERROR_SUCCESS)
 				break;
 
@@ -349,7 +362,7 @@ BOOL CInfoMaster::OutputPackageFile()
 
 	if (GetSaveFileName(&SaveFileName) == FALSE)
 	{
-		SetErrorInfo(CUSTOM_ERROR, 0, _T("请选择文件打包保存位置"));
+		SetErrorInfo(CUSTOM_ERROR, 0, _T("请选择文件输出保存位置"));
 		return FALSE;
 	}
 
@@ -373,6 +386,12 @@ BOOL CInfoMaster::OutputPackageFile()
 
 	GetLsThreadMgr().AddThreadToList(m_pEncryptFile);
 
+	//显示打包进度
+	if (m_pEncryptProcess == NULL)
+		m_pEncryptProcess = new CEncryptProcess(m_hWnd);
+
+	m_pEncryptProcess->ShowModal();
+	
 	return TRUE;
 }
 
