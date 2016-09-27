@@ -311,6 +311,10 @@
 				Name="Utils"
 				>
 				<File
+					RelativePath=".\Utils\DPI.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\DuiFunc.cpp"
 					>
 				</File>
@@ -572,6 +576,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Utils\DPI.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\DuiFunc.h"
 					>
 				</File>
@@ -601,6 +609,10 @@
 				</File>
 				<File
 					RelativePath=".\Utils\Utils.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\VersionHelpers.h"
 					>
 				</File>
 				<File

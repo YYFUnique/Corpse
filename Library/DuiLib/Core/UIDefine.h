@@ -287,8 +287,9 @@ protected:                                                                \
 //////////////END控件名称宏定义//////////////////////////////////////////////////
 
 //自定义消息列表
-#define	WM_BASE_ID				(WM_USER+0x100)
-#define	WM_MENUCLICK		WM_BASE_ID+0x1		//菜单鼠标点击消息
+#define	WM_BASE_ID				(WM_USER+0x1000)
+#define	WM_MENUCLICK		(WM_BASE_ID+0x1)		//菜单鼠标点击消息
+#define   WM_USER_SET_DPI     (WM_BASE_ID+0x2)		//设置DPI消息
 
 //自定义定时器ID
 
