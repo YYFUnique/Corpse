@@ -249,6 +249,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\EncryptProcess.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\InfoMaster.cpp"
 				>
 			</File>
@@ -284,6 +288,10 @@
 			>
 			<File
 				RelativePath=".\EncryptFileThread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EncryptProcess.h"
 				>
 			</File>
 			<File

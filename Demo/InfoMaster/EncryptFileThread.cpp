@@ -43,26 +43,33 @@ UINT CEncryptFile::workThread(LPVOID lParam)
 	PostMessage(hMainDlg, WM_ENCRYPT_PROGRESS_POSITION, 0, 10);
 	SHDeleteDirectory(szTmpFolder);
 
-	CWaitCursor WaitCursor;
+	PostMessage(hMainDlg, WM_ENCRYPT_PROGRESS_POSITION, 0, 15);
+
+	//将APK文件加压到指定目录
 	CLzma Lzma;
 	Lzma.LzmaDecode(pInfoMaster->GetZipFilePath(), szTmpFolder);
 
+	PostMessage(hMainDlg, WM_ENCRYPT_PROGRESS_POSITION, 0, 40);
+
+	//拷贝加密文件到APK解压目录
 	CString strCryptFile, strNewCryptFile;
 	strCryptFile.Format(_T("%s\\InfoMaster"), szTmpFile);
 	strNewCryptFile.Format(_T("%s\\META-INF\\InfoMaster"), szTmpFolder);
 	CopyFile(strCryptFile, strNewCryptFile, FALSE);
 
-	PostMessage(hMainDlg, WM_ENCRYPT_PROGRESS_POSITION, 0, 50);
+	PostMessage(hMainDlg, WM_ENCRYPT_PROGRESS_POSITION, 0, 60);
 
+	//将APK解压目录打包
 	Lzma.LzmaEncode(szTmpFolder, pInfoMaster->GetEncryptFilePath());
 
 	PostMessage(hMainDlg, WM_ENCRYPT_PROGRESS_POSITION, 0, 90);
 
+	//删除APK解压目录
 	SHDeleteDirectory(szTmpFolder);
+	
 	PostMessage(hMainDlg, WM_ENCRYPT_PROGRESS_POSITION, 0, 100);
 	
 	PostMessage(hMainDlg, WM_ENCRYPT_SUCCESS, NULL, NULL);
-
 	return TRUE;
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EncryptFileThread.h"
+#include "EncryptProcess.h"
 #include <atlstr.h>
 
 class CInfoMaster : public WindowImplBase
@@ -36,4 +37,5 @@ protected:
 	CDuiString m_strEncryptFilePath;
 
 	CEncryptFile* m_pEncryptFile;
+	CEncryptProcess* m_pEncryptProcess;
 };

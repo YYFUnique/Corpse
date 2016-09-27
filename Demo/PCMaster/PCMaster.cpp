@@ -145,14 +145,14 @@ void CPCMaster::OnFinalMessage(HWND hWnd)
 void CPCMaster::InitWindow()
 {
 	//将主窗口句柄放入内存映射文件
-	SetMainWndToMapping();
+	//SetMainWndToMapping();
 	::DragAcceptFiles(m_hWnd,TRUE);
 	//设置显示图标
 	SetIcon(IDI_MAINFRAME);
 	//设置用户名
 
-	CMessageTip* pTip = new CMessageTip(_T(""),0xFFFFFFFF,_T("测试"),_T("测试内容"));
-	pTip->ShowWindow(true);
+	/*CMessageTip* pTip = new CMessageTip(_T(""),0xFFFFFFFF,_T("测试"),_T("测试内容"));
+	pTip->ShowWindow(true);*/
 
  	CTextUI* pText = (CTextUI*)m_PaintManager.FindControl(_T("LabelUserName"));
  	if (pText)
