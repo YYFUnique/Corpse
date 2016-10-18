@@ -249,6 +249,8 @@ protected:                                                                \
 #define  DUI_CTR_TREENODE									(_T("TreeNode"))
 #define  DUI_CTR_CALENDAR									(_T("Calendar"))
 #define  DUI_CTR_ROLLTEXT										(_T("RollText"))
+#define  DUI_CTR_DOCKPANE									(_T("DockPane"))
+#define  DUI_CTR_DOCKITEM									(_T("DockItem"))
 
 #define  DUI_CTR_CONTAINER									(_T("Container"))
 #define  DUI_CTR_TABLAYOUT									(_T("TabLayout"))

@@ -483,6 +483,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Control\UIDockPane.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Control\UIEdit.cpp"
 					>
 				</File>
@@ -741,6 +745,10 @@
 				</File>
 				<File
 					RelativePath=".\Control\UIDateTime.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Control\UIDockPane.h"
 					>
 				</File>
 				<File

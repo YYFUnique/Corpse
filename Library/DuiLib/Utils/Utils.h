@@ -58,6 +58,7 @@ namespace DuiLib
 		int GetHeight() const;
 		void Empty();
 		bool IsNull() const;
+		void CopyRect(LPCRECT lpSrcRect);
 		void Join(const RECT& rc);
 		void ResetOffset();
 		void Normalize();
@@ -65,6 +66,9 @@ namespace DuiLib
 		void Inflate(int cx, int cy);
 		void Deflate(int cx, int cy);
 		void Union(CDuiRect& rc);
+		bool PtInRect(POINT pt);
+		void SetRect(POINT topLeft, POINT bottomRight);
+		void Move(int x,int y);
 	};
 
 	class UILIB_API CDuiImage
