@@ -105,6 +105,11 @@ namespace DuiLib
 		return (left == 0 && right == 0 && top == 0 && bottom == 0); 
 	}
 
+	void CDuiRect::CopyRect(LPCRECT lpSrcRect)
+	{
+		::CopyRect(this, lpSrcRect);
+	}
+
 	void CDuiRect::Join(const RECT& rc)
 	{
 		if( rc.left < left ) left = rc.left;
@@ -144,6 +149,23 @@ namespace DuiLib
 		::UnionRect(this, this, &rc);
 	}
 
+	bool CDuiRect::PtInRect(POINT pt)
+	{
+		return ::PtInRect(this,pt) != FALSE;
+	}
+
+	void CDuiRect::SetRect(POINT topLeft, POINT bottomRight)
+	{
+		::SetRect(this, topLeft.x, topLeft.y, bottomRight.x, bottomRight.y);
+	}
+
+	void CDuiRect::Move(int x,int y)
+	{
+		left += x;
+		right+=x;
+		top += y;
+		bottom += y;
+	}
 
 	CDuiImage::CDuiImage()
 	{

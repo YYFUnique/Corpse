@@ -164,6 +164,7 @@ m_pDataObject(NULL)
     ::ZeroMemory(&m_rcCaption, sizeof(m_rcCaption));
 	::ZeroMemory(&m_rcLayeredUpdate, sizeof(m_rcLayeredUpdate));
     m_ptLastMousePos.x = m_ptLastMousePos.y = -1;
+	m_strShadowImage.Empty();
 }
 
 CPaintManagerUI::~CPaintManagerUI()

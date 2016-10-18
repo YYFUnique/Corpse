@@ -121,3 +121,4 @@
 #include "Control/UIMenu.h"
 #include "Control/UIColorPalette.h"
 #include "Control/UIIPAddress.h"
+#include "Control/UIDockPane.h"
