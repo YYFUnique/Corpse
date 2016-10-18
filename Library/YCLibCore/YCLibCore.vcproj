@@ -269,6 +269,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\File\FileSystemWatcher.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\File\LogicalDiskMgr.cpp"
 					>
 				</File>
@@ -301,11 +305,19 @@
 				Name="Utils"
 				>
 				<File
+					RelativePath=".\Utils\APIs.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\ErrorInfo.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Utils\FileTools.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\OsInfo.cpp"
 					>
 				</File>
 			</Filter>
@@ -351,6 +363,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\File\FileSystemWatcher.h"
+					>
+				</File>
+				<File
 					RelativePath=".\File\LogicalDiskMgr.h"
 					>
 				</File>
@@ -387,11 +403,19 @@
 				Name="Utils"
 				>
 				<File
+					RelativePath=".\Utils\APIs.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\ErrorInfo.h"
 					>
 				</File>
 				<File
 					RelativePath=".\Utils\FileTools.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\OsInfo.h"
 					>
 				</File>
 				<File
