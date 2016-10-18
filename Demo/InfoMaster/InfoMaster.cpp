@@ -183,7 +183,6 @@ void CInfoMaster::OnSave(TNotifyUI& msg)
 
 	do 
 	{
-		//判断是否是APK文件
 		CString strCryptString;
 		if (GetCryptContext(strCryptString) == FALSE)
 		{

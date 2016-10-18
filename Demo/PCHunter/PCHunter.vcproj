@@ -439,10 +439,6 @@
 			<Filter
 				Name="Control"
 				>
-				<File
-					RelativePath=".\Control\UIDockPane.cpp"
-					>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -637,10 +633,6 @@
 			<Filter
 				Name="Control"
 				>
-				<File
-					RelativePath=".\Control\UIDockPane.h"
-					>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter

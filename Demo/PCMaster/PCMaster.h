@@ -66,3 +66,4 @@ protected:
 
 	//CDrawingBoard* m_pDraw;
 };
+

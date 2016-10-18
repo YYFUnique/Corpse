@@ -11,14 +11,13 @@
 #include <shellapi.h>
 #include <Shlwapi.h>
 #include <shlobj.h>
-//#include "UiFeatureEffect/UIFeatureEffect.h"
-
-
-#define UI_FEATUREEFFECT_CONTROL		_T("Tools")
+#include "YCLibCore/Utils/ErrorInfo.h"
+#include "YCLibCore/Utils/APIs.h"
 
 #pragma comment(lib,"shell32.lib")
 #pragma comment(lib,"shlwapi.lib")
 #pragma comment(lib,"Msimg32.lib")
+
 typedef enum _MONITORPOWER
 {
 	MONITORPOWER_OPEN = 1,	//开启显示器
@@ -32,7 +31,9 @@ typedef enum _tagTHUMBBUTTON_INDEX
 	THUMBBUTTON_THREE,
 };
 
-#define		WM_ADD_TOOLBAR				(WM_USER+0x100)
+#define		WM_ADD_TOOLBAR							(WM_USER+0x100)
+#define		UI_FEATUREEFFECT_CONTROL			_T("Tools")
+#define		PRIVATE_CONFIG_SECTION_NAME	_T("App")
 
 CPCMaster::CPCMaster()
 :m_pTaskbarList(NULL)
@@ -75,6 +76,9 @@ LRESULT CPCMaster::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 						HandleCmdLine(szCmdLine);  
 				} 
 			}
+			break;
+		case WM_ADD_TOOLBAR:
+				OnLoadToobar();
 			break;
 		default:
 			return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
@@ -154,15 +158,32 @@ void CPCMaster::InitWindow()
 	/*CMessageTip* pTip = new CMessageTip(_T(""),0xFFFFFFFF,_T("测试"),_T("测试内容"));
 	pTip->ShowWindow(true);*/
 
+	TCHAR szUserName[MAX_PATH];
+
  	CTextUI* pText = (CTextUI*)m_PaintManager.FindControl(_T("LabelUserName"));
  	if (pText)
  	{
- 		TCHAR szUserName[MAX_PATH];
  		DWORD dwSize = _countof(szUserName);
  		GetUserName(szUserName,&dwSize);
  		pText->SetText(szUserName);
 		pText->SetToolTip(szUserName);
  	}
+
+	//由于获取的图片是16位色，显示存在问题，故暂时废弃
+	/*TCHAR szUserPicturePath[MAX_PATH];
+	if (GetUserPicturePath(szUserName,szUserPicturePath,_countof(szUserPicturePath)) == ERROR_SUCCESS)
+	{
+		CButtonUI* pFace = (CButtonUI*)m_PaintManager.FindControl(_T("BtnFace"));
+		if (pFace)
+		{
+			CDuiString strUserPictrue;
+			strUserPictrue.Format(_T("file='%s' dest='1,1,81,81'"),szUserPicturePath);
+			pFace->SetNormalImage(strUserPictrue);
+		}
+	}*/
+
+	//加载工具栏图标
+	PostMessage(WM_ADD_TOOLBAR, NULL, NULL);
 }
 
 void CPCMaster::OnMenuClick(CControlUI* pControl)
@@ -279,6 +300,10 @@ void CPCMaster::OnClick(TNotifyUI& msg)
 		GetWindowRect(m_hWnd, &rcWindow);
 		rcWindow.top = rcWindow.top + msg.pSender->GetPos().bottom;
 		new CColorSkinWindow(this, rcWindow);
+	}
+	else if(msg.pSender == (CButtonUI*)m_PaintManager.FindControl(_T("BtnSpy")))
+	{
+
 	}
 }
 
@@ -406,8 +431,34 @@ void CPCMaster::AddToolBar(LPCTSTR lpszToolBar,LPCTSTR lpszDisplayName)
 
 void CPCMaster::OnLoadToobar()
 {
-	for (int n=0;n<10;++n)
-		AddToolBar(_T("D:\\Program Files (x86)\\VMware\\VMware Workstation\\vmware.exe"),_T("这是代码添加的加的"));
+	TCHAR szModuleFile[MAX_PATH];
+	GetModuleFileName(NULL,szModuleFile,_countof(szModuleFile));
+	PathRemoveFileSpec(szModuleFile);
+	PathAppend(szModuleFile,_T("Config.ini"));
+
+	//if (PathFileExists(szModuleFile) == FALSE)
+	//{
+	//	SetErrorInfo(SYSTEM_ERROR, 0, _T("查找运行目录下的Config.ini配置文件失败"));
+	//	MessageBox(m_hWnd, GetThreadErrorInfoString(), _T("提示") ,MB_OK|MB_ICONSTOP);
+	//	return;
+	//}
+
+	TCHAR szKeys[5*1024];
+	TCHAR szAppName[MAX_PATH];
+	TCHAR szAppPath[MAX_PATH];
+	GetPrivateProfileString(NULL,NULL,NULL,szKeys,_countof(szKeys),szModuleFile);
+	LPCTSTR lpszKeys = szKeys;
+	while(*lpszKeys)
+	{
+		GetPrivateProfileString(lpszKeys,_T("AppName"),NULL,szAppName,_countof(szAppName),szModuleFile);
+		GetPrivateProfileString(lpszKeys,_T("AppPath"),NULL,szAppPath,_countof(szAppPath),szModuleFile);
+
+		AddToolBar(szAppPath,szAppName);
+
+		lpszKeys += _tcslen(lpszKeys) + 1;
+	}
+
+	//需要添加一个添加按钮，暂时未做
 }
 
 void CPCMaster::AddThumbnailButtons()
