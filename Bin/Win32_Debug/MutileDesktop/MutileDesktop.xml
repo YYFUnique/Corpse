@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="150,30" sizebox="4,4,6,6" bktrans="true" roundcorner="5,5">
+    <Font name="微软雅黑" size="14" bold="false" italic="false" />
+	<HorizontalLayout name="VLayout" pos="0,1,0,1" bkimage="file=&apos;main_bkg.jpg&apos; corner=&apos;600,200,1,1&apos;" borderround="5,5">
+		<Button text="系统桌面" name="System" font="0"/>
+		<Button text="安全桌面" name="Security" font="0"/>
+	</HorizontalLayout>
+</Window>

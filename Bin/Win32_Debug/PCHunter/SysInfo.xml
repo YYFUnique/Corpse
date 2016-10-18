@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="List" value="scrollstepsize=&quot;50&quot; vscrollbar=&quot;true&quot; hscrollbar=&quot;true&quot; itemalign=&quot;left&quot; itemaltbk=&quot;true&quot; itemtextpadding=&quot;5,0,0,0&quot; itemlinecolor=&quot;#FF939393&quot;" />
+	<Default name="ListHeaderItem" value="sepimage=&quot;file=&apos;ListHeadSep.png&apos;&quot; sepwidth=&quot;1&quot;"/>
+	<VerticalLayout name="VLayout">
+		<VerticalLayout name="VLayoutSysInfo" height="30" bkcolor="#FFDEDEDE" >
+			<Option name="OptionUI1" font="0" text="系统信息" tooltip="系统信息" userdata="0" float="true" pos="15,2,85,30" group="SysInfo" selected="true"/>
+			<Option name="OptionUI3" font="0" text="系统用户" tooltip="系统用户" userdata="1" float="true" pos="97,2,167,30" group="SysInfo"/>
+			<Option name="OptionUI4" font="0" text="进程窗口" tooltip="进程窗口" userdata="2" float="true" pos="179,2,249,30" group="SysInfo" />
+			<Option name="OptionUI5" font="0" text="托盘图标" tooltip="托盘图标" userdata="3" float="true" pos="261,2,331,30" group="SysInfo" />
+			<Option name="OptionUI2" font="0" text="Explorer菜单管理" tooltip="Explorer菜单管理" userdata="4" float="true" pos="343,2,453,30" group="SysInfo" />
+		</VerticalLayout>
+		<TabLayout name="InfoWizard" Padding="1,0,1,1">
+			<HorizontalLayout virtualwnd="osinfo"  name="VLayoutOsInfo">
+				<TreeView name="OsInfo" visiblefolderbtn="false" textpadding="5,0,0,0" vscrollbar="true" visiblecheckbtn="false" />
+			</HorizontalLayout>
+		</TabLayout>
+	</VerticalLayout>
+</Window>
+

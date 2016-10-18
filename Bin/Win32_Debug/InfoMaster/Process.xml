@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="300,120" caption="0,0,0,40" maxbox="false" bktrans="true" shadow="true" shadowimage="shadow.png" shadowcorner="5,3,5,5" roundcorner="5,5" maxbox="false" >
+    <Font name="微软雅黑" size="16" bold="false" italic="false" />
+    <Font name="楷体" size="16" bold="false" italic="false" />
+    <Font name="微软雅黑" size="12" bold="false" italic="false" />
+    <Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="Picture" value="hotimage=&quot;file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;&quot; pushedimage=&quot;file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;&quot;" />
+    <VerticalLayout name="VLayoutTotal" bkimage="file=&apos;bk.png&apos; corner=&apos;1,40,1,1&apos;" borderround="5,5">
+        <VerticalLayout name="WinBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;">
+			<HorizontalLayout name="HLayoutHead" pos="0,0,0,40" height="40">
+				<Control />
+				<HorizontalLayout name="HLayoutSys" pos="0,0,39,40" width="39" height="40">
+					<Button name="BtnClose" tooltip="关闭" float="true" pos="0,0,39,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
+				</HorizontalLayout>
+			</HorizontalLayout>
+			<VerticalLayout name="VLayoutBody" >
+				<Progress name="rate" float="true" pos="10,20,10,0" width="270" height="10" bkimage="progressb.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" foreimage="progressf.png" min="0" max="100" value="10" hor="true" />
+			</VerticalLayout>
+        </VerticalLayout>
+    </VerticalLayout>
+</Window>
