@@ -124,10 +124,10 @@ void CToolbar::OnItemMenu(TNotifyUI& msg)
 {
 	if (msg.pSender->GetName() == _T("Rich"))
 	{
-		CMenuWnd* pMenu = new CMenuWnd(m_hWnd);
-		CPoint pt = msg.ptMouse;
+		CMenuWnd* pMenu = new CMenuWnd();
+		CDuiPoint pt = msg.ptMouse;
 		ClientToScreen(m_hWnd, &pt);
 		STRINGorID strXmlFile(_T("ContentMenu.xml"));
-		pMenu->Init(NULL,strXmlFile,_T("xml"), pt);
+		pMenu->Init(NULL,strXmlFile,pt,&m_PaintManager);
 	}
 }

@@ -1,35 +1,34 @@
 #include "stdafx.h"
-#include "PCHunter.h"
+#include "CaptureScreen.h"
 
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
 {
 	CPaintManagerUI::SetInstance(hInstance);
 	BOOL bSuccess = FALSE;
 	HRESULT hRet = S_FALSE;
-	CDuiString strTip;
-do 
+
+	do
 	{
-		hRet = ::OleInitialize(NULL);
+		hRet = ::CoInitialize(NULL);
 		if (FAILED(hRet)) 
 			break;
 
-		CPCHunter* pPCHunter = new CPCHunter();
-		if (pPCHunter == NULL) 
+		CCaptureScreen* pCaptureScreen = new CCaptureScreen();
+		if (pCaptureScreen == NULL) 
 			break;
 
-		pPCHunter->Create(NULL, _T("µçÄÔ¹Ü¼Ò"), UI_WNDSTYLE_FRAME, 0, 0, 0, CW_USEDEFAULT, CW_USEDEFAULT);
-		pPCHunter->CenterWindow();
-		pPCHunter->ShowWindow(true);
+		pCaptureScreen->Create(NULL, _T("·É·É½ØÍ¼"), UI_WNDSTYLE_DIALOG, WS_EX_TOPMOST, 0, 0, 400, 300);
+		pCaptureScreen->CenterWindow();
+		pCaptureScreen->ShowWindow(true);
 		CPaintManagerUI::MessageLoop();
 
 		CPaintManagerUI::Term();
-		delete pPCHunter;
 
 		bSuccess = TRUE;
-	} while (FALSE);
+	}while(FALSE);
 
 	if (SUCCEEDED(hRet))
-		::OleUninitialize();
+		::CoUninitialize();
 
 	return bSuccess;
 }
