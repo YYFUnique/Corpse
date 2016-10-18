@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Window size="600,250" sizebox="4,4,6,6" caption="0,0,0,35" mininfo="267,645" roundcorner="5,5" layered="true">
+	<Font name="微软雅黑" size="16" bold="false" italic="false" />
+    <Font name="楷体" size="16" bold="false" italic="false" />
+    <Font name="微软雅黑" size="12" bold="false" italic="false" />
+	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="List" value="scrollstepsize=&quot;50&quot; vscrollbar=&quot;true&quot; hscrollbar=&quot;true&quot; itemalign=&quot;left&quot; itemaltbk=&quot;true&quot; itemtextpadding=&quot;5,0,0,0&quot; itemlinecolor=&quot;#FF939393&quot;" />
+    <VerticalLayout name="VLayoutTotal" bkcolor="#FFFEFEFE">
+		<VerticalLayout name="WinBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos; mask=&apos;0xffffffff&apos;">
+			<HorizontalLayout name="HLayoutTitle" pos="0,0,0,35" >
+				<Control />
+				<HorizontalLayout name="HLayoutSys" pos="0,0,38,20" width="38" height="20">
+					<Button name="BtnClose" tooltip="关闭" float="true" pos="0,0,38,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
+				</HorizontalLayout>
+			</HorizontalLayout>
+			<HorizontalLayout >
+				<List name="ArpInfo" padding="1,0,1,0" menu="true">
+					<ListHeader bkimage="file=&apos;subtab_bg.png&apos; corner=&apos;1,1,1,1&apos;" menu="true">						
+						<ListHeaderItem text="IP地址" sepimage="file=&apos;fenge_line.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="MAC地址" sepimage="file=&apos;fenge_line.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="标识" sepimage="file=&apos;fenge_line.png&apos;" sepwidth="1"/>
+					</ListHeader>
+				</List>
+			</HorizontalLayout>
+			<Control height="2"/>
+		</VerticalLayout>
+	</VerticalLayout>
+</Window>

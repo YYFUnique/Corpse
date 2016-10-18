@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="800,600" sizebox="4,4,6,6" caption="0,0,0,100" mininfo="800,600" >
+    <Font name="微软雅黑" size="16" bold="false" italic="false" />
+    <Font name="楷体" size="16" bold="false" italic="false" />
+    <Font name="微软雅黑" size="12" bold="false" italic="false" />
+	<VerticalLayout name="Screen" enabled="disabled" pos="0,1,0,1" bkimage="file=&apos;main_bkg.jpg&apos; corner=&apos;600,200,1,1&apos;" borderround="5,5">
+		<Label name="Capture" enabled="disabled" />
+	</VerticalLayout>
+</Window>

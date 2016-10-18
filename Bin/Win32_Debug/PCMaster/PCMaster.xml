@@ -19,9 +19,9 @@
                         <Button name="BtnClose" tooltip="关闭" float="true" pos="57,0,96,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
                     </HorizontalLayout>
                 </HorizontalLayout>
-                <HorizontalLayout name="HLayoutCenter" pos="0,0,0,85" height="85">
-                    <HorizontalLayout name="HLayoutFace" pos="0,0,90,85" width="90" height="85">
-                        <Button name="BtnFace" tooltip="修改头像" float="true" pos="4,1,86,83" bkimage="picture_.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;UserFace.bmp&apos; dest=&apos;1,1,81,81&apos;" />
+                <HorizontalLayout name="HLayoutCenter" pos="0,0,0,90" height="90">
+                    <HorizontalLayout name="HLayoutFace" pos="0,0,90,90" width="90" height="90">
+                        <Button name="BtnFace" tooltip="修改头像" float="true" pos="4,4,86,86" bkimage="picture_.png" textcolor="#FFFF0000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;UserFace.bmp&apos; dest=&apos;1,1,81,81&apos;" />
                     </HorizontalLayout>
                     <VerticalLayout name="VLayoutUserInfo">
                         <HorizontalLayout name="HorizontalLayoutUI1" pos="0,0,127,30" width="127" height="30">
@@ -49,7 +49,8 @@
             </VerticalLayout>
 			<TabLayout name="demo">
 				<VerticalLayout name="VLayoutBody" bkimage="file=&apos;main_bottom_bkg.png&apos; source=&apos;0,45,50,111&apos; corner=&apos;20,20,20,20&apos;" inset="3,1,3,6" >
-					<ListCtrl name="Tools" childpadding="1,1,1,1" padding="4,5,2,2" itemfont="2" vscrollbar="true" itempushedimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;" itemselectedimage="file=&apos;main_topmask_selected.png&apos; corner=&apos;2,2,2,2&apos;" itemhotimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;"/>
+					<!--<ListCtrl name="Tools" childpadding="1,1,1,1" padding="4,5,2,2" itemfont="2" vscrollbar="true" itempushedimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;" itemselectedimage="file=&apos;main_topmask_selected.png&apos; corner=&apos;2,2,2,2&apos;" itemhotimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;"/>-->
+					<ListCtrl name="Tools" childpadding="1,1,1,1" padding="4,4,2,2" itemfont="2" vscrollbar="true" itempushedimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;" itemselectedimage="file=&apos;main_topmask_selected.png&apos; corner=&apos;2,2,2,2&apos;" itemhotimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;"/>
 				</VerticalLayout>
 				<VerticalLayout name="TabPage2" bkcolor="#FFFFFF00">
 				</VerticalLayout>
