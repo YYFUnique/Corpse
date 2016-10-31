@@ -2,11 +2,11 @@
 #include <BaseTsd.h>
 
 /*#ifdef LS_STATIC_LIB_CALL
-#define YCLIB_CORE_API 
-#elif defined  YCLIBCORE_EXPORTS
-#define YCLIB_CORE_API __declspec(dllexport)
+#define DLL_API 
+#elif defined  DLL_EXPORTS
+#define DLL_API __declspec(dllexport)
 #else
-#define YCLIB_CORE_API __declspec(dllimport)
+#define DLL_API __declspec(dllimport)
 #endif*/
 
 class CNodeData
@@ -45,7 +45,7 @@ typedef struct __POSITION
 #endif
 
 template<class TYPE, class ARG_TYPE = const TYPE&>
-class /*YCLIB_CORE_API*/ CYjList /*: public CObject*/
+class /*DLL_API*/ CYjList /*: public CObject*/
 {
 protected:
 	struct CNode

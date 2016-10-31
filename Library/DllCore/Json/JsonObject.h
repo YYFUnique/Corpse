@@ -7,11 +7,11 @@
 using namespace Json;
 
 #ifdef LS_STATIC_LIB_CALL
-#define YCLIB_CORE_API 
-#elif defined  YCLIBCORE_EXPORTS
-#define YCLIB_CORE_API __declspec(dllexport)
+#define DLL_API 
+#elif defined  DLL_EXPORTS
+#define DLL_API __declspec(dllexport)
 #else
-#define YCLIB_CORE_API __declspec(dllimport)
+#define DLL_API __declspec(dllimport)
 #endif
 
 //typedef struct _ENUM_JSON_MEMBER_NAME 
@@ -24,7 +24,7 @@ using namespace Json;
 
 /*class  CJsonObjectArray;*/
 
-class YCLIB_CORE_API CJsonObject
+class DLL_API CJsonObject
 {
 public:
 	CJsonObject();

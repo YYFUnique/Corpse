@@ -1,11 +1,11 @@
 #pragma once
 
 #ifdef LS_STATIC_LIB_CALL
-#define YCLIB_CORE_API 
-#elif defined  YCLIBCORE_EXPORTS
-#define YCLIB_CORE_API __declspec(dllexport)
+#define DLL_API 
+#elif defined  DLL_EXPORTS
+#define DLL_API __declspec(dllexport)
 #else
-#define YCLIB_CORE_API __declspec(dllimport)
+#define DLL_API __declspec(dllimport)
 #endif
 
 //线程功能ID
@@ -23,7 +23,7 @@ typedef enum _YJ_THREAD_APP_ID
 	LS_THREAD_APP_ID_ENCRYPT,														//终端安全手机客户端压缩线程
 }YJ_THREAD_APP_ID;
 
-class YCLIB_CORE_API CLsThread
+class DLL_API CLsThread
 {
 public:
 	CLsThread(void);

@@ -1,11 +1,11 @@
 #pragma once
 
 #ifdef LS_STATIC_LIB_CALL
-#define YCLIB_CORE_API 
-#elif defined  YCLIBCORE_EXPORTS
-#define YCLIB_CORE_API __declspec(dllexport)
+#define DLL_API 
+#elif defined  DLL_EXPORTS
+#define DLL_API __declspec(dllexport)
 #else
-#define YCLIB_CORE_API __declspec(dllimport)
+#define DLL_API __declspec(dllimport)
 #endif
 
 #include <atlstr.h>
@@ -40,7 +40,7 @@ typedef struct _ERROR_INFO
 //输入参数: 无
 //返 回 值: 返回错误信息的描述字符串
 //==================================================================
-YCLIB_CORE_API CString GetLastErrorInfo();
+DLL_API CString GetLastErrorInfo();
 
 //==================================================================
 //函 数 名: ReleaseThreadErrorInfo
@@ -48,7 +48,7 @@ YCLIB_CORE_API CString GetLastErrorInfo();
 //输入参数: 无
 //返 回 值: 无返回值
 //==================================================================
-YCLIB_CORE_API void ReleaseThreadErrorInfo();
+DLL_API void ReleaseThreadErrorInfo();
 
 //==================================================================
 //函 数 名: ReleaseProcessErrorInfo
@@ -56,7 +56,7 @@ YCLIB_CORE_API void ReleaseThreadErrorInfo();
 //输入参数: 无
 //返 回 值: 无返回值
 //==================================================================
-YCLIB_CORE_API void ReleaseProcessErrorInfo();
+DLL_API void ReleaseProcessErrorInfo();
 
 //==================================================================
 //函 数 名: GetThreadErrorInfoString
@@ -64,7 +64,7 @@ YCLIB_CORE_API void ReleaseProcessErrorInfo();
 //输入参数: 无
 //返 回 值: 返回线程错误消息字符串的引用
 //==================================================================
-YCLIB_CORE_API CString& GetThreadErrorInfoString();
+DLL_API CString& GetThreadErrorInfoString();
 
 //==================================================================
 //函 数 名: IsSpecialError
@@ -75,7 +75,7 @@ YCLIB_CORE_API CString& GetThreadErrorInfoString();
 //			[in]  dwErrorCode, 错误代码
 //返 回 值: 是指定的错误返回TRUE,否则FALSE 
 //==================================================================
-YCLIB_CORE_API BOOL IsSpecialError(DWORD dwErrorType,DWORD dwErrorCode);
+DLL_API BOOL IsSpecialError(DWORD dwErrorType,DWORD dwErrorCode);
 
 //==================================================================
 //函 数 名: SetErrorInfo
@@ -90,9 +90,9 @@ YCLIB_CORE_API BOOL IsSpecialError(DWORD dwErrorType,DWORD dwErrorCode);
 //			[in]  ..., 参数列表
 //返 回 值: 返回错误代码
 //==================================================================
-YCLIB_CORE_API DWORD SetErrorInfo(DWORD dwErrorType,DWORD dwErrorCode,LPCTSTR lpszErrorTitle,...);
+DLL_API DWORD SetErrorInfo(DWORD dwErrorType,DWORD dwErrorCode,LPCTSTR lpszErrorTitle,...);
 
-YCLIB_CORE_API DWORD RtlNtStatusToDosError(NTSTATUS NtStatus);
+DLL_API DWORD RtlNtStatusToDosError(NTSTATUS NtStatus);
 
 //==================================================================
 //函 数 名: SetErrorInfo
@@ -108,7 +108,7 @@ DWORD SetErrorInfoV(DWORD dwErrorType,DWORD dwErrorCode,LPCTSTR lpszErrorTitle,v
 //			这里设置的就是前面的"打开文件失败"冒号之前的字符串)
 //返 回 值: 返回错误代码
 //==================================================================
-YCLIB_CORE_API DWORD SetErrorTitle(LPCTSTR lpszTitle,...);
+DLL_API DWORD SetErrorTitle(LPCTSTR lpszTitle,...);
 
 //==================================================================
 //函 数 名: ResetErrorInfo
@@ -116,7 +116,7 @@ YCLIB_CORE_API DWORD SetErrorTitle(LPCTSTR lpszTitle,...);
 //输入参数: 无
 //返 回 值: 无
 //==================================================================
-YCLIB_CORE_API void ResetErrorInfo();
+DLL_API void ResetErrorInfo();
 
 //==================================================================
 //函 数 名: AppendErrorInfo
@@ -124,6 +124,6 @@ YCLIB_CORE_API void ResetErrorInfo();
 //输入参数: 参见SetErrorInfo函数
 //返 回 值: 无
 //==================================================================
-YCLIB_CORE_API void AppendErrorInfo(DWORD dwErrorType,DWORD dwErrorCode,LPCTSTR lpszErrorTitle,...);
+DLL_API void AppendErrorInfo(DWORD dwErrorType,DWORD dwErrorCode,LPCTSTR lpszErrorTitle,...);
 
 CString GetLogModuleFileName();
