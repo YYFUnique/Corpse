@@ -32,7 +32,7 @@
 
 #ifdef LS_STATIC_LIB_CALL
 #define JSON_API
-#elif defined YCLIBCORE_EXPORTS
+#elif defined DLL_EXPORTS
 #define JSON_API __declspec(dllexport)
 #else
 #define JSON_API __declspec(dllimport)
