@@ -11,9 +11,9 @@
 #include <shellapi.h>
 #include <Shlwapi.h>
 #include <shlobj.h>
-#include "YCLibCore/Utils/ErrorInfo.h"
-#include "YCLibCore/Utils/APIs.h"
-#include "YCLibCore/Utils/TextTools.h"
+#include "DllCore/Utils/ErrorInfo.h"
+#include "DllCore/Utils/APIs.h"
+#include "DllCore/Utils/TextTools.h"
 
 #include "QRCode/qr.h"
 

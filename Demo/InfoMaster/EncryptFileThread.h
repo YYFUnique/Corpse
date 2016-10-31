@@ -1,6 +1,6 @@
 #pragma once
 
-#include "YCLibCore/Thread/LsThread.h"
+#include "DllCore/Thread/LsThread.h"
 
 class CEncryptFile : public CLsThread
 {

@@ -5,7 +5,6 @@
 #include "Utils/TextTools.h"
 #include <atlstr.h>
 #include "Wnd/AboutDialog.h"
-#include "Control/UIDockPane.h"
 
 #define		TIMER_PCHUNTER_ID			0x1000
 #define		WM_TRAYICON					WM_USER+0x1000
@@ -103,7 +102,7 @@ CControlUI* CPCHunter::CreateControl(LPCTSTR pstrClass)
 {
 	CControlUI* pControl = NULL;
 
-	if (_tcsicmp(pstrClass, DUI_CTR_DOCKPANE) == 0)
+	/*if (_tcsicmp(pstrClass, DUI_CTR_DOCKPANE) == 0)
 	{
 		pControl = new CDockPaneUI;
 	}
@@ -114,7 +113,7 @@ CControlUI* CPCHunter::CreateControl(LPCTSTR pstrClass)
 		CDuiString strControlName;
 		strControlName.Format(_T("%s 没有定义！请确认"),pstrClass);
 		ASSERT(FALSE && _T("控件没有定义"));
-	}
+	}*/
 
 	return pControl;
 }
