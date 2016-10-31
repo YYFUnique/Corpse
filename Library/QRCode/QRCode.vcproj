@@ -18,9 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\DllProperty.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -41,10 +40,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;QRCODE_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;QR_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -89,9 +88,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
+			InheritedPropertySheets="..\DllProperty.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -114,7 +112,76 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;QRCODE_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;QR_EXPORTS"
+				RuntimeLibrary="2"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Static_Release|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="..\DllProperty.vsprops"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LS_STATIC_LIB_CALL"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -171,54 +238,50 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\QRCode.cpp"
+				RelativePath=".\qr.c"
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.cpp"
+				RelativePath=".\qrcnv.c"
+				>
+			</File>
+			<File
+				RelativePath=".\qrcnv_bmp.c"
+				>
+			</File>
+			<File
+				RelativePath=".\qrcnv_bmp2.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\qrcnv_png.c"
+				>
+			</File>
+			<File
+				RelativePath=".\qrcnv_svg.c"
+				>
+			</File>
+			<File
+				RelativePath=".\qrcnv_tiff.c"
 				>
 			</File>
 			<Filter
-				Name="QREncode"
+				Name="zlib"
 				>
 				<File
-					RelativePath=".\QREncode\bitstream.c"
+					RelativePath=".\zlib\adler32.c"
 					>
 				</File>
 				<File
-					RelativePath=".\QREncode\mask.c"
+					RelativePath=".\zlib\deflate.c"
 					>
 				</File>
 				<File
-					RelativePath=".\QREncode\mmask.c"
+					RelativePath=".\zlib\trees.c"
 					>
 				</File>
 				<File
-					RelativePath=".\QREncode\mqrspec.c"
-					>
-				</File>
-				<File
-					RelativePath=".\QREncode\qrenc.c"
-					>
-				</File>
-				<File
-					RelativePath=".\QREncode\qrencode.c"
-					>
-				</File>
-				<File
-					RelativePath=".\QREncode\qrinput.c"
-					>
-				</File>
-				<File
-					RelativePath=".\QREncode\qrspec.c"
-					>
-				</File>
-				<File
-					RelativePath=".\QREncode\rscode.c"
-					>
-				</File>
-				<File
-					RelativePath=".\QREncode\split.c"
+					RelativePath=".\zlib\zutil.c"
 					>
 				</File>
 			</Filter>
@@ -229,54 +292,50 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\stdafx.h"
+				RelativePath=".\crc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\qr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\qr_dwtable.h"
+				>
+			</File>
+			<File
+				RelativePath=".\qr_private.h"
+				>
+			</File>
+			<File
+				RelativePath=".\qr_util.h"
+				>
+			</File>
+			<File
+				RelativePath=".\qrcnv.h"
 				>
 			</File>
 			<Filter
-				Name="QREncode"
+				Name="zlib"
 				>
 				<File
-					RelativePath=".\QREncode\bitstream.h"
+					RelativePath=".\zlib\deflate.h"
 					>
 				</File>
 				<File
-					RelativePath=".\QREncode\config.h"
+					RelativePath=".\zlib\trees.h"
 					>
 				</File>
 				<File
-					RelativePath=".\QREncode\mask.h"
+					RelativePath=".\zlib\zconf.h"
 					>
 				</File>
 				<File
-					RelativePath=".\QREncode\mmask.h"
+					RelativePath=".\zlib\zlib.h"
 					>
 				</File>
 				<File
-					RelativePath=".\QREncode\mqrspec.h"
-					>
-				</File>
-				<File
-					RelativePath=".\QREncode\qrencode.h"
-					>
-				</File>
-				<File
-					RelativePath=".\QREncode\qrencode_inner.h"
-					>
-				</File>
-				<File
-					RelativePath=".\QREncode\qrinput.h"
-					>
-				</File>
-				<File
-					RelativePath=".\QREncode\qrspec.h"
-					>
-				</File>
-				<File
-					RelativePath=".\QREncode\rscode.h"
-					>
-				</File>
-				<File
-					RelativePath=".\QREncode\split.h"
+					RelativePath=".\zlib\zutil.h"
 					>
 				</File>
 			</Filter>
