@@ -2,8 +2,8 @@
 #include "EncryptFileThread.h"
 #include "InfoMaster.h"
 #include "Lzma/Lzma.h"
-#include "YCLibCore/Utils/FileTools.h"
-#include "YCLibCore/Utils/ErrorInfo.h"
+#include "DllCore/Utils/FileTools.h"
+#include "DllCore/Utils/ErrorInfo.h"
 
 CEncryptFile::CEncryptFile()
 {

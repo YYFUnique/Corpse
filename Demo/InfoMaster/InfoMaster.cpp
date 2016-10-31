@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "InfoMaster.h"
-#include "YCLibCore/Encrypt/LsRc4.h"
-#include "YCLibCore/Utils/ErrorInfo.h"
-#include "YCLibCore/Json/JsonObject.h"
-#include "YCLibCore/Thread/LsThreadMgr.h"
+#include "DllCore/Encrypt/LsRc4.h"
+#include "DllCore/Utils/ErrorInfo.h"
+#include "DllCore/Json/JsonObject.h"
+#include "DllCore/Thread/LsThreadMgr.h"
 
 #include <CommDlg.h>
 #include <atlstr.h>
