@@ -372,7 +372,7 @@ void CRichEdit::OnBtnSendOption(TNotifyUI& msg)
 {
 	CMenuWnd* pMenu = new CMenuWnd;
 	const RECT& rcPos = msg.pSender->GetPos();
-	CPoint pt(rcPos.left,rcPos.bottom);
+	CDuiPoint pt(rcPos.left,rcPos.bottom);
 	ClientToScreen(m_hWnd, &pt);
 	STRINGorID strXmlFile(_T("MenuStatus.xml"));
 	pMenu->Init(NULL,strXmlFile, pt,&m_PaintManager);

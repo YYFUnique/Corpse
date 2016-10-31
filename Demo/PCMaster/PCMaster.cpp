@@ -13,6 +13,9 @@
 #include <shlobj.h>
 #include "YCLibCore/Utils/ErrorInfo.h"
 #include "YCLibCore/Utils/APIs.h"
+#include "YCLibCore/Utils/TextTools.h"
+
+#include "QRCode/qr.h"
 
 #pragma comment(lib,"shell32.lib")
 #pragma comment(lib,"shlwapi.lib")
@@ -155,10 +158,60 @@ void CPCMaster::InitWindow()
 	SetIcon(IDI_MAINFRAME);
 	//设置用户名
 
+	int nCode = QR_ERR_NONE;
+	//qrInit的5个参数分别是version,mode,纠错等级和掩码，
+	//使用过程中使用除了QR_EM_8BIT以外的mode会生成不正常的二维码，暂时不知道原因。
+	//如果不确定使用什么模式，请直接使用QR_EM_AUTO模式
+	QRCode* pCode = qrInit(3, QR_EM_8BIT, QR_ECL_M, 7, &nCode);
+
+	if (pCode == NULL)
+		return;
+
+	LPCSTR lpszText = "http://www.baidu.com/s?wd=我说中国人!";
+	LPSTR lpszUtf8 = Gb32ToUtf8(lpszText);
+	if (qrAddData(pCode, (const qr_byte_t* )lpszUtf8, strlen(lpszUtf8)) == FALSE)
+		return;
+	//注意需要调用qrFinalize函数
+	if (qrFinalize(pCode) == FALSE)
+		return;
+
+	int size = 0;
+	//两个5分别表示：像素之间的距离(是否有边框）和二维码图片的放大倍数，范围都是1-16
+	//目前由于该函数返回BMP深度为1位，恰巧在Duilib图片解析引擎不能识别深度为1的BMP
+	//，故
+	qr_byte_t * buffer = qrSymbolToBMP2(pCode, 0, 2, &size);
+	if (buffer == NULL)
+		return;
+
+	//由于目前Duilib没有做从内存中打开BMP文件方式，暂时存放在缓存目录，待后续修改接口完成后处理
+	/*TCHAR szTmpPathName[MAX_PATH],szTmpName[MAX_PATH];
+	GetTempPath(_countof(szTmpPathName), szTmpPathName);
+	GetTempFileName(szTmpPathName, _T("QRCode"), 0, szTmpName);
+*/
+	HANDLE hFile = CreateFile(_T("C:\\test123.bmp"),GENERIC_WRITE|GENERIC_READ,
+				FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,CREATE_ALWAYS,0,NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+		return;
+
+	DWORD dwSize = 0;
+	if (WriteFile(hFile,buffer,size,&dwSize,NULL) == FALSE)
+		return;
+	//暂时没有处理写入文件失败的关闭句柄
+	CloseHandle(hFile);
+	//释放BMP分配的内存
+	//delete[] buffer;
+
+	CButtonUI* pBk = (CButtonUI*)m_PaintManager.FindControl(_T("BtnFace"));
+	if (pBk)
+	{
+		pBk->SetNormalImage(_T("C:\\test123.bmp"));
+	}
+	//
+	//free(buffer);
 	/*CMessageTip* pTip = new CMessageTip(_T(""),0xFFFFFFFF,_T("测试"),_T("测试内容"));
 	pTip->ShowWindow(true);*/
 
-	TCHAR szUserName[MAX_PATH];
+	/*TCHAR szUserName[MAX_PATH];
 
  	CTextUI* pText = (CTextUI*)m_PaintManager.FindControl(_T("LabelUserName"));
  	if (pText)
@@ -168,7 +221,7 @@ void CPCMaster::InitWindow()
  		pText->SetText(szUserName);
 		pText->SetToolTip(szUserName);
  	}
-
+*/
 	//由于获取的图片是16位色，显示存在问题，故暂时废弃
 	/*TCHAR szUserPicturePath[MAX_PATH];
 	if (GetUserPicturePath(szUserName,szUserPicturePath,_countof(szUserPicturePath)) == ERROR_SUCCESS)
