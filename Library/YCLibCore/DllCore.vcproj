@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="YCLibCore"
+	Name="DllCore"
 	ProjectGUID="{8EFDE56A-84E2-4340-BB17-56CF347FFA47}"
-	RootNamespace="YCLibCore"
+	RootNamespace="DllCore"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;YCLIBCORE_EXPORTS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;DllCore_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -112,7 +112,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;YCLIBCORE_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;DllCore_EXPORTS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
@@ -258,7 +258,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\YCLibCore.cpp"
+				RelativePath=".\DllCore.cpp"
 				>
 			</File>
 			<Filter
@@ -320,6 +320,10 @@
 					RelativePath=".\Utils\OsInfo.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\Utils\TextTools.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Encrypt"
@@ -352,7 +356,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\YCLibCore.h"
+				RelativePath=".\DllCore.h"
 				>
 			</File>
 			<Filter
@@ -416,6 +420,10 @@
 				</File>
 				<File
 					RelativePath=".\Utils\OsInfo.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\TextTools.h"
 					>
 				</File>
 				<File
