@@ -4,11 +4,11 @@
 #include "../Utils/YjList.h"
 
 #ifdef LS_STATIC_LIB_CALL
-#define YCLIB_CORE_API 
-#elif defined  YCLIBCORE_EXPORTS
-#define YCLIB_CORE_API __declspec(dllexport)
+#define DLL_API 
+#elif defined  DLL_EXPORTS
+#define DLL_API __declspec(dllexport)
 #else
-#define YCLIB_CORE_API __declspec(dllimport)
+#define DLL_API __declspec(dllimport)
 #endif
 
 //template class __declspec(dllexport) CLsList<CLsThread*,CLsThread*>;
@@ -16,7 +16,7 @@
 //对CLsThread类的管理
 typedef CYjList<CLsThread* , CLsThread*> CLsThreadList;
 
-class YCLIB_CORE_API CLsThreadMgr
+class DLL_API CLsThreadMgr
 {
 public:
 	CLsThreadMgr(void);
@@ -57,4 +57,4 @@ protected:
 	BOOL m_bInitComplete;
 };
 
-YCLIB_CORE_API CLsThreadMgr& GetLsThreadMgr();
+DLL_API CLsThreadMgr& GetLsThreadMgr();

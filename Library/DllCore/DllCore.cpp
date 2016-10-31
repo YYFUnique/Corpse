@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "YCLibCore.h"
+#include "DllCore.h"
 
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  dwReason, LPVOID /*lpReserved*/)
 {

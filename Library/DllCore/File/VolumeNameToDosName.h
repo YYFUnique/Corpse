@@ -1,11 +1,11 @@
 #pragma once
 
 #ifdef LS_STATIC_LIB_CALL
-#define YCLIB_CORE_API 
-#elif defined  YCLIBCORE_EXPORTS
-#define YCLIB_CORE_API __declspec(dllexport)
+#define DLL_API 
+#elif defined  DLL_EXPORTS
+#define DLL_API __declspec(dllexport)
 #else
-#define YCLIB_CORE_API __declspec(dllimport)
+#define DLL_API __declspec(dllimport)
 #endif
 
 //实现\Device\HarddiskVolume1\Test\1.txt转换为C:\Test\1.txt的转换
@@ -19,7 +19,7 @@ typedef struct _VOLUME_NAME_INFO
 
 typedef CYjList<VOLUME_NAME_INFO,const VOLUME_NAME_INFO&> CVolumeInfo;
 
-class YCLIB_CORE_API CVolumeNameToDosName
+class DLL_API CVolumeNameToDosName
 {
 public:
 	CVolumeNameToDosName(void);
