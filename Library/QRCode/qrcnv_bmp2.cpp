@@ -97,7 +97,7 @@
 /* {{{ function prototypes */
 
 static qr_byte_t *
-qrBmpWriteHeader(qr_byte_t *bof, int size, int width, int height, int imagesize);
+qrBmpWriteHeader2(qr_byte_t *bof, int size, int width, int height, int imagesize);
 
 /* }}} */
 /* {{{ qrSymbolToBMP() */
@@ -113,20 +113,25 @@ qrSymbolToBMP2(QRCode *qr, int sep, int mag, int *size)
 	qr_byte_t *sbuf, *sptr;
 	int rsize, imgsize;
 	int sepskips;
-	int i, j, ix, dim, imgdim, sepdim;
+	int i, j, ix, dim, imgdim, sepdim,rmod;
 
 	QRCNV_CHECK_STATE();
 	QRCNV_GET_SIZE();
 
 	//bmp位图在存储时，图片数据部分的字节数一定是4的倍数，如果不够四的倍数，在每一行要补齐字节。 
-	rsize = (imgdim*3/4+1)*4;
+	//rsize = imgdim*3+ (4-imgdim%4)*3;
+	rsize = imgdim*3;
+	if ((rmod = (rsize % 4)) != 0) {
+		rsize += 4 - rmod;
+	}
+
 	//bmp文件大小，包括文件头和数据部分
 	imgsize = rsize * imgdim *3;
 	*size = QRCNV_BMP_OFFBITS + imgsize;
 
 	QRCNV_MALLOC(rsize, *size);
 
-	sptr = qrBmpWriteHeader(sbuf, *size, imgdim, imgdim, imgsize);
+	sptr = qrBmpWriteHeader2(sbuf, *size, imgdim, imgdim, imgsize);
 
 	sepskips = rsize * sepdim;
 	/* 在bmp图片下部绘制白边框 */
@@ -183,7 +188,7 @@ qrSymbolToBMP2(QRCode *qr, int sep, int mag, int *size)
 /* {{{ qrBmpWriteHeader() */
 
 static qr_byte_t *
-qrBmpWriteHeader(qr_byte_t *bof, int size, int width, int height, int imagesize)
+qrBmpWriteHeader2(qr_byte_t *bof, int size, int width, int height, int imagesize)
 {
 	qr_byte_t *ptr;
 
