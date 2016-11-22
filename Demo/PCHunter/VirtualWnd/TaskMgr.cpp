@@ -6,6 +6,8 @@ CTaskMgr::CTaskMgr()
 	AddVirtualWnd(_T("process"),&m_Process);
 	AddVirtualWnd(_T("services"),&m_Services);
 	AddVirtualWnd(_T("driver"),&m_CoreDriver);
+	AddVirtualWnd(_T("csp"),&m_ViewCSP);
+	AddVirtualWnd(_T("cert"),&m_ViewCert);
 	AddVirtualWnd(_T("user"),&m_UserInfo);
 }
 
@@ -15,6 +17,8 @@ CTaskMgr::~CTaskMgr()
 	RemoveVirtualWnd(_T("process"));
 	RemoveVirtualWnd(_T("services"));
 	RemoveVirtualWnd(_T("driver"));
+	RemoveVirtualWnd(_T("csp"));
+	RemoveVirtualWnd(_T("cert"));
 	RemoveVirtualWnd(_T("user"));
 }
 

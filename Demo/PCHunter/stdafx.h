@@ -32,6 +32,8 @@ typedef struct __POSITION
 #include "VirtualWnd/Process.h"
 #include "VirtualWnd/Services.h"
 #include "VirtualWnd/CoreDriver.h"
+#include "VirtualWnd/ViewCSP.h"
+#include "VirtualWnd/ViewCert.h"
 #include "VirtualWnd/UserInfo.h"
 
 //网络分享工具
@@ -45,8 +47,12 @@ typedef struct __POSITION
 //系统信息查看工具
 #include "VirtualWnd/OsInfo.h"
 
+//硬件变化通知
+#include "VirtualWnd/Hardware.h"
+
 //模块管理类
 #include "VirtualWnd/TaskMgr.h"
 #include "VirtualWnd/NetMgr.h"
 #include "VirtualWnd/SysInfoMgr.h"
+#include "VirtualWnd/HardNotify.h"
 

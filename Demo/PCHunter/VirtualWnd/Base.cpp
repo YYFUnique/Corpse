@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
-CPaintManagerUI* CBase::m_pPaintManager;
+CPaintManagerUI* CBase::m_pPaintManager = NULL;
+
 CBase::CBase()
 	:m_strWndName(_T(""))
 	,m_bShowData(TRUE)
@@ -31,10 +32,9 @@ void CBase::SetFocus()
 	OnPaint();
 }
 
-
-void CBase::SetPaintManager(CPaintManagerUI* pPaintMgr)
+BOOL CBase::OnInitDialog()
 {
-	m_pPaintManager = pPaintMgr;
+	return TRUE;
 }
 
 CDuiString CBase::GetWndName()
@@ -55,4 +55,9 @@ BOOL CBase::ShouldShowData()
 void CBase::SetShowData(BOOL bShow /*= TRUE*/)
 {
 	m_bShowData = bShow;
+}
+
+void CBase::SetPaintManager(CPaintManagerUI* pPaintMgr)
+{
+	m_pPaintManager = pPaintMgr;
 }

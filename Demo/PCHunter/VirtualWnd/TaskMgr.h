@@ -19,5 +19,7 @@ protected:
 	CProcess		m_Process;
 	CServices		m_Services;
 	CCoreDriver m_CoreDriver;
+	CViewCSP	m_ViewCSP;
+	CViewCert	m_ViewCert;
 	CUserInfo   m_UserInfo;
 };

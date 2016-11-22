@@ -1,12 +1,13 @@
 #pragma once
-class CWndMgr;
+
 class CTask : public CNotifyPump,public INotifyUI
 {
 public:
 	CTask();
 	~CTask();
-	void SetPaintMagager(CPaintManagerUI* pPaintMgr);
 
+public:
+	
 	virtual void Notify(TNotifyUI& msg);
 
 	DUI_DECLARE_MESSAGE_MAP()
@@ -16,7 +17,8 @@ public:
 	virtual void OnHeaderClick(TNotifyUI& msg);
 	virtual void OnSelectChanged( TNotifyUI &msg );
 	virtual void OnItemClick( TNotifyUI &msg );
+
+	static void SetPaintMagager(CPaintManagerUI* pPaintMgr);
 private:
 	CPaintManagerUI* m_pPaintManager;
-	/*CWndMgr* m_pWndMgr;*/
 };
