@@ -21,7 +21,7 @@
 				<Control height="10"/>
 				<HorizontalLayout height="300">
 					<Control />
-					<Label name="pic" bkimage="error.png" width="300" height="300"/>
+					<Label name="pic" width="300" height="300"/>
 					<Control />
 				</HorizontalLayout>
 				<HorizontalLayout>

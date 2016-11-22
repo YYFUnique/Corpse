@@ -35,11 +35,11 @@
 				</Combo>
 				<Label name="Label3" text="原包大小" float="true" pos="215,5,270,21" font="2" textcolor="#FFFFFFFF"/>
 				<Combo name="Atom" float="true" pos="275,5,315,25" >
+					<ListLabelElement name="ListLabelElementUI3" text="1" pos="0,0,0,23" height="23" />
+					<ListLabelElement name="ListLabelElementUI3" text="2" pos="0,0,0,23" height="23" selected="true"/>
+					<ListLabelElement name="ListLabelElementUI3" text="3" pos="0,0,0,23" height="23" />
 					<ListLabelElement name="ListLabelElementUI3" text="4" pos="0,0,0,23" height="23" />
-					<ListLabelElement name="ListLabelElementUI3" text="5" pos="0,0,0,23" height="23" selected="true"/>
-					<ListLabelElement name="ListLabelElementUI3" text="6" pos="0,0,0,23" height="23" />
-					<ListLabelElement name="ListLabelElementUI3" text="7" pos="0,0,0,23" height="23" />
-					<ListLabelElement name="ListLabelElementUI3" text="8" pos="0,0,0,23" height="23" />
+					<ListLabelElement name="ListLabelElementUI3" text="5" pos="0,0,0,23" height="23" />
 				</Combo>
 				<Label name="Label4" text="边缘留白" float="true" pos="5,28,60,45" font="2" textcolor="#FFFFFFFF"/>
 				<Combo name="Border" float="true" pos="65,28,115,48" >
