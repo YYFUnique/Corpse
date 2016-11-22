@@ -641,6 +641,7 @@ TImageInfo* CRenderEngine::LoadImage(STRINGorID bitmap, LPCTSTR type, DWORD mask
         }
     }
 
+	//memcpy(pDest,pImage,bmi.bmiHeader.biSizeImage);
     stbi_image_free(pImage);
 
     TImageInfo* data = new TImageInfo;
@@ -649,6 +650,71 @@ TImageInfo* CRenderEngine::LoadImage(STRINGorID bitmap, LPCTSTR type, DWORD mask
     data->nY = y;
     data->bAlpha = bAlphaChannel;
     return data;
+}
+
+TImageInfo* CRenderEngine::LoadImage(LPBYTE pData, DWORD dwSize, DWORD mask)
+{
+	LPBYTE pImage = NULL;
+	int x,y,n;
+	pImage = stbi_load_from_memory(pData, dwSize, &x, &y, &n, 4);
+	if( !pImage ) {
+		//::MessageBox(0, _T("½âÎöÍ¼Æ¬Ê§°Ü"), _T("×¥BUG"), MB_OK);
+		return NULL;
+	}
+
+	BITMAPINFO bmi;
+	::ZeroMemory(&bmi, sizeof(BITMAPINFO));
+	bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bmi.bmiHeader.biWidth = x;
+	bmi.bmiHeader.biHeight = -y;
+	bmi.bmiHeader.biPlanes = 1;
+	bmi.bmiHeader.biBitCount = 32;
+	bmi.bmiHeader.biCompression = BI_RGB;
+	bmi.bmiHeader.biSizeImage = x * y * 4;
+
+	bool bAlphaChannel = false;
+	LPBYTE pDest = NULL;
+	HBITMAP hBitmap = ::CreateDIBSection(NULL, &bmi, DIB_RGB_COLORS, (void**)&pDest, NULL, 0);
+	if( !hBitmap ) {
+		//::MessageBox(0, _T("CreateDIBSectionÊ§°Ü"), _T("×¥BUG"), MB_OK);
+		return NULL;
+	}
+
+	for( int i = 0; i < x * y; i++ ) 
+	{
+		pDest[i*4 + 3] = pImage[i*4 + 3];
+		if( pDest[i*4 + 3] < 255 )
+		{
+			pDest[i*4] = (BYTE)(DWORD(pImage[i*4 + 2])*pImage[i*4 + 3]/255);
+			pDest[i*4 + 1] = (BYTE)(DWORD(pImage[i*4 + 1])*pImage[i*4 + 3]/255);
+			pDest[i*4 + 2] = (BYTE)(DWORD(pImage[i*4])*pImage[i*4 + 3]/255); 
+			bAlphaChannel = true;
+		}
+		else
+		{
+			pDest[i*4] = pImage[i*4 + 2];
+			pDest[i*4 + 1] = pImage[i*4 + 1];
+			pDest[i*4 + 2] = pImage[i*4]; 
+		}
+
+		if( *(DWORD*)(&pDest[i*4]) == mask ) {
+			pDest[i*4] = (BYTE)0;
+			pDest[i*4 + 1] = (BYTE)0;
+			pDest[i*4 + 2] = (BYTE)0; 
+			pDest[i*4 + 3] = (BYTE)0;
+			bAlphaChannel = true;
+		}
+	}
+
+	//memcpy(pDest,pImage,bmi.bmiHeader.biSizeImage);
+	stbi_image_free(pImage);
+
+	TImageInfo* data = new TImageInfo;
+	data->hBitmap = hBitmap;
+	data->nX = x;
+	data->nY = y;
+	data->bAlpha = bAlphaChannel;
+	return data;
 }
 
 void CRenderEngine::FreeImage(const TImageInfo* bitmap)

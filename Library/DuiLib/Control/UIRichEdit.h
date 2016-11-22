@@ -173,6 +173,7 @@ protected:
     bool m_bRich;
     bool m_bReadOnly;
     bool m_bWordWrap;
+	bool m_bNum;
     DWORD m_dwTextColor;
     int m_iFont;
     int m_iLimitText;

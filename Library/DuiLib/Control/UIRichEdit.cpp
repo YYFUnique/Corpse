@@ -1748,8 +1748,8 @@ void CTxtWinHost::SetParaFormat(PARAFORMAT2 &p)
 
 CRichEditUI::CRichEditUI() :m_pCallback(NULL), m_pTwh(NULL),m_pRichEditOle(NULL), m_bVScrollBarFixing(false), m_bWantTab(true), m_bWantReturn(true), 
     m_bWantCtrlReturn(true), m_bRich(true), m_bReadOnly(false), m_bWordWrap(false), m_dwTextColor(0), m_iFont(-1), 
-    m_iLimitText(cInitTextMax), m_lTwhStyle(ES_MULTILINE), m_bInited(false), m_chLeadByte(0),m_uButtonState(0),
-	m_dwTipValueColor(0xFFBAC0C5),
+    m_iLimitText(cInitTextMax), m_lTwhStyle(ES_MULTILINE), m_bInited(false), m_chLeadByte(0),m_bNum(false),
+	m_uButtonState(0),m_dwTipValueColor(0xFFBAC0C5),
 	m_bShowCaret(FALSE)
 {
 
@@ -3071,7 +3071,7 @@ void CRichEditUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 		if( _tcscmp(pstrValue, _T("true")) == 0 ) m_lTwhStyle |= ES_PASSWORD;
     }
 	else if( _tcscmp(pstrName, _T("numberonly")) == 0 ) {
-		if( _tcscmp(pstrValue, _T("true")) == 0 ) m_lTwhStyle |= ES_NUMBER;
+		if( _tcscmp(pstrValue, _T("true")) == 0 ) m_bNum = true;
 	}
     else if( _tcscmp(pstrName, _T("align")) == 0 ) {
         if( _tcsstr(pstrValue, _T("left")) != NULL ) {
@@ -3131,8 +3131,14 @@ LRESULT CRichEditUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, boo
 		{
 			// Set composition window position near caret position
 			POINT point;
-			GetCaretPos(&point);
-
+			if (m_pManager->IsLayered())
+			{
+				point.x = m_rcPos.left;
+				point.y = m_rcPos.top;
+			}
+			else
+				GetCaretPos(&point);
+			
 			COMPOSITIONFORM Composition;
 			Composition.dwStyle = CFS_POINT;
 			Composition.ptCurrentPos.x = point.x;
@@ -3208,7 +3214,7 @@ LRESULT CRichEditUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, boo
 
 	if(WM_CHAR == uMsg)
 	{
-		if (m_lTwhStyle & ES_NUMBER && isdigit(wParam) == false)
+		if (m_bNum && isdigit(wParam) == false)
 			return false;
 #ifndef _UNICODE
 		// check if we are waiting for 2 consecutive WM_CHAR messages

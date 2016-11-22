@@ -23,6 +23,7 @@ BOOL CLogicalDiskMgr::OpenDisk(LPCTSTR lpszDiskVolumePath)
 	{
 		TCHAR szVolumeName[MAX_PATH];
 		_stprintf_s(szVolumeName, _countof(szVolumeName), _T("\\\\.\\%c:"), lpszDiskVolumePath[0]);
+
 		m_hVolume = CreateFile(szVolumeName,GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,0,NULL);
 		if (m_hVolume == INVALID_HANDLE_VALUE)
 		{
@@ -44,7 +45,7 @@ HANDLE CLogicalDiskMgr::Detach()
 	return hLogicalDisk;
 }
 
-BOOL CLogicalDiskMgr::GetDiskExtents(PVOLUME_DISK_EXTENTS lpVolumeDiskExtents,DWORD& dwLen)
+BOOL CLogicalDiskMgr::GetDiskExtents(PVOLUME_DISK_EXTENTS lpVolumeDiskExtents, DWORD& dwLen)
 {
 	BOOL bSuccess = FALSE;
 	do 
@@ -52,8 +53,8 @@ BOOL CLogicalDiskMgr::GetDiskExtents(PVOLUME_DISK_EXTENTS lpVolumeDiskExtents,DW
 		if (m_hVolume == INVALID_HANDLE_VALUE)
 			break;
 
-		BOOL bRet = ::DeviceIoControl(m_hVolume,IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS,NULL,0,
-																lpVolumeDiskExtents,dwLen,&dwLen,NULL);
+		BOOL bRet = ::DeviceIoControl(m_hVolume, IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS, NULL, 0,
+																lpVolumeDiskExtents,dwLen, &dwLen, NULL);
 		if (bRet == FALSE)
 		{
 			SetErrorInfo(SYSTEM_ERROR, 0 , _T("获取设备扩展信息失败"));
@@ -61,6 +62,74 @@ BOOL CLogicalDiskMgr::GetDiskExtents(PVOLUME_DISK_EXTENTS lpVolumeDiskExtents,DW
 		}
 		
 		bSuccess = TRUE;
+	} while (FALSE);
+
+	return bSuccess;
+}
+
+BOOL CLogicalDiskMgr::GetDriveProperty(HANDLE hDevice, PSTORAGE_DEVICE_DESCRIPTOR pDevDesc)
+{
+	BOOL bSuccess = FALSE;
+	ASSERT(hDevice);
+
+	do 
+	{
+		if (hDevice == INVALID_HANDLE_VALUE)
+			break;
+
+		// 查询输入参数
+		STORAGE_PROPERTY_QUERY Query;    
+		// IOCTL输出数据长度
+		DWORD dwOutBytes;               
+
+		// 指定查询方式
+		Query.PropertyId  = StorageDeviceProperty;
+		Query.QueryType = PropertyStandardQuery;
+
+		// 用IOCTL_STORAGE_QUERY_PROPERTY取设备属性信息
+		bSuccess = ::DeviceIoControl(hDevice,																// 设备句柄
+													IOCTL_STORAGE_QUERY_PROPERTY,						// 获取设备属性信息
+													&Query, sizeof(STORAGE_PROPERTY_QUERY),		// 输入数据缓冲区
+													pDevDesc, pDevDesc->Size,									// 输出数据缓冲区
+													&dwOutBytes,															// 输出数据长度
+													(LPOVERLAPPED)NULL);											// 用同步I/O    
+
+	} while (FALSE);
+
+	return bSuccess;
+}
+
+BOOL CLogicalDiskMgr::GetPhysicalDiskSize(HANDLE hPhysical, PHYSICAL_DISK_SIZE& PhysicalDiskSize)
+{
+	BOOL bSuccess = FALSE;	
+	DWORD dwBytesReturned;
+
+	ASSERT(hPhysical);
+	do 
+	{
+		if (hPhysical == INVALID_HANDLE_VALUE)
+		{
+			SetErrorInfo(SYSTEM_ERROR, 0, _T("打开磁盘设备失败"));
+			break;
+		}
+
+		DISK_GEOMETRY_EX  GeoEx;
+		if (::DeviceIoControl(hPhysical, 
+				IOCTL_DISK_GET_DRIVE_GEOMETRY_EX, NULL, 0, 
+				&GeoEx, sizeof(GeoEx), &dwBytesReturned, NULL) == FALSE)
+		{
+			SetErrorInfo(SYSTEM_ERROR,0,_T("获取可移动设备物理总大小失败"));
+			break;
+		}
+
+		if (GeoEx.Geometry.BytesPerSector == 0)
+			GeoEx.Geometry.BytesPerSector = 512;
+
+		PhysicalDiskSize.dwBytesPerSector = GeoEx.Geometry.BytesPerSector;
+		PhysicalDiskSize.DiskSectors.QuadPart = GeoEx.DiskSize.QuadPart / GeoEx.Geometry.BytesPerSector;
+
+		bSuccess = TRUE;
+
 	} while (FALSE);
 
 	return bSuccess;
