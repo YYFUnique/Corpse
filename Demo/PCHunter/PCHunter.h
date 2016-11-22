@@ -66,6 +66,7 @@ protected:
 	CTaskMgr		m_TaskMgr;
 	CNetMgr			m_NetMgr;
 	CSysInfoMgr	m_SysInfoMgr;
+	CHardNotify    m_HardNotify;
 	CStdPtrArray	m_SubNotifys;
 
 	CUITrayIcon m_Tray;

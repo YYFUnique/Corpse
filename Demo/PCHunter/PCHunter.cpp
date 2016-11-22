@@ -19,6 +19,7 @@ CPCHunter::CPCHunter()
 	AddVirtualWnd(_T("task"),&m_TaskMgr);
 	AddVirtualWnd(_T("network"),&m_NetMgr);
 	AddVirtualWnd(_T("sysinfo"),&m_SysInfoMgr);
+	AddVirtualWnd(_T("hard"),&m_HardNotify);
 	m_pMsgTip = NULL;
 }
 
@@ -27,6 +28,7 @@ CPCHunter::~CPCHunter()
 	RemoveVirtualWnd(_T("task"));
 	RemoveVirtualWnd(_T("network"));
 	RemoveVirtualWnd(_T("sysinfo"));
+	RemoveVirtualWnd(_T("hard"));
 
 	if (m_pDropTarget)
 		m_pDropTarget->DragDropRevoke(m_hWnd);
@@ -36,6 +38,11 @@ CPCHunter::~CPCHunter()
 
 LRESULT CPCHunter::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	switch(uMsg)
+	{
+		case WM_DEVICECHANGE:
+			return	m_HardNotify.DeviceChanged(wParam, lParam);
+	}
 	return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
 }
 
@@ -178,6 +185,7 @@ void CPCHunter::InitWindow()
 	m_SubNotifys.Add(&m_TaskMgr);
 	m_SubNotifys.Add(&m_NetMgr);
 	m_SubNotifys.Add(&m_SysInfoMgr);
+	m_SubNotifys.Add(&m_HardNotify);
 
 	CHorizontalLayoutUI* pControl = (CHorizontalLayoutUI*)m_PaintManager.FindControl(_T("TabSwitch"));
 	if (pControl)

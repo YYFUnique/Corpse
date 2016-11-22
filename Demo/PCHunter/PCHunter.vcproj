@@ -301,10 +301,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Task.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Wndtask.cpp"
 				>
 			</File>
@@ -329,6 +325,14 @@
 				</File>
 				<File
 					RelativePath=".\VirtualWnd\CoreDriver.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\VirtualWnd\HardNotify.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\VirtualWnd\Hardware.cpp"
 					>
 				</File>
 				<File
@@ -369,6 +373,14 @@
 				</File>
 				<File
 					RelativePath=".\VirtualWnd\UserInfo.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\VirtualWnd\ViewCert.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\VirtualWnd\ViewCSP.cpp"
 					>
 				</File>
 				<File
@@ -479,10 +491,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Task.h"
-				>
-			</File>
-			<File
 				RelativePath=".\wndtask.h"
 				>
 			</File>
@@ -507,6 +515,14 @@
 				</File>
 				<File
 					RelativePath=".\VirtualWnd\CoreDriver.h"
+					>
+				</File>
+				<File
+					RelativePath=".\VirtualWnd\HardNotify.h"
+					>
+				</File>
+				<File
+					RelativePath=".\VirtualWnd\Hardware.h"
 					>
 				</File>
 				<File
@@ -547,6 +563,14 @@
 				</File>
 				<File
 					RelativePath=".\VirtualWnd\UserInfo.h"
+					>
+				</File>
+				<File
+					RelativePath=".\VirtualWnd\ViewCert.h"
+					>
+				</File>
+				<File
+					RelativePath=".\VirtualWnd\ViewCSP.h"
 					>
 				</File>
 				<File
