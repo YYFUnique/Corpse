@@ -32,6 +32,7 @@ public:
     static DWORD AdjustColor(DWORD dwColor, short H, short S, short L);
 	static void DrawWinBorder(HDC dc,RECT rcClient/*,HWND hMainWnd*/);
     static TImageInfo* LoadImage(STRINGorID bitmap, LPCTSTR type = NULL, DWORD mask = 0);
+	static TImageInfo* LoadImage(LPBYTE pData, DWORD dwSize, DWORD mask);
 	static HBITMAP ConvertIconToBitmap(HICON hIcon, int* x, int* y);
     static void FreeImage(const TImageInfo* bitmap);
     static void DrawImage(HDC hDC, HBITMAP hBitmap, const RECT& rc, const RECT& rcPaint, \

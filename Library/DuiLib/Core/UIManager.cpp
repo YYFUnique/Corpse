@@ -2198,6 +2198,20 @@ const TImageInfo* CPaintManagerUI::AddImage(LPCTSTR bitmap, HBITMAP hBitmap, int
     return data;
 }
 
+const TImageInfo* CPaintManagerUI::AddImage(LPCTSTR bitmap, LPBYTE pData, DWORD dwSize, DWORD dwMask)
+{
+	if (pData == NULL || dwSize == 0)
+		return NULL;
+
+	TImageInfo* data = CRenderEngine::LoadImage(pData,dwSize,dwMask);
+	if( !m_mImageHash.Insert(bitmap, data) ) {
+		::DeleteObject(data->hBitmap);
+		delete data;
+	}
+
+	return data;
+}
+
 bool CPaintManagerUI::RemoveImage(LPCTSTR bitmap)
 {
     const TImageInfo* data = GetImage(bitmap);
