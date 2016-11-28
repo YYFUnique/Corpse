@@ -753,39 +753,72 @@ namespace DuiLib
 
 		SIZE szXY = pControl->GetFixedXY();
 		SIZE sz = {pControl->GetFixedWidth(), pControl->GetFixedHeight()};
-		RECT rcCtrl = { 0 };
-		if( szXY.cx >= 0 ) {
-			rcCtrl.left = m_rcItem.left + szXY.cx;
-			rcCtrl.right = m_rcItem.left + szXY.cx + sz.cx;
+
+		int nParentWidth = m_rcItem.right - m_rcItem.left;
+		int nParentHeight = m_rcItem.bottom - m_rcItem.top;
+
+		if (sz.cx <= 0) sz.cx = nParentWidth;
+		if (sz.cy <= 0) sz.cy = nParentHeight;
+
+		UINT uAlign = pControl->GetFloatAlign();
+
+		if (uAlign != 0){
+			//新增加floatalign属性
+			RECT rcCtrl = {0, 0, sz.cx, sz.cy};
+			if ((uAlign & DT_CENTER) != 0)
+				::OffsetRect(&rcCtrl, (nParentWidth - sz.cx) / 2, 0);
+			else if ((uAlign & DT_RIGHT) != 0)
+				::OffsetRect(&rcCtrl, (nParentWidth - sz.cx), 0);
+			else
+				::OffsetRect(&rcCtrl, szXY.cx, 0);
+
+			if ((uAlign & DT_VCENTER) != 0)
+				::OffsetRect(&rcCtrl, 0, (nParentHeight - sz.cy) / 2);
+			else if ((uAlign & DT_BOTTOM) != 0)
+				::OffsetRect(&rcCtrl, 0, nParentHeight - sz.cy);
+			else
+				::OffsetRect(&rcCtrl, 0, szXY.cy);
+
+			::OffsetRect(&rcCtrl, m_rcItem.left, m_rcItem.top);
+			pControl->SetPos(rcCtrl);
 		}
-		else {
-			rcCtrl.left = m_rcItem.right + szXY.cx - sz.cx;
-			rcCtrl.right = m_rcItem.right + szXY.cx;
-		}
-		if( szXY.cy >= 0 ) {
-			rcCtrl.top = m_rcItem.top + szXY.cy;
-			rcCtrl.bottom = m_rcItem.top + szXY.cy + sz.cy;
-		}
-		else {
-			rcCtrl.top = m_rcItem.bottom + szXY.cy - sz.cy;
-			rcCtrl.bottom = m_rcItem.bottom + szXY.cy;
-		}
-		if( pControl->IsRelativePos() )
-		{
-			TRelativePosUI tRelativePos = pControl->GetRelativePos();
-			SIZE szParent = {m_rcItem.right-m_rcItem.left,m_rcItem.bottom-m_rcItem.top};
-			if(tRelativePos.szParent.cx != 0)
-			{
-				int nIncrementX = szParent.cx-tRelativePos.szParent.cx;
-				int nIncrementY = szParent.cy-tRelativePos.szParent.cy;
-				rcCtrl.left += (nIncrementX*tRelativePos.nMoveXPercent/100);
-				rcCtrl.top += (nIncrementY*tRelativePos.nMoveYPercent/100);
-				rcCtrl.right = rcCtrl.left+sz.cx+(nIncrementX*tRelativePos.nZoomXPercent/100);
-				rcCtrl.bottom = rcCtrl.top+sz.cy+(nIncrementY*tRelativePos.nZoomYPercent/100);
+		else{
+			//暂时未修改原有float浮动代码
+			RECT rcCtrl = { 0 };
+			if( szXY.cx >= 0 ) {
+				rcCtrl.left = m_rcItem.left + szXY.cx;
+				rcCtrl.right = m_rcItem.left + szXY.cx + sz.cx;
 			}
-			pControl->SetRelativeParentSize(szParent);
+			else {
+				rcCtrl.left = m_rcItem.right + szXY.cx - sz.cx;
+				rcCtrl.right = m_rcItem.right + szXY.cx;
+			}
+			if( szXY.cy >= 0 ) {
+				rcCtrl.top = m_rcItem.top + szXY.cy;
+				rcCtrl.bottom = m_rcItem.top + szXY.cy + sz.cy;
+			}
+			else {
+				rcCtrl.top = m_rcItem.bottom + szXY.cy - sz.cy;
+				rcCtrl.bottom = m_rcItem.bottom + szXY.cy;
+			}
+			if( pControl->IsRelativePos() )
+			{
+				TRelativePosUI tRelativePos = pControl->GetRelativePos();
+				SIZE szParent = {m_rcItem.right-m_rcItem.left,m_rcItem.bottom-m_rcItem.top};
+				if(tRelativePos.szParent.cx != 0)
+				{
+					int nIncrementX = szParent.cx-tRelativePos.szParent.cx;
+					int nIncrementY = szParent.cy-tRelativePos.szParent.cy;
+					rcCtrl.left += (nIncrementX*tRelativePos.nMoveXPercent/100);
+					rcCtrl.top += (nIncrementY*tRelativePos.nMoveYPercent/100);
+					rcCtrl.right = rcCtrl.left+sz.cx+(nIncrementX*tRelativePos.nZoomXPercent/100);
+					rcCtrl.bottom = rcCtrl.top+sz.cy+(nIncrementY*tRelativePos.nZoomYPercent/100);
+				}
+				pControl->SetRelativeParentSize(szParent);
+			}
+			pControl->SetPos(rcCtrl);
 		}
-		pControl->SetPos(rcCtrl);
+		
 	}
 
 	void CContainerUI::ProcessScrollBar(RECT rc, int cxRequired, int cyRequired)

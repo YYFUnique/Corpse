@@ -723,7 +723,7 @@ namespace DuiLib
 					hasSubMenu = true;
 				}
 			}
-			if( hasSubMenu )
+			if (hasSubMenu)
 			{
 				m_pOwner->SelectItem(GetIndex(), true);
 				CreateMenuWnd();
@@ -734,7 +734,7 @@ namespace DuiLib
 				param.hWnd = m_pManager->GetPaintWindow();
 				param.wParam = 2;
 				CMenuWnd::GetGlobalContextMenuObserver().RBroadcast(param);
-				m_pOwner->SelectItem(GetIndex(), true);
+				//m_pOwner->SelectItem(GetIndex(), true);
 			}
 			return;
 		}
@@ -754,7 +754,7 @@ namespace DuiLib
 						hasSubMenu = true;
 					}
 				}
-				if( hasSubMenu )
+				if (hasSubMenu)
 				{
 					CreateMenuWnd();
 				}
@@ -796,7 +796,7 @@ namespace DuiLib
 				param.hWnd = m_pManager->GetPaintWindow();
 				param.wParam = 2;
 				CMenuWnd::GetGlobalContextMenuObserver().RBroadcast(param);
-				m_pOwner->SelectItem(GetIndex(), true);
+				//m_pOwner->SelectItem(GetIndex(), true);
 			}
 			return ;
 		}

@@ -104,6 +104,8 @@ public:
     virtual void SetMinHeight(int cy);
     virtual int GetMaxHeight() const;
     virtual void SetMaxHeight(int cy);
+	void SetFloatAlign(UINT uAlign);
+	UINT GetFloatAlign() const;
     virtual void SetRelativePos(SIZE szMove,SIZE szZoom);
     virtual void SetRelativeParentSize(SIZE sz);
     virtual TRelativePosUI GetRelativePos() const;
@@ -211,6 +213,7 @@ protected:
 	bool m_bKeyboardEnabled ;
     bool m_bFocused;
     bool m_bFloat;
+	UINT m_uFloatAlign;
     bool m_bSetPos; // ∑¿÷πSetPos—≠ª∑µ˜”√
     TRelativePosUI m_tRelativePos;
 
