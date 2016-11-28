@@ -14,6 +14,7 @@ m_bEnabled(true),
 m_bMouseEnabled(true),
 m_bKeyboardEnabled(true),
 m_bFloat(false),
+m_uFloatAlign(0),
 m_bSetPos(false),
 m_chShortcut('\0'),
 m_pTag(NULL),
@@ -458,6 +459,23 @@ void CControlUI::SetMaxHeight(int cy)
     else NeedUpdate();
 }
 
+void CControlUI::SetFloatAlign(UINT uAlign)
+{
+	if (m_uFloatAlign == uAlign)
+		return;
+
+	if (IsFloat() == false)
+		SetFloat(true);
+
+	m_uFloatAlign = uAlign;
+	NeedParentUpdate();
+}
+
+UINT CControlUI::GetFloatAlign() const
+{
+	return m_uFloatAlign;
+}
+
 void CControlUI::SetRelativePos(SIZE szMove,SIZE szZoom)
 {
     m_tRelativePos.bRelative = TRUE;
@@ -798,6 +816,33 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
         szZoom.cy = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr); 
         SetRelativePos(szMove,szZoom);
     }
+	else if (_tcsicmp(pstrName, _T("floatalign")) == 0){
+		UINT uAlign = GetFloatAlign();
+		CDuiString strValue = pstrValue;
+		if (strValue.Find(_T("left")) != -1){
+			uAlign &= ~(DT_CENTER | DT_RIGHT);
+			uAlign |= DT_LEFT;
+		}else if (strValue.Find(_T("center")) != -1){
+			uAlign &= ~(DT_LEFT | DT_RIGHT);
+			uAlign |= DT_CENTER;
+		}else if (strValue.Find(_T("right")) != -1){
+			uAlign &= ~(DT_LEFT | DT_CENTER);
+			uAlign |= DT_RIGHT;
+		}
+
+		if (strValue.Find(_T("top")) != -1){
+			uAlign &= ~(DT_VCENTER | DT_BOTTOM);
+			uAlign |= DT_TOP;
+		}else if (strValue.Find(_T("vcenter")) != -1){
+			uAlign &= ~(DT_TOP | DT_BOTTOM);
+			uAlign |= DT_VCENTER;
+		}else if (strValue.Find(_T("bottom")) != -1){
+			uAlign &= ~(DT_TOP | DT_VCENTER);
+			uAlign |= DT_BOTTOM;
+		}
+
+		SetFloatAlign(uAlign);
+	}
     else if( _tcscmp(pstrName, _T("padding")) == 0 ) {
         RECT rcPadding = { 0 };
         LPTSTR pstr = NULL;

@@ -173,7 +173,11 @@ CPaintManagerUI::~CPaintManagerUI()
 	for( int i = 0; i < m_aDelayedCleanup.GetSize(); i++ ) delete static_cast<CControlUI*>(m_aDelayedCleanup[i]);
 	for( int i = 0; i < m_aAsyncNotify.GetSize(); i++ ) delete static_cast<TNotifyUI*>(m_aAsyncNotify[i]);
 	m_mNameHash.Resize(0);
-	if( m_pRoot != NULL ) delete m_pRoot;
+	if( m_pRoot != NULL ) 
+	{
+		delete m_pRoot;
+		m_pRoot = NULL;
+	}
 
     ::DeleteObject(m_DefaultFontInfo.hFont);
     RemoveAllFonts();
@@ -740,6 +744,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 			DWORD dwWidth = rcClient.right - rcClient.left;
 			DWORD dwHeight = rcClient.bottom - rcClient.top;
 
+			BOOL bNeedSizeMsg = FALSE;
 			if( m_bUpdateNeeded ) {
 				m_bUpdateNeeded = false;
 				if( !::IsRectEmpty(&rcClient) && !::IsIconic(m_hWndPaint) ) {
@@ -749,6 +754,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 						m_hDcOffscreen = NULL;
 						m_hbmpOffscreen = NULL;
 						m_pRoot->SetPos(rcClient);
+						bNeedSizeMsg = TRUE;
 					}
 					else {
 						CControlUI* pControl = NULL;
@@ -837,6 +843,8 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 			}
 			// All Done!
 			::EndPaint(m_hWndPaint, &ps);
+			if (bNeedSizeMsg) 
+				this->SendNotify(m_pRoot, DUI_MSGTYPE_WINDOWSIZE, 0, 0, true);
 			return true;
 		}
     case WM_PRINTCLIENT:
