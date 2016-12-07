@@ -329,7 +329,23 @@
 				Name="Encrypt"
 				>
 				<File
+					RelativePath=".\Encrypt\Base64.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Encrypt\EncryptObject.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Encrypt\LsRc4.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Encrypt\Rijndael.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Encrypt\Xor.cpp"
 					>
 				</File>
 			</Filter>
@@ -342,6 +358,34 @@
 				</File>
 				<File
 					RelativePath=".\Thread\LsThreadMgr.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Hash"
+				>
+				<File
+					RelativePath=".\Hash\Crc16.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Hash\Crc32.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Hash\Hash.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Hash\Md5.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Hash\Sha1.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Hash\Sha256.cpp"
 					>
 				</File>
 			</Filter>
@@ -435,7 +479,23 @@
 				Name="Encrypt"
 				>
 				<File
+					RelativePath=".\Encrypt\Base64.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Encrypt\EncryptObject.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Encrypt\LsRc4.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Encrypt\Rijndael.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Encrypt\Xor.h"
 					>
 				</File>
 			</Filter>
@@ -448,6 +508,34 @@
 				</File>
 				<File
 					RelativePath=".\Thread\LsThreadMgr.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Hash"
+				>
+				<File
+					RelativePath=".\Hash\Crc16.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Hash\Crc32.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Hash\Hash.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Hash\Md5.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Hash\Sha1.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Hash\Sha256.h"
 					>
 				</File>
 			</Filter>
