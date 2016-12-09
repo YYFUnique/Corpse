@@ -1,7 +1,6 @@
 #pragma once
 
-#include "RectTracker.h"
-#include "YCLibCore/File/FileSystemWatcher.h"
+#include "DllCore/File/FileSystemWatcher.h"
 
 class CCaptureScreen : public WindowImplBase
 {
@@ -44,10 +43,11 @@ protected:
 	HBITMAP m_hDesktopBitMap;
 	HBITMAP m_hMask;
 
-	CRectTracker* m_pRcTracker;
-	CDuiRect m_RectSelected;
-	CDuiPoint m_LastMousePt;
+// 	CRectTracker* m_pRcTracker;
+// 	CDuiRect m_RectSelected;
+// 	CDuiPoint m_LastMousePt;
 
+	CRectTrackerUI* m_pRcTracker;
 	BOOL m_bDrawing;
 
 	BOOL m_bHit;

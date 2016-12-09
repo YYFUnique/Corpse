@@ -16,11 +16,11 @@ CCaptureScreen::CCaptureScreen()
 ,m_bDrawing(FALSE)
 ,m_bHit(FALSE)
 {
-	m_pRcTracker = new CRectTracker;
+	//m_pRcTracker = new CRectTracker;
 
 	m_hColorCursor = ::LoadCursor(CPaintManagerUI::GetInstance(), MAKEINTRESOURCE(IDC_CURSOR));
 
-	ZeroMemory(&m_RectSelected,0);
+	//ZeroMemory(&m_RectSelected,0);
 	m_PaintManager.SetMaxInfo(SCREEN_WIDTH,SCREEN_HEIGHT);
 
 	RECT rcWnd;
@@ -69,15 +69,19 @@ LRESULT CCaptureScreen::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch(uMsg)
 	{
 		case WM_SETCURSOR:
-				if (m_bHit > 0)
+			{
+				POINT pt;
+				GetCursorPos(&pt);
+				ScreenToClient(m_hWnd, &pt);
+				if (m_pRcTracker->HitTest(pt) >= 0)
 					m_pRcTracker->SetCursor(m_hWnd, HTCLIENT);
 				else
 					SetCursor(m_hColorCursor);
-				return 0;
+				return TRUE;
+			}
 			break;
-		default:
-			return WindowImplBase::HandleMessage(uMsg,wParam,lParam);
 	}
+	return WindowImplBase::HandleMessage(uMsg,wParam,lParam);
 }
 
 void CCaptureScreen::Notify(TNotifyUI& msg)
@@ -106,15 +110,19 @@ void CCaptureScreen::InitWindow()
 	//设置显示图标
 	SetIcon(IDI_MAINFRAME);
 	
-	DWORD dwNotifyFilter = FILTER_FILE_NAME|FILTER_DIR_NAME;
-	FileObject.Run(_T("C:\\test"), TRUE, dwNotifyFilter, (LPDEALFUNCTION)NotifyDeal, 0);
+	m_pRcTracker = (CRectTrackerUI*)m_PaintManager.FindControl(_T("capture"));
 
-//#ifdef _DEBUG
-//	SetWindowPos(m_hWnd,HWND_NOTOPMOST,0,0,800,600,SWP_SHOWWINDOW);
-//	CenterWindow();
-//#else
+	/*m_pRcTracker->se*/
+	
+	//DWORD dwNotifyFilter = FILTER_FILE_NAME|FILTER_DIR_NAME;
+	//FileObject.Run(_T("C:\\test"), TRUE, dwNotifyFilter, (LPDEALFUNCTION)NotifyDeal, 0);
+
+#ifdef _DEBUG
+	SetWindowPos(m_hWnd,HWND_NOTOPMOST,0,0,800,600,SWP_SHOWWINDOW);
+	CenterWindow();
+#else
 	SetWindowPos(m_hWnd,HWND_TOPMOST,0,0,SCREEN_WIDTH,SCREEN_HEIGHT,SWP_SHOWWINDOW);
-//#endif // _DEBUG
+#endif // _DEBUG
 	SetForegroundWindow(m_hWnd);
 
 	//HBITMAP hDotBmp = (HBITMAP)LoadImage(CPaintManagerUI::GetInstance(),MAKEINTRESOURCE(IDB_BITMAP_MASK),IMAGE_BITMAP,5,5,LR_DEFAULTCOLOR);
@@ -191,22 +199,18 @@ void CCaptureScreen::OnInitDialog(TNotifyUI& msg)
 LRESULT CCaptureScreen::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = TRUE;
-
-	m_LastMousePt.x = GET_X_LPARAM(lParam);
-	m_LastMousePt.y = GET_Y_LPARAM(lParam);
-
-	if (m_RectSelected.IsNull() != FALSE)
-		m_bDrawing = TRUE;
+	POINT pt = {GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam)};
+	if (m_pRcTracker->HitTest(pt) < 0)
+		m_pRcTracker->TrackRubberBand(m_hWnd, pt, TRUE);
 	else
-		m_bDrawing = FALSE;
-
-	return 0;
+		m_pRcTracker->Track(m_hWnd, pt, TRUE);	
+	return TRUE;
 }
 
 LRESULT CCaptureScreen::OnLButtonUP(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = TRUE;
-	m_bDrawing = FALSE;
+	//m_pRcTracker->TrackRubberBand(m)
 
 	return 0;
 }
@@ -217,23 +221,26 @@ LRESULT CCaptureScreen::OnRButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, B
 
 	m_bDrawing = FALSE;
 
+	//m_RectSelected.Empty();
+	//ShowScreen();
 	return 0;
 }
 
 LRESULT CCaptureScreen::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = TRUE;
-	POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+	/*POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
 	BOOL bLButtonDown = (MK_LBUTTON & wParam);
 	if ((MK_LBUTTON & wParam) != FALSE && m_bDrawing != FALSE)
 	{
+		//ClientToScreen(m_hWnd,&pt);
 		m_RectSelected.SetRect(m_LastMousePt,pt);
 
 		ShowScreen();
 	}
 	else
 	{
-		if (m_RectSelected.IsNull() == FALSE)
+		if (m_RectSelected.IsRectNull() == FALSE)
 		{	
 			m_bHit = m_pRcTracker->HitTest(pt);
 			if (m_bHit > 0)
@@ -251,32 +258,36 @@ LRESULT CCaptureScreen::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 				m_LastMousePt.y = GET_Y_LPARAM(lParam);
 			}
 		}
-	}
+	}*/
 	
 	return 0;
 }
 
 void CCaptureScreen::ShowScreen()
 {
-	m_RectSelected.Normalize();
-	m_pRcTracker->SetRect(&m_RectSelected);
+	//m_RectSelected.Normalize();
+	//m_pRcTracker->SetRect(&m_RectSelected);
 
 	DrawTrackRect();
 }
 
 void CCaptureScreen::DrawTrackRect()
 {
-	RECT rcWnd,rcShow;
-	GetWindowRect(m_hWnd,&rcWnd);
-	
+	/*RECT rcWndPos,rcShow;
+	GetWindowRect(m_hWnd,&rcWndPos);
+	//将窗口位置移植到屏幕原点
+	int nWidth = rcWndPos.right - rcWndPos.left;
+	int nHeight = rcWndPos.bottom - rcWndPos.top;
+	RECT rcWnd = {0,0,nWidth,nHeight};
 	::IntersectRect(&rcShow, &rcWnd, &m_RectSelected);
 
-	int nWidth = rcShow.right-rcShow.left;
-	int nHeight =rcShow.bottom-rcShow.top;
+	nWidth = rcShow.right-rcShow.left;
+	nHeight =rcShow.bottom-rcShow.top;
 
 	CLabelUI* pColor = (CLabelUI*)m_PaintManager.FindControl(_T("Capture"));
 	if (pColor != NULL)
 	{
+		//开始截图位置
 		POINT pt = {rcShow.left,rcShow.top};
 		ClientToScreen(m_hWnd,&pt);
 		//修改内部控件位置，以适应选择矩形
@@ -285,7 +296,7 @@ void CCaptureScreen::DrawTrackRect()
 		CDuiString strCapture;
 		strCapture.Format(_T("file='%s' source='%d,%d,%d,%d'"),CAPTURE_COLOR,pt.x,pt.y,pt.x+nWidth,pt.y+nHeight);
 		pColor->SetBkImage(strCapture);
-	}
+	}*/
 
 	//绘制橡皮筋
 }
