@@ -46,11 +46,11 @@ public:
     bool RemoveAt(int iIndex);
     void RemoveAll();
 
-    void DoEvent(TEventUI& event);
-    void SetVisible(bool bVisible = true);
-    void SetInternVisible(bool bVisible = true);
+	void DoEvent(TEventUI& event);
+	void SetVisible(bool bVisible = true);
+	void SetInternVisible(bool bVisible = true);
 	void SetEnabled(bool bEnabled);
-    void SetMouseEnabled(bool bEnable = true);
+	void SetMouseEnabled(bool bEnable = true);
 
     virtual RECT GetInset() const;
     virtual void SetInset(RECT rcInset); // 设置内边距，相当于设置客户区

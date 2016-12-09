@@ -111,6 +111,7 @@
 #include "Control/UIComboBox.h"
 #include "Control/UIRichEdit.h"
 #include "Control/UIDateTime.h"
+#include "Control/RichEditEx.h"
 
 #include "Control/UIActiveX.h"
 #include "Control/UIWebBrowser.h"
@@ -122,3 +123,5 @@
 #include "Control/UIColorPalette.h"
 #include "Control/UIIPAddress.h"
 #include "Control/UIDockPane.h"
+#include "Control/UIPage.h"
+#include "Control/UIRectTracker.h"
