@@ -892,7 +892,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
                 event.dwTimestamp = ::GetTickCount();
                 m_pFocus->Event(event);
             }
-            if( m_pRoot != NULL ) m_pRoot->NeedUpdate();
+			if( m_pRoot != NULL )  m_pRoot->NeedUpdate();
 			// Á¢¼´ÖØ»æ´°¿Ú
 			::RedrawWindow(m_hWndPaint, NULL, NULL, RDW_INVALIDATE);
         }
@@ -1014,7 +1014,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             // when Win32 child windows are placed on the dialog
             // and we need to remove them on focus change).
             ::SetFocus(m_hWndPaint);
-            POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+            POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };			
             m_ptLastMousePos = pt;
             CControlUI* pControl = FindControl(pt);
             if( pControl == NULL ) break;

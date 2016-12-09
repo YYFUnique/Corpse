@@ -100,9 +100,19 @@ namespace DuiLib
 		left = top = right = bottom = 0;
 	}
 
-	bool CDuiRect::IsNull() const
+	BOOL CDuiRect::EqualRect(const LPCRECT lprc)
+	{
+		return ::EqualRect(this,lprc);
+	}
+
+	BOOL CDuiRect::IsRectNull() const
 	{
 		return (left == 0 && right == 0 && top == 0 && bottom == 0); 
+	}
+
+	BOOL CDuiRect::IsRectEmpty() const
+	{
+		return ::IsRectEmpty(this);
 	}
 
 	void CDuiRect::CopyRect(LPCRECT lpSrcRect)
@@ -165,6 +175,30 @@ namespace DuiLib
 		right+=x;
 		top += y;
 		bottom += y;
+	}
+
+	void CDuiRect::MoveToY(int y) throw()
+	{ 
+		bottom = GetHeight() + y; 
+		top = y; 
+	}
+
+	void CDuiRect::MoveToX(int x) throw()
+	{ 
+		right = GetWidth() + x; 
+		left = x; 
+	}
+
+	void CDuiRect::MoveToXY(int x, int y) throw()
+	{ 
+		MoveToX(x); 
+		MoveToY(y); 
+	}
+
+	void CDuiRect::MoveToXY(POINT pt) throw()
+	{ 
+		MoveToX(pt.x); 
+		MoveToY(pt.y); 
 	}
 
 	CDuiImage::CDuiImage()

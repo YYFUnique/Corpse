@@ -222,6 +222,7 @@ protected:                                                                \
 
 #define  DUI_CTR_EDIT												(_T("Edit"))
 #define  DUI_CTR_LIST												(_T("List"))
+#define  DUI_CTR_PAGE												(_T("Page"))
 #define  DUI_CTR_TEXT												(_T("Text"))
 #define  DUI_CTR_MENU											(_T("Menu"))
 
@@ -240,6 +241,7 @@ protected:                                                                \
 #define  DUI_CTR_SHADOW										(_T("Shadow"))
 
 #define  DUI_CTR_LISTITEM										(_T("ListItem"))
+#define  DUI_CTR_LISTBODY										(_T("ListBody"))
 #define  DUI_CTR_PROGRESS									(_T("Progress"))
 #define  DUI_CTR_RICHEDIT										(_T("RichEdit"))
 #define  DUI_CTR_CHECKBOX									(_T("CheckBox"))
@@ -268,8 +270,8 @@ protected:                                                                \
 #define  DUI_CTR_LISTELEMENT								(_T("ListElement"))
 #define  DUI_CTR_SLIDERRANGE								(_T("SliderRange"))
 #define  DUI_CTR_MENUELEMENT							(_T("MenuElement"))
-
-#define DUI_CTR_COLORPALETTE								(_T("ColorPalette"))
+#define  DUI_CTR_RECTTRACKER								(_T("RectTracker"))
+#define  DUI_CTR_COLORPALETTE							(_T("ColorPalette"))
 
 #define  DUI_CTR_MENULISTLABEL							(_T("MenuListLabel"))
 

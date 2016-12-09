@@ -57,7 +57,9 @@ namespace DuiLib
 		int GetWidth() const;
 		int GetHeight() const;
 		void Empty();
-		bool IsNull() const;
+		BOOL EqualRect(const LPCRECT lprc);
+		BOOL IsRectNull() const;
+		BOOL IsRectEmpty() const;
 		void CopyRect(LPCRECT lpSrcRect);
 		void Join(const RECT& rc);
 		void ResetOffset();
@@ -68,7 +70,13 @@ namespace DuiLib
 		void Union(CDuiRect& rc);
 		bool PtInRect(POINT pt);
 		void SetRect(POINT topLeft, POINT bottomRight);
+
+		// absolute position of rectangle
 		void Move(int x,int y);
+		void MoveToY(int y) throw();
+		void MoveToX(int x) throw();
+		void MoveToXY(int x, int y) throw();
+		void MoveToXY(POINT point) throw();
 	};
 
 	class UILIB_API CDuiImage

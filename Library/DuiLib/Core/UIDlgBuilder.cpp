@@ -377,6 +377,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
                 else if( _tcscmp(pstrClass, DUI_CTR_TEXT) == 0 )						pControl = new CTextUI;
 				/*else if( _tcscmp(pstrClass, DUI_CTR_ICON) == 0 )					pControl = new CIconUI;*/
 				else if(_tcscmp(pstrClass,DUI_CTR_MENU)==0)						pControl= new CMenuUI;	
+				else if(_tcscmp(pstrClass,DUI_CTR_PAGE) == 0)						pControl = new CPageUI;
                 break;
             case 5:
                 if( _tcscmp(pstrClass, DUI_CTR_COMBO) == 0 )						pControl = new CComboUI;
@@ -418,12 +419,14 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
                 else if( _tcscmp(pstrClass, DUI_CTR_TILELAYOUT) == 0 )			pControl = new CTileLayoutUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_WEBBROWSER) == 0 )     pControl = new CWebBrowserUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_WKEBROWSER) == 0 )     pControl = new CWkeBrowserUI;
+				else if( _tcsicmp(pstrClass, _T("RichEditEx")) == 0)					pControl = new CRichEditExUI;
                 break;
 			case 11:
 				if (_tcscmp(pstrClass, DUI_CTR_CHILDLAYOUT) == 0)				pControl = new CChildLayoutUI;
 				else if(_tcscmp(pstrClass,DUI_CTR_SLIDERRANGE) == 0)			pControl = new CSliderRangeUI;
 				else if(_tcscmp(pstrClass,DUI_CTR_MENUELEMENT) == 0)		pControl = new CMenuElementUI;
 				else if(_tcscmp(pstrClass,DUI_CTR_GROUPLAYOUT) == 0)		pControl = new CGroupLayoutUI;
+				else if(_tcscmp(pstrClass,DUI_CTR_RECTTRACKER) == 0 )		pControl = new CRectTrackerUI;
 				break;
 			case 12:
 				if (_tcscmp(pstrClass, DUI_CTR_COLORPALETTE) == 0)			pControl = new CColorPaletteUI;

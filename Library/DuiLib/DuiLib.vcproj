@@ -443,6 +443,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Control\RichEditEx.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Control\RollTextUI.cpp"
 					>
 				</File>
@@ -515,7 +519,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Control\UIPage.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Control\UIProgress.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Control\UIRectTracker.cpp"
 					>
 				</File>
 				<File
@@ -708,6 +720,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Control\RichEditEx.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Control\RollTextUI.h"
 					>
 				</File>
@@ -780,7 +796,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Control\UIPage.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Control\UIProgress.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Control\UIRectTracker.h"
 					>
 				</File>
 				<File
