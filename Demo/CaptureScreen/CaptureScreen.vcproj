@@ -252,10 +252,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RectTracker.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -291,10 +287,6 @@
 			>
 			<File
 				RelativePath=".\CaptureScreen.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RectTracker.h"
 				>
 			</File>
 			<File
