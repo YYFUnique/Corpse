@@ -18,17 +18,12 @@
 				</HorizontalLayout>
 			</HorizontalLayout>
 			<VerticalLayout padding="1,1,1,1">
-				<Control height="10"/>
-				<HorizontalLayout height="300">
-					<Control />
-					<Label name="pic" width="300" height="300"/>
-					<Control />
-				</HorizontalLayout>
-				<HorizontalLayout>
-					<Button name="BtnCreate" text="制作二维码" float="true" pos="70,5,170,35" textcolor="#FF000000" normalimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,164,38&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" foreimage="file='15_10.png' dest='9,7,24,17'"/>
-					<Button name="BtnSave" text="保存二维码" float="true" pos="230,5,330,35" textcolor="#FF000000" normalimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,164,38&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" foreimage="file='15_10.png' dest='9,7,24,17'"/>
-				</HorizontalLayout>
+				<Label name="pic" width="300" height="300" bkimage="error.png" floatalign="center,vcenter"/>
 			</VerticalLayout>
+			<HorizontalLayout height="40">
+				<Button name="BtnCreate" text="制作二维码" float="true" pos="70,5,170,35" textcolor="#FF000000" normalimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,164,38&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" foreimage="file='15_10.png' dest='9,7,24,17'"/>
+				<Button name="BtnSave" text="保存二维码" float="true" pos="230,5,330,35" textcolor="#FF000000" normalimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,164,38&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" foreimage="file='15_10.png' dest='9,7,24,17'"/>
+			</HorizontalLayout>
 		</VerticalLayout>
 	</VerticalLayout>
 </Window>
