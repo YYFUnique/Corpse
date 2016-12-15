@@ -1,12 +1,18 @@
 #include "StdAfx.h"
 #include "Installer.h"
 #include "resource.h"
+#include "3DView.h"
 #include <Shlwapi.h>
 #pragma comment(lib,"shlwapi.lib")
+#pragma comment(lib,"Msimg32.lib")
 
 CInstaller::CInstaller()
+:m_nZStep(40)
+,m_nYStep(10)
+,m_nFrameIndex(0)
 {
-
+	m_hBitmapBefore = NULL;
+	m_hBitmapAfter = NULL;
 }
 
 CInstaller::~CInstaller()
@@ -14,13 +20,15 @@ CInstaller::~CInstaller()
 
 }
 
-DUI_BEGIN_MESSAGE_MAP(CInstaller,WindowImplBase)
-DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK,OnClick)
-DUI_END_MESSAGE_MAP()
+void CInstaller::OnFinalMessage( HWND hWnd )
+{
+	WindowImplBase::OnFinalMessage(hWnd);
+	delete this;
+}
 
 LPCTSTR CInstaller::GetWindowClassName() const
 {
-	return _T("DuiLib::CInstaller");
+	return _T("CInstaller");
 }
 
 CDuiString CInstaller::GetSkinFile()
@@ -35,24 +43,43 @@ CDuiString CInstaller::GetZIPFileName() const
 
 CDuiString CInstaller::GetSkinFolder()
 {
-	return _T("");
+	return _T("Installer");
 }
 
-LPCTSTR CInstaller::GetResourceID() const  
-{  
-	return MAKEINTRESOURCE(IDR_ZIP_SKIN);
-};
+UILIB_RESOURCETYPE CInstaller::GetResourceType() const
+{
+	return UILIB_FILE;
+}
 
 void CInstaller::Notify(TNotifyUI& msg)
 {
 	CDuiString strCtlName = msg.pSender->GetName();
 
-	if (msg.sType == _T("click"))
+	if (msg.sType == DUI_MSGTYPE_CLICK)
 	{
 		if (strCtlName == _T("BtnClose"))
 			PostQuitMessage(0);
 		else if (strCtlName == _T("BtnMin"))
-			SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
+		{
+			//SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
+			CTabLayoutUI* pTab = (CTabLayoutUI*)m_PaintManager.FindControl(_T("WizardTab"));
+			if (pTab->GetCount() == pTab->GetCurSel()+1)
+				return;
+
+			C3DViewUI* p3dView = (C3DViewUI*)m_PaintManager.FindControl(_T("VLayoutTotal"));
+			CDuiRect rcPos = p3dView->GetPos();
+			LPBYTE lpBit = NULL;
+			//p3dView->StartEffect(fa);
+
+			m_hBitmapBefore = CRenderEngine::GenerateBitmap(&m_PaintManager,p3dView,p3dView->GetPos());
+			p3dView->Get3dParam().nOffsetZ = m_nZStep ;
+			p3dView->Get3dParam().nRotateY = 0;
+			p3dView->SetBmpOrig(m_hBitmapBefore);
+			p3dView->Update();    
+			m_nFrameIndex = 1;
+			p3dView->StartEffect(TRUE);
+			m_PaintManager.SetTimer(p3dView,1000,20);
+		}
 		else
 		{
 			CTabLayoutUI* pWizardTab = (CTabLayoutUI*)m_PaintManager.FindControl(_T("WizardTab"));
@@ -66,11 +93,70 @@ void CInstaller::Notify(TNotifyUI& msg)
 				PostQuitMessage(0);
 		}
 	}
+	else if (msg.sType == DUI_MSGTYPE_TIMER)
+		OnTimer(msg);
+}
+
+void CInstaller::OnTimer(TNotifyUI& msg)
+{
+	if (msg.pSender == m_PaintManager.FindControl(_T("VLayoutTotal")))
+	{
+		int nMaxBeforeFrame, nMaxAfterFrame;
+		nMaxBeforeFrame = 90 / m_nYStep;
+		nMaxAfterFrame = 180 / m_nYStep;
+
+		C3DViewUI* p3dView = (C3DViewUI*)m_PaintManager.FindControl(_T("VLayoutTotal"));
+		if(NULL != p3dView)
+		{      
+			if(m_nFrameIndex <= nMaxBeforeFrame)
+			{
+				p3dView->Get3dParam().nOffsetZ = m_nZStep * m_nFrameIndex;
+				p3dView->Get3dParam().nRotateY = m_nYStep * m_nFrameIndex;
+				p3dView->SetBmpOrig(m_hBitmapBefore);
+
+				p3dView->Update();   
+			}
+			else if(m_nFrameIndex > nMaxBeforeFrame && m_nFrameIndex < nMaxAfterFrame)
+			{
+				if (m_hBitmapAfter == NULL)
+				{
+					CTabLayoutUI* pTab = (CTabLayoutUI*)m_PaintManager.FindControl(_T("WizardTab"));
+					int nSel = pTab->GetCurSel();
+					if (pTab->GetCount() <= nSel +1)
+						return;
+					p3dView->StartEffect(FALSE);
+					pTab->SelectItem(nSel+1);
+					//CVerticalLayoutUI* pHead = (CVerticalLayoutUI*)pTab->GetItemAt(nSel+1);
+					m_hBitmapAfter = CRenderEngine::GenerateBitmap(&m_PaintManager,p3dView,p3dView->GetPos());
+					p3dView->StartEffect(TRUE);
+				}
+
+				p3dView->Get3dParam().nOffsetZ = m_nZStep * (nMaxAfterFrame - m_nFrameIndex);
+				p3dView->Get3dParam().nRotateY =  m_nYStep * (m_nFrameIndex - nMaxAfterFrame);
+				p3dView->SetBmpOrig(m_hBitmapAfter);
+				p3dView->Update();        
+			}
+			else
+			{
+				p3dView->StartEffect(FALSE);
+				m_PaintManager.KillTimer(p3dView);
+				p3dView->Invalidate();
+				DeleteObject(m_hBitmapAfter);
+				m_hBitmapAfter = NULL;
+				DeleteObject(m_hBitmapBefore);
+				m_hBitmapBefore = NULL;
+			}
+		}
+		++m_nFrameIndex;
+	}
 }
 
 CControlUI* CInstaller::CreateControl(LPCTSTR pstrClass)
 {
-	return NULL;
+	CControlUI* pControl = NULL;
+	if (_tcsicmp(pstrClass, _T("3DView")) == 0)
+		pControl = new C3DViewUI;
+	return pControl;
 }
 
 void CInstaller::InitWindow()
