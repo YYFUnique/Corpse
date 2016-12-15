@@ -77,6 +77,7 @@ union DuiMessageMapFunctions
 #define DUI_MSGTYPE_SELECTCHANGED   (_T("selectchanged"))
 
 #define DUI_MSGTYPE_COLORCHANGED		(_T("colorchanged"))
+#define DUI_MSGTYPE_POSCHANGED			(_T("poschanged"))
 //////////////////////////////////////////////////////////////////////////
 
 
