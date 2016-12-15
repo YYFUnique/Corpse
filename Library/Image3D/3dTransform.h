@@ -1,25 +1,23 @@
 #ifndef IMAGE3D_H_CBBEE65C_14A5_4811_9AED_65F25D658C01
 #define IMAGE3D_H_CBBEE65C_14A5_4811_9AED_65F25D658C01
 
-#ifdef IMAGE3D_EXPORTS
-#define IMAGE3D_API __declspec(dllexport)
-#else
-	#ifdef USE3DIMAGE_DLL
-	#define IMAGE3D_API __declspec(dllimport)
-	#else
+#ifdef LS_STATIC_LIB_CALL
 	#define IMAGE3D_API 
-	#endif
+#elif defined IMAGE3D_DLL
+	#define IMAGE3D_API __declspec(dllexport)	
+#else
+	#define IMAGE3D_API __declspec(dllimport)
 #endif
 
 namespace IMAGE3D
 {
-	struct PARAM3DTRANSFORM
+	typedef struct tagPARAM3DTRANSFORM
 	{
 		int     nRotateX;
 		int     nRotateY;
 		int     nRotateZ;
 		int     nOffsetZ;
-	};
+	}PARAM3DTRANSFORM;
 
 	struct Quad;
 	class IMAGE3D_API C3DTransform
