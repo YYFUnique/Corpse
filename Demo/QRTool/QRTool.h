@@ -1,5 +1,5 @@
 #pragma once
-
+#include "WndMagnet.h"
 typedef struct _tagQRCodeItem 
 {
 	DWORD dwLevel;						//¶þÎ¬Âë¾À´í¼¶±ð
@@ -27,10 +27,16 @@ public:
 	virtual void OnFinalMessage(HWND hWnd);
 
 	CControlUI* CreateControl(LPCTSTR pstrClass);
+	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 protected:
 	void OnSave();
 	void OnClick(TNotifyUI& msg);
 	void OnCreate(TNotifyUI& msg);
 	LRESULT OnQRCodeItemInfo(WPARAM wParam, LPARAM lParam);
+
+	LRESULT OnMoving(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+private:
+	CWndMagnet m_WndMagnet;
 };

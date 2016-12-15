@@ -22,19 +22,17 @@ public:
 	virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	static void CALLBACK NotifyDeal(FILE_ACTION Action, LPCTSTR lpszFileName, LPVOID lParam);
+
 protected:
-	virtual void OnClick(TNotifyUI& msg);
+	void OnClick(TNotifyUI& msg);
+	void OnPosChanged(TNotifyUI& msg);
 	void OnInitDialog(TNotifyUI& msg);
 	LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnLButtonUP(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnRButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 protected:
 	void OnWindowInit();
 	BOOL CopyScreenToBitmap(LPRECT lpRect,HBITMAP& hDesktopMap,BOOL bSave = FALSE);
 	BOOL CoverDesktopBmp(HBITMAP hDesktopMap,HBITMAP hCoverMap,HBITMAP& hCoverDesktopMap);
 
-	
 protected:
 	void ShowScreen();
 	void DrawTrackRect();

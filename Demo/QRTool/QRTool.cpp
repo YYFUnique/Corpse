@@ -58,6 +58,20 @@ CControlUI* CQRTool::CreateControl(LPCTSTR pstrClass)
 	return pControl;
 }
 
+LRESULT CQRTool::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch(uMsg)
+	{
+		case WM_MOVING:
+				m_WndMagnet.OnMoving(m_hWnd, (LPRECT)lParam);
+			break;
+		default:
+			return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
+	}
+
+	return FALSE;
+}
+
 LRESULT CQRTool::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	switch(uMsg)
@@ -71,10 +85,19 @@ LRESULT CQRTool::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	}
 }
 
+LRESULT CQRTool::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	m_WndMagnet.OnSize(m_hWnd, wParam);
+
+	return WindowImplBase::OnSize(uMsg, wParam, lParam ,bHandled);
+}
+
 void CQRTool::InitWindow()
 {
+	m_WndMagnet.SetLeadWindow(m_hWnd);
 	SetIcon(IDI_MAINFRAME);
 
+	m_WndMagnet.AddMagnetWnd(m_hWnd);
 	/*int nCode = QR_ERR_NONE;
 	QRCode* pCode = qrInit(6, QR_EM_8BIT, QR_ECL_M, 7, &nCode);
 
@@ -119,13 +142,18 @@ void CQRTool::OnClick(TNotifyUI& msg)
 void CQRTool::OnCreate(TNotifyUI& msg)
 {
 	CQRDlg* pQRDlg = new CQRDlg(m_hWnd);
+	
 	pQRDlg->ShowWindow();
+	m_WndMagnet.AddMagnetWnd(pQRDlg->GetHWND());
+	RECT rcWnd;
+	GetWindowRect(pQRDlg->GetHWND(),&rcWnd);
+	m_WndMagnet.OnMoving(pQRDlg->GetHWND(),&rcWnd);
 }
 
 void CQRTool::OnSave()
 {
 	TCHAR szApkFilePath[MAX_PATH] = {0};
-	_tcscpy_s(szApkFilePath, _countof(szApkFilePath), _T("tsrs.bmp"));
+	_tcscpy_s(szApkFilePath, _countof(szApkFilePath), _T("未命名.bmp"));
 	OPENFILENAME SaveFileName = {0};
 	SaveFileName.lStructSize		= sizeof(SaveFileName); 
 	SaveFileName.hwndOwner		= m_hWnd; 
@@ -135,15 +163,12 @@ void CQRTool::OnSave()
 	SaveFileName.nFilterIndex		= 1; 
 	SaveFileName.lpstrFileTitle	= NULL; 
 	SaveFileName.nMaxFileTitle	= 0; 
-	SaveFileName.lpstrTitle			= _T("保存图片");
+	SaveFileName.lpstrTitle			= _T("请选择图片保存位置");
 	SaveFileName.lpstrInitialDir	= NULL ; 
 	SaveFileName.Flags				= OFN_PATHMUSTEXIST|OFN_FILEMUSTEXIST ; 
 
 	if (GetSaveFileName(&SaveFileName) == FALSE)
-	{
-		//SetErrorInfo(CUSTOM_ERROR, 0, _T("请选择文件输出保存位置"));
 		return ;
-	}
 
 	const TImageInfo* pImage = m_PaintManager.GetImage(_T("BtnFace.bmp"));
 	CRenderEngine::SaveBitmapFile(pImage->hBitmap,SaveFileName.lpstrFile);
@@ -153,38 +178,52 @@ LRESULT CQRTool::OnQRCodeItemInfo(WPARAM wParam, LPARAM lParam)
 {
 	QRCodeItem* pQRCodeInfo = (QRCodeItem*)wParam;
 
-	int nCode = QR_ERR_NONE;
-	QRCode* pCode = qrInit(pQRCodeInfo->dwSize, QR_EM_8BIT, (qr_ecl_t)pQRCodeInfo->dwLevel, 7, &nCode);
-
-	if (pCode == NULL)
-		return FALSE;
-
-	//LPCSTR lpszText = "直接一耳巴子!";
-	CStringA strQRCode(pQRCodeInfo->strQrCode);
-	LPSTR lpszUtf8 = Gb32ToUtf8(strQRCode);
-	if (qrAddData(pCode, (const qr_byte_t* )lpszUtf8, strlen(lpszUtf8)) == FALSE)
-		return FALSE;
-	//注意需要调用qrFinalize函数
-	if (qrFinalize(pCode) == FALSE)
-		return FALSE;
-
-	int size = 0;
-	qr_byte_t* lpData = qrSymbolToBMP2(pCode, pQRCodeInfo->dwBorder, pQRCodeInfo->dwMag, &size);
-	if (lpData == NULL)
-		return FALSE;
-
-	m_PaintManager.RemoveImage(_T("BtnFace.bmp"));
-	m_PaintManager.AddImage(_T("BtnFace.bmp"), (LPBYTE)lpData, size);
-
-	qrFreeBMP(lpData);
+	LRESULT lRet = FALSE;
 
 	CLabelUI* pLabel = (CButtonUI*)m_PaintManager.FindControl(_T("pic"));
-	if (pLabel)
+
+	do 
 	{
-		pLabel->SetBkImage(_T("BtnFace.bmp"));
-		//由于二维码图片名称未发生改变，需要强制刷新
+		int nCode = QR_ERR_NONE;
+		QRCode* pCode = qrInit(pQRCodeInfo->dwSize, QR_EM_8BIT, (qr_ecl_t)pQRCodeInfo->dwLevel, 7, &nCode);
+
+		if (pCode == NULL)
+			return FALSE;
+
+		//LPCSTR lpszText = "直接一耳巴子!";
+		CStringA strQRCode(pQRCodeInfo->strQrCode);
+		LPSTR lpszUtf8 = Gb32ToUtf8(strQRCode);
+		if (qrAddData(pCode, (const qr_byte_t* )lpszUtf8, strlen(lpszUtf8)) == FALSE)
+			break;
+		//注意需要调用qrFinalize函数
+		if (qrFinalize(pCode) == FALSE)
+			break;
+
+		int size = 0;
+		qr_byte_t* lpData = qrSymbolToBMP2(pCode, pQRCodeInfo->dwBorder, pQRCodeInfo->dwMag, &size);
+		if (lpData == NULL)
+			break;
+
+		m_PaintManager.RemoveImage(_T("BtnFace.bmp"));
+		m_PaintManager.AddImage(_T("BtnFace.bmp"), (LPBYTE)lpData, size);
+
+		qrFreeBMP(lpData);
+
+		if (pLabel)
+		{
+			pLabel->SetBkImage(_T("BtnFace.bmp"));
+			//由于二维码图片名称未发生改变，需要强制刷新
+			pLabel->Invalidate();
+		}
+
+		lRet = TRUE;
+	} while (FALSE);
+
+	if (lRet == FALSE)
+	{
+		pLabel->SetBkImage(_T("error.png"));
 		pLabel->Invalidate();
 	}
 
-	return TRUE;
+	return lRet;
 }

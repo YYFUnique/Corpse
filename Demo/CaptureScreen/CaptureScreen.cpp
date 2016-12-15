@@ -8,16 +8,12 @@
 #define   SCREEN_HEIGHT		GetSystemMetrics(SM_CYSCREEN)
 
 #define	CAPTURE_SCREEN	_T("DesktopScreen")
-#define	CAPTURE_COLOR	_T("CaptureColor")
+#define	CAPTURE_COLOR	_T("Capture")
 
 CCaptureScreen::CCaptureScreen()
 :m_hDesktopBitMap(NULL)
 ,m_hMask(NULL)
-,m_bDrawing(FALSE)
-,m_bHit(FALSE)
 {
-	//m_pRcTracker = new CRectTracker;
-
 	m_hColorCursor = ::LoadCursor(CPaintManagerUI::GetInstance(), MAKEINTRESOURCE(IDC_CURSOR));
 
 	//ZeroMemory(&m_RectSelected,0);
@@ -90,6 +86,8 @@ void CCaptureScreen::Notify(TNotifyUI& msg)
 		OnClick(msg);
 	else if (msg.sType == DUI_MSGTYPE_WINDOWINIT)
 		OnInitDialog(msg);
+	else if (msg.sType == DUI_MSGTYPE_POSCHANGED)
+		OnPosChanged(msg);
 }
 
 void CCaptureScreen::OnFinalMessage(HWND hWnd)
@@ -135,47 +133,6 @@ void CCaptureScreen::InitWindow()
 	m_PaintManager.AddImage(CAPTURE_COLOR,m_hDesktopBitMap,SCREEN_WIDTH,SCREEN_HEIGHT,FALSE);
 }
 
-BOOL CCaptureScreen::CoverDesktopBmp(HBITMAP hDesktopMap,HBITMAP hCoverMap,HBITMAP& hCoverDesktopMap)
-{
-	// 屏幕和内存设备描述表
-	HDC      hScrDC,hMemDC,hTmpDC;      
-	HBITMAP hTmpOldMap,hOldMap;
-
-	int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-	int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
-	hScrDC = CreateDC(_T("DISPLAY"), NULL, NULL, NULL);
-
-	hMemDC = CreateCompatibleDC(hScrDC);
-	hTmpDC = CreateCompatibleDC(hScrDC);
-
-	hCoverDesktopMap = CreateCompatibleBitmap(hScrDC,nScreenWidth,nScreenHeight);
-	hOldMap = (HBITMAP)SelectObject(hMemDC,hCoverDesktopMap);
-
-	hTmpOldMap = (HBITMAP)SelectObject(hTmpDC,hDesktopMap);
-	BitBlt(hMemDC,0,0,nScreenWidth,nScreenHeight,hTmpDC,0,0,SRCCOPY);
-
-	SelectObject(hTmpDC,hCoverMap);
-
-	BLENDFUNCTION BlendFunc;
-	BlendFunc.BlendOp=AC_SRC_OVER;
-	BlendFunc.BlendFlags=0;
-	BlendFunc.SourceConstantAlpha=0x50;
-	BlendFunc.AlphaFormat=0 ;
-
-	typedef BOOL (WINAPI *LPALPHABLEND)(HDC, int, int, int, int,HDC, int, int, int, int, BLENDFUNCTION);
-	static LPALPHABLEND lpAlphaBlend = (LPALPHABLEND) ::GetProcAddress(::GetModuleHandle(_T("msimg32.dll")), "AlphaBlend");
-
-	int nRet = lpAlphaBlend(hMemDC,0,0,nScreenWidth,nScreenHeight,hTmpDC,0,0,4,4,BlendFunc);
-	hCoverMap = (HBITMAP)SelectObject(hTmpDC,hTmpOldMap);
-
-	hCoverDesktopMap = (HBITMAP)SelectObject(hMemDC,hOldMap);
-
-	DeleteDC(hMemDC);
-	DeleteDC(hTmpDC);
-
-	return TRUE;
-}
-
 void CCaptureScreen::OnClick(TNotifyUI& msg)
 {
 	
@@ -207,98 +164,37 @@ LRESULT CCaptureScreen::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, B
 	return TRUE;
 }
 
-LRESULT CCaptureScreen::OnLButtonUP(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+
+void CCaptureScreen::OnPosChanged(TNotifyUI& msg)
 {
-	bHandled = TRUE;
-	//m_pRcTracker->TrackRubberBand(m)
-
-	return 0;
-}
-
-LRESULT CCaptureScreen::OnRButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	bHandled = TRUE;
-
-	m_bDrawing = FALSE;
-
-	//m_RectSelected.Empty();
-	//ShowScreen();
-	return 0;
-}
-
-LRESULT CCaptureScreen::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	bHandled = TRUE;
-	/*POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
-	BOOL bLButtonDown = (MK_LBUTTON & wParam);
-	if ((MK_LBUTTON & wParam) != FALSE && m_bDrawing != FALSE)
-	{
-		//ClientToScreen(m_hWnd,&pt);
-		m_RectSelected.SetRect(m_LastMousePt,pt);
-
+	if (msg.pSender == m_PaintManager.FindControl(_T("capture")))
 		ShowScreen();
-	}
-	else
-	{
-		if (m_RectSelected.IsRectNull() == FALSE)
-		{	
-			m_bHit = m_pRcTracker->HitTest(pt);
-			if (m_bHit > 0)
-				m_pRcTracker->SetCursor(m_hWnd,HTCLIENT);
-
-			if (bLButtonDown && m_bHit == 8)
-			{
-				CLabelUI* pColor = (CLabelUI*)m_PaintManager.FindControl(_T("Capture"));
-				SIZE szMove = {pt.x - m_LastMousePt.x , pt.y - m_LastMousePt.y };
-
-				m_RectSelected.Move(szMove.cx,szMove.cy);				
-
-				ShowScreen();
-				m_LastMousePt.x = GET_X_LPARAM(lParam);
-				m_LastMousePt.y = GET_Y_LPARAM(lParam);
-			}
-		}
-	}*/
-	
-	return 0;
 }
 
 void CCaptureScreen::ShowScreen()
 {
-	//m_RectSelected.Normalize();
-	//m_pRcTracker->SetRect(&m_RectSelected);
+	CDuiRect rcWndPos;
+	RECT rcShow;
+	GetWindowRect(m_hWnd, &rcWndPos);
 
-	DrawTrackRect();
-}
+	//因为控件是相对于窗口左上角
+	//将窗口矩形恢复到屏幕左上角(并未将窗口移动到屏幕左上角)
+	RECT rcWnd = {0, 0, rcWndPos.GetWidth(), rcWndPos.GetHeight()};
+	RECT rcTracker = m_pRcTracker->GetPos();
+	::IntersectRect(&rcShow, &rcWnd, &rcTracker);
 
-void CCaptureScreen::DrawTrackRect()
-{
-	/*RECT rcWndPos,rcShow;
-	GetWindowRect(m_hWnd,&rcWndPos);
-	//将窗口位置移植到屏幕原点
-	int nWidth = rcWndPos.right - rcWndPos.left;
-	int nHeight = rcWndPos.bottom - rcWndPos.top;
-	RECT rcWnd = {0,0,nWidth,nHeight};
-	::IntersectRect(&rcShow, &rcWnd, &m_RectSelected);
+	int nWidth = rcShow.right-rcShow.left;
+	int nHeight =rcShow.bottom-rcShow.top;
 
-	nWidth = rcShow.right-rcShow.left;
-	nHeight =rcShow.bottom-rcShow.top;
-
-	CLabelUI* pColor = (CLabelUI*)m_PaintManager.FindControl(_T("Capture"));
-	if (pColor != NULL)
+	if (m_pRcTracker->GetBkImage() != NULL)
 	{
 		//开始截图位置
 		POINT pt = {rcShow.left,rcShow.top};
 		ClientToScreen(m_hWnd,&pt);
-		//修改内部控件位置，以适应选择矩形
-		pColor->SetPos(rcShow);
-		//使用彩色来显示选择矩形
 		CDuiString strCapture;
-		strCapture.Format(_T("file='%s' source='%d,%d,%d,%d'"),CAPTURE_COLOR,pt.x,pt.y,pt.x+nWidth,pt.y+nHeight);
-		pColor->SetBkImage(strCapture);
-	}*/
-
-	//绘制橡皮筋
+		strCapture.Format(_T("file='%s' source='%d,%d,%d,%d'"), CAPTURE_COLOR, pt.x, pt.y, pt.x+nWidth, pt.y+nHeight);
+		m_pRcTracker->SetBkImage(strCapture);
+	}
 }
 
 BOOL CCaptureScreen::CopyScreenToBitmap(LPRECT lpRect,HBITMAP& hDesktopMap,BOOL bSave /*= FALSE*/)
@@ -359,6 +255,47 @@ BOOL CCaptureScreen::CopyScreenToBitmap(LPRECT lpRect,HBITMAP& hDesktopMap,BOOL 
 	{
 		//添加保存功能
 	}
+
+	return TRUE;
+}
+
+BOOL CCaptureScreen::CoverDesktopBmp(HBITMAP hDesktopMap,HBITMAP hCoverMap,HBITMAP& hCoverDesktopMap)
+{
+	// 屏幕和内存设备描述表
+	HDC      hScrDC,hMemDC,hTmpDC;      
+	HBITMAP hTmpOldMap,hOldMap;
+
+	int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+	int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+	hScrDC = CreateDC(_T("DISPLAY"), NULL, NULL, NULL);
+
+	hMemDC = CreateCompatibleDC(hScrDC);
+	hTmpDC = CreateCompatibleDC(hScrDC);
+
+	hCoverDesktopMap = CreateCompatibleBitmap(hScrDC,nScreenWidth,nScreenHeight);
+	hOldMap = (HBITMAP)SelectObject(hMemDC,hCoverDesktopMap);
+
+	hTmpOldMap = (HBITMAP)SelectObject(hTmpDC,hDesktopMap);
+	BitBlt(hMemDC,0,0,nScreenWidth,nScreenHeight,hTmpDC,0,0,SRCCOPY);
+
+	SelectObject(hTmpDC,hCoverMap);
+
+	BLENDFUNCTION BlendFunc;
+	BlendFunc.BlendOp=AC_SRC_OVER;
+	BlendFunc.BlendFlags=0;
+	BlendFunc.SourceConstantAlpha=0x50;
+	BlendFunc.AlphaFormat=0 ;
+
+	typedef BOOL (WINAPI *LPALPHABLEND)(HDC, int, int, int, int,HDC, int, int, int, int, BLENDFUNCTION);
+	static LPALPHABLEND lpAlphaBlend = (LPALPHABLEND) ::GetProcAddress(::GetModuleHandle(_T("msimg32.dll")), "AlphaBlend");
+
+	int nRet = lpAlphaBlend(hMemDC,0,0,nScreenWidth,nScreenHeight,hTmpDC,0,0,4,4,BlendFunc);
+	hCoverMap = (HBITMAP)SelectObject(hTmpDC,hTmpOldMap);
+
+	hCoverDesktopMap = (HBITMAP)SelectObject(hMemDC,hOldMap);
+
+	DeleteDC(hMemDC);
+	DeleteDC(hTmpDC);
 
 	return TRUE;
 }
