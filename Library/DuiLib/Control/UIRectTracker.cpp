@@ -94,9 +94,6 @@ namespace DuiLib
 		m_sizeLast.cx = m_sizeLast.cy = 0;
 		m_bFinalErase =  FALSE;
 
-		RECT rc = {100,100,300,300};
-
-		m_rect.CopyRect(&rc);
 		m_nStyle = solidLine|resizeOutside;
 	}
 
@@ -409,8 +406,6 @@ namespace DuiLib
 		if (::GetCapture() != NULL)
 			return FALSE;
 
-		//AfxLockTempMaps();  // protect maps while looping
-
 		ASSERT(!m_bFinalErase);
 
 		// save original width & height in pixels
@@ -482,12 +477,14 @@ namespace DuiLib
 						DrawTrackerRect(&rectOld, hDrawDC);
 					}
 
-					SetPos(m_rect);
-					/*CDuiString strTipInfo;
-					strTipInfo.Format(_T("left:%d,top:%d,right:%d,bottom:%d"),m_rect.left,m_rect.top,m_rect.right,m_rect.bottom);
-					OutputDebugString(strTipInfo);*/
-					//if (m_pManager)
-					//	m_pManager->SendNotify(this, DUI_MSGTYP_CHANGE)
+					CDuiRect rcItem = m_rect;
+					rcItem.Normalize();
+					SetPos(rcItem);
+
+					if (m_pManager)
+						m_pManager->SendNotify(this, DUI_MSGTYPE_POSCHANGED);
+
+					OnChangedRect(rectOld);
 					if (msg.message != WM_LBUTTONUP)
 						bMoved = TRUE;
 				}
@@ -524,8 +521,6 @@ namespace DuiLib
 ExitLoop:
 		ReleaseDC(hWnd, hDrawDC);
 		ReleaseCapture();
-
-		//AfxUnlockTempMaps(FALSE);
 
 		// restore rect in case bMoved is still FALSE
 		if (!bMoved)
