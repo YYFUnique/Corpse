@@ -105,7 +105,8 @@ BOOL CGetIpLocationDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
-	GetDlgItem(IDC_EDIT_IP_ADDR)->SetWindowText(_T("http://ip.taobao.com/service/getIpInfo.php"));
+	//GetDlgItem(IDC_EDIT_IP_ADDR)->SetWindowText(_T("http://ip.taobao.com/service/getIpInfo.php"));
+	GetDlgItem(IDC_EDIT_IP_ADDR)->SetWindowText(_T("https://10.1.1.250"));
 	GetDlgItem(IDC_EDIT_PRARM)->SetWindowText(_T("ip=61.139.2.69"));
 	GetDlgItem(IDC_EDIT_IP_ADDR)->SetFocus();
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
