@@ -2013,8 +2013,18 @@ HFONT CPaintManagerUI::AddFontAt(int index, LPCTSTR pStrFontName, int nSize, boo
 
 HFONT CPaintManagerUI::GetFont(int index)
 {
-    if( index < 0 || index >= m_aCustomFonts.GetSize() ) return GetDefaultFontInfo()->hFont;
-    TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[index]);
+	TFontInfo* pFontInfo = NULL;
+    if (m_aCustomFonts.GetSize() != 0 && index < m_aCustomFonts.GetSize() && index >= 0 ) 
+		pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[index]);
+
+	if (pFontInfo == NULL)
+	{
+		if (m_pParentResourcePM != NULL)
+			return m_pParentResourcePM->GetFont(index);
+		else
+			return GetDefaultFontInfo()->hFont;
+	}
+
     return pFontInfo->hFont;
 }
 

@@ -3259,11 +3259,11 @@ LRESULT CRichEditUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, boo
 	}
 
     LRESULT lResult = 0;
-    HRESULT Hr = TxSendMessage(uMsg, wParam, lParam, &lResult);
-    if( Hr == S_OK ) bHandled = bWasHandled;
-    else if( (uMsg >= WM_KEYFIRST && uMsg <= WM_KEYLAST) || uMsg == WM_CHAR || uMsg == WM_IME_CHAR )
+	HRESULT Hr = TxSendMessage(uMsg, wParam, lParam, &lResult);
+	if( Hr == S_OK ) bHandled = bWasHandled;
+	else if( (uMsg >= WM_KEYFIRST && uMsg <= WM_KEYLAST) || uMsg == WM_CHAR || uMsg == WM_IME_CHAR )
         bHandled = bWasHandled;
-    else if( uMsg >= WM_MOUSEFIRST && uMsg <= WM_MOUSELAST ) {
+	else if( uMsg >= WM_MOUSEFIRST && uMsg <= WM_MOUSELAST ) {
         if( m_pTwh->IsCaptured() ) bHandled = bWasHandled;
     }
     return lResult;
@@ -3278,6 +3278,18 @@ bool CRichEditUI::IsAccumulateDBCMode()
 {
 	return m_fAccumulateDBC;
 }
+
+ITextDocument* CRichEditUI::GetDoc()
+{
+	HRESULT hRet;
+	ITextDocument* m_pTextDoc = NULL;
+	IRichEditOle* pRichEditOle = NULL;
+	TxSendMessage(EM_GETOLEINTERFACE,0, (LPARAM)&pRichEditOle,&hRet);
+	hRet = pRichEditOle->QueryInterface(__uuidof(ITextDocument), (void**)&m_pTextDoc);
+	pRichEditOle->Release();
+	return m_pTextDoc;
+}
+
 ITextHost * CRichEditUI::GetTextHost()
 {
 	if (NULL == m_pTwh)
