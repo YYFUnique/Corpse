@@ -5,6 +5,7 @@
 #include <Imm.h>
 #include <textserv.h>
 #include <Richole.h>
+#include <TOM.h>
 #pragma comment(lib,"imm32.lib")
 
 // #define IDM_VERBMIN						40200
@@ -158,6 +159,8 @@ public:
     void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
     LRESULT MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled);
+
+	ITextDocument* GetDoc();
 
 	ITextHost * GetTextHost();
 	ITextServices * GetTextServices();

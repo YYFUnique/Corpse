@@ -160,21 +160,14 @@ namespace DuiLib
 		rc.right -= m_rcTextPadding.right;
 		rc.top += m_rcTextPadding.top;
 		rc.bottom -= m_rcTextPadding.bottom;
-		if( IsEnabled() ) {
-			if( m_bShowHtml )
-				CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, m_sText, m_dwTextColor, \
-				m_rcLinks, m_sLinks, m_nLinks, m_uTextStyle);
-			else
-				CRenderEngine::DrawText(hDC, m_pManager, rc, m_sText, m_dwTextColor, \
-				m_iFont, m_uTextStyle);
-		}
-		else {
-			if( m_bShowHtml )
-				CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, m_sText, m_dwDisabledTextColor, \
-				m_rcLinks, m_sLinks, m_nLinks, m_uTextStyle);
-			else
-				CRenderEngine::DrawText(hDC, m_pManager, rc, m_sText, m_dwDisabledTextColor, \
-				m_iFont, m_uTextStyle);
-		}
+
+		DWORD dwTextColor = IsEnabled() ? m_dwTextColor : m_dwDisabledTextColor;
+
+		if( m_bShowHtml )
+			CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, m_sText, dwTextColor, \
+			m_rcLinks, m_sLinks, m_nLinks, m_uTextStyle);
+		else
+			CRenderEngine::DrawText(hDC, m_pManager, rc, m_sText, dwTextColor, \
+			m_iFont, m_uTextStyle);
 	}
 }
