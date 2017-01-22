@@ -38,4 +38,5 @@ private:
 	CDuiString			m_Title;
 
 	CWkeModal*		m_pModal;
+	CWebBrowserEventHandler* m_pWebBrowserEventHandler;
 };

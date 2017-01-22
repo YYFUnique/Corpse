@@ -85,7 +85,9 @@ protected:
 	void OnIpRange(TNotifyUI& msg);
 	void OnIpTools(TNotifyUI& msg);
 	void OnShowArp(TNotifyUI& msg);
-
+	void OnWOL(TNotifyUI& msg);
+	
+	void OnBindMac(CListTextElementUI* pItem);
 	void OnPingTarget(CListTextElementUI* pItem);
 	void OnAddUserName(CListTextElementUI* pItem);
 	void OnRemoteDesktop(CListTextElementUI* pItem);

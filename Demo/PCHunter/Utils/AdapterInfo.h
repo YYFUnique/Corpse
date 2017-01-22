@@ -8,8 +8,8 @@
 #pragma comment(lib,"ole32.lib")//CoCreateInstanceº¯ÊýÐèÒª
 
 typedef CDuiList<MIB_IPFORWARDROW,const MIB_IPFORWARDROW&> CMibIpforwardIpv4List;
-typedef CDuiList<NETCON_PROPERTIES*,NETCON_PROPERTIES*> CNetPropertiesList;
-
+typedef CDuiList<NETCON_PROPERTIES,NETCON_PROPERTIES&> CNetPropertiesList;
+typedef CDuiList<IP_ADAPTER_INFO,IP_ADAPTER_INFO&> CIpAdapterInfoList;
 typedef CDuiList<MIB_IPNETROW,const MIB_IPNETROW&>CMibIpNetRowList;
 
 BOOL GetAllShowAdapter(CNetPropertiesList& NetPropertiesInfo);
@@ -19,6 +19,8 @@ BOOL GetIpForwardTableIpv4(CMibIpforwardIpv4List& MibIpforwardIpv4List);
 BOOL GetIpNetTable(CMibIpNetRowList& MibIpNetRowList);
 
 BOOL GetIPAddrTable(MIB_IPADDRTABLE* &pMibIPAddrTable);
+
+BOOL GetAdaptersInfo(CIpAdapterInfoList& AdapterList);
 
 BOOL LsIpv4StringToAddress(LPCTSTR lpszIpv4String, SOCKADDR_IN *pAddrIn);
 

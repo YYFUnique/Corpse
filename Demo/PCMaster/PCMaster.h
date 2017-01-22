@@ -46,6 +46,7 @@ protected:
 		void OnItemClick(TNotifyUI& msg);
 		void OnItemSelect(TNotifyUI& msg);
 		void OnMenu(TNotifyUI& msg);
+		void OnBtnWeather(TNotifyUI& msg);
 		LRESULT OnDropFiles(WPARAM wParam, LPARAM lParam);
 // 		virtual void OnSelectChanged( TNotifyUI &msg );
 // 		virtual void OnItemClick( TNotifyUI &msg );

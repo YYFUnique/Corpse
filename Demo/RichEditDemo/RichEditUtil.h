@@ -42,9 +42,13 @@ void RichEdit_ReplaceSel(ITextServices * pTextServices, LPCTSTR lpszNewText,
 
 void RichEdit_ReplaceSel(ITextServices * pTextServices, LPCTSTR lpszNewText, BOOL bCanUndo = FALSE);
 
-BOOL RichEdit_SetStartIndent(ITextServices * pTextServices, int nSize);
+BOOL RichEdit_SetStartIndent(ITextServices * pTextServices, int nSize,BOOL bNickName);
 
 // ≤Â»Î±Ì«ÈÕº∆¨
 BOOL RichEdit_InsertFace(ITextServices *pTextServices, ITextHost *pTextHost,	
 						 LPCTSTR lpszFileName, int nFaceId,	int nFaceIndex, 
 						 COLORREF clrBg, BOOL bAutoScale, int nReservedWidth);
+
+void InsertTextToEdit(CRichEditUI* edit, LPCTSTR str);
+
+BOOL GetSelectionRect(CRichEditUI* pRichEdit, LONG cpStart, LONG cpEnd, RECT &rcCursor);

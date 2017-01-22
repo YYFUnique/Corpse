@@ -6,9 +6,11 @@
 #include "FileDialogEx.h"
 #include "LsList.h"
 #include "ImageOleCtrl/ImageOle.h"
+
 CFontInfo g_BuddyFontInfo;
 
 typedef CLsList<DWORD,DWORD> CListDWord;
+
 
 CRichEdit::CRichEdit()
 :m_pSendRichEdit(NULL)
@@ -76,12 +78,16 @@ void CRichEdit::InitWindow()
 
 	m_pSendRichEdit = (CRichEditUI*)m_PaintManager.FindControl(_T("RichSend"));
 	m_pRecvRichEdit = (CRichEditUI*)m_PaintManager.FindControl(_T("RichRecv"));
-	
 
-	CListDWord LsListDWord;
+	m_pChatView = (CVerticalLayoutUI*)m_PaintManager.FindControl(_T("ChatView"));
+	m_pChatView->OnSize += MakeDelegate(this, &CRichEdit::ChatViewSizeChange);
+	
+	m_pRecvRichEdit->OnEvent += MakeDelegate(this, &CRichEdit::ChatViewEvent);
+
+	/*CListDWord LsListDWord;
 	DWORD dwIndex = 5;
 	LsListDWord.AddTail(dwIndex);
-	LsListDWord.AddTail(dwIndex);
+	LsListDWord.AddTail(dwIndex);*/
 // 	IRichEditOleCallback2* pRichEditOleCallback2 = NULL;
 // 	HRESULT hRet = ::CoCreateInstance(CLSID_ImageOle, NULL, CLSCTX_INPROC_SERVER,
 // 		__uuidof(IRichEditOleCallback2), (void**)&pRichEditOleCallback2);
@@ -111,6 +117,38 @@ void CRichEdit::InitWindow()
 // 	IDropTarget *pDropTarget = m_pSendRichEdit->GetTxDropTarget();
 // 	hRet = ::RegisterDragDrop(m_hWnd, pDropTarget);
 // 	pDropTarget->Release();
+}
+
+bool CRichEdit::ChatViewSizeChange(LPVOID lParam)
+{
+	bool bSuccess = true;
+	do 
+	{
+		CControlUI* pChatView = (CControlUI*)lParam;
+		if (pChatView->GetInterface(DUI_CTR_VERTICALLAYOUT) == NULL)
+			break;
+
+		m_pRecvRichEdit->SetPos(pChatView->GetPos());
+	} while (FALSE);
+
+	return bSuccess;
+}
+
+bool CRichEdit::ChatViewEvent(LPVOID lParam)
+{
+	bool bSuccess = true;
+	do 
+	{
+		TEventUI* pEvent = (TEventUI*)lParam;
+		if (pEvent->pSender == m_pRecvRichEdit && pEvent->Type == UIEVENT_SCROLLWHEEL)
+		{
+			m_pRecvRichEdit->DoEvent(*pEvent);
+			m_pChatView->SetScrollPos(m_pRecvRichEdit->GetScrollPos());
+			bSuccess = false;
+		}
+	} while (FALSE);
+
+	return bSuccess;
 }
 
 LRESULT CRichEdit::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -193,7 +231,7 @@ LRESULT CRichEdit::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 void CRichEdit::OnClick(TNotifyUI& msg)
 {
 	if (msg.pSender->GetName() == _T("BtnClose"))
-		Close();
+		PostQuitMessage(0);
 	else if (msg.pSender->GetName() == _T("BtnMax"))
 	{
 		m_PaintManager.FindControl(_T("BtnMax"))->SetVisible(false);
@@ -410,10 +448,11 @@ void CRichEdit::AddTipMsgToRecvEdit(LPCTSTR lpText)
 	ITextServices * pTextServices = m_pRecvRichEdit->GetTextServices();
 	RichEdit_SetSel(pTextServices, -1, -1);
 
+	RichEdit_SetStartIndent(pTextServices, 0, FALSE);
 	RichEdit_ReplaceSel(pTextServices,lpText,_T("Î¢ÈíÑÅºÚ"),9,0x696969,FALSE,FALSE,FALSE,FALSE,-1);
 
 	RichEdit_ReplaceSel(pTextServices, _T("\r\n"));
-	RichEdit_SetStartIndent(pTextServices, 0);
+	RichEdit_SetStartIndent(pTextServices, 1,FALSE);
 	m_pRecvRichEdit->EndDown();
 }
 
@@ -427,27 +466,48 @@ void CRichEdit::AddMsgToRecvEdit(LPCTSTR lpText)
 	CDuiString strRecvTime;
 	strRecvTime = FormatTime(time(NULL), _T("%H:%M:%S"));
 
+	BOOL bMine = (BOOL)GetTickCount()%2;
+	CControlUI* pElement = (CControlUI*)CreateListElement(bMine);
+
 	ITextServices * pTextServices = m_pRecvRichEdit->GetTextServices();
-	RichEdit_SetSel(pTextServices, -1, -1);
 
-	TCHAR cText[2048] = {0};
-	wsprintf(cText, _T("%s("), _T("ÒÐÌì"));
+	int n=1;
+	if (bMine != FALSE)
+		n = -1;
+	RichEdit_SetSel(pTextServices, -1,-1);
+	RichEdit_SetStartIndent(pTextServices,n*600, FALSE);
+	AddMsg(m_pRecvRichEdit, _T("ÓëÃÎÆë·É"));
+	//RichEdit_ReplaceSel(pTextServices, _T("\r\n"));	
+	AddMsg(m_pRecvRichEdit, _T("\r\n"));
+	RichEdit_SetSel(pTextServices, -1,-1);
 
-	RichEdit_ReplaceSel(pTextServices, cText, 
-		_T("ËÎÌå"), 9, RGB(0, 0, 255), FALSE, FALSE, FALSE, FALSE, 0);
+	RichEdit_SetStartIndent(pTextServices,n*700, FALSE);
+	long lStartChar = 0, lEndChar = 0;
+	RichEdit_GetSel(pTextServices, lStartChar, lEndChar);
+	RichEdit_ReplaceSel(pTextServices, lpText, FALSE);
+	lEndChar = lStartChar + _tcslen(lpText);
+	RichEdit_SetSel(pTextServices, lStartChar, lEndChar);
+	
+	CDuiRect rcPos;
+	GetSelectionRect(m_pRecvRichEdit,lStartChar,lEndChar,rcPos);
 
-	wsprintf(cText, _T("%u"), 43156150);
-	RichEdit_ReplaceSel(pTextServices, cText, 
-		_T("ËÎÌå"), 9, RGB(0, 114, 193), FALSE, FALSE, TRUE, TRUE, 0);
+	CControlUI* pHBox = m_PaintManager.FindSubControlByName(pElement, _T("HBox"));
+	CControlUI* pItem = m_PaintManager.FindSubControlByName(pElement,_T("BubbleItem"));
+	CControlUI* pList = m_PaintManager.FindSubControlByName(pElement,_T("BubbleList"));
 
-	wsprintf(cText, _T(")  %s\r\n"), strRecvTime);
-	RichEdit_ReplaceSel(pTextServices, cText, 
-		_T("ËÎÌå"), 9, RGB(0, 0, 255), FALSE, FALSE, FALSE, FALSE, 0);
+	CControlUI* pNickName = m_PaintManager.FindSubControlByName(pElement,_T("NickName"));
 
-	AddMsg(m_pRecvRichEdit, lpText);
+	pHBox->SetFixedHeight(rcPos.GetHeight()+24-2);
+	pList->SetFixedWidth(rcPos.GetWidth()+20);
+	pItem->SetFixedHeight(rcPos.GetHeight()+4);
+	
+	//pNickName->SetFixedHeight(18-2);
 
-	RichEdit_ReplaceSel(pTextServices, _T("\r\n"));
-	RichEdit_SetStartIndent(pTextServices, 0);
+	RichEdit_SetSel(pTextServices, -1,-1);
+	//RichEdit_ReplaceSel(pTextServices, _T("\r\n"));	
+	AddMsg(m_pRecvRichEdit, _T("\r\n"));
+	RichEdit_SetStartIndent(pTextServices, 1, FALSE);
+	
 	m_pRecvRichEdit->EndDown();
 
 	pTextServices->Release();
@@ -471,16 +531,6 @@ void CRichEdit::AddMsg(CRichEditUI* pRichEdit, LPCTSTR lpText)
 				pRichSendText++;
 				continue;
 			}
-// 			else if (*(p+1) == _T('f'))
-// 			{
-// 				if (HandleSysFaceId(pRichEdit, p, strTmp))
-// 					continue;
-// 			}
-// 			else if (*(p+1) == _T('s'))
-// 			{
-// 				if (HandleSysFaceIndex(pRichEdit, p, strTmp))
-// 					continue;
-// 			}
 			else if (*(pRichSendText+1) == _T('c'))
 			{
 				if (HandleCustomPic(pRichEdit, pRichSendText, strTmp))
@@ -502,7 +552,7 @@ void CRichEdit::_RichEdit_ReplaceSel(CRichEditUI * pRichEdit, LPCTSTR lpszNewTex
 		RichEdit_ReplaceSel(pTextServices, lpszNewText, 
 			m_FontInfo.m_strName, m_FontInfo.m_nSize, 
 			m_FontInfo.m_clrText, m_FontInfo.m_bBold, m_FontInfo.m_bItalic, 
-			m_FontInfo.m_bUnderLine, FALSE, 300);
+			m_FontInfo.m_bUnderLine, FALSE, 30);
 	}
 	else
 	{
@@ -524,7 +574,7 @@ BOOL CRichEdit::_RichEdit_InsertFace(CRichEditUI * pRichEdit, LPCTSTR lpszFileNa
 	if (pTextServices != NULL && pTextHost != NULL)
 	{
 		if (pRichEdit == m_pRecvRichEdit)
-			RichEdit_SetStartIndent(pTextServices, 300);
+			RichEdit_SetStartIndent(pTextServices, 300,FALSE);
 		bRet = RichEdit_InsertFace(pTextServices, pTextHost, 
 			lpszFileName, nFaceId, nFaceIndex, RGB(255,255,255), TRUE, 40);
 	}
@@ -578,4 +628,40 @@ void CRichEdit::RestoreBtnStatus(CControlUI* pControl)
 	event.Type = UIEVENT_MOUSELEAVE;
 	event.pSender = pControl;
 	pControl->DoEvent(event);
+}
+
+CControlUI* CRichEdit::CreateListElement(BOOL bMine)
+{
+	LPCTSTR lpszXMLFile = _T("ChatBubbleLeft.xml");
+	if (bMine != FALSE)
+		lpszXMLFile = _T("ChatBubbleRight.xml");
+
+	CControlUI* pControl = NULL;
+
+	CDialogBuilder m_dlgBuilder;
+	//if( !m_dlgBuilder.GetMarkup()->IsValid() ) {
+		pControl = m_dlgBuilder.Create(lpszXMLFile, (UINT)0, NULL, &m_PaintManager);
+	//}
+//	else {
+//		pControl =m_dlgBuilder.Create((UINT)0, &m_PaintManager);
+//	}
+	m_pChatView->Add(pControl);
+
+	return pControl;
+}
+
+void CRichEdit::SetOleCallback(CRichEditUI* pRichEdit)
+{
+	IRichEditOleCallback2* pRichEditOleCallback2 = NULL;
+	HRESULT hr = ::CoCreateInstance(CLSID_ImageOle, NULL, CLSCTX_INPROC_SERVER,
+		__uuidof(IRichEditOleCallback2), (void**)&pRichEditOleCallback2);
+	if (SUCCEEDED(hr))
+	{
+		pRichEditOleCallback2->SetNotifyHwnd(m_hWnd);
+		ITextServices * pTextServices = pRichEdit->GetTextServices();
+		pRichEditOleCallback2->SetTextServices(pTextServices);
+		pTextServices->Release();
+		pRichEdit->SetOleCallback(pRichEditOleCallback2);
+		pRichEditOleCallback2->Release();
+	}
 }

@@ -447,6 +447,10 @@
 					RelativePath=".\Wnd\StaticArpDialog.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\Wnd\WakeOnLan.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -647,6 +651,10 @@
 				</File>
 				<File
 					RelativePath=".\Wnd\StaticArpDialog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wnd\WakeOnLan.h"
 					>
 				</File>
 			</Filter>

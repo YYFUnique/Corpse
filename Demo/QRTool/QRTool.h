@@ -22,6 +22,7 @@ public:
 	virtual UILIB_RESOURCETYPE GetResourceType() const;
 	virtual CDuiString GetSkinFile();
 	virtual CDuiString GetSkinFolder();
+	CDuiString GetZIPFileName() const;
 	virtual void Notify(TNotifyUI& msg);
 	virtual void InitWindow();
 	virtual void OnFinalMessage(HWND hWnd);

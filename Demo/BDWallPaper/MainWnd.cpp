@@ -131,7 +131,7 @@ void CMainWnd::InitWindow()
 			{_T("8009"), _T("ÑÕÉ«")},
 		};
 		COptionUI* pFirst = NULL;
-		for(int i = 0; i < sizeof(aTypes) / sizeof(TABBTN); ++i)
+		for(int i = 0; i < _countof(aTypes); ++i)
 		{
 			TABBTN Tab = aTypes[i];
 			COptionUI* pOption = new COptionUI();

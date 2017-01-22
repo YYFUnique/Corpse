@@ -129,11 +129,11 @@ public:
 					for(UINT i = 0; i < vInfos.size(); i++)
 					{
 						WPInfo Info = vInfos[i];
-						CString sID = Info.id.c_str();
-						CString sThumbMid = Info.thumb_mid.c_str();
-						CString sThumbNail = Info.thumb_nail.c_str();
+						CString sID = Info.id;
+						CString sThumbMid = Info.thumb_mid;
+						CString sThumbNail = Info.thumb_nail;
 						CString sButton;
-						sButton.Format(_T("wp_button_%s_%d"), pKey->sType, atoi(Info.id.c_str()));
+						sButton.Format(_T("wp_button_%s_%d"), pKey->sType,_ttoi(Info.id));
 						CWPButton* pButton = new CWPButton();
 						pButton->SetName(sButton);
 						pButton->SetWPImage(sThumbMid);
