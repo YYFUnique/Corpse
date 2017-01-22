@@ -33,6 +33,11 @@ UILIB_RESOURCETYPE CQRTool::GetResourceType() const
 	return UILIB_FILE;
 }
 
+CDuiString CQRTool::GetZIPFileName() const
+{
+	return _T("QRTool.zip");
+}
+
 CDuiString CQRTool::GetSkinFile()
 {
 	return _T("QRTool.xml");
@@ -41,6 +46,7 @@ CDuiString CQRTool::GetSkinFile()
 CDuiString CQRTool::GetSkinFolder()
 {
 	return _T("QRTool");
+	//return _T("");
 }
 
 void CQRTool::Notify(TNotifyUI& msg)
@@ -194,7 +200,11 @@ LRESULT CQRTool::OnQRCodeItemInfo(WPARAM wParam, LPARAM lParam)
 		CStringA strQRCode(pQRCodeInfo->strQrCode);
 		LPSTR lpszUtf8 = Gb32ToUtf8(strQRCode);
 		if (qrAddData(pCode, (const qr_byte_t* )lpszUtf8, strlen(lpszUtf8)) == FALSE)
+		{
+			CString strTipInfo(qrGetErrorInfo(pCode));
+			MessageBox(m_hWnd, strTipInfo, _T("生成错误"), MB_OK|MB_ICONINFORMATION);
 			break;
+		}
 		//注意需要调用qrFinalize函数
 		if (qrFinalize(pCode) == FALSE)
 			break;

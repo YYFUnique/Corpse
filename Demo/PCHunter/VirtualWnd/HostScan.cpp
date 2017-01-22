@@ -4,6 +4,8 @@
 #include "../Wnd/IPTools.h"
 #include "../Wnd/AddUserName.h"
 #include "../Wnd/ArpList.h"
+#include "../Wnd/WakeOnLan.h"
+#include "../Utils/ErrorInfo.h"
 #include <Icmpapi.h>
 #include <nmmintrin.h>
 #pragma comment(lib,"Iphlpapi.lib")
@@ -69,6 +71,8 @@ void CHostScan::OnClick(TNotifyUI& msg)
 		OnIpTools(msg);
 	else if (strSender == _T("ShowArp"))
 		OnShowArp(msg);
+	else if (strSender == _T("WakeOnLAN"))
+		OnWOL(msg);
 }
 
 void CHostScan::OnHostScanMenu(CControlUI* pControl)
@@ -95,6 +99,8 @@ void CHostScan::OnHostScanMenu(CControlUI* pControl)
 		OnRemoteDesktop(pItem);
 	else if (strName == _T("Ping"))
 		OnPingTarget(pItem);
+	else if (strName == _T("StaticMac"))
+		OnBindMac(pItem);
 }
 
 void CHostScan::OnAddUserName(CListTextElementUI* pItem)
@@ -159,6 +165,50 @@ void CHostScan::OnPingTarget(CListTextElementUI* pItem)
 	{
 		MessageBox(hWnd, _T("启动Ping命令失败！"), _T("提示"), MB_OK);
 		return;
+	}
+}
+
+void CHostScan::OnBindMac(CListTextElementUI* pItem)
+{
+	MIB_IPNETROW MibIpNetRow;
+	ZeroMemory(&MibIpNetRow, sizeof(MIB_IPNETROW));
+	
+	//遍历第一个可用的网卡接口
+	//由于通过网卡列表获取的数据可能存在不可用的情况，故采用获取路由表的方式，
+	//排除回环路由其余路由接口都是可用接口
+	CMibIpforwardIpv4List IpForwardList;
+	if (GetIpForwardTableIpv4(IpForwardList) == FALSE)
+		return;
+
+	POSITION pos = IpForwardList.GetHeadPosition();
+	while(pos)
+	{
+		const MIB_IPFORWARDROW& MibIpFrorWard = IpForwardList.GetNext(pos);
+		if (MibIpFrorWard.dwForwardIfIndex == 1)
+			continue;
+
+		MibIpNetRow.dwIndex = MibIpFrorWard.dwForwardIfIndex;
+	}
+
+	//采用网络地址
+	MibIpNetRow.dwAddr = inet_addr(CStringA(pItem->GetText(0)));
+
+	CDuiString strPhyAddr = pItem->GetText(1);
+
+	BYTE bMac[20];
+	_stscanf_s(strPhyAddr,_T("%x-%x-%x-%x-%x-%x"),
+		&bMac[0],&bMac[1],&bMac[2],&bMac[3],&bMac[4],&bMac[5]);
+
+	memcpy_s(MibIpNetRow.bPhysAddr,6,bMac,6);
+
+	MibIpNetRow.dwPhysAddrLen = 6;
+	MibIpNetRow.dwType = MIB_IPNET_TYPE_STATIC;
+
+	DWORD dwRet = CreateIpNetEntry(&MibIpNetRow);
+	if (dwRet != NO_ERROR)
+	{
+		SetErrorInfo(SYSTEM_ERROR, dwRet, _T("绑定静态MAC失败"));
+		MessageBox(m_pPaintManager->GetPaintWindow(), GetThreadErrorInfoString(), _T("提示"), MB_OK);
 	}
 }
 
@@ -404,6 +454,14 @@ void CHostScan::OnShowArp(TNotifyUI& msg)
 
 	pArpList->ShowModal();
 }
+
+void CHostScan::OnWOL(TNotifyUI& msg)
+{
+	CWakeOnLan* pWOL = new CWakeOnLan(m_pPaintManager->GetPaintWindow());
+
+	pWOL->ShowModal();
+}
+
 
 void CHostScan::AddStaticArp()
 {

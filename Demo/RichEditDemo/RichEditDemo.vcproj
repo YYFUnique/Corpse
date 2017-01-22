@@ -270,6 +270,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\session_util.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\StdAfx.cpp"
 				>
 			</File>
@@ -305,6 +309,10 @@
 			</File>
 			<File
 				RelativePath=".\RichEditUtil.h"
+				>
+			</File>
+			<File
+				RelativePath=".\session_util.h"
 				>
 			</File>
 			<File

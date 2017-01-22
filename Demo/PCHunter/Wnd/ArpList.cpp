@@ -95,7 +95,7 @@ void CArpList::ShowArpList()
 
 		pListElement->SetText(1,strHostMacAddr);
 		CDuiString strArpType(_T("¶¯Ì¬"));
-		if (MibIpInfo.dwType == 4)
+		if (MibIpInfo.dwType == MIB_IPNET_TYPE_STATIC)
 			strArpType = _T("¾²Ì¬");
 		pListElement->SetText(2,strArpType);
 	}

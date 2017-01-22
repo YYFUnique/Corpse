@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "PCMaster.h"
+#include "HttpResponse.h"
 #include "Wnd/ColorSkinWindow.h"
 #include "Wnd/MessageTip.h"
 #include "Wnd/SkinChange.h"
@@ -16,6 +17,7 @@
 #include "DllCore/Utils/TextTools.h"
 
 #include "QRCode/qr.h"
+#include "libcurl/libcurl.h"
 
 #pragma comment(lib,"shell32.lib")
 #pragma comment(lib,"shlwapi.lib")
@@ -359,6 +361,21 @@ void CPCMaster::OnClick(TNotifyUI& msg)
 	else if(msg.pSender == (CButtonUI*)m_PaintManager.FindControl(_T("BtnSpy")))
 	{
 
+	}
+	else if (msg.pSender == (CButtonUI*)m_PaintManager.FindControl(_T("BtnWeather")))
+		OnBtnWeather(msg);
+}
+
+void CPCMaster::OnBtnWeather(TNotifyUI& msg)
+{
+	CLibcurl libcurl;
+	CHTTPResponse HttpResponse;
+	libcurl.SetCallback(&HttpResponse);
+	if (libcurl.doHttpGet(_T("https://www.qq.com")) == FALSE)
+	{
+		CString strTipInfo;
+		libcurl.GetErrorInfo(strTipInfo);
+		MessageBox(m_hWnd,strTipInfo,_T("ÌבÊ¾"),MB_OK);
 	}
 }
 

@@ -2,6 +2,7 @@
 #include "RichEditUtil.h"
 #include "DuiLib/Utils/DuiFunc.h"
 #include "ImageOleCtrl/ImageOle.h"
+#include <atlstr.h>
 
 DWORD RichEdit_GetDefaultCharFormat(ITextServices * pTextServices, CHARFORMAT& cf)
 {
@@ -210,32 +211,47 @@ void RichEdit_ReplaceSel(ITextServices * pTextServices, LPCTSTR lpszNewText,
 	lEndChar = lStartChar + _tcslen(lpszNewText);
 	RichEdit_SetSel(pTextServices, lStartChar, lEndChar);
 	RichEdit_SetFont(pTextServices, lpFontName, nFontSize, clrText, bBold, bItalic, bUnderLine, bIsLink);
-	RichEdit_SetStartIndent(pTextServices, nStartIndent);
+	//RichEdit_SetStartIndent(pTextServices, nStartIndent);
 	RichEdit_SetSel(pTextServices, lEndChar, lEndChar);
 }
 
 void RichEdit_ReplaceSel(ITextServices * pTextServices, LPCTSTR lpszNewText, BOOL bCanUndo/* = FALSE*/)
-{
+ {
 	pTextServices->TxSendMessage(EM_REPLACESEL, (WPARAM)bCanUndo, (LPARAM)lpszNewText, NULL);
 }
 
 // 设置左缩进(单位:缇)
-BOOL RichEdit_SetStartIndent(ITextServices * pTextServices, int nSize)
+BOOL RichEdit_SetStartIndent(ITextServices * pTextServices, int nSize,BOOL bNickName)
 {
 	PARAFORMAT2 pf2;
 	memset(&pf2, 0, sizeof(pf2));
 	pf2.cbSize = sizeof(PARAFORMAT2);
-	if (nSize == -1)
+
+	if (nSize < 0)
 	{
-		pf2.dwMask = PFM_ALIGNMENT;
-		pf2.wAlignment = PFA_CENTER;
-	}else
+		pf2.dwMask |= PFM_RIGHTINDENT|PFM_ALIGNMENT; 
+		pf2.wAlignment = PFA_RIGHT;
+		pf2.dxRightIndent = -nSize;
+	}
+	else if(nSize > 0)
 	{
-		pf2.dwMask = PFM_STARTINDENT|PFM_ALIGNMENT;
+		pf2.dwMask |= PFM_STARTINDENT|PFM_ALIGNMENT;
 		pf2.wAlignment = PFA_LEFT;
 		pf2.dxStartIndent = nSize;
 	}
+	else
+	{
+		pf2.dwMask |= PFM_ALIGNMENT;
+		pf2.wAlignment = PFA_CENTER;
+	}
 	
+	if (bNickName != TRUE)
+	{
+		pf2.dwMask |=PFM_SPACEBEFORE|PFM_SPACEAFTER;
+		pf2.dySpaceAfter  = 10*5;
+		pf2.dySpaceBefore = 10*5;
+	}
+
 	HRESULT lRes = 0;
 	pTextServices->TxSendMessage(EM_SETPARAFORMAT, 0, (LPARAM)&pf2, &lRes);
 	return (BOOL)lRes;
@@ -389,4 +405,129 @@ BOOL RichEdit_InsertFace(ITextServices *pTextServices, ITextHost *pTextHost,
 		::SysFreeString(bstrFileName);
 
 	return SUCCEEDED(hRet);
+}
+
+void InsertTextToEdit(CRichEditUI* edit, LPCTSTR str)
+{
+	LPCTSTR kCp = _T("["), kCq = _T("]");
+
+	size_t p1 = 0, p2 = 0, q = 0, len = _tcslen(str);
+	LPCTSTR emo, file, txt;
+	CString strText(str);
+	while (p1 < len)
+	{
+		//查找"["
+		p2 = strText.Find(kCp,p1);
+		//p2 = StrStr(str,kCp);//str.find(kCp, p1);
+		if (p2 == -1)
+		{
+			//txt = str.substr(p1);
+			txt = strText.Left(len);
+			edit->ReplaceSel(txt, false);
+			break;
+		}
+		else
+		{
+			if (p2 > p1)
+			{
+				//txt = str.substr(p1, p2 - p1);
+				txt = strText.Mid(p1,p2-p1);
+				edit->ReplaceSel(txt, false);
+			}
+			//查找"]"
+			//q = str.find(kCq, p2);
+			q=strText.Find(kCq,p2);
+			if (q == len)
+			{
+				//txt = str.substr(p2);
+				txt = strText.Left(p2);
+				edit->ReplaceSel(txt, false);
+				break;
+			}
+			else
+			{
+				//emo = str.substr(p2, q - p2 + 1);
+				//_FindEmoji(edit, emo);
+
+				p1 = q + 1;
+			}
+		}
+	}
+}
+
+#define _tomClientCoord     256  // 默认获取到的是屏幕坐标， Use client coordinates instead of screen coordinates.
+#define _tomAllowOffClient  512  // Allow points outside of the client area.
+
+BOOL GetSelectionRect(CRichEditUI* pRichEdit, LONG cpStart, LONG cpEnd, RECT &rcCursor)
+{
+	SetRect(&rcCursor,0,0,0,0);
+	if (cpStart < 0 || cpEnd < 0)
+		return FALSE;
+
+	ITextDocument* pTextDoc = pRichEdit->GetDoc();
+	ITextRange* pRange;
+
+	for (int n = cpStart; n<= cpEnd;)
+	{
+		LONG lcpEnd = n+pRichEdit->LineLength(n);
+
+		if (lcpEnd > cpEnd)
+			lcpEnd = cpEnd;
+
+		pTextDoc->Range(n, lcpEnd, &pRange);
+
+		BSTR bStrText;
+		pRange->GetText(&bStrText);
+		RECT rcPos;
+
+		long lTypeTopLeft       = _tomAllowOffClient|_tomClientCoord|tomStart|TA_TOP|TA_LEFT;
+		long lTypeRightBottom   = _tomAllowOffClient|_tomClientCoord|tomEnd|TA_BOTTOM|TA_RIGHT;
+
+		if (pRange->GetPoint(lTypeTopLeft,&rcPos.left,&rcPos.top) != S_OK ||
+			pRange->GetPoint(lTypeRightBottom,&rcPos.right,&rcPos.bottom))
+			return FALSE;
+
+		UnionRect(&rcCursor,&rcCursor,&rcPos);
+
+		pRange->Release();
+		//添加一个回车换行，转移到下一行
+		n =lcpEnd+1;
+	}
+	
+
+	/*pTextDoc->Range(cpStart, cpEnd, &pRange);
+	if (!pRange)
+	{
+		return FALSE;
+	}
+
+	// http://technet.microsoft.com/zh-cn/hh768766(v=vs.90) 新类型定义
+
+*/
+
+	/*if (pRange->GetPoint(lTypeTopLeft,     &ptStart.x, &ptStart.y) != S_OK ||
+		pRange->GetPoint(lTypeRightBottom, &ptEnd.x,   &ptEnd.y) != S_OK)
+	{
+		return FALSE;
+	}*/
+
+	//获取左上角、右下角索引坐标，这里只能准确获取到高度，宽度不一定准确
+
+	
+	//获取每一行最大最大坐标
+	//pRange->GetIndex(cpStart)
+/*
+	rcCursor.left = ptStart.x;
+	rcCursor.top = ptStart.y;
+	rcCursor.right = ptEnd.x;
+	rcCursor.bottom = ptEnd.y;
+*/
+	//rcCursor.SetRect(ptStart, ptEnd);
+	if (rcCursor.right - rcCursor.left == 0)
+	{
+		rcCursor.right += 1;
+	}
+
+	//ClientToScreen(rcCursor);
+	return TRUE;
 }

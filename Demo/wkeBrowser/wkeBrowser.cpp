@@ -83,7 +83,7 @@ void CWkeBrowser::InitWindow()
 	m_pURLEdit = static_cast<CEditUI2*>(m_PaintManager.FindControl(_T("urlEdit")));
 	m_pLblStatusBar = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("statusbar")));
 
-	CWkeBrowserUI* pWke = static_cast<CWkeBrowserUI*>(m_PaintManager.FindControl(_T("ie")));
+	/*CWkeBrowserUI* pWke = static_cast<CWkeBrowserUI*>(m_PaintManager.FindControl(_T("ie")));
 	if (pWke)
 	{
 		pWke->InitBrowser(wkeCreateWebView(),1000);
@@ -92,13 +92,15 @@ void CWkeBrowser::InitWindow()
 // 		m_pWkeHandler.onTitleChanged = OnTitleChanged;
 // 		m_pWkeHandler.onURLChanged = OnURLChanged;
 // 		pWke->SetClientHandler(&m_pWkeHandler);
-		//m_pWke->SetFile(_T("Html/index.html")/*msg.pSender->GetText().GetData()*/);
+		//m_pWke->SetFile(_T("Html/index.html")msg.pSender->GetText().GetData());
 		//m_pWke->SetURL(L"http://mudcu.be/sketchpad/"); //一个漂亮的网站，大家可以自己试试
-		//m_pWke->Navigate(_T("10.3.1.253:8000"));
-	}	
-	pWke = static_cast<CWkeBrowserUI*>(m_PaintManager.FindControl(_T("ie2")));
-	if (pWke)
-		pWke->InitBrowser(wkeCreateWebView(),1000);	
+		//pWke->Navigate(_T("10.3.1.253:8000"));
+	}*/
+	CWebBrowserUI* pWeb = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("ie2")));
+	m_pWebBrowserEventHandler = new CWebBrowserEventHandler;
+	pWeb->SetWebBrowserEventHandler(m_pWebBrowserEventHandler);
+	if (pWeb)
+		pWeb ->Navigate2(_T("http://www.duilib.com")); 
 }
 
 LRESULT CWkeBrowser::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -156,8 +158,8 @@ void CWkeBrowser::OnReturn(TNotifyUI& msg)
 		if (m_pURLEdit)
 		{
 
-			CWkeBrowserUI* pWke = static_cast<CWkeBrowserUI*>(m_PaintManager.FindControl(_T("ie")));
-			pWke->Navigate(m_pURLEdit->GetText());
+			CWebBrowserUI* pWke = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("ie2")));
+			pWke->Navigate2(m_pURLEdit->GetText());
 		}
 	}
 }

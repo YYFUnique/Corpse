@@ -1,5 +1,9 @@
 #include "stdafx.h"
 #include "AdapterInfo.h"
+#include <NetCon.h>
+#include <Ras.h>
+#pragma comment(lib,"Rasapi32.lib")
+/*#pragma comment(lib,"Netshell.lib")*/
 
 BOOL GetAllShowAdapter(CNetPropertiesList& NetPropertiesInfo)
 {
@@ -20,20 +24,61 @@ BOOL GetAllShowAdapter(CNetPropertiesList& NetPropertiesInfo)
 		if (FAILED(hRet))
 			break;
 
-		pManager->EnumConnections(NCME_DEFAULT, &pEnum);//开始枚举网卡
+		pManager->EnumConnections(NCME_DEFAULT, &pEnum);
+		
 		ULONG           celt;
-	    while(  pEnum->Next(1, &pConnection, &celt) == S_OK )
+		while (pEnum->Next(1, &pConnection, &celt) == S_OK )
 		{  
 			pConnection->GetProperties(&Nproperties);
-			NetPropertiesInfo.AddTail(Nproperties);
+			NetPropertiesInfo.AddTail(*Nproperties);
+
+			 //NcFreeNetconProperties(Nproperties);
+			CoTaskMemFree(Nproperties);
+			pConnection->Release();
 		}
+
+		if(pEnum) pEnum->Release();
+		
+/*
+		HRESULT hRet = CoCreateInstance(CLSID_NetSharingManager,NULL,CLSCTX_SERVER,IID_INetSharingManager,(void**)&pNetSharingManager);
+		if (FAILED(hRet))
+			break;
+
+		INetSharingEveryConnectionCollection* pNSECC = NULL;
+
+		pNetSharingManager->get_EnumEveryConnection(&pNSECC);
+
+		IEnumVARIANT* pEV = NULL;  
+		IUnknown* pUnk = NULL;
+		pNSECC->get__NewEnum(&pUnk);  
+
+		pUnk->QueryInterface(__uuidof(IEnumVARIANT), (void**)&pEV);  
+
+		INetConnection* pNetConnection = NULL;
+		ULONG           celt;
+		VARIANT v;  
+	    VariantInit(&v);// 初始化 错误 类型VARIANT（是错误可捕捉）
+
+		while (pEV->Next(1,&v,&celt) == S_OK)
+		{
+			if (V_VT(&v) == VT_UNKNOWN)
+			{
+
+				INetConnection* pNC = NULL;  
+
+				V_UNKNOWN(&v)->QueryInterface(__uuidof(INetConnection), (void**)&pNC);  // 查询设备是否支持接口 
+				NETCON_PROPERTIES*  Nproperties=NULL;
+				pNC->GetProperties(&Nproperties);
+				NetPropertiesInfo.AddTail(*Nproperties);
+			}
+		}
+*/
 
 		bSuccess = TRUE;
 	} while (FALSE);
 
 	if(pManager) pManager->Release();
-	if(pConnection) pConnection->Release();
-	if(pEnum) pEnum->Release();
+	
 	if(pNetSharingManager) pNetSharingManager->Release();
 	if(pConfiguration) pConfiguration->Release();
 
@@ -134,6 +179,45 @@ BOOL GetIPAddrTable(MIB_IPADDRTABLE* &pMibIPAddrTable)
 	{
 		delete[] pMibIPAddrTable;
 		pMibIPAddrTable = NULL;
+	}
+
+	return bSuccess;
+}
+
+BOOL GetAdaptersInfo(CIpAdapterInfoList& AdapterList)
+{
+	BOOL bSuccess = FALSE;
+	PIP_ADAPTER_INFO pAdapterInfo = NULL;
+	DWORD dwSize = 0;
+
+	do 
+	{
+		DWORD dwRet = GetAdaptersInfo(pAdapterInfo, &dwSize);
+		if (dwRet != ERROR_SUCCESS )
+		{
+			pAdapterInfo = (PIP_ADAPTER_INFO)new BYTE[dwSize];
+			if (pAdapterInfo == NULL)
+				break;
+
+			dwRet = GetAdaptersInfo(pAdapterInfo, &dwSize);
+		}
+
+		if (dwRet != ERROR_SUCCESS)
+			break;
+
+		PIP_ADAPTER_INFO pAdapterDev = pAdapterInfo;
+		do 
+		{
+			AdapterList.AddTail(*pAdapterDev);
+		} while (pAdapterDev = pAdapterDev->Next);
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	if (pAdapterInfo != NULL)
+	{
+		delete[] pAdapterInfo;
+		pAdapterInfo = NULL;
 	}
 
 	return bSuccess;

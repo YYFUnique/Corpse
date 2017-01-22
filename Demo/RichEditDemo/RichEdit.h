@@ -27,6 +27,9 @@ public:
 	BOOL _RichEdit_InsertFace(CRichEditUI * pRichEdit, LPCTSTR lpszFileName, int nFaceId, int nFaceIndex);
 	BOOL HandleCustomPic(CRichEditUI * pRichEdit, LPCTSTR& pRichSendText, CDuiString& strRicvText);
 protected:
+	bool ChatViewSizeChange(LPVOID lParam);
+	bool ChatViewEvent(LPVOID lParam);
+
 	void OnClick(TNotifyUI& msg);
 	void OnItemSelect(TNotifyUI& msg);
 	void OnSelectChanged(TNotifyUI& msg);
@@ -48,12 +51,18 @@ protected:
 	void OnBtnSendOption(TNotifyUI& msg);
 	void OnMenuClick(CControlUI* pControl);
 	void RestoreBtnStatus(CControlUI* pControl);
+
+	CControlUI* CreateListElement(BOOL bMine);
+	void SetOleCallback(CRichEditUI* pRichEdit);
 private:
 	CRichEditUI* m_pSendRichEdit;
 	CRichEditUI* m_pRecvRichEdit;
+	CVerticalLayoutUI* m_pChatView;
 	BOOL			  m_Inited;
 	CFontInfo      m_FontInfo;
 	BOOL			  m_bReturnSendMsg;
+
+	
 // 	CRichEditOleCallback* m_pRichEditOleCallBackSendEdit;
 // 	CRichEditOleCallback* m_pRichEditOleCallBackRecvEdit;
 };

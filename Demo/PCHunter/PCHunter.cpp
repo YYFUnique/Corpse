@@ -89,20 +89,21 @@ CDuiString CPCHunter::GetSkinFile()
 
 CDuiString CPCHunter::GetSkinFolder()
 {
-#ifdef _DEBUG
+//#ifdef _DEBUG
 	return _T("PCHunter");
-#else
-	return _T("");
-#endif
+//#else
+//	return _T("");
+//#endif
 }
 
 UILIB_RESOURCETYPE CPCHunter::GetResourceType() const
 {
-#ifdef _DEBUG
+/*#ifdef _DEBUG
 	return UILIB_FILE;
 #else
 	return UILIB_ZIP;
-#endif
+#endif*/
+	return UILIB_FILE;
 }
 
 CControlUI* CPCHunter::CreateControl(LPCTSTR pstrClass)
@@ -159,6 +160,19 @@ void CPCHunter::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
 
+	CPageUI* pPage = (CPageUI*)m_PaintManager.FindControl(_T("page"));
+
+	CListUI* pList = (CListUI*)m_PaintManager.FindControl(_T("App"));
+	//for (int n=0;n<pList->GetCount();++n)
+	{
+		CListBodyUI* pListBody = (CListBodyUI*)pList->GetList();
+		if (pListBody)
+		{
+			pPage->SetPage(pListBody);
+			pPage->SetCount(10);
+			pPage->SetTotal(pList->GetCount());
+		}
+	}
 
 	//CString strTipInfo;
 	//strTipInfo.Format(_T("±‡“Î ±º‰:%s,%s"),__DATE__,__TIME__);

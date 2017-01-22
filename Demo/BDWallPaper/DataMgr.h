@@ -4,9 +4,10 @@
 #pragma comment(lib, "WinInet.lib")
 #include <string>
 using namespace std;
-#include "helper/jsoncpp/json.h"
 #include <Urlmon.h>
 #pragma comment(lib, "Urlmon.lib")
+#include "DllCore/Json/JsonObject.h"
+#include "DllCore/Utils/ErrorInfo.h"
 
 #define WM_GETWPPAGE_OK	WM_USER + 100
 #define WM_GETWPINFO_OK	WM_USER + 101
@@ -42,11 +43,11 @@ struct WPPage
 
 struct WPInfo
 {
-	string flag;
-	string flag_desc;
-	string id;
-	string thumb_mid;
-	string thumb_nail;
+	CString flag;
+	CString flag_desc;
+	CString id;
+	CString thumb_mid;
+	CString thumb_nail;
 };
 
 class CDataMgr
@@ -75,11 +76,12 @@ public:
 
 		CDuiString sUrl;
 		sUrl.Format(_T("http://bizhi.baidu.com/wallpaper/getList?type=%s&page=%d&count=%d&g=C_0-D_100825PBN40317ERB89E-M_206A8A1263C4-V_DE5571AC-T_20140714225619485&tn=bdwp&version=2.0.0.1160&_t=%d"), lpszType, nPage, nCount, GetTickCount());
-		std::string data = WebReadFile(sUrl);
+		//sUrl.Format(_T("http://bizhi.baidu.com/wallpaper/getList?type=%s&page=%d"), lpszType, nPage);
+		CDuiString strData = WebReadFile(sUrl);
 
-		Json::Reader reader;
-		Json::Value root;
-		if (!reader.parse(data.c_str(), root, false))
+		//Json::Reader reader;
+		//Json::Value root;
+		/*if (!reader.parse(data.c_str(), root, false))
 		{
 			return -1;
 		}
@@ -96,25 +98,47 @@ public:
 		{
 			string totalpage = root["totalPage"].asString();
 			ntotal = atoi(totalpage.c_str());
+		}*/
+		CJsonObject JsonObject;
+		JsonObject.FromString(strData);
+		int nError;
+		JsonObject.GetValue(_T("errorno"),&nError);
+		if (nError != 0)
+		{
+			MessageBox(NULL,JsonObject.GetValue(_T("errormsg")),_T("提示"),MB_OK);
+			return 0;
 		}
+
+		int nTotal = 0;
+		JsonObject.GetValue(_T("totalPage"),&nTotal);
 		// 分类页数
 		WPPage *pPage = new WPPage;
 		pPage->sType = lpszType;
-		pPage->nTotalPage = ntotal;
+		pPage->nTotalPage = nTotal;
 		m_mapWPPages[lpszType] = *pPage;
 		::PostMessage(m_hWnd, WM_GETWPPAGE_OK, (WPARAM)pPage, 0);
 
-		int page = root["page"].asInt();
-		Json::Value urls = root["list"];
-		for(UINT i = 0; i < urls.size(); ++i)
+		int page = 0;
+		//root["page"].asInt();
+		JsonObject.GetValue(_T("page"),&page);
+		CJsonObject JsonUrl;
+		JsonObject.GetValue(_T("list"),&JsonUrl);
+		//Json::Value urls = root["list"];
+		for(int i = 0; i < JsonUrl.GetArraySize(); ++i)
 		{
-			Json::Value url = urls[i];
+			//Json::Value url = urls[i];
+			CJsonObject Json = JsonUrl.GetArrayItem(i);
 			WPInfo Info;
-			Info.flag = url["flag"].asString();
-			Info.flag_desc = url["flag_desc"].asString();
-			Info.id = url["id"].asString();
-			Info.thumb_mid = url["thumb_mid"].asString();
-			Info.thumb_nail = url["thumbnail"].asString();
+			//Info.flag = url["flag"].asString();
+			Info.flag = Json.GetValue(_T("flag"));
+			//Info.flag_desc = url["flag_desc"].asString();
+			Info.flag_desc = Json.GetValue(_T("flag_desc"));
+			//Info.id = url["id"].asString();
+			Info.id = Json.GetValue(_T("id"));
+			//Info.thumb_mid = url["thumb_mid"].asString();
+			Info.thumb_mid = Json.GetValue(_T("thumb_mid"));
+			//Info.thumb_nail = url["thumbnail"].asString();
+			Info.thumb_nail = Json.GetValue(_T("thumbnail"));
 			m_mapWPInfos[*pKey].push_back(Info);
 		}
 
@@ -137,18 +161,23 @@ public:
 		return false;
 	}
 private:
-	static string WebReadFile(LPCTSTR lpszUrl)
+	CDuiString WebReadFile(LPCTSTR lpszUrl)
 	{
-		string data;
+		CDuiString strData;
 		// 打开http链接
 		HINTERNET hConnect = InternetOpen(NULL, INTERNET_OPEN_TYPE_DIRECT, NULL, NULL, 0); 
 
 		if (hConnect)
 		{
-			DWORD dwTimeOut = 1;
-			InternetSetOption(hConnect, INTERNET_OPTION_CONNECT_TIMEOUT, &dwTimeOut, sizeof(dwTimeOut));
+			//DWORD dwTimeOut = 10;
+			//InternetSetOption(hConnect, INTERNET_OPTION_CONNECT_TIMEOUT, &dwTimeOut, sizeof(dwTimeOut));
 
-			HINTERNET hSession = InternetOpenUrl(hConnect, lpszUrl, NULL, 0, INTERNET_FLAG_TRANSFER_BINARY | INTERNET_FLAG_PRAGMA_NOCACHE, 0);
+			HINTERNET hSession = InternetOpenUrl(hConnect, lpszUrl, NULL, 0, INTERNET_FLAG_TRANSFER_BINARY, 0);
+			if (hSession == 0)
+			{
+				SetErrorInfo(SYSTEM_ERROR,0,_T("打开地址失败"));
+				OutputDebugString(GetThreadErrorInfoString());
+			}
 			if (hSession)
 			{
 				// 建立数据缓冲区
@@ -165,7 +194,7 @@ private:
 					memcpy(pBuffer, szBuffer, nLen);
 					if(pBuffer != NULL)
 					{
-						data = pBuffer;
+						strData = CString(pBuffer);
 					}
 				}
 
@@ -178,7 +207,7 @@ private:
 			InternetCloseHandle(hConnect);
 		}
 
-		return data;
+		return strData;
 	}
 
 

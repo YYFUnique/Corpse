@@ -191,26 +191,6 @@
 					>
 				</File>
 			</Filter>
-			<Filter
-				Name="Helper"
-				>
-				<Filter
-					Name="jsoncpp"
-					>
-					<File
-						RelativePath=".\helper\jsoncpp\json_reader.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\helper\jsoncpp\json_value.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\helper\jsoncpp\json_writer.cpp"
-						>
-					</File>
-				</Filter>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -268,50 +248,6 @@
 					RelativePath=".\helper\XUnzip.cpp"
 					>
 				</File>
-				<Filter
-					Name="jsoncpp"
-					>
-					<File
-						RelativePath=".\helper\jsoncpp\autolink.h"
-						>
-					</File>
-					<File
-						RelativePath=".\helper\jsoncpp\config.h"
-						>
-					</File>
-					<File
-						RelativePath=".\helper\jsoncpp\features.h"
-						>
-					</File>
-					<File
-						RelativePath=".\helper\jsoncpp\forwards.h"
-						>
-					</File>
-					<File
-						RelativePath=".\helper\jsoncpp\json.h"
-						>
-					</File>
-					<File
-						RelativePath=".\helper\jsoncpp\json_batchallocator.h"
-						>
-					</File>
-					<File
-						RelativePath=".\helper\jsoncpp\json_valueiterator.inl"
-						>
-					</File>
-					<File
-						RelativePath=".\helper\jsoncpp\reader.h"
-						>
-					</File>
-					<File
-						RelativePath=".\helper\jsoncpp\value.h"
-						>
-					</File>
-					<File
-						RelativePath=".\helper\jsoncpp\writer.h"
-						>
-					</File>
-				</Filter>
 			</Filter>
 		</Filter>
 		<Filter

@@ -51,14 +51,21 @@ void CAdapter::OnPaint()
 	do
 	{
 		BOOL bContinue = FALSE;
+		GUID AdapterGuid;
+		CHAR szGuidString[100];
+		memcpy_s(szGuidString,_countof(szGuidString),&pAdapterInfo->AdapterName[1],MAX_GUID_STRING_LEN);
+		szGuidString[strlen(szGuidString)-1] = _T('\0');
+		RPC_STATUS rpcStatus = UuidFromStringA((BYTE*)szGuidString, (UUID*)&AdapterGuid);
+
 		POSITION posProperties = NetPropertiesInfo.GetHeadPosition();
 		while(posProperties)
 		{
-			const NETCON_PROPERTIES* NetProperties = NetPropertiesInfo.GetNext(posProperties);
-			if (wcscmp(pAdapterInfo->Description,NetProperties->pszwDeviceName) == 0)
+			const NETCON_PROPERTIES& NetProperties = NetPropertiesInfo.GetNext(posProperties);
+
+			if (IsEqualGUID(AdapterGuid,NetProperties.guidId) != FALSE)
 			{
-				MediaType = NetProperties->MediaType;
-				MediaStatus = NetProperties->Status;
+				MediaType = NetProperties.MediaType;
+				MediaStatus = NetProperties.Status;
 				bContinue = TRUE;
 				break;
 			}
@@ -138,7 +145,7 @@ void CAdapter::OnPaint()
 		CDuiString strAdapterAddr;
 
 		for (UINT n=0;n<pAdapterInfo->PhysicalAddressLength;++n)
-			strAdapterAddr.AppendFormat(_T("%0X-"),pAdapterInfo->PhysicalAddress[n]);
+			strAdapterAddr.AppendFormat(_T("%02X-"),pAdapterInfo->PhysicalAddress[n]);
 
 		strAdapterAddr.TrimRight(_T("-"));
 		strItemText.Format(_T("MAC : %s"),strAdapterAddr);
