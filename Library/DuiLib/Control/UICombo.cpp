@@ -189,8 +189,11 @@ void CComboWnd::EnsureVisible(int iIndex)
 
 	RECT rcOwner = m_pOwner->GetPos();
 	int nOwnerHeight = rcOwner.bottom - rcOwner.top;
-	if( rcItem.bottom > rcList.bottom ) dx = rcItem.bottom - ( rcList.top + nOwnerHeight + 2);
-    if( rcItem.top < rcList.top ) dx = rcItem.top - rcList.top;
+	//选中内容完全在列表框不可见部分以下
+	if (rcItem.top > rcList.bottom)  dx = rcItem.top - rcList.top - 2;
+	//选中内容刚好在列表框底部部分可见
+	else if( rcItem.bottom > rcList.bottom && rcItem.top < rcList.bottom)  dx = rcItem.bottom - rcList.bottom + 2;
+    else if( rcItem.top < rcList.top ) dx = rcItem.top - rcList.top - 2;
     Scroll(0, dx);
 }
 
