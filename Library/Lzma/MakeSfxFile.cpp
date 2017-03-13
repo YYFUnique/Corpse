@@ -202,7 +202,7 @@ BOOL CMakeSfxFile::AppendData(LPBYTE lpData,UINT nLen,SECTION_TYPE SectionType /
 	ImageSectionInfo.nLen = dwLen;
 	memcpy_s(ImageSectionInfo.lpData,dwLen,lpData,nLen);
 
-	m_SectionData.push_back(ImageSectionInfo);
+	m_SectionData->push_back(ImageSectionInfo);
 
 	return TRUE;
 }
@@ -247,9 +247,9 @@ BOOL CMakeSfxFile::MakeBinaryFile(LPCTSTR lpszBinaryFile)
  			break;
 
 		//填充新添加的区段数据
-		for (UINT nIndex=0;nIndex<m_SectionData.size();++nIndex)
+		for (UINT nIndex=0;nIndex<m_SectionData->size();++nIndex)
 		{
-			const IMAGE_SECTION_INFO& ImageSectionInfo = m_SectionData[nIndex];
+			IMAGE_SECTION_INFO ImageSectionInfo = m_SectionData[nIndex];
 			if (WriteFile(hFile,ImageSectionInfo.lpData,ImageSectionInfo.nLen,&dwRealRead,NULL) == FALSE)
 				continue;
 

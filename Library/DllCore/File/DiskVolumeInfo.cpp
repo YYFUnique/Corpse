@@ -12,7 +12,7 @@ CDiskVolumeInfo::~CDiskVolumeInfo()
 
 }
 
-/*BOOL CDiskVolumeInfo::EnumAllVolume(CStringArray& strVolumeArray)
+BOOL CDiskVolumeInfo::EnumAllVolume(CStdArray& strVolumeArray)
 {
 	BOOL bSuccess = FALSE;
 	HANDLE hVolume = INVALID_HANDLE_VALUE;
@@ -33,9 +33,9 @@ CDiskVolumeInfo::~CDiskVolumeInfo()
 	}while(bSuccess);
 		
 	return strVolumeArray.IsEmpty() == FALSE;
-}*/
+}
 
-/*BOOL CDiskVolumeInfo::EnumVolumeForDisk(DWORD dwPhysicalDiskNumber , ULONGLONG ullStartingOffset , ULONGLONG ullExtentLength , CStringArray& strVolumeArray)
+BOOL CDiskVolumeInfo::EnumVolumeForDisk(DWORD dwPhysicalDiskNumber , ULONGLONG ullStartingOffset , ULONGLONG ullExtentLength , CStdArray& strVolumeArray)
 {
 	BOOL bSuccess = FALSE;
 
@@ -96,4 +96,4 @@ CDiskVolumeInfo::~CDiskVolumeInfo()
 	} while (FALSE);
 
 	return bSuccess;
-}*/
+}

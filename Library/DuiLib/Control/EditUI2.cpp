@@ -26,7 +26,7 @@ namespace DuiLib
 		,CalcCaretType(CALC_CARET_TYPE_NONE)
 	{
 		m_CursorType = IDC_IBEAM;
-		SetRect(&m_rcTextPadding,5,4,5,2);
+		SetRect(&m_rcTextPadding,4,4,4,4);
 		ZeroMemory(&m_rcCaret,sizeof(RECT));
 		ZeroMemory(&m_szCaretPt,sizeof(POINT));
 		m_uTextStyle = DT_SINGLELINE|DT_LEFT|DT_VCENTER|DT_NOPREFIX;
