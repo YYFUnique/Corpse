@@ -60,6 +60,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(SolutionDir)Lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -269,11 +270,19 @@
 					>
 				</File>
 				<File
+					RelativePath=".\File\FileSystemRedirecte.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\File\FileSystemWatcher.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\File\LogicalDiskMgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\File\MiniDump.cpp"
 					>
 				</File>
 				<File
@@ -318,6 +327,18 @@
 				</File>
 				<File
 					RelativePath=".\Utils\OsInfo.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\Security.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\ServiceControl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\StdPtr.cpp"
 					>
 				</File>
 				<File
@@ -389,6 +410,34 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="User"
+				>
+				<File
+					RelativePath=".\User\UserInfo.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Process"
+				>
+				<File
+					RelativePath=".\Process\ImpersonateSessionUser.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Process\ImpersonateSystemUser.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Process\Process.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Process\ProcessInfo.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -411,11 +460,19 @@
 					>
 				</File>
 				<File
+					RelativePath=".\File\FileSystemRedirecte.h"
+					>
+				</File>
+				<File
 					RelativePath=".\File\FileSystemWatcher.h"
 					>
 				</File>
 				<File
 					RelativePath=".\File\LogicalDiskMgr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\File\MiniDump.h"
 					>
 				</File>
 				<File
@@ -464,6 +521,18 @@
 				</File>
 				<File
 					RelativePath=".\Utils\OsInfo.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\Security.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\ServiceControl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\StdPtr.h"
 					>
 				</File>
 				<File
@@ -536,6 +605,34 @@
 				</File>
 				<File
 					RelativePath=".\Hash\Sha256.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="User"
+				>
+				<File
+					RelativePath=".\User\UserInfo.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Process"
+				>
+				<File
+					RelativePath=".\Process\ImpersonateSessionUser.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Process\ImpersonateSystemUser.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Process\Process.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Process\ProcessInfo.h"
 					>
 				</File>
 			</Filter>

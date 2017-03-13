@@ -1,28 +1,11 @@
 #include "stdafx.h"
 #include "SkinEngine.h"
-#include <DbgHelp.h>
-#pragma comment(lib,"dbghelp.lib")
+#include "DllCore/File/MiniDump.h"
+
 extern CString strInstallPageName;
 extern BOOL bCancleOrExit;
 namespace DuiLib
 {
-	LONG WINAPI LsUnhandledExceptionFilter(struct _EXCEPTION_POINTERS* ExceptionInfo)
-	{
-		CString strDumpFilePath(_T("C:\\1.dmp"));
-
-		HANDLE lhDumpFile = CreateFile(strDumpFilePath, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL ,NULL);
-		MINIDUMP_EXCEPTION_INFORMATION loExceptionInfo;
-		loExceptionInfo.ExceptionPointers = ExceptionInfo;
-		loExceptionInfo.ThreadId = GetCurrentThreadId();
-		loExceptionInfo.ClientPointers = TRUE;
-
-		MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(),lhDumpFile, MiniDumpWithPrivateReadWriteMemory , &loExceptionInfo, NULL, NULL);
-		CloseHandle(lhDumpFile);
-
-		return EXCEPTION_EXECUTE_HANDLER;
-	}
-
-
 	CSkinEngine::CSkinEngine()
 	{
 
@@ -108,7 +91,7 @@ namespace DuiLib
 
 	void CSkinEngine::InitWindow()
 	{
-		SetUnhandledExceptionFilter(LsUnhandledExceptionFilter);
+		CMiniDump::InitDumpDebugInfo();
 	}
 
 	void CSkinEngine::OnClick(TNotifyUI& msg)

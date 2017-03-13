@@ -8,6 +8,8 @@
 #define DLL_API __declspec(dllimport)
 #endif
 
+#include "../Utils/StdPtr.h"
+
 class DLL_API CDiskVolumeInfo
 {
 public:
@@ -15,6 +17,6 @@ public:
 	~CDiskVolumeInfo();
 
 public:
-	//BOOL EnumAllVolume(CStringArray& strVolumeArray);
-	//BOOL EnumVolumeForDisk(DWORD dwPhysicalDiskNumber , ULONGLONG ullStartingOffset , ULONGLONG ullExtentLength , CStringArray& strVolumeArray);
+	BOOL EnumAllVolume(CStdArray& strVolumeArray);
+	BOOL EnumVolumeForDisk(DWORD dwPhysicalDiskNumber , ULONGLONG ullStartingOffset , ULONGLONG ullExtentLength , CStdArray& strVolumeArray);
 };

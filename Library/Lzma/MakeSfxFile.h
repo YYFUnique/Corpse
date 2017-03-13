@@ -119,7 +119,7 @@ protected:
 	DWORD   m_dwMiniPointer;			//区段第一块数据项的起始位置
 	DWORD   m_dwEmptyDataLen;		//在区表后面需要添加的空数据的长度
 	DWORD   m_dwSectionDataLen;	//原始区段数据长度
-	CImageData		m_SectionData;		//新添加区段数据内容
+	CImageData   m_SectionData;		//新添加区段数据内容
 	LPBYTE				m_pDosHeader;		//源文件Dos头和Dos Stub头
 	LPBYTE				m_pSectionData;		//元素区段数据内容
 	IMAGE_NT_HEADERS    m_NtHeader;	//源文件PE头结构

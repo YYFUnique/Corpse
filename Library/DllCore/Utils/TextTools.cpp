@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "TextTools.h"
+#include "StdPtr.h"
 
 #define GB2312_CODE_PAGE 936
 
@@ -32,4 +33,19 @@ LPSTR Gb32ToUtf8(LPCSTR lpszGb32Text)
 	WideCharToMultiByte(CP_UTF8, 0, pUnicodeBuf, -1, pUft8Buf, nUtf8BufLen, NULL, NULL);
 
 	return pUft8Buf;
+}
+
+UINT AnalyseDbNullTerminatedText(LPCTSTR lpszFormattedInfo,CStdArray& InfoArray)
+{
+	InfoArray.RemoveAll();
+	if (lpszFormattedInfo==NULL)
+		return 0;
+
+	while(*lpszFormattedInfo != '\0')
+	{
+		InfoArray.Add(lpszFormattedInfo);
+		lpszFormattedInfo+=_tcslen(lpszFormattedInfo)+1;
+	}
+
+	return InfoArray.GetSize();
 }
