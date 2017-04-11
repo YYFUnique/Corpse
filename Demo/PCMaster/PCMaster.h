@@ -58,13 +58,17 @@ protected:
 		HRESULT AddShellLink(IObjectCollection *pOCTasks);
 		HRESULT SetTitle( IShellLink * pShellLink, LPCTSTR lpszTitle);
 protected:
+	BOOL m_bMouseDown;
+	BOOL m_bDrag;
 	SkinChangedObserver skin_changed_observer_;
 	ITaskbarList3* m_pTaskbarList;
 	UINT				WM_TASKBARBUTTONCREATED;
+	UINT				WM_DI_GETDRAGIMAGE;
 	HICON				m_hIcon,m_hRed,m_hGreen,m_hBlue;
-
+	CUIDropTarget*	m_pDropTarget;
 	//IUIEffect* m_pEffect;
 
+	IDragSourceHelper* m_pDragHelper;
 	//CDrawingBoard* m_pDraw;
 };
 

@@ -15,6 +15,7 @@
 #include "DllCore/Utils/ErrorInfo.h"
 #include "DllCore/Utils/APIs.h"
 #include "DllCore/Utils/TextTools.h"
+#include "DllCore/Utils/FileTools.h"
 
 #include "QRCode/qr.h"
 #include "libcurl/libcurl.h"
@@ -43,7 +44,12 @@ typedef enum _tagTHUMBBUTTON_INDEX
 CPCMaster::CPCMaster()
 :m_pTaskbarList(NULL)
 {
+	m_pDragHelper = NULL;
+	m_bMouseDown = FALSE;
+	m_pDropTarget = NULL;
+	m_bDrag = FALSE;
 	WM_TASKBARBUTTONCREATED = :: RegisterWindowMessage (TEXT ("TaskbarButtonCreated" ));
+	WM_DI_GETDRAGIMAGE = ::RegisterWindowMessage(DI_GETDRAGIMAGE);
 	//m_pDraw = NULL;
 	//设置窗口属性，打开自定义缩略图和AeroPeek预览
 	// 	BOOL truth = TRUE;
@@ -53,8 +59,12 @@ CPCMaster::CPCMaster()
 
 CPCMaster::~CPCMaster()
 {
-
+	if (m_pDropTarget)
+	{
+		m_pDropTarget->Release();
+	}
 }
+
 
 // DUI_BEGIN_MESSAGE_MAP(CPCMaster, WindowImplBase)
 // 	DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK,OnClick)
@@ -62,6 +72,13 @@ CPCMaster::~CPCMaster()
 
 LRESULT CPCMaster::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (WM_DI_GETDRAGIMAGE == uMsg)
+	{
+	
+
+		return FALSE;
+	}
+				
 	switch(uMsg)
 	{
 		case WM_DROPFILES:
@@ -155,10 +172,19 @@ void CPCMaster::InitWindow()
 {
 	//将主窗口句柄放入内存映射文件
 	//SetMainWndToMapping();
-	::DragAcceptFiles(m_hWnd,TRUE);
+	//::DragAcceptFiles(m_hWnd,TRUE);
+
+// 	CUIDropSource* pDropSource = new CUIDropSource;
+// 	pDropSource->Release();
+
+ 	/*m_pDropTarget = new CUIDropTarget;
+ 	m_pDropTarget->DragDropRegister(m_hWnd, MK_LBUTTON, &m_PaintManager);
+ 	m_pDropTarget->SetDropTargetHelper(TRUE);*/
 	//设置显示图标
 	SetIcon(IDI_MAINFRAME);
 	//设置用户名
+
+	//CreateShortcurLnkFile(_T("C:\\Aquarius.exe"),_T("C:\\Users\\Public\\Desktop\\as.lnk"));
 
 	/*int nCode = QR_ERR_NONE;
 	//qrInit的5个参数分别是version,mode,纠错等级和掩码，
@@ -215,17 +241,17 @@ void CPCMaster::InitWindow()
 	/*CMessageTip* pTip = new CMessageTip(_T(""),0xFFFFFFFF,_T("测试"),_T("测试内容"));
 	pTip->ShowWindow(true);*/
 
-	/*TCHAR szUserName[MAX_PATH];
+	TCHAR szUserName[MAX_PATH];
 
- 	CTextUI* pText = (CTextUI*)m_PaintManager.FindControl(_T("LabelUserName"));
- 	if (pText)
+ 	CTextUI* pUserName = (CTextUI*)m_PaintManager.FindControl(_T("LabelUserName"));
+ 	if (pUserName)
  	{
  		DWORD dwSize = _countof(szUserName);
  		GetUserName(szUserName,&dwSize);
- 		pText->SetText(szUserName);
-		pText->SetToolTip(szUserName);
+ 		pUserName->SetText(szUserName);
+		//pUserName->SetToolTip(szUserName);
  	}
-*/
+
 	//由于获取的图片是16位色，显示存在问题，故暂时废弃
 	/*TCHAR szUserPicturePath[MAX_PATH];
 	if (GetUserPicturePath(szUserName,szUserPicturePath,_countof(szUserPicturePath)) == ERROR_SUCCESS)
@@ -371,7 +397,7 @@ void CPCMaster::OnBtnWeather(TNotifyUI& msg)
 	CLibcurl libcurl;
 	CHTTPResponse HttpResponse;
 	libcurl.SetCallback(&HttpResponse);
-	if (libcurl.doHttpGet(_T("https://www.qq.com")) == FALSE)
+	if (libcurl.doHttpGet(_T("http://www.qq.com")) == FALSE)
 	{
 		CString strTipInfo;
 		libcurl.GetErrorInfo(strTipInfo);
@@ -469,6 +495,126 @@ LRESULT CPCMaster::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 
 	switch(uMsg)
 	{
+		case WM_LBUTTONUP:
+				bHandled = FALSE;
+				m_bMouseDown = FALSE;
+				ReleaseCapture();
+				return 0;
+			break;
+		case WM_LBUTTONDOWN:
+				bHandled = FALSE;
+				m_bMouseDown = TRUE;
+				return 0;
+			break;
+		case WM_MOUSEMOVE:
+			{
+				if (m_bMouseDown)
+				{
+					if (m_bDrag == FALSE)
+					{
+						m_bDrag = TRUE;
+						IDropSource *pDropSource;
+						IDataObject *pDataObject;
+
+						if (CUIDropSource::CreateDropSource(&pDropSource) != S_OK) 
+							break;
+
+						if (CUIDataObject::CreateDataObject(&pDataObject) != S_OK)
+							pDropSource->Release();
+
+						//准备拖放数据
+						FORMATETC cFmt = {CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL}; 
+						STGMEDIUM Medium = {TYMED_HGLOBAL,NULL,NULL};
+						LPCTSTR lpszFileName=_T("C:\\log.txt\0");
+						
+						DWORD dwLen = (_tcslen(lpszFileName)+2)*sizeof(TCHAR);
+
+						//由GMEM_FIXED标识的全局内存直接返回内存指针
+						HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED|GMEM_ZEROINIT, dwLen);
+
+						//LPTSTR lpszMemFile = (LPTSTR)GlobalLock(hMem);
+						_tcscpy((LPTSTR)hMem, lpszFileName);
+						//GlobalUnlock(hMem);
+
+						Medium.hGlobal = hMem;
+						pDataObject->SetData(&cFmt, &Medium, FALSE);
+					
+						//创建拖放源图标
+						CButtonUI* pFace = (CButtonUI*)m_PaintManager.FindControl(_T("BtnFace"));
+						if (pFace == NULL)
+							break;
+
+						POINT pt;
+						GetCursorPos(&pt);
+						ScreenToClient(m_hWnd, &pt);
+						RECT rcPos = pFace->GetPos();
+						HBITMAP hBitmap = CRenderEngine::GenerateBitmap(&m_PaintManager, pFace, rcPos); 
+
+						SHDRAGIMAGE ShDragImage = {0};
+						SIZE szImage={rcPos.right-rcPos.left,rcPos.bottom-rcPos.top};
+						ShDragImage.sizeDragImage = szImage;
+						ShDragImage.hbmpDragImage = hBitmap;
+						ShDragImage.crColorKey = GetSysColor(COLOR_WINDOW); 
+						ShDragImage.ptOffset.x = pt.x - rcPos.left;
+						ShDragImage.ptOffset.y = pt.y - rcPos.top;
+
+						 CoCreateInstance(CLSID_DragDropHelper, NULL, CLSCTX_INPROC_SERVER, 
+															IID_IDragSourceHelper, (void**)&m_pDragHelper);
+
+						HRESULT hRet =	m_pDragHelper->InitializeFromBitmap(&ShDragImage, pDataObject);
+
+						if (FAILED(hRet))
+						{
+							SetErrorInfo(COM_ERROR, hRet, _T("初始化程序图标失败"));
+							OutputDebugString(GetThreadErrorInfoString());
+						}
+
+						DWORD dwEffect = DROPEFFECT_COPY;
+						DWORD dwResult = DoDragDrop(pDataObject, pDropSource, DROPEFFECT_COPY , &dwEffect);
+
+						if (dwResult == DRAGDROP_S_DROP)  
+						{  
+							if (dwEffect & DROPEFFECT_MOVE)  
+							{  
+								OutputDebugString(_T("DROPEFFECT_MOVE"));
+							}  
+							else if (dwEffect & DROPEFFECT_COPY)
+							{
+								CreateShortcurLnkFile(_T("C:\\log.txt"),_T("C:\\Users\\Public\\Desktop\\log.lnk"));
+								OutputDebugString(_T("DROPEFFECT_COPY"));
+							}
+							else if (dwEffect & DROPEFFECT_LINK)
+							{
+								OutputDebugString(_T("DROPEFFECT_LINK"));
+							}
+							else if ((dwEffect & DROPEFFECT_NONE) == DROPEFFECT_NONE)
+							{
+								OutputDebugString(_T("DROPEFFECT_NONE"));
+							}
+						}  
+						// cancelled  
+						else if(dwResult == DRAGDROP_S_CANCEL)  
+						{  
+							OutputDebugString(_T("DRAGDROP_S_CANCEL"));
+						} 
+
+						GlobalFree(hMem);
+
+						ReleaseCapture();
+
+						pDropSource->Release();
+						pDataObject->Release();
+						m_pDragHelper->Release();
+						//delete pDragSource;
+
+						m_bMouseDown = FALSE;
+						m_bDrag = FALSE;
+					}
+					
+				}
+				return 0;
+			}
+			break;
 		case WM_MENUCLICK:
 				OnMenuClick((CControlUI*)lParam);
 			break;

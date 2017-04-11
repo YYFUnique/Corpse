@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "PCMaster.h"
-
+#include "DllCore/File/MiniDump.h"
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
 {
 	CPaintManagerUI::SetInstance(hInstance);
@@ -32,9 +32,11 @@ BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSh
 			break;
 		}
 
-		hRet = ::CoInitialize(NULL);
+		hRet = ::OleInitialize(NULL);
 		if (FAILED(hRet)) 
 			break;
+
+		CMiniDump::InitDumpDebugInfo();
 
 		CPCMaster* pPCMaster = new CPCMaster();
 		if (pPCMaster == NULL) 
