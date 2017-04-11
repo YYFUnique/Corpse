@@ -24,16 +24,53 @@ public:
 	~CLogicalDiskMgr();
 
 public:
-	HANDLE Detach();
+	
 	BOOL OpenDisk(LPCTSTR lpszDiskVolumePath);
 	BOOL GetDiskExtents(PVOLUME_DISK_EXTENTS lpVolumeDiskExtents,DWORD& dwLen);
 
-	BOOL LockVolume();
-	BOOL UnlockVolume();
-	BOOL DismountVolume();
+	/************************************************************************/
+	/* 函数名称：Detach																				   */
+	/* 函数说明：解除对象与设备的关联关系													   */
+	/* 返 回 值 ：返回打开设备的设备句柄											               */
+	/************************************************************************/
+	HANDLE Detach();
 
-	DWORD GetHardDiskIndexFromVolume(LPCTSTR lpszDiskVolumePath);
+	/************************************************************************/
+	/* 函数名称：LockVolume																		   */
+	/* 函数说明：锁定卷设备																			   */
+	/* 返 回 值 ：返回TRUE表示成功，返回FALSE表示失败					               */
+	/************************************************************************/
+	BOOL LockVolume();
+
+	/************************************************************************/
+	/* 函数名称：UnlockVolume																	   */
+	/* 函数说明：解除卷设备锁定状态																   */
+	/* 返 回 值 ：返回TRUE表示成功，返回FALSE表示失败					               */
+	/************************************************************************/
+	BOOL UnlockVolume();
+
+	/************************************************************************/
+	/* 函数名称：DismountVolume																   */
+	/* 函数说明：卸载卷设备																			   */
+	/* 返 回 值 ：返回TRUE表示成功，返回FALSE表示失败					               */
+	/************************************************************************/
+	BOOL DismountVolume();
+	
+	/************************************************************************/
+	/* 函数名称：GetSystemDiskIndex															   */
+	/* 函数说明：获取系统盘所在磁盘序号														   */
+	/* 返 回 值 ：返回磁盘序号															               */
+	/************************************************************************/
 	DWORD GetSystemDiskIndex();
+
+	/************************************************************************/
+	/* 函数名称：GetHardDiskIndexFromVolume											   */
+	/* 函数说明：根据卷标获取当前卷所在磁盘												   */
+	/* 输入参数：lpszDiskVolumePath	卷设备卷标								           */
+	/* 返 回 值 ：返回磁盘序号															               */
+	/************************************************************************/
+	DWORD GetHardDiskIndexFromVolume(LPCTSTR lpszDiskVolumePath);
+public:
 
 	/************************************************************************/
 	/* 函数名称：GetDriveProperty																   */
@@ -43,8 +80,23 @@ public:
 	/* 返 回 值 ：返回TRUE表示成功，返回FALSE表示失败					               */
 	/************************************************************************/
 	static BOOL GetDriveProperty(HANDLE hDevice, PSTORAGE_DEVICE_DESCRIPTOR pDevDesc);
-	static BOOL GetPhysicalDiskSize(HANDLE hPhysical, PHYSICAL_DISK_SIZE& PhysicalDiskSize);
 
+	/************************************************************************/
+	/* 函数名称：GetPhysicalDiskSize															   */
+	/* 函数说明：获取指定句柄设备磁盘大小信息											   */
+	/* 输入参数：dwPhysicalIndex 要打开的磁盘序号							           */
+	/*					 PhysicalDiskSize 磁盘扇区信息											   */
+	/* 返 回 值 ：返回TRUE表示成功，返回FALSE表示失败					               */
+	/************************************************************************/
+	static BOOL GetPhysicalDiskSize(DWORD dwPhysicalIndex, PHYSICAL_DISK_SIZE& PhysicalDiskSize);
+
+	/************************************************************************/
+	/* 函数名称：DeleteDiskVolumeLnk														   */
+	/* 函数说明：解除指定磁盘上所有卷的设备符号链接									   */
+	/* 输入参数：dwDiskIndex 指定磁盘设备的序号								           */
+	/* 返 回 值 ：返回TRUE表示成功，返回FALSE表示失败					               */
+	/************************************************************************/
+	static BOOL DeleteDiskVolumeLnk(DWORD dwDiskIndex);
 protected:
 	BOOL DeviceIoControl(DWORD dwIoControlCode);
 

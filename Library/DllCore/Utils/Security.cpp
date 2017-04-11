@@ -111,3 +111,51 @@ BOOL InjectProcess(LPCTSTR lpszFilePath, DWORD dwRemoteProcessId, DWORD dwWaitTi
 
 	return bSuccess;
 }
+
+BOOL UnLoadViewOfModule(DWORD dwProcessId, LPVOID lpBaseAddr)
+{
+	BOOL bSuccess = FALSE;
+	HANDLE hProcess = NULL;
+	do 
+	{
+		HMODULE hModule = GetModuleHandle(_T("ntdll.dll"));
+		if (hModule == NULL)
+			hModule = LoadLibrary(_T("ntdll.dll"));
+
+		if (hModule == NULL)
+		{
+			SetErrorInfo(CUSTOM_ERROR, 0, _T("打开ntdll句柄失败"));
+			break;
+		}
+
+		PFNNtUnmapViewOfSection pfnUnLoadModule = (PFNNtUnmapViewOfSection)GetProcAddress(hModule,"NtUnmapViewOfSection");
+		if (pfnUnLoadModule == NULL)
+		{
+			SetErrorInfo(CUSTOM_ERROR, 0, _T("获取函数[NtUnmapViewOfSection]地址失败"));
+			break;
+		}
+
+		hProcess = OpenProcess(PROCESS_ALL_ACCESS, TRUE, dwProcessId);
+		if (hProcess == NULL)
+		{
+			SetErrorInfo(SYSTEM_ERROR, 0, _T("打开进程失败"));
+			break;
+		}
+
+		if (pfnUnLoadModule(hProcess, lpBaseAddr) != 0)
+		{
+			SetErrorInfo(SYSTEM_ERROR, 0, _T("卸载远程指定模块失败"));
+			break;
+		}
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	if (hProcess != NULL)
+	{
+		CloseHandle(hProcess);
+		hProcess = NULL;
+	}
+
+	return bSuccess;
+}

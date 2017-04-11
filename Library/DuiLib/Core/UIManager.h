@@ -161,7 +161,7 @@ public:
 typedef CControlUI* (*LPCREATECONTROL)(LPCTSTR pstrType);
 
 
-class UILIB_API CPaintManagerUI : public IDuiDropTarget
+class UILIB_API CPaintManagerUI : public IDropTargetCallBack
 {
 public:
     CPaintManagerUI();
@@ -415,8 +415,8 @@ private:
 	LPBYTE	m_pBmpOffscreenBits;
 	RECT	m_rcLayeredUpdate;
     //
-	//当前DtopTarget控件
-	CControlUI* m_pEventDrop;
+	//当前DropTarget控件
+	CControlUI* m_pDropTargetCtrl;
 	IDataObject* m_pDataObject;
 
     CStdPtrArray m_aNotifiers;

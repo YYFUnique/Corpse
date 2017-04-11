@@ -29,6 +29,7 @@ m_nBorderSize(0),
 m_nBorderStyle(PS_SOLID),
 m_nTooltipWidth(300),
 m_bDragEnabled(false),
+m_DropEffect(DROPEFFECT_COPY),
 m_dwCaretColor(0xFF000000)
 {
 	m_CursorType = IDC_ARROW;
@@ -963,6 +964,7 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	else if( _tcscmp(pstrName, _T("virtualwnd")) == 0 ) SetVirtualWnd(pstrValue);
 	else if( _tcscmp(pstrName, _T("style")) == 0) SetStyle(pstrValue);
 	else if( _tcscmp(pstrName, _T("droptarget")) == 0 ) SetDropEnabled(_tcscmp(pstrValue, _T("true")) == 0);
+	else if( _tcscmp(pstrName, _T("dropeffect")) == 0 ) SetDropEffect(pstrValue);
 	else if( _tcscmp(pstrName, _T("cursor")) == 0 )	 SetCursor(pstrValue);
 }
 
@@ -1303,6 +1305,16 @@ void CControlUI::SetDropEnabled(bool bEnable)
 	m_bDragEnabled = bEnable;
 }
 
+void CControlUI::SetDropEffect(LPCTSTR pstrValue)
+{
+	m_DropEffect = _ttoi(pstrValue);
+}
+
+DWORD CControlUI::GetDropEffect()
+{
+	return m_DropEffect;
+}
+
 bool CControlUI::IsDropEnabled()
 {
 	return m_bDragEnabled;
@@ -1312,7 +1324,7 @@ void  CControlUI::OnDragEnter( IDataObject *pDataObj, DWORD grfKeyState, POINT p
 {
 	if (IsDropEnabled())
 	{
-		*pdwEffect = DROPEFFECT_COPY;
+		*pdwEffect = GetDropEffect();
 	}else
 	{
 		*pdwEffect = DROPEFFECT_NONE;
@@ -1324,7 +1336,7 @@ void  CControlUI::OnDragOver(DWORD grfKeyState, POINT pt,DWORD *pdwEffect)
 {
 	if (IsDropEnabled())
 	{
-		*pdwEffect = DROPEFFECT_COPY;
+		*pdwEffect = GetDropEffect();
 	}else
 	{
 		*pdwEffect = DROPEFFECT_NONE;
@@ -1343,7 +1355,7 @@ void  CControlUI::OnDrop(IDataObject *pDataObj, DWORD grfKeyState, POINT pt, DWO
 {
 	if (IsDropEnabled())
 	{
-		*pdwEffect = DROPEFFECT_COPY;
+		*pdwEffect = GetDropEffect();
 	}else
 	{
 		*pdwEffect = DROPEFFECT_NONE;

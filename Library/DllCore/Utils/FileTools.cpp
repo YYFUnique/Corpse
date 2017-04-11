@@ -232,3 +232,95 @@ CString GetProgramDataFilePath(LPCTSTR lpszDirName,LPCTSTR lpszName,LPCTSTR lpsz
 	::PathAppend(szLogPath,szFileName);
 	return szLogPath;
 }
+
+BOOL GetFilePathByLink(LPCTSTR lpszLinkName, CString& strFilePath)
+{
+	HRESULT hRet;   
+	IShellLink *pShellLink = NULL;   
+	IPersistFile *pPersistFile = NULL;
+	WIN32_FIND_DATA FindData;
+	WCHAR wszLinkFilePath[MAX_PATH];
+
+	BOOL bSuccess = FALSE;
+
+	do 
+	{
+		hRet = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&pShellLink);   
+		if (FAILED(hRet))
+		{
+			SetErrorInfo(COM_ERROR, hRet, _T("获取快捷方式指向文件时，创建COM实例失败"));
+			break;
+		}
+
+		hRet = pShellLink->QueryInterface(IID_IPersistFile,(void**)&pPersistFile);
+		if (FAILED(hRet))
+		{
+			SetErrorInfo(COM_ERROR, hRet, _T("获取快捷方式指向文件时，查询接口失败"));
+			break;
+		}
+
+		hRet = pPersistFile->Load(lpszLinkName,STGM_READ);
+		if (FAILED(hRet))
+		{
+			SetErrorInfo(COM_ERROR, hRet, _T("获取快捷方式指向文件时，加载快捷方式失败"));
+			break;
+		}
+
+		hRet = pShellLink->GetPath(wszLinkFilePath,_countof(wszLinkFilePath),&FindData,0); 
+		if (FAILED(hRet))
+		{
+			SetErrorInfo(COM_ERROR, hRet, _T("获取快捷方式指向文件时，获取路径失败"));
+			break;
+		}
+
+		strFilePath = CString(wszLinkFilePath);
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	if (pShellLink != NULL)
+	{
+		pShellLink->Release();
+		pShellLink = NULL;
+	}
+
+	if (pPersistFile != NULL)
+	{
+		pPersistFile->Release();
+		pPersistFile = NULL;
+	}
+
+	return bSuccess;	
+}
+
+BOOL CreateShortcurLnkFile(LPCTSTR lpszTargetFile, LPCTSTR lpszLnkFile)
+{
+	BOOL bSuccess = FALSE;
+	IShellLink *pShellLink = NULL;
+	IPersistFile* pIPF = NULL;
+
+	do 
+	{
+		HRESULT hRet = CoCreateInstance(CLSID_ShellLink, NULL, CLSCTX_INPROC_SERVER, IID_IShellLink, (void**)&pShellLink);
+		if (FAILED(hRet))
+		{
+			SetErrorInfo(COM_ERROR, hRet, _T("创建IShellLink实例失败"));
+			break;
+		}
+
+		pShellLink->SetPath(lpszTargetFile);
+
+		hRet = pShellLink->QueryInterface(IID_IPersistFile, (LPVOID*)&pIPF);
+		if (FAILED(hRet))
+		{
+			SetErrorInfo(COM_ERROR ,hRet, _T("创建文件快捷方式时，获取IPersistFile接口失败"));
+			break;
+		}
+
+		pIPF->Save(lpszLnkFile, FALSE);
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	return bSuccess;
+}

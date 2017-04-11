@@ -79,6 +79,9 @@ public:
 	void SetDropEnabled(bool bEnable);
 	bool IsDropEnabled();
 
+	void SetDropEffect(LPCTSTR pstrValue);
+	DWORD GetDropEffect();
+
 	void SetCursor(LPCTSTR lpszCursorType);
 
     // Œª÷√œ‡πÿ
@@ -244,6 +247,7 @@ protected:
 	RECT m_rcRoundSelect;
 	//Added by gechunping  on 2014-3-14
 	bool  m_bDragEnabled;
+	DWORD m_DropEffect;
 	//////////////////////////////////////////////////////////////////////////
 	LPCTSTR m_CursorType;
 };

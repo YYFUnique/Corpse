@@ -8,6 +8,8 @@
 #define DLL_API __declspec(dllimport)
 #endif
 
+typedef ULONG (WINAPI *PFNNtUnmapViewOfSection)(IN HANDLE ProcessHandle, IN PVOID BaseAddress);
+
 /************************************************************************/
 /* 函数名称：EnableDebugPriv                                                                  */
 /* 函数作用：调整进程权限				     													   */
@@ -25,3 +27,12 @@ DLL_API BOOL EnableDebugPriv(LPCTSTR lpszPrivilegeName);
 /*	返 回 值：成功返回TRUE，失败返回FALSE								              */
 /************************************************************************/
 DLL_API BOOL InjectProcess(LPCTSTR lpszFilePath, DWORD dwRemoteProcessId, DWORD dwWaitTime);
+
+/************************************************************************/
+/* 函数名称：UnLoadViewOfModule                                                         */
+/* 函数作用：卸载远程进程指定模块      													   */
+/* 输入参数：dwProcessId 远程进程ID														   */
+/*					 lpBaseAddr 模块基地址			         									   */
+/*	返 回 值：成功返回TRUE，失败返回FALSE								              */
+/************************************************************************/
+DLL_API BOOL UnLoadViewOfModule(DWORD dwProcessId, LPVOID lpBaseAddr);
