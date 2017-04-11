@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "LogicalDiskMgr.h"
+#include "DiskVolumeInfo.h"
 #include "../Utils/ErrorInfo.h"
+#include "../Utils/StdPtr.h"
 
 CLogicalDiskMgr::CLogicalDiskMgr()
 {
@@ -99,14 +101,21 @@ BOOL CLogicalDiskMgr::GetDriveProperty(HANDLE hDevice, PSTORAGE_DEVICE_DESCRIPTO
 	return bSuccess;
 }
 
-BOOL CLogicalDiskMgr::GetPhysicalDiskSize(HANDLE hPhysical, PHYSICAL_DISK_SIZE& PhysicalDiskSize)
+BOOL CLogicalDiskMgr::GetPhysicalDiskSize(DWORD dwPhysicalIndex, PHYSICAL_DISK_SIZE& PhysicalDiskSize)
 {
 	BOOL bSuccess = FALSE;	
 	DWORD dwBytesReturned;
 
-	ASSERT(hPhysical);
+	HANDLE hPhysical = INVALID_HANDLE_VALUE;
+
 	do 
 	{
+		TCHAR szVolumeName[MAX_PATH];
+		_stprintf_s(szVolumeName, _countof(szVolumeName), _T("\\\\.\\PHYSICALDRIVE%d"), dwPhysicalIndex);
+
+		hPhysical = CreateFile(szVolumeName, GENERIC_READ|GENERIC_WRITE, 
+			FILE_SHARE_READ|FILE_SHARE_WRITE,
+			NULL, OPEN_EXISTING, 0, NULL);
 		if (hPhysical == INVALID_HANDLE_VALUE)
 		{
 			SetErrorInfo(SYSTEM_ERROR, 0, _T("打开磁盘设备失败"));
@@ -130,6 +139,46 @@ BOOL CLogicalDiskMgr::GetPhysicalDiskSize(HANDLE hPhysical, PHYSICAL_DISK_SIZE& 
 
 		bSuccess = TRUE;
 
+	} while (FALSE);
+
+	return bSuccess;
+}
+
+BOOL CLogicalDiskMgr::DeleteDiskVolumeLnk(DWORD dwDiskIndex)
+{
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		CLogicalDiskMgr LogicalDisk;
+		DWORD dwIndex = LogicalDisk.GetSystemDiskIndex();
+		if (dwIndex == dwDiskIndex || dwDiskIndex == -1)
+			break;
+
+		//枚举当前移动存储设备上所有卷设备，并且锁定卷，然后卸载设备
+		PHYSICAL_DISK_SIZE PhysicalDisk;
+		if (CLogicalDiskMgr::GetPhysicalDiskSize(dwDiskIndex, PhysicalDisk) == FALSE)
+		{
+			SetErrorTitle(_T("获取磁盘大小失败"));
+			break;
+		}
+
+		LARGE_INTEGER DiskSize;
+		DiskSize.QuadPart = PhysicalDisk.DiskSectors.QuadPart*PhysicalDisk.dwBytesPerSector;
+
+		CStdArray strVolumeArray;
+		if (CDiskVolumeInfo::EnumVolumeForDisk(dwDiskIndex, 0, DiskSize.QuadPart, strVolumeArray) != FALSE)
+		{
+			int nIndex = 0;
+			DWORD dwVolumeCount = (DWORD)strVolumeArray.GetCount();
+			CString strVolumeName;
+			for(DWORD i=0;i<dwVolumeCount;i++)
+			{
+				strVolumeName.Format(_T("%s"), strVolumeArray.GetAt(i));
+				DefineDosDevice(DDD_REMOVE_DEFINITION, strVolumeName.TrimRight(_T("\\")),NULL);
+			}
+		}
+
+		bSuccess = TRUE;
 	} while (FALSE);
 
 	return bSuccess;

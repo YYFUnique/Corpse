@@ -123,7 +123,7 @@ m_bMaxSizeBox(true),
 m_bEnableDrop(false),
 m_pBmpOffscreenBits(NULL),
 m_bShadow(false),
-m_pEventDrop(NULL),
+m_pDropTargetCtrl(NULL),
 m_pDataObject(NULL)
 {
     m_dwDefaultDisabledColor = 0xFFA7A6AA;
@@ -2614,21 +2614,21 @@ UINT CPaintManagerUI::MapKeyState()
 	return uState;
 }
 
-HRESULT CPaintManagerUI::OnDragEnter( IDataObject *pDataObj, DWORD grfKeyState, POINTL ptl,  DWORD *pdwEffect)
+HRESULT CPaintManagerUI::OnDragEnter(IDataObject *pDataObj, DWORD grfKeyState, POINTL ptl,  DWORD *pdwEffect)
 {
 	m_pDataObject = pDataObj;
 	POINT pt={ptl.x,ptl.y};
 	::ScreenToClient(m_hWndPaint,&pt);
-	CControlUI* pHover = FindControl(pt);
-	if( pHover == NULL ) 
+	CControlUI* pDragTarget = FindControl(pt);
+	if (pDragTarget == NULL)
 	{
 		*pdwEffect = DROPEFFECT_NONE;
 		return S_OK;
 	}
 	// Generate mouse hover event
 
-	pHover->OnDragEnter(pDataObj,grfKeyState,pt,pdwEffect);
-	m_pEventDrop = pHover;
+	pDragTarget->OnDragEnter(pDataObj, grfKeyState, pt, pdwEffect);
+	m_pDropTargetCtrl = pDragTarget;
 	return	S_OK;
 }
 
@@ -2638,56 +2638,52 @@ HRESULT  CPaintManagerUI::OnDragOver(DWORD grfKeyState, POINTL ptl,DWORD *pdwEff
 	::ScreenToClient(m_hWndPaint,&pt);
 	m_ptLastMousePos = pt;
 	CControlUI* pNewHover = FindControl(pt);
-	if(pNewHover==NULL)
+	if (pNewHover == NULL)
 	{
 		*pdwEffect = DROPEFFECT_NONE;
 		return S_OK;
 	}
 
-	if( pNewHover != NULL && pNewHover->GetManager() != this )
+	if (pNewHover != NULL && pNewHover->GetManager() != this)
 	{
 		*pdwEffect = DROPEFFECT_NONE;
 		return S_OK;
 	}
 
-	if( pNewHover != m_pEventDrop && m_pEventDrop != NULL ) {
-		m_pEventDrop->OnDragLeave();
-		m_pEventDrop = NULL;
+	if (pNewHover != m_pDropTargetCtrl && m_pDropTargetCtrl != NULL) {
+		m_pDropTargetCtrl->OnDragLeave();
+		m_pDropTargetCtrl = NULL;
 	}
 
-	if( pNewHover != m_pEventDrop && pNewHover != NULL ) {
-		pNewHover->OnDragEnter(m_pDataObject,grfKeyState,pt,pdwEffect);
-		m_pEventDrop = pNewHover;
+	if (pNewHover != m_pDropTargetCtrl && pNewHover != NULL ) {
+		pNewHover->OnDragEnter(m_pDataObject, grfKeyState, pt, pdwEffect);
+		m_pDropTargetCtrl = pNewHover;
 	}
 
-	if( pNewHover != NULL ) {
-		pNewHover->OnDragOver(grfKeyState,pt,pdwEffect);
-	}
+	if (pNewHover != NULL) 
+		pNewHover->OnDragOver(grfKeyState, pt, pdwEffect);
+	
 	return S_OK;
 }
 
 HRESULT  CPaintManagerUI::OnDragLeave()
 {
 	m_pDataObject = NULL;
-	if( m_pEventDrop != NULL ) {
-		m_pEventDrop->OnDragLeave();
-		m_pEventDrop = NULL;
+	if (m_pDropTargetCtrl != NULL) {
+		m_pDropTargetCtrl->OnDragLeave();
+		m_pDropTargetCtrl = NULL;
 	}
 	return S_OK;
 }
 
-HRESULT  CPaintManagerUI::OnDrop(__RPC__in_opt IDataObject *pDataObj, DWORD grfKeyState, POINTL ptl, __RPC__inout DWORD *pdwEffect)
+HRESULT  CPaintManagerUI::OnDrop(IDataObject *pDataObj, DWORD grfKeyState, POINTL ptl, DWORD *pdwEffect)
 {
 	POINT pt={ptl.x,ptl.y};
-	::ScreenToClient(m_hWndPaint,&pt);
-	if( m_pEventDrop != NULL ) {
+	::ScreenToClient(m_hWndPaint, &pt);
 
-		m_pEventDrop->OnDrop(pDataObj,grfKeyState,pt,pdwEffect);
-	}else
-	{
-		*pdwEffect = DROPEFFECT_NONE;
-		return S_OK;
-	}
+	if (m_pDropTargetCtrl != NULL)
+		m_pDropTargetCtrl->OnDrop(pDataObj, grfKeyState, pt, pdwEffect);
+	
 	return S_OK;
 }
 } // namespace DuiLib

@@ -351,7 +351,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Utils\UIDragTarget.cpp"
+					RelativePath=".\Utils\UIDropDrag.cpp"
 					>
 				</File>
 				<File
@@ -616,7 +616,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Utils\UIDragTarget.h"
+					RelativePath=".\Utils\UIDropDrag.h"
 					>
 				</File>
 				<File

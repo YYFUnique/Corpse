@@ -68,3 +68,21 @@ DLL_API BOOL GetCommonAppDataFilePath(LPCTSTR lpszFileDirectory,LPCTSTR lpszFile
 /************************************************************************/
 //返回字符串，例如： C:\ProgramData\Corpse\MiniDump\PCHunter(2017-03-10)-V1.0.0.0.dmp
 DLL_API CString GetProgramDataFilePath(LPCTSTR lpszDirName,LPCTSTR lpszExtendName,LPCTSTR lpszVersion /* = NULL*/);
+
+/************************************************************************/
+/* 函  数  名：GetFilePathByLink								                                    */
+/* 函数功能：获取程序在ProgramData目录下的路径									   */
+/* 输入参数：lpszLinkName 快捷文件路径												   */
+/*					 strFilePath  快捷方式指向的文件路径									   */
+/* 返  回 值：如果获取成功返回TRUE，否则返回FALSE								   */
+/************************************************************************/
+DLL_API BOOL GetFilePathByLink(LPCTSTR lpszLinkName, CString& strFilePath);
+
+/************************************************************************/
+/* 函  数  名：CreateShortcurLnkFile	     				                                   */
+/* 函数功能：在指定路径下创建文件快捷方式											   */
+/* 输入参数：lpszTargetFile 快捷方式指向的文件										   */
+/*					 lpszLnkFile  快捷方式文件所在路径										   */
+/* 返  回 值：如果获取成功返回TRUE，否则返回FALSE								   */
+/************************************************************************/
+DLL_API BOOL CreateShortcurLnkFile(LPCTSTR lpszTargetFile, LPCTSTR lpszLnkFile);

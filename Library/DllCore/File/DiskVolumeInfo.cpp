@@ -69,7 +69,7 @@ BOOL CDiskVolumeInfo::EnumVolumeForDisk(DWORD dwPhysicalDiskNumber , ULONGLONG u
 			}
 
 			DWORD j;
-			for(j=0;j<pVolumeDiskExtents->NumberOfDiskExtents;j++)
+			for (j=0;j<pVolumeDiskExtents->NumberOfDiskExtents;j++)
 			{
 				if (pVolumeDiskExtents->Extents[j].DiskNumber != dwPhysicalDiskNumber)
 					continue;
@@ -89,8 +89,6 @@ BOOL CDiskVolumeInfo::EnumVolumeForDisk(DWORD dwPhysicalDiskNumber , ULONGLONG u
 			if (j == pVolumeDiskExtents->NumberOfDiskExtents)
 				strVolumeArray.RemoveAt(i);
 		}
-
-		return TRUE;
 
 		bSuccess = TRUE;
 	} while (FALSE);
