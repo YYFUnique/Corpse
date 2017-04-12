@@ -250,6 +250,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AnimLayout.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Installer.cpp"
 				>
 			</File>
@@ -277,6 +281,10 @@
 			>
 			<File
 				RelativePath=".\3DView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AnimLayout.h"
 				>
 			</File>
 			<File

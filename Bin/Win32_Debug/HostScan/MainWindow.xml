@@ -38,8 +38,8 @@
                 </VerticalLayout>
 				<VerticalLayout name="VLayoutCenter" pos="0,0,1,0" bkcolor="#FFCDCDCD"/>
                 <VerticalLayout name="VLayoutRight">
-					<VerticalLayout name="ScanResult">
-						<List name="ScanInfo" vscrollbar="true" hscrollbar="true" menu="true" itembkcolor="#FFF0F0F0" itemaltbk="true" itemalign="left" itemfont="2" itemtextpadding="5,0,0,0" itemhotbkcolor="#FFFFFF00" multiexpanding="true" itemtextcolor="#00000000" itemhottextcolor="#00000000" itemlinecolor="#FF939393" itemcolline="true">
+					<VerticalLayout name="ScanResult" >
+						<!--<List name="ScanInfo" vscrollbar="true" hscrollbar="true" menu="true" itembkcolor="#FFF0F0F0" itemaltbk="true" itemalign="left" itemfont="2" itemtextpadding="5,0,0,0" itemhotbkcolor="#FFFFFF00" multiexpanding="true" itemtextcolor="#00000000" itemhottextcolor="#00000000" itemlinecolor="#FF939393" itemcolline="true">
 							<ListHeader name="scanheader" height="30" itemselectedimage="file=&apos;main_topmask_selected.png&apos; corner=&apos;2,2,2,2&apos;" itemhotimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;" menu="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
 							  <ListHeaderItem text="IP地址" font="0"  width="110" textcolor="#00000000" normalimage="file=&apos;ListHeadBk.png&apos; corner=&apos;5,5,5,5&apos;" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 							  <ListHeaderItem text="MAC地址" font="0" width="130" textcolor="#00000000" normalimage="file=&apos;listheadbk.png&apos; corner=&apos;5,5,5,5&apos;" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
@@ -49,7 +49,7 @@
 							  <ListHeaderItem text="备注信息" font="0" width="90" textcolor="#00000000" normalimage="file=&apos;listheadbk.png&apos; corner=&apos;5,5,5,5&apos;" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 							  <ListHeaderItem text="描述信息" font="0" width="170" textcolor="#00000000" normalimage="file=&apos;listheadbk.png&apos; corner=&apos;5,5,5,5&apos;" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 							</ListHeader>
-						</List>
+						</List>-->
 					</VerticalLayout>
 					<HorizontalLayout name="HLayoutInfo" pos="0,0,0,1"/>
 				</VerticalLayout>				

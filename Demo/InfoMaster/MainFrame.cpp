@@ -1,48 +1,10 @@
 #include "stdafx.h"
 #include "InfoMaster.h"
-#include <Dbghelp.h>
-#pragma comment( lib, "DbgHelp.lib" )
-
-LONG WINAPI LsUnhandledExceptionFilter(struct _EXCEPTION_POINTERS* ExceptionInfo)
-{
-	//CCallstackInfo CallstackInfoList;
-	//if (GetCallstackInfo(ExceptionInfo->ContextRecord,CallstackInfoList) == TRUE)
-	//{
-	//	POSITION pos = CallstackInfoList.GetHeadPosition();
-	//	while(pos)
-	//	{
-	//		CALLSTACKINFO& CallstackInfo = CallstackInfoList.GetNext(pos);
-	//		CString strCallstackInfo;
-	//		strCallstackInfo.Format(_T("%s::%s[%d]"),CallstackInfo.strModuleName,CallstackInfo.strFileName,CallstackInfo.dwLine);
-	//		WriteErrorInfoToLogFile(strCallstackInfo);
-	//	}
-	//}
-
-	CString strDumpFilePath = _T("C:\\infomaster.dmp");
-	HANDLE lhDumpFile = CreateFile(strDumpFilePath, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL ,NULL);
-	MINIDUMP_EXCEPTION_INFORMATION loExceptionInfo;
-	loExceptionInfo.ExceptionPointers = ExceptionInfo;
-	loExceptionInfo.ThreadId = GetCurrentThreadId();
-	loExceptionInfo.ClientPointers = TRUE;
-
-	MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(),lhDumpFile, MiniDumpWithPrivateReadWriteMemory , &loExceptionInfo, NULL, NULL);
-	CloseHandle(lhDumpFile);
-
-	return EXCEPTION_EXECUTE_HANDLER;
-}
-
-BOOL LsSetUnhandledExceptionFilter(LPTOP_LEVEL_EXCEPTION_FILTER lpTopLevelExceptionFilter)
-{
-	if (lpTopLevelExceptionFilter == NULL)
-		lpTopLevelExceptionFilter = LsUnhandledExceptionFilter;
-
-	SetUnhandledExceptionFilter(lpTopLevelExceptionFilter);
-	return TRUE;
-}
+#include "DllCore/File/MiniDump.h"
 
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
 {
-	LsSetUnhandledExceptionFilter(NULL);
+	CMiniDump::InitDumpDebugInfo();
 
 	CPaintManagerUI::SetInstance(hInstance);
 	BOOL bSuccess = FALSE;

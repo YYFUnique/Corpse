@@ -70,7 +70,7 @@ public:
 
 	void OnHostScanMenu(CControlUI* pControl);
 	void OnRangeMenu(CControlUI* pControl);
-
+	void OnHttpRequest(CListTextElementUI* pItem);
 	BOOL GetAdapterName(LPCTSTR lpszMacAddress,LPTSTR szAdapterName,DWORD dwNameLen);
 	BOOL GetHostUserName(LPCTSTR lpszMacAddress,LPTSTR szAdapterName,DWORD dwNameLen);
 protected:

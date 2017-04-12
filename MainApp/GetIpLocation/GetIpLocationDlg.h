@@ -4,7 +4,6 @@
 
 #pragma once
 
-
 // CGetIpLocationDlg 对话框
 class CGetIpLocationDlg : public CDialog
 {
@@ -18,8 +17,7 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 	
-	static int ProcessUrl(void* pData , size_t size , size_t nmemb);
-	BOOL FillTheEditBox(LPCTSTR lpszJson);
+	
 // 实现
 protected:
 	HICON m_hIcon;
@@ -32,4 +30,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedBtnOk();
+	BOOL FillTheEditBox(LPCTSTR lpszJson);
 };

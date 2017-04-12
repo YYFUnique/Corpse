@@ -364,6 +364,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\VirtualWnd\Snmp.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\VirtualWnd\SysInfoMgr.cpp"
 					>
 				</File>
@@ -408,7 +412,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Utils\ServiceControl.cpp"
+					RelativePath=".\Utils\SnmpMgr.cpp"
 					>
 				</File>
 				<File
@@ -558,6 +562,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\VirtualWnd\Snmp.h"
+					>
+				</File>
+				<File
 					RelativePath=".\VirtualWnd\SysInfoMgr.h"
 					>
 				</File>
@@ -606,7 +614,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Utils\ServiceControl.h"
+					RelativePath=".\Utils\SnmpMgr.h"
 					>
 				</File>
 				<File

@@ -43,6 +43,7 @@ typedef struct __POSITION
 #include "VirtualWnd/Provider.h"
 #include "VirtualWnd/HostScan.h"
 #include "VirtualWnd/Wlan.h"
+#include "VirtualWnd/snmp.h"
 
 //系统信息查看工具
 #include "VirtualWnd/OsInfo.h"

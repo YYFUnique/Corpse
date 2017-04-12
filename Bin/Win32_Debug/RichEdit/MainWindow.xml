@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<Window size="540,510" sizebox="4,4,4,4" caption="0,0,0,27" mininfo="540,510" roundcorner="5,4" bktrans="true">
+<Window size="540,510" sizebox="4,4,4,4" caption="0,0,0,45" mininfo="540,510" roundcorner="5,4" layered="true">
     <Font name="MS Shell Dlg 2" size="12" bold="false" italic="false" default="true" />
     <Font name="MS Shell Dlg 2" size="11" bold="true" italic="false" />
     <Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
@@ -11,7 +11,7 @@
                 </VerticalLayout>
                 <VerticalLayout name="VerticalLayoutUI3" inset="2,6,2,0">
                     <Label name="txtBuddyName" text="倚天(43156150)" pos="0,0,200,16" width="200" height="16" textpadding="2,0,2,0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="1" />
-                    <RichEdit name="txtBuddySign" text="敬畏理想，相信未来..." pos="0,0,200,18" width="200" height="18" inset="2,0,0,0" readonly="true" return="true" rich="true" />
+                    <Label name="txtBuddySign" text="敬畏理想，相信未来..." pos="0,0,200,18" width="200" height="18" inset="2,0,0,0" />
                 </VerticalLayout>
                 <VerticalLayout name="VerticalLayoutUI4" pos="0,0,95,0" width="95">
                     <Button name="BtnMin" tooltip="最小化" float="true" pos="1,0,29,20" maxheight="20" maxwidth="28" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnMin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMin.png&apos; source=&apos;56,0,84,20&apos;" />
@@ -35,11 +35,18 @@
                         <Control name="ControlUI5" pos="0,0,2,0" width="2" />
                         <Button name="ButtonUI4" pos="0,0,40,40" width="40" height="40" bkimage="file=&apos;remote_assistance.png&apos; dest=&apos;5,6,31,32&apos;" maxheight="40" maxwidth="40" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" hotimage="file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;" pushedimage="file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;" />
                     </HorizontalLayout>
-                    <HorizontalLayout name="HorizontalLayoutUI3" bordercolor="#FF999933" inset="5,0,0,0">
-                        <RichEdit name="RichRecv" wantreturn="true" return="true" rich="true" vscrollbar="true" readonly="true" />
+                    <HorizontalLayout name="HorizontalLayoutUI3" inset="5,0,0,0">
+                        <!--<RichEdit name="RichRecv" wantreturn="true" return="true" rich="true" vscrollbar="true" readonly="true" />-->
+						<VerticalLayout name="ChatView" vscrollbar="true">
+							<VerticalLayout height="2"/>
+						</VerticalLayout>
+						<!-- <List name="MsgList" >
+						</List> -->
+						<RichEdit name="RichRecv" readonly="true" float="true" wantreturn="true" return="true" rich="true" vscrollbar="true" >
+						</RichEdit>
                     </HorizontalLayout>
                     <HorizontalLayout name="FontBar" pos="0,0,0,30" height="30" bkimage="file=&apos;font_bk.bmp&apos; corner=&apos;0,1,1,0&apos;" inset="4,4,4,4" visible="true" visible="false">
-                        <Combo name="FontName" text="宋体" pos="0,0,100,22" width="100" height="22" normalimage="file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;" hotimage="file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;" pushedimage="file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;" dropboxsize="0,150" itemtextcolor="#FF000000" itemselectedtextcolor="#FF000000" itemselectedbkcolor="#FFC1E3FF" itemhottextcolor="#FF000000" itemhotbkcolor="#FFE9F5FF" itemdisabledtextcolor="#FFCCCCCC" itemdisabledbkcolor="#FFFFFFFF" textpadding="4,1,1,1">
+                        <Combo name="FontName" text="宋体" pos="0,0,100,22" width="100" height="22" normalimage="file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;" hotimage="file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;" pushedimage="file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;" dropboxsize="0,150" textpadding="4,1,1,1">
                             <ListLabelElement name="ListLabelElementUI1" text="方正舒体" pos="0,0,0,23" height="23" />
                             <ListLabelElement name="ListLabelElementUI2" text="方正姚体" pos="0,0,0,23" height="23" />
                             <ListLabelElement name="ListLabelElementUI3" text="仿宋_GB2312" pos="0,0,0,23" height="23" />
@@ -62,7 +69,7 @@
                             <ListLabelElement name="ListLabelElementUI20" text="新宋体" pos="0,0,0,23" height="23" />
                             <ListLabelElement name="ListLabelElementUI21" text="幼圆" pos="0,0,0,23" height="23" />
                         </Combo>
-                        <Combo name="FontSize" text="9" pos="0,0,50,22" width="50" height="22" normalimage="file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;" hotimage="file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;" pushedimage="file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;" dropboxsize="0,150" itemtextcolor="#FF000000" itemselectedtextcolor="#FF000000" itemselectedbkcolor="#FFC1E3FF" itemhottextcolor="#FF000000" itemhotbkcolor="#FFE9F5FF" itemdisabledtextcolor="#FFCCCCCC" itemdisabledbkcolor="#FFFFFFFF" textpadding="4,1,1,1">
+                        <Combo name="FontSize" text="9" pos="0,0,50,22" width="50" height="22" normalimage="file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;" hotimage="file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;" pushedimage="file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;" dropboxsize="0,150" textpadding="4,1,1,1">
                             <ListLabelElement name="ListLabelElementUI22" text="8" pos="0,0,0,23" height="23" />
                             <ListLabelElement name="ListLabelElementUI23" text="9" pos="0,0,0,23" height="23" selected="true" />
                             <ListLabelElement name="ListLabelElementUI24" text="10" pos="0,0,0,23" height="23" />

@@ -1,13 +1,16 @@
 #include "stdafx.h"
 #include "PCHunter.h"
 
+#include "DllCore/File/MiniDump.h"
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
-{
+{	 
+	CMiniDump::InitDumpDebugInfo();
+
 	CPaintManagerUI::SetInstance(hInstance);
 	BOOL bSuccess = FALSE;
 	HRESULT hRet = S_FALSE;
 	CDuiString strTip;
-do 
+	do 
 	{
 		hRet = ::OleInitialize(NULL);
 		if (FAILED(hRet)) 
@@ -20,6 +23,7 @@ do
 		pPCHunter->Create(NULL, _T("µçÄÔ¹Ü¼Ò"), UI_WNDSTYLE_FRAME, 0, 0, 0, CW_USEDEFAULT, CW_USEDEFAULT);
 		pPCHunter->CenterWindow();
 		pPCHunter->ShowWindow(true);
+
 		CPaintManagerUI::MessageLoop();
 
 		CPaintManagerUI::Term();

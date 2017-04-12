@@ -8,6 +8,7 @@ CNetMgr::CNetMgr()
 	AddVirtualWnd(_T("provider"),&m_Provider);
 	AddVirtualWnd(_T("wlan"),&m_Wlan);
 	AddVirtualWnd(_T("scan"),&m_Scan);
+	AddVirtualWnd(_T("snmp"),&m_SNMP);
 }
 
 CNetMgr::~CNetMgr()
@@ -18,6 +19,7 @@ CNetMgr::~CNetMgr()
 	RemoveVirtualWnd(_T("provider"));
 	RemoveVirtualWnd(_T("wlan"));
 	RemoveVirtualWnd(_T("scan"));
+	RemoveVirtualWnd(_T("snmp"));
 }
 
 DUI_BEGIN_MESSAGE_MAP(CNetMgr, CNotifyPump)

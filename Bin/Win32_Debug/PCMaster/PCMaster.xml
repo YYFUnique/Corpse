@@ -7,7 +7,7 @@
 	<Default name="Picture" value="hotimage=&quot;file=&apos;aio_toolbar_highligh.png&apos; corner=&apos;3,3,3,3&apos;&quot; pushedimage=&quot;file=&apos;aio_toolbar_down.png&apos; corner=&apos;3,3,3,3&apos;&quot;" />
     <VerticalLayout name="VLayoutTotal" pos="0,1,0,1" bkimage="file=&apos;main_bkg.jpg&apos; corner=&apos;600,200,1,1&apos;" borderround="5,5">
         <VerticalLayout name="WinBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;">
-            <VerticalLayout name="VLayoutHead" pos="0,0,0,160" height="160">
+            <VerticalLayout name="VLayoutHead" pos="0,0,0,160" height="160" droptarget="true">
                 <HorizontalLayout name="HLayoutTitle" pos="0,0,0,40" height="40">
                     <HorizontalLayout name="HLayoutWinName" pos="0,0,80,40" width="80" height="40">
                         <Label name="WindowName" text="大管家" float="true" pos="7,4,67,34" textpadding="2,0,2,0" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
@@ -35,7 +35,7 @@
                     <VerticalLayout name="VerticalLayoutUI1" pos="0,0,60,0" width="60">
                         <HorizontalLayout name="HLayoutWeather">
                             <HorizontalLayout name="HorizontalLayoutUI3" />
-                            <HorizontalLayout name="HorizontalLayoutUI4" pos="0,0,48,48" width="48" height="48" bkimage="s_a1.png" />
+                            <Button name="BtnWeather" pos="0,0,48,48" width="48" height="48" bkimage="s_a1.png" />
                         </HorizontalLayout>
                         <HorizontalLayout name="HLayoutSkin" pos="31,57,91,87" width="60" height="30">
                             <Button name="BtnChangeSkin" tooltip="更换皮肤" float="true" pos="12,5,32,25" padding="2,2,0,0" bkimage="BtnSkinColor.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="BtnSkinColor.png" hotimage="btn_hover.png" pushedimage="btn_press.png" />

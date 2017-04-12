@@ -6,18 +6,34 @@
 #include "GetIpLocation.h"
 #include "GetIpLocationDlg.h"
 #include "LsCommon/Class/Localtion.h"
-#include "LsCUrl/CUrl.h"
 #include "LsCommon/Json/JsonObject.h"
 #include "LsCommon/FileTools.h"
 #include "LsCommon/TextTools.h"
 #include "LsCommon/ErrorInfo.h"
-#include "LsCUrl/CUrl/curl.h"
+
+#include "libcurl/libcurl.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
+
+class CHTTPResponse : public ILibcurlCallback
+{
+public:
+	int Progress(LPVOID lpData, size_t size, size_t nmemb);
+};
+
+int CHTTPResponse::Progress(LPVOID lpData, size_t size, size_t nmemb)
+{
+	CString strData((CHAR*)lpData,nmemb);
+	CGetIpLocationDlg* pDlg = (CGetIpLocationDlg*)(AfxGetApp()->m_pMainWnd);
+
+	pDlg->FillTheEditBox(strData);
+
+	return size * nmemb;
+}
 
 class CAboutDlg : public CDialog
 {
@@ -173,26 +189,29 @@ void CGetIpLocationDlg::OnBnClickedBtnOk()
 		MessageBox(_T("请输入网址!"),_T("提示"),MB_OK);
 		return;
 	}
-	CCUrl Url;
-	Url.init();
-	Url.SetProcessFunc(ProcessUrl);
+
+	CLibcurl libcurl;
+	CHTTPResponse HttpResponse;
+	libcurl.SetCallback(&HttpResponse);
 	CString strPrama;
 	GetDlgItem(IDC_EDIT_PRARM)->GetWindowText(strPrama);
-	if (Url.doHttpGet(strIPAddr,strPrama,3) == 28)
+	if (libcurl.doHttpGet(strIPAddr,strPrama,3) != CURLE_OK)
 	{
-		MessageBox(_T("请求超时"),_T("提示"),MB_OK);
+		CString strTipInfo;
+		libcurl.GetErrorInfo(strTipInfo);
+		MessageBox(strTipInfo,_T("提示"),MB_OK|MB_ICONINFORMATION);
 	}
 }
-
-int CGetIpLocationDlg::ProcessUrl(void* pData , size_t size , size_t nmemb)
+/*
+int CGetIpLocationDlg::Progress(void* pData , size_t size , size_t nmemb)
 {
 	CString strData((CHAR*)pData,nmemb);
 	CGetIpLocationDlg* pDlg = (CGetIpLocationDlg*)(AfxGetApp()->m_pMainWnd);
 	
 	pDlg->FillTheEditBox(strData);
 
-	return 0;
-}
+	return size*nmemb;
+}*/
 
 BOOL CGetIpLocationDlg::FillTheEditBox(LPCTSTR lpszJson)
 {

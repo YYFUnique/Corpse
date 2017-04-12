@@ -101,6 +101,8 @@ void CHostScan::OnHostScanMenu(CControlUI* pControl)
 		OnPingTarget(pItem);
 	else if (strName == _T("StaticMac"))
 		OnBindMac(pItem);
+	else if (strName == _T("HttpRequest"))
+		OnHttpRequest(pItem);
 }
 
 void CHostScan::OnAddUserName(CListTextElementUI* pItem)
@@ -210,6 +212,13 @@ void CHostScan::OnBindMac(CListTextElementUI* pItem)
 		SetErrorInfo(SYSTEM_ERROR, dwRet, _T("°ó¶¨¾²Ì¬MACÊ§°Ü"));
 		MessageBox(m_pPaintManager->GetPaintWindow(), GetThreadErrorInfoString(), _T("ÌáÊ¾"), MB_OK);
 	}
+}
+
+void CHostScan::OnHttpRequest(CListTextElementUI* pItem)
+{
+	CDuiString strTipInfo;
+	strTipInfo.Format(_T("http://%s"),pItem->GetText(0));
+	ShellExecute(m_pPaintManager->GetPaintWindow(),_T("open"),strTipInfo,NULL,NULL,NULL);
 }
 
 void CHostScan::OnRangeMenu(CControlUI* pControl)
