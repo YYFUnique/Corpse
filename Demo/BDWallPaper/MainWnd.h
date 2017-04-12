@@ -89,17 +89,17 @@ public:
 				{
 					pTabPanel = new CVerticalLayoutUI();
 					pTabPanel->SetName(sTabPanel);
-					pTabPanel->SetFixedHeight(pTabLayout->GetFixedHeight());
+					pTabPanel->SetFixedHeight(pTabLayout->GetHeight());
 					pTabLayout->Add(pTabPanel);
 					pTabPanel->EnableScrollBar(true, false);
-					pTabPanel->GetVerticalScrollBar()->SetLineSize(pTabLayout->GetFixedHeight());
+					pTabPanel->GetVerticalScrollBar()->SetLineSize(pTabLayout->GetHeight());
 					pTabLayout->SelectItem(pTabPanel);
 					for(int i = 1; i <= pPage->nTotalPage; i++)
 					{
 						CString sPanel;
 						sPanel.Format(_T("wp_panel_%s_%d"), pPage->sType, i);
 						CWPPanel* pPanel = new CWPPanel();
-						pPanel->SetFixedHeight(pTabPanel->GetFixedHeight());
+						pPanel->SetFixedHeight(pTabPanel->GetHeight());
 						pPanel->SetName(sPanel);
 						pTabPanel->Add(pPanel);
 						//DoEvents();

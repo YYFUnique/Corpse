@@ -6,6 +6,8 @@
 #include <atlstr.h>
 #include "Wnd/AboutDialog.h"
 
+#include "DllCore/Process/Process.h"
+
 #define		TIMER_PCHUNTER_ID			0x1000
 #define		WM_TRAYICON					WM_USER+0x1000
 
@@ -191,8 +193,8 @@ void CPCHunter::InitWindow()
 	//创建系统托盘图标
 	//m_Tray.CreateTrayIcon(m_hWnd,IDI_MAINFRAME,_T("系统信息查看工具 V1.0"),WM_TRAYICON);
 	//注册应用程序拖拽功能
-	m_pDropTarget = new CDropTargetEx;
-	m_pDropTarget->DragDropRegister(&m_PaintManager,m_hWnd);
+	m_pDropTarget = new CUIDropTarget;
+	m_pDropTarget->DragDropRegister(m_hWnd,NULL,&m_PaintManager);
 
 	CVirtualWnd::SetPaintMagager(&m_PaintManager);
 

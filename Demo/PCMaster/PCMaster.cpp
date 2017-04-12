@@ -177,9 +177,9 @@ void CPCMaster::InitWindow()
 // 	CUIDropSource* pDropSource = new CUIDropSource;
 // 	pDropSource->Release();
 
- 	/*m_pDropTarget = new CUIDropTarget;
- 	m_pDropTarget->DragDropRegister(m_hWnd, MK_LBUTTON, &m_PaintManager);
- 	m_pDropTarget->SetDropTargetHelper(TRUE);*/
+//  	m_pDropTarget = new CUIDropTarget;
+//  	m_pDropTarget->DragDropRegister(m_hWnd, MK_LBUTTON, &m_PaintManager);
+//  	m_pDropTarget->SetDropTargetHelper(TRUE);
 	//设置显示图标
 	SetIcon(IDI_MAINFRAME);
 	//设置用户名
@@ -302,7 +302,7 @@ void CPCMaster::OnClick(TNotifyUI& msg)
 		PostQuitMessage(0);//Close(0);
 	else if(msg.pSender == (CButtonUI*)m_PaintManager.FindControl(_T("BtnMin")))
 	{		
-		PostMessage(WM_SYSCOMMAND,SC_MINIMIZE,0);
+		//PostMessage(WM_SYSCOMMAND,SC_MINIMIZE,0);
  		/*m_pEffect = GetAnimation();
  		if (m_pEffect == NULL)
  			return;
@@ -515,28 +515,46 @@ LRESULT CPCMaster::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 						m_bDrag = TRUE;
 						IDropSource *pDropSource;
 						IDataObject *pDataObject;
-
+						
 						if (CUIDropSource::CreateDropSource(&pDropSource) != S_OK) 
 							break;
 
 						if (CUIDataObject::CreateDataObject(&pDataObject) != S_OK)
 							pDropSource->Release();
 
-						//准备拖放数据
+						CUIDragSourceHelper* pDragSource = new CUIDragSourceHelper(pDataObject);
+
+						//准备拖放数据,拖放文件
 						FORMATETC cFmt = {CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL}; 
 						STGMEDIUM Medium = {TYMED_HGLOBAL,NULL,NULL};
 						LPCTSTR lpszFileName=_T("C:\\log.txt\0");
 						
-						DWORD dwLen = (_tcslen(lpszFileName)+2)*sizeof(TCHAR);
-
+						DWORD dwLen = sizeof(DROPFILES)+(_tcslen(lpszFileName)+2)*sizeof(TCHAR);
+						
 						//由GMEM_FIXED标识的全局内存直接返回内存指针
-						HGLOBAL hMem = ::GlobalAlloc(GMEM_FIXED|GMEM_ZEROINIT, dwLen);
+						HGLOBAL hMem = ::GlobalAlloc(GMEM_ZEROINIT|GMEM_MOVEABLE|GMEM_DDESHARE, dwLen);
 
-						//LPTSTR lpszMemFile = (LPTSTR)GlobalLock(hMem);
-						_tcscpy((LPTSTR)hMem, lpszFileName);
-						//GlobalUnlock(hMem);
+						DROPFILES* pData=(DROPFILES*)GlobalLock(hMem);
+						pData->fNC = FALSE;
+						pData->fWide = TRUE;
+						pData->pt.x = 0;
+						pData->pt.y = 0;
+						pData->pFiles = sizeof(DROPFILES);
+						memcpy((LPVOID)((LPBYTE)pData+sizeof(DROPFILES)),lpszFileName,dwLen-sizeof(DROPFILES));
+						GlobalUnlock(hMem);
 
 						Medium.hGlobal = hMem;
+						
+
+						//拖放文字
+						/*FORMATETC cFmt = {CF_UNICODETEXT, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL}; 
+						STGMEDIUM Medium = {TYMED_HGLOBAL,NULL,NULL};
+						LPCTSTR lpszText = _T("Hello word!");
+						HGLOBAL hMem = ::GlobalAlloc(GMEM_ZEROINIT,(_tcslen(lpszText)+1)*sizeof(TCHAR));
+						LPTSTR lpszGlobal = (LPTSTR)GlobalLock(hMem);
+						_tcscpy(lpszGlobal,lpszText);
+						GlobalUnlock(hMem);
+						Medium.hGlobal = hMem;*/
 						pDataObject->SetData(&cFmt, &Medium, FALSE);
 					
 						//创建拖放源图标
@@ -550,18 +568,7 @@ LRESULT CPCMaster::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 						RECT rcPos = pFace->GetPos();
 						HBITMAP hBitmap = CRenderEngine::GenerateBitmap(&m_PaintManager, pFace, rcPos); 
 
-						SHDRAGIMAGE ShDragImage = {0};
-						SIZE szImage={rcPos.right-rcPos.left,rcPos.bottom-rcPos.top};
-						ShDragImage.sizeDragImage = szImage;
-						ShDragImage.hbmpDragImage = hBitmap;
-						ShDragImage.crColorKey = GetSysColor(COLOR_WINDOW); 
-						ShDragImage.ptOffset.x = pt.x - rcPos.left;
-						ShDragImage.ptOffset.y = pt.y - rcPos.top;
-
-						 CoCreateInstance(CLSID_DragDropHelper, NULL, CLSCTX_INPROC_SERVER, 
-															IID_IDragSourceHelper, (void**)&m_pDragHelper);
-
-						HRESULT hRet =	m_pDragHelper->InitializeFromBitmap(&ShDragImage, pDataObject);
+						HRESULT hRet = pDragSource->InitializeFromBitmap(hBitmap, pt, rcPos);
 
 						if (FAILED(hRet))
 						{
@@ -580,7 +587,7 @@ LRESULT CPCMaster::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 							}  
 							else if (dwEffect & DROPEFFECT_COPY)
 							{
-								CreateShortcurLnkFile(_T("C:\\log.txt"),_T("C:\\Users\\Public\\Desktop\\log.lnk"));
+								/*CreateShortcurLnkFile(_T("C:\\log.txt"),_T("C:\\Users\\Public\\Desktop\\log.lnk"));*/
 								OutputDebugString(_T("DROPEFFECT_COPY"));
 							}
 							else if (dwEffect & DROPEFFECT_LINK)
@@ -604,8 +611,7 @@ LRESULT CPCMaster::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 
 						pDropSource->Release();
 						pDataObject->Release();
-						m_pDragHelper->Release();
-						//delete pDragSource;
+						pDragSource->Release();
 
 						m_bMouseDown = FALSE;
 						m_bDrag = FALSE;

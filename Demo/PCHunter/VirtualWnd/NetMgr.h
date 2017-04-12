@@ -21,4 +21,5 @@ protected:
 	CProvider    m_Provider;
 	CWlan			m_Wlan;
 	CHostScan	m_Scan;
+	CSnmp			m_SNMP;
 };

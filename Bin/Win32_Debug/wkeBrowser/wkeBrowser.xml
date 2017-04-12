@@ -40,14 +40,14 @@
 					<Button name="ButtonUI7" float="true" pos="2,3,0,0" width="36" height="26" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;backward.png&apos; dest=&apos;0,0,36,26&apos; source=&apos;0,0,36,26&apos;" hotimage="file=&apos;backward.png&apos; dest=&apos;0,0,36,26&apos; source=&apos;36,0,72,26&apos;" pushedimage="file=&apos;backward.png&apos; dest=&apos;0,0,36,26&apos; source=&apos;72,0,108,26&apos;" disabledimage="file=&apos;backward.png&apos; dest=&apos;0,0,36,26&apos; source=&apos;108,0,144,26&apos;" />
 					<Button name="ButtonUI8" float="true" pos="43,9,0,0" width="14" height="14" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;tabbutton.png&apos; dest=&apos;0,0,14,14&apos; source=&apos;0,0,14,14&apos;" hotimage="file=&apos;tabbutton.png&apos; dest=&apos;0,0,14,14&apos; source=&apos;14,0,28,14&apos;" pushedimage="file=&apos;tabbutton.png&apos; dest=&apos;0,0,14,14&apos; source=&apos;28,0,42,14&apos;" disabledimage="file=&apos;tabbutton.png&apos; dest=&apos;0,0,14,14&apos; source=&apos;42,0,56,14&apos;" />
 					<Button name="ButtonUI9" float="true" pos="62,3,0,0" width="26" height="26" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;refresh.png&apos; dest=&apos;0,0,26,26&apos; source=&apos;0,0,26,26&apos;" hotimage="file=&apos;refresh.png&apos; dest=&apos;0,0,26,26&apos; source=&apos;26,0,52,26&apos;" pushedimage="file=&apos;refresh.png&apos; dest=&apos;0,0,26,26&apos; source=&apos;52,0,78,26&apos;" />
-					<Edit2 name="edit" caretwidth="2" float="true" pos="90,5,400,26" bkcolor="#FFFFFFFF" font="0"/>
+					<Edit2 name="urlEdit" caretwidth="1" float="true" pos="90,5,400,26" bkcolor="#FFFFFFFF" font="0"/>
 				</HorizontalLayout>
 			</VerticalLayout>
 		</HorizontalLayout>
         <HorizontalLayout name="HorizontalLayoutUI4" float="false">
 			<TabLayout name="TabWizard" inset="1,0,1,0" >
-				<WkeBrowser name="ie" url="http://10.3.1.253:8000"/>
-				<WkeBrowser name="ie2" url="http://10.2.1.252:8000"/>
+				<!--<WkeBrowser name="ie" url="http://10.1.1.131:8000"/>-->
+				<WebBrowser name="ie2" clsid="{8856F961-340A-11D0-A96B-00C04FD705A2}" delaycreate="false"/>
 			</TabLayout>
         </HorizontalLayout>
         <HorizontalLayout name="HorizontalLayoutUI5" float="false" height="22" bkimage="statusbar.png">

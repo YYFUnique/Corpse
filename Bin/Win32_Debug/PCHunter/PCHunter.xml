@@ -36,6 +36,7 @@
             <TabLayout name="TabWizard" padding="1,0,1,1" bkimage="file=&apos;white.png&apos;" showanimate="false" frame="20" >
 				<VerticalLayout name="0" virtualwnd="task">
 					<Include source="task.xml" />
+					<!--<Label height="50" text="我心里的一把火" bkcolor="#FFFF0000" bkcolor2="#FF00FF00" bkcolor3="#FF0000FF" />-->
 					<!--<DockPane itemsize="32,32" >
 						<DockItem normalimage="medal.png" hotimage="medal.png" pushedimage="medal.png"/>
 						<DockItem normalimage="busy.png" hotimage="close_hover.png" pushedimage="close_pressed.png" />
@@ -59,6 +60,29 @@
 							<Label text="安全" float="true"/>
 						</ListContainerElement>
 					</List>-->
+					<!--<RichEditEx textpadding="3,3,3,3">
+						<ListContainerElement height="30">
+							<HorizontalLayout>
+								<Label text="测试"/>
+							</HorizontalLayout>
+						</ListContainerElement>
+					</RichEditEx>-->
+					<!--<List name="App" menu="true" itemfont="0" multiexpanding="true" multiselect="false">
+						<ListHeader menu="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
+							<ListHeaderItem text="任务" width="200" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+							<ListHeaderItem text="状态" width="60" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						</ListHeader>
+					</List>-->
+					<!--<HorizontalLayout >
+						<Button text="首页"/>
+						<Button text="上一页"/>
+						<Button text="下一页"/>
+						<Button text="尾页"/>
+						<Label text="每页10条" />
+						<Label text="当前第1页" />
+						<Button text="跳转"/>
+					</HorizontalLayout>-->
+					
 				</VerticalLayout>
 				<VerticalLayout name="1" virtualwnd="network" >
 					<Include source="network.xml" />

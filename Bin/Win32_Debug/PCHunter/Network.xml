@@ -3,6 +3,8 @@
 	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
 	<Default name="List" value="scrollstepsize=&quot;50&quot; vscrollbar=&quot;true&quot; hscrollbar=&quot;true&quot; itemalign=&quot;left&quot; itemaltbk=&quot;true&quot; itemtextpadding=&quot;5,0,0,0&quot; itemlinecolor=&quot;#FF939393&quot;" />
 	<Default name="ListHeaderItem" value="sepimage=&quot;file=&apos;ListHeadSep.png&apos;&quot; sepwidth=&quot;1&quot;"/>
+	<Default name="Combo" value="textpadding=&quot;4,1,1,1&quot; normalimage=&quot;file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;&quot; hotimage=&quot;file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;&quot; pushedimage=&quot;file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot; focusedimage=&quot;file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot;" />
+	<Style name="Radio" value="disabledtextcolor=&quot;#FFA7A6AA&quot; font=&quot;0&quot; align=&quot;center&quot; normalimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;0,0,15,15&apos; dest=&apos;0,5,15,20&apos;&quot; hotimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;15,0,30,15&apos; dest=&apos;0,5,15,20&apos;&quot; pushedimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;30,0,45,15&apos; dest=&apos;0,5,15,20&apos;&quot; selectedimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;75,0,90,15&apos; dest=&apos;0,5,15,20&apos;&quot; selectedpressimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;90,0,105,15&apos; dest=&apos;0,5,15,20&apos;&quot;" />
 	<VerticalLayout name="VLayout">
 		<VerticalLayout name="VLayoutNet" height="30" bkcolor="#FFDEDEDE" >
 			<Option name="OptionUI1" font="0" text="适配器状态" tooltip="适配器状态" userdata="0" float="true" pos="15,2,85,30" group="network" selected="true"/>
@@ -13,9 +15,10 @@
 			<!-- <Option name="OptionUI6" font="0" text="网络抓包" tooltip="网络抓包" userdata="5" float="true" pos="425,1,495,30" group="network" /> -->
             <!-- <Option name="OptionUI7" font="0" text="电脑门诊" tooltip="电脑门诊" userdata="6" float="true" pos="507,1,577,30" group="network" /> -->
 			<Option name="OptionUI8" font="0" text="无线网络" tooltip="无线网络" userdata="5" float="true" pos="425,2,495,30" group="network" />  <!--"589,1,659,30"-->
+			<Option name="OptionUI9" font="0" text="SNMP" tooltip="SNMP" userdata="6" float="true" pos="507,2,577,30" group="network" />
 		</VerticalLayout>
 		<TabLayout name="NetWizard" Padding="1,0,1,1">
-			<VerticalLayout virtualwnd="adapter"  name="VLayoutAdapter" >
+			<VerticalLayout virtualwnd="adapter"  name="VLayoutAdapter" inset="0,0,0,2">
 				<TreeView name="Adapter" visiblefolderbtn="false" vscrollbar="true" visiblecheckbtn="false" >
 				</TreeView>
 			</VerticalLayout>
@@ -88,7 +91,7 @@
 							<Button name="AddStaticArp" text="添加静态ARP表" float="true" pos="10,69,120,91" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" foreimage="file='color.png' dest='1,3,16,18'" textpadding="10,0,0,0" font="0" />
 							<Button name="ShowArp" text="查看ARP表" float="true" pos="125,69,210,91" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" foreimage="file='color.png' dest='1,3,16,18'" textpadding="10,0,0,0" font="0"/>
 							<Button name="IPTools" text="IP计算器" tooltip="IP地址相关计算" float="true" pos="10,100,84,122" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" foreimage="file='color.png' dest='1,3,16,18'" textpadding="10,0,0,0" font="0" />
-							<Button name="WakeOnLAN" tooltip="唤醒处于休眠、睡眠的计算机" text="网络唤醒" enabled="disable" float="true" pos="125,100,199,122" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" foreimage="file='color.png' dest='1,3,16,18'" textpadding="10,0,0,0" font="0" />
+							<Button name="WakeOnLAN" tooltip="唤醒处于关机的局域网计算机" text="网络唤醒" float="true" pos="125,100,199,122" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" foreimage="file='color.png' dest='1,3,16,18'" textpadding="10,0,0,0" font="0" />
 						</HorizontalLayout>
 					</VerticalLayout>
 					<Control width="2" bkcolor="#FF54A5D5" />
@@ -117,6 +120,55 @@
 						<ListHeaderItem text="信号强度" />
 					</ListHeader>
 				</List>
+			</VerticalLayout>
+			<VerticalLayout virtualwnd="snmp" name="VLayoutSNMP">
+				<HorizontalLayout>
+					<VerticalLayout width="247">
+						<HorizontalLayout name="HLayout" pos="0,0,247,165" width="247" bkimage="file='InfoBox.png' corner='10,30,10,10' dest='2,2,245,165'">
+							<Label name="LabelUI1" text="设备设置" font="1" float="true" pos="8,0,247,26" textpadding="5,0,0,0" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" />
+							<Label name="LabelUI2" text="设备地址:" align="right" float="true" pos="15,35,65,60" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<IPAddress name="DevAddr" inset="0,4,0,3" pos="73,35,230,60" float="true" align="center" font="0" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" />
+							<Label name="LabelPort" text="端口:" align="right" font="0" float="true" pos="15,65,65,90" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" />
+							<Edit2 name="Port" text="161" float="true" pos="73,65,230,90" bkcolor="#FFFFFFFF" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" /> 
+							<Label name="LabelVersion" text="版本:" align="right" font="0" float="true" pos="15,95,65,120" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" />
+							<Combo name="VersionList" float="true" itemfont="1" dropbox="font=&quot;1&quot;" itemtextpadding="5,0,0,0" pos="73,96,230,119" height="23">
+								<ListLabelElement name="ListLabelElementUI1" text="SNMP v1" pos="0,0,0,23" height="23" selected="true"/>
+								<ListLabelElement name="ListLabelElementUI2" text="SNMP v2C" pos="0,0,0,23" height="23" />
+							</Combo>
+							<Label name="LabelPassword" text="团体名:" align="right" font="0" float="true" pos="15,125,65,150" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" />
+							<Edit2 name="Password" float="true" pos="73,125,230,150" bkcolor="#FFFFFFFF" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" /> 
+						</HorizontalLayout>
+						<HorizontalLayout name="HLayoutOidInfo" heigt="125" width="247" bkimage="file='InfoBox.png' corner='10,30,10,10' dest='2,2,245,125'">
+							<Label name="OidInfo" text="OID" font="1" float="true" pos="8,0,247,26" textpadding="5,0,0,0" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" />
+							<Option name="oid" text="指定OID" style="Radio" align="left" textpadding="17,0,0,0" group="oidGroup" float="true" pos="15,30,90,55" font="0" selected="true"/>
+							<Edit2 name="oidEdit" float="true" pos="95,30,230,55" bkcolor="#FFFFFFFF" textpadding="4,4,4,4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" /> 
+							<Option name="oidGroup" text="指定OID组" style="Radio" align="left" textpadding="17,0,0,0" group="oidGroup" float="true" pos="15,60,90,85" font="0" />
+							<Edit2 name="oidGroupEdit" float="true" pos="95,60,230,85" bkcolor="#FFFFFFFF" textpadding="4,4,4,4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" /> 
+							<Option name="alloid" text="所有OID" style="Radio" align="left" textpadding="17,0,0,0" group="oidGroup" float="true" pos="15,90,90,115" font="0" />
+							<Edit2 name="alloidEdit" text="1.3.6" visible="false" float="true" pos="95,90,230,115" bkcolor="#FFFFFFFF" textpadding="4,4,4,4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" /> 
+						</HorizontalLayout>
+						<HorizontalLayout name="HLayoutBtn" height="40">
+							<Button name="BtnStart" text="开始扫描" float="true" pos="150,3,230,37" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" align="center" normalimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,164,38&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" />	
+						</HorizontalLayout>
+						<HorizontalLayout name="HLayoutLnk" heigt="135" width="247" bkimage="file='InfoBox.png' corner='10,30,10,10' dest='2,2,245,135'">
+							<Label name="OidInfo" text="查看设备指定信息" font="1" float="true" pos="8,0,247,26" textpadding="5,0,0,0" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" />
+							<Button name="BtnPowerOn" text="设备开机时间" float="true" pos="10,30,120,52" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" foreimage="file='color.png' dest='1,3,16,18'" textpadding="10,0,0,0" font="0" />
+						</HorizontalLayout>
+						<Control height="1"/>
+					</VerticalLayout>
+					<Control width="2" bkcolor="#FF54A5D5" />
+					<VerticalLayout >
+						<List name="snmpList" itemfont="0" menu="true" multiselect="false" >
+							<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;" menu="true">						
+								<ListHeaderItem text="OID" width="150"/>
+								<ListHeaderItem text="值" />
+								<ListHeaderItem text="长度" width="50"/>
+								<ListHeaderItem text="值类型"  width="80"/>
+							</ListHeader>
+						</List>
+						<Control height="2"/>
+					</VerticalLayout>
+				</HorizontalLayout>
 			</VerticalLayout>
 		</TabLayout>
 	</VerticalLayout>

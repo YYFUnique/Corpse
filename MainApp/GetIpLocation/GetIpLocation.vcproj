@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library&quot;"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;LS_EXPORTS"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
