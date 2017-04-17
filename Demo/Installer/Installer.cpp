@@ -2,6 +2,7 @@
 #include "Installer.h"
 #include "resource.h"
 #include "3DView.h"
+#include "AnimLayout.h"
 #include <Shlwapi.h>
 #pragma comment(lib,"shlwapi.lib")
 #pragma comment(lib,"Msimg32.lib")
@@ -59,7 +60,7 @@ void CInstaller::Notify(TNotifyUI& msg)
 	{
 		if (strCtlName == _T("BtnClose"))
 			PostQuitMessage(0);
-		else if (strCtlName == _T("BtnMin"))
+		else if (strCtlName == _T("BtnSMin"))
 		{
 			//SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
 			CTabLayoutUI* pTab = (CTabLayoutUI*)m_PaintManager.FindControl(_T("WizardTab"));
@@ -91,15 +92,30 @@ void CInstaller::Notify(TNotifyUI& msg)
 				PostQuitMessage(0);
 			else if (strCtlName == _T("BtnComplete"))
 				PostQuitMessage(0);
+			else
+				OnClick(msg);
 		}
 	}
 	else if (msg.sType == DUI_MSGTYPE_TIMER)
 		OnTimer(msg);
+	else if (msg.sType == DUI_MSGTYPE_WINDOWINIT)
+		OnInitDialog(msg);
+}
+
+void CInstaller::OnInitDialog(TNotifyUI& msg)
+{
+	CAnimLayoutUI* pAniLayout = (CAnimLayoutUI*)msg.pSender->GetInterface(_T("AnimLayout"));
+	pAniLayout->StartEffect();
+	//ShowWindow(true);
+	//CControlUI* pControl = m_PaintManager.FindControl(_T("VLayoutTotal"));
+	//CAnimLayoutUI* pAniLayout = (CAnimLayoutUI*)pControl->GetInterface(_T("AnimLayout"));
+	//pAniLayout->StartEffect();
+	//m_PaintManager.KillTimer(pAniLayout);
 }
 
 void CInstaller::OnTimer(TNotifyUI& msg)
 {
-	if (msg.pSender == m_PaintManager.FindControl(_T("VLayoutTotal")))
+	if (msg.pSender == m_PaintManager.FindControl(_T("1")))
 	{
 		int nMaxBeforeFrame, nMaxAfterFrame;
 		nMaxBeforeFrame = 90 / m_nYStep;
@@ -156,12 +172,18 @@ CControlUI* CInstaller::CreateControl(LPCTSTR pstrClass)
 	CControlUI* pControl = NULL;
 	if (_tcsicmp(pstrClass, _T("3DView")) == 0)
 		pControl = new C3DViewUI;
+	if (_tcsicmp(pstrClass, _T("AnimLayout")) == 0)
+		pControl = new CAnimLayoutUI;
 	return pControl;
 }
 
 void CInstaller::InitWindow()
 {
-	//SetIcon(IDI_MAINFRAME);
+	//CControlUI* pControl = m_PaintManager.FindControl(_T("VLayoutTotal"));
+		//CAnimLayoutUI* pAniLayout = (CAnimLayoutUI*)pControl->GetInterface(_T("AnimLayout"));
+		//pAniLayout->StartEffect();
+	//	m_PaintManager.SetTimer(pControl,1001,10);
+	SetIcon(IDI_MAINFRAME);
 
     //CMakeSfxFile MakeSfx;
  	//MakeSfx.ReleaseData();
@@ -209,7 +231,13 @@ void CInstaller::InitWindow()
 
 void CInstaller::OnClick(DuiLib::TNotifyUI &msg)
 {
-
+	if (msg.pSender == m_PaintManager.FindControl(_T("BtnMin")))
+	{
+		CControlUI* pControl = m_PaintManager.FindControl(_T("VLayoutBody"));
+		//CAnimLayoutUI* pAniLayout = (CAnimLayoutUI*)pControl->GetInterface(_T("AnimLayout"));
+		//pAniLayout->StartEffect();
+		m_PaintManager.SetTimer(pControl,1001,100);
+	}
 }
 
 LRESULT CInstaller::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)

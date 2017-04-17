@@ -110,16 +110,22 @@ public:
 	BOOL Animation(IUIEffectCallBack *iDrawEffect,DWORD frameSpin);
 	// 初始化支持的动画
 	static DWORD InitSurportAnimationType(const TCHAR *& strAnimationType);
+
+	IUIEffectCallBack*			m_pEffectCallback;
+	std::vector<InternalAnimationParam>				m_animationContainer;				// 动画参数容器
 private:
 	// 计算动画过程
 	void ComputeAnimation(IUIEffectCallBack *iDrawEffect,DWORD timeElapse);
 	// 清理执行结束的动画
 	void CleanFinishedAnimation(IUIEffectCallBack *iDrawEffect);
+
+	static UINT AnimateworkThread(LPVOID lParam);
 private:
-	std::vector<InternalAnimationParam>				m_animationContainer;				// 动画参数容器
+	
 	std::vector<InternalAnimationParam>::iterator	m_itAnimation;						// 枚举器
 	static const TCHAR *								m_animation;						// 动画名称，以\0分割,\0\0结束
 	ULONG_PTR m_gdiplusToken;															// gdiplus 
+	
 };
 
 class CAnimateMgr : public IUIEffect

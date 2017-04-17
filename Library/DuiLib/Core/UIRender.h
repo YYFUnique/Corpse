@@ -57,9 +57,9 @@ public:
 	static void DrawColor(HDC hDC, const RECT& rc, DWORD color,SIZE BorderRound,long bTopLeftRound=1,long bTopRightRound=1,long bBottomRightRound=1,long bBottomLeftRound=1);
 	static void DrawPolygon(HDC hDC,POINT * pPoints,int nNumber,DWORD dwFillColor,DWORD dwBorderColor=0,int mode=0);//0 Fill 1:border 2:border and fill
 	static void Draw3dRect(HDC hDC,const RECT& rect,DWORD clrTopLeft, DWORD clrBottomRight);
-	static void CheckAalphaColor(DWORD& dwColor);
-	static void ClearAalphaPixel(LPBYTE pBits, int bitsWidth, LPRECT rc);
-	static void RestoreAalphaColor(LPBYTE pBits, int bitsWidth, LPRECT rc);
+	static void CheckAlphaColor(DWORD& dwColor);
+	static void ClearAlphaPixel(LPBYTE pBits, int bitsWidth, LPRECT rc);
+	static void RestoreAlphaColor(LPBYTE pBits, int bitsWidth, LPRECT rc);
 	static HBITMAP CreateARGB32Bitmap(HDC hDC, int cx, int cy, BYTE** pBits);
 #ifdef RENDER_GDIPLUS
 	static void DrawGradient(HDC hDC, const RECT& rc, DWORD *dwColors, float*fPositions, int colorCount,bool bVertical,SIZE borderRound,long bTopLeftRound=1,long bTopRightRound=1,long bBottomRightRound=1,long bBottomLeftRound=1);

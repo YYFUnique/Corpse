@@ -21,6 +21,7 @@ public:
 protected:
 
 	void OnClick(TNotifyUI& msg);
+	void OnInitDialog(TNotifyUI& msg);
 	void OnTimer(TNotifyUI& msg);
 	virtual LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	void OnMenuItemClick(CControlUI* pControl);

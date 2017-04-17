@@ -140,22 +140,33 @@ BOOL CWndEffect::ClearAllAnimation()
 
 BOOL CWndEffect::Animation(IUIEffectCallBack *iDrawEffect,DWORD frameSpin)
 {
-	if(iDrawEffect == NULL)
+	if (iDrawEffect == NULL)
 	{
 		return FALSE;
 	}
+
+	m_pEffectCallback = iDrawEffect;
+
+	CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)AnimateworkThread,this,0,NULL);
+
+	return TRUE;
+}
+
+UINT CWndEffect::AnimateworkThread(LPVOID lParam)
+{
+	CWndEffect* pEffect = (CWndEffect*)lParam;
 
 	DWORD time_start = clock();
 	DWORD delta_time = 0;
 
 	// 队列非空，执行动画
-	while (m_animationContainer.size() != 0)
+	while (pEffect->m_animationContainer.size() != 0)
 	{
-		ComputeAnimation(iDrawEffect,delta_time);
- 
-		iDrawEffect->OnUiEffectDraw();
+		pEffect->ComputeAnimation(pEffect->m_pEffectCallback,delta_time);
 
-		CleanFinishedAnimation(iDrawEffect);
+		pEffect->m_pEffectCallback->OnUiEffectDraw();
+
+		pEffect->CleanFinishedAnimation(pEffect->m_pEffectCallback);
 
 		Sleep(10);
 
@@ -185,7 +196,6 @@ void CWndEffect::ComputeAnimation(IUIEffectCallBack *iDrawEffect,DWORD timeElaps
 			m_itAnimation->frameNow++;
 			pEffect->ComputeOneFrame(&*m_itAnimation);
 		}
-
 	}
 }
 
