@@ -2164,6 +2164,14 @@ HBITMAP CRenderEngine::GenerateBitmap(CPaintManagerUI* pManager, CControlUI* pCo
     LPDWORD pDest = NULL;
     HDC hCloneDC = ::CreateCompatibleDC(pManager->GetPaintDC());
     HBITMAP hBitmap = ::CreateDIBSection(pManager->GetPaintDC(), &bmi, DIB_RGB_COLORS, (LPVOID*) &pDest, NULL, 0);
+	int i=0;
+	if (hBitmap == 0)
+	{
+		//SetErrorInfo(SYSTEM_ERROR, 0, _T("CreateDIBSection失败"));
+		i= GetLastError();
+
+		//OutputDebugString(GetThreadErrorInfoString());
+	}
     ASSERT(hCloneDC);
     ASSERT(hBitmap);
     if( hBitmap != NULL )
@@ -2326,7 +2334,7 @@ void CRenderEngine::Draw3dRect(HDC hDC,const RECT& rect,DWORD clrTopLeft, DWORD 
 	DrawColor(hDC,rectBottom,clrBottomRight);
 }
 
-void CRenderEngine::CheckAalphaColor(DWORD& dwColor)
+void CRenderEngine::CheckAlphaColor(DWORD& dwColor)
 {
 	//RestoreAlphaColor认为0x00000000是真正的透明，其它都是GDI绘制导致的
 	//所以在GDI绘制中不能用0xFF000000这个颜色值，现在处理是让它变成RGB(0,0,1)
@@ -2337,7 +2345,7 @@ void CRenderEngine::CheckAalphaColor(DWORD& dwColor)
 	}
 }
 
-void CRenderEngine::ClearAalphaPixel(LPBYTE pBits, int bitsWidth, PRECT rc)
+void CRenderEngine::ClearAlphaPixel(LPBYTE pBits, int bitsWidth, PRECT rc)
 {
 	if(!pBits)
 		return;
@@ -2352,13 +2360,22 @@ void CRenderEngine::ClearAalphaPixel(LPBYTE pBits, int bitsWidth, PRECT rc)
 	}
 }
 
-void CRenderEngine::RestoreAalphaColor(LPBYTE pBits, int bitsWidth, PRECT rc)
+void CRenderEngine::RestoreAlphaColor(LPBYTE pBits, int bitsWidth, PRECT rc)
 {
-	for(int i = rc->top; i < rc->bottom; ++i)
+	/*for(int i = rc->top; i < rc->bottom; ++i)
 	{
 		for(int j = rc->left; j < rc->right; ++j)
 		{
 			int x = (i*bitsWidth + j) * 4;
+			if((pBits[x + 3] == 0)&& (pBits[x + 0] != 0 || pBits[x + 1] != 0|| pBits[x + 2] != 0))
+				pBits[x + 3] = 255;	
+		}
+	}*/
+	for (int i = 0; i < rc->bottom - rc->top; ++i )
+	{
+		for (int j = 0; j < rc->right - rc->left; ++j)
+		{
+			int x = (i*bitsWidth + j) *4;
 			if((pBits[x + 3] == 0)&& (pBits[x + 0] != 0 || pBits[x + 1] != 0|| pBits[x + 2] != 0))
 				pBits[x + 3] = 255;	
 		}

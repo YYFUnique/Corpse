@@ -803,7 +803,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 				HBITMAP hOldBitmap = (HBITMAP) ::SelectObject(m_hDcOffscreen, m_hbmpOffscreen);
 				int iSaveDC = ::SaveDC(m_hDcOffscreen);
 				
-				CRenderEngine::ClearAalphaPixel(m_pBmpOffscreenBits, dwWidth,&rcPaint);
+				CRenderEngine::ClearAlphaPixel(m_pBmpOffscreenBits, dwWidth,&rcPaint);
 
 				RECT rcClipClient = {0};
 				memcpy(&rcClipClient, &rcPaint, sizeof(RECT));
@@ -818,7 +818,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 					CControlUI* pPostPaintControl = static_cast<CControlUI*>(m_aPostPaintControls[i]);
 					pPostPaintControl->DoPostPaint(m_hDcOffscreen, rcPaint);
 				}
-				CRenderEngine::RestoreAalphaColor(m_pBmpOffscreenBits, dwWidth, &rcPaint);
+				CRenderEngine::RestoreAlphaColor(m_pBmpOffscreenBits, dwWidth, &rcPaint);
 				::RestoreDC(m_hDcOffscreen, iSaveDC);
 
 				if (IsLayered() ) {

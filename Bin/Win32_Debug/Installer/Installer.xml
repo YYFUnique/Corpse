@@ -3,7 +3,7 @@
     <Font name="SimSun" size="12" bold="true" italic="false" />
     <Font name="SimSun" size="12" bold="false" italic="false" default="true" />
     <Font name="华文新魏" size="21" bold="false" italic="false" />
-    <3DView name="VLayoutTotal" bkcolor="#FFFFFFFF" >
+    <AnimLayout name="VLayoutTotal" bkcolor="#FFFFFFFF" >
         <VerticalLayout name="VLayoutBorder" inset="1,0,1,1" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos; hole=&apos;false&apos;">
             <HorizontalLayout name="HLayoutHead" pos="0,0,0,32" height="32">
                 <HorizontalLayout name="HLayoutTitle" pos="0,0,0,32" height="32" />
@@ -12,7 +12,7 @@
                     <Button name="BtnClose" tooltip="关闭" float="true" pos="31,0,70,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
                 </HorizontalLayout>
             </HorizontalLayout>
-            <VerticalLayout name="VLayoutBody" >
+            <AnimLayout name="VLayoutBody" >
                 <TabLayout name="WizardTab" >
                     <VerticalLayout name="VLayoutPage1" bkcolor="#FFFFFFFF">
                         <HorizontalLayout name="HLayoutDetail" pos="0,0,0,70" height="70">
@@ -114,7 +114,7 @@
                         </HorizontalLayout>
                     </VerticalLayout>
                 </TabLayout>
-            </VerticalLayout>
+            </AnimLayout>
         </VerticalLayout>
-    </3DView>
+    </AnimLayout>
 </Window>
