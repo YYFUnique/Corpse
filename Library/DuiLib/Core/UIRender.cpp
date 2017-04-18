@@ -2362,20 +2362,11 @@ void CRenderEngine::ClearAlphaPixel(LPBYTE pBits, int bitsWidth, PRECT rc)
 
 void CRenderEngine::RestoreAlphaColor(LPBYTE pBits, int bitsWidth, PRECT rc)
 {
-	/*for(int i = rc->top; i < rc->bottom; ++i)
+	for (int i = rc->top; i < rc->bottom; ++i)
 	{
-		for(int j = rc->left; j < rc->right; ++j)
+		for (int j = rc->left; j < rc->right; ++j)
 		{
 			int x = (i*bitsWidth + j) * 4;
-			if((pBits[x + 3] == 0)&& (pBits[x + 0] != 0 || pBits[x + 1] != 0|| pBits[x + 2] != 0))
-				pBits[x + 3] = 255;	
-		}
-	}*/
-	for (int i = 0; i < rc->bottom - rc->top; ++i )
-	{
-		for (int j = 0; j < rc->right - rc->left; ++j)
-		{
-			int x = (i*bitsWidth + j) *4;
 			if((pBits[x + 3] == 0)&& (pBits[x + 0] != 0 || pBits[x + 1] != 0|| pBits[x + 2] != 0))
 				pBits[x + 3] = 255;	
 		}

@@ -49,6 +49,12 @@ namespace DuiLib {
 		DEFAULT_LINE_COLOR = 0xFFBCBFC4	//默认分隔线颜色
 	};
 
+	typedef enum tagKILL_TARGET_WND_TYPE
+	{
+		KILL_TARGET_WND_TYPE_SELF		 = 1,			//关闭窗口的动作由自身窗口引发，比如在窗口点击
+		KILL_TARGET_WND_TYPE_PARENT = 2,			//关闭窗口的动作由父窗口引发，比如鼠标在父窗口移动
+	}KILL_TARGET_WND_TYPE;
+
 	//////////////////////////////////////////////
 	class MenuMenuReceiverImplBase;
 	class MenuMenuObserverImplBase
