@@ -130,10 +130,10 @@ namespace DuiLib
 	{
 		switch (param.wParam)
 		{
-		case 1:
+		case KILL_TARGET_WND_TYPE_SELF:
 			Close();
 			break;
-		case 2:
+		case KILL_TARGET_WND_TYPE_PARENT:
 			{
 				HWND hParent = GetParent(m_hWnd);
 				while (hParent != NULL)
@@ -465,7 +465,7 @@ namespace DuiLib
 			}
 
 			if( !bInMenuWindowList ) {
-				param.wParam = 1;
+				param.wParam = KILL_TARGET_WND_TYPE_SELF;
 				CMenuWnd::GetGlobalContextMenuObserver().RBroadcast(param);
 
 				return 0;
@@ -709,18 +709,21 @@ namespace DuiLib
 
 	void CMenuElementUI::DoEvent(TEventUI& event)
 	{
-		if( event.Type == UIEVENT_MOUSEENTER ){
+		if (event.Type == UIEVENT_MOUSEENTER){
+			if (IsEnabled() == false)
+				return;
 			CListContainerElementUI::DoEvent(event);
-			if( m_pWindow ) return;
-			bool hasSubMenu = false;
+			if (m_pWindow) return;
+			BOOL hasSubMenu = FALSE;
 			for( int i = 0; i < GetCount(); ++i )
 			{
-				if( GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT) != NULL )
+				CMenuElementUI* pMenuElement = static_cast<CMenuElementUI*>(GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT));
+				if (pMenuElement != NULL)
 				{
-					(static_cast<CMenuElementUI*>(GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT)))->SetVisible(true);
-					(static_cast<CMenuElementUI*>(GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT)))->SetInternVisible(true);
+					pMenuElement->SetVisible(true);
+					pMenuElement->SetInternVisible(true);
 
-					hasSubMenu = true;
+					hasSubMenu = TRUE;
 				}
 			}
 			if (hasSubMenu)
@@ -732,57 +735,65 @@ namespace DuiLib
 			{
 				ContextMenuParam param;
 				param.hWnd = m_pManager->GetPaintWindow();
-				param.wParam = 2;
+				param.wParam = KILL_TARGET_WND_TYPE_PARENT;
 				CMenuWnd::GetGlobalContextMenuObserver().RBroadcast(param);
-				//m_pOwner->SelectItem(GetIndex(), true);
+				//取消当前选中的Item
+				int nSel = m_pOwner->GetCurSel();
+				if (nSel != -1 && nSel != GetIndex())
+					m_pOwner->SelectItem(-1,false);
 			}
 			return;
 		}
 		else if( event.Type == UIEVENT_BUTTONUP ){
-			if( IsEnabled() ){
-				CListContainerElementUI::DoEvent(event);
+			if (IsEnabled() == false)
+				return;
+			CListContainerElementUI::DoEvent(event);
 
-				if( m_pWindow ) return;
+			if (m_pWindow) return;
 
-				bool hasSubMenu = false;
-				//PostMessage(GetDuiLibMgr().GetMainWndHandle(),WM_MENUCLICK,NULL,(LPARAM)this);
-				for( int i = 0; i < GetCount(); ++i ) {
-					if( GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT) != NULL ) {
-						(static_cast<CMenuElementUI*>(GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT)))->SetVisible(true);
-						(static_cast<CMenuElementUI*>(GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT)))->SetInternVisible(true);
+			BOOL hasSubMenu = FALSE;
+			//PostMessage(GetDuiLibMgr().GetMainWndHandle(),WM_MENUCLICK,NULL,(LPARAM)this);
+			for( int i = 0; i < GetCount(); ++i )
+			{
+				CMenuElementUI* pMenuElement = static_cast<CMenuElementUI*>(GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT));
+				if (pMenuElement != NULL) {
+					pMenuElement->SetVisible(true);
+					pMenuElement->SetInternVisible(true);
 
-						hasSubMenu = true;
-					}
-				}
-				if (hasSubMenu)
-				{
-					CreateMenuWnd();
-				}
-				else
-				{
-					SetChecked(!GetChecked());
-					ContextMenuParam param;
-					param.hWnd = m_pManager->GetPaintWindow();
-					param.wParam = 1;
-					MenuObserverImpl& MenuImpl = CMenuWnd::GetGlobalContextMenuObserver();
-					MenuImpl.RBroadcast(param);
-
-					if (MenuImpl.GetManager() != NULL)
-						PostMessage(MenuImpl.GetManager()->GetPaintWindow(), WM_MENUCLICK, NULL, (LPARAM)this);
+					hasSubMenu = TRUE;
 				}
 			}
+			if (hasSubMenu)
+			{
+				CreateMenuWnd();
+			}
+			else
+			{
+				SetChecked(!GetChecked());
+				ContextMenuParam param;
+				param.hWnd = m_pManager->GetPaintWindow();
+				param.wParam = KILL_TARGET_WND_TYPE_SELF;
+				MenuObserverImpl& MenuImpl = CMenuWnd::GetGlobalContextMenuObserver();
+				MenuImpl.RBroadcast(param);
+
+				if (MenuImpl.GetManager() != NULL)
+					PostMessage(MenuImpl.GetManager()->GetPaintWindow(), WM_MENUCLICK, NULL, (LPARAM)this);
+			}
    			return;
-		}else if (event.Type == UIEVENT_KEYDOWN && event.chKey == VK_RIGHT)	{
-			if( m_pWindow ) return ;
-			bool hasSubMenu = false;
+		}else if (event.Type == UIEVENT_KEYDOWN && event.chKey == VK_RIGHT){
+			if (IsEnabled() == false)
+				return;
+			if (m_pWindow) return ;
+			BOOL hasSubMenu = FALSE;
 			for (int i = 0; i < GetCount(); ++i)
 			{
-				if (GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT) != NULL)
+				CMenuElementUI* pMenuElement = static_cast<CMenuElementUI*>(GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT));
+				if (pMenuElement != NULL)
 				{
-					(static_cast<CMenuElementUI*>(GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT)))->SetVisible(true);
-					(static_cast<CMenuElementUI*>(GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT)))->SetInternVisible(true);
+					pMenuElement->SetVisible(true);
+					pMenuElement->SetInternVisible(true);
 
-					hasSubMenu = true;
+					hasSubMenu = TRUE;
 				}
 			}
 			if (hasSubMenu)
@@ -794,7 +805,7 @@ namespace DuiLib
 			{
 				ContextMenuParam param;
 				param.hWnd = m_pManager->GetPaintWindow();
-				param.wParam = 2;
+				param.wParam = KILL_TARGET_WND_TYPE_PARENT;
 				CMenuWnd::GetGlobalContextMenuObserver().RBroadcast(param);
 				//m_pOwner->SelectItem(GetIndex(), true);
 			}
@@ -818,7 +829,7 @@ namespace DuiLib
 
 		ContextMenuParam param;
 		param.hWnd = m_pManager->GetPaintWindow();
-		param.wParam = 2;
+		param.wParam = KILL_TARGET_WND_TYPE_PARENT;
 		CMenuWnd::GetGlobalContextMenuObserver().RBroadcast(param);
 
 		m_pWindow->Init(static_cast<CMenuElementUI*>(this), _T(""), CDuiPoint(), NULL);
