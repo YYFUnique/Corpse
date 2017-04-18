@@ -1,4 +1,3 @@
-
 #ifndef IEFFECT_H
 #define IEFFECT_H
 
@@ -10,22 +9,14 @@
 // 动画参数
 struct AnimationParam
 {
-	// 动画ID
-	WPARAM				effectKey;
-	// 动画图片资源
-	HBITMAP				hBitmap;
-	// 动画图片DC
-	HDC					hdc;
-	// 动画图片尺寸
-	SIZE				bmpSize;
-	// 动画图片内存地址
-	BYTE*				pBmpData;
-	// 动画种类
-	DWORD				animationEffect;
-	// 动画帧时间
-	DWORD				animationFrequency;
-	// 进入可视区域还是离开可视区域
-	BOOL				bShow;
+	WPARAM				effectKey;					// 动画ID
+	HBITMAP				hBitmap;						// 动画图片资源
+	HDC						hdc;								// 动画图片DC
+	SIZE						bmpSize;						// 动画图片尺寸
+	BYTE*					pBmpData;					// 动画图片内存地址
+	DWORD				animationEffect;			// 动画种类
+	DWORD				animationFrequency;	// 动画帧时间
+	BOOL					bShow;							// 进入可视区域还是离开可视区域
 };
 
 class _declspec(novtable) IUIEffectCallBack
@@ -39,19 +30,19 @@ public:
 	virtual void OnUiEffectDraw() = 0;
 };
 
-
 class _declspec(novtable) IUIEffect
 {
 public:
+	// 初始化动画引擎
+	virtual BOOL InitializeAnimation() = 0;
 	// 加入一个动画
-	virtual BOOL AppendAnimation(AnimationParam &aParam) = 0;
+	virtual BOOL AddAnimation(AnimationParam &aParam) = 0;
 	// 删除一个动画
-	virtual BOOL DependAnimation(WPARAM effectKey) = 0;
+	virtual BOOL DeleteAnimation(WPARAM effectKey) = 0;
 	// 删除所有动画
 	virtual BOOL ClearAllAnimation() = 0;
 	// 执行所有动画
-	virtual BOOL Animation(IUIEffectCallBack *iDrawEffect,DWORD frameSpin) = 0;
-
+	virtual BOOL StartAnimation(IUIEffectCallBack *pDrawEffect,DWORD dwFrameSpin) = 0;
 };
 
 // 导出函数

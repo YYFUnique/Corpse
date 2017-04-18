@@ -7,15 +7,15 @@
 IUIEffect* GetAnimation(void)
 {
 	// 创建对象实例
-	IUIEffect *pEffect =  dynamic_cast<IUIEffect*>(new CWndEffect());
+	IUIEffect *pEffect =  dynamic_cast<IUIEffect*>(new CTimedEffect());
 	return pEffect != NULL ? pEffect :NULL;
 }
 
 BOOL ReleaseAnimation(IUIEffect* &pUIEffect)
 {
 	// 释放，置空
-	CWndEffect* pWndEffect =  dynamic_cast<CWndEffect*>(pUIEffect);
-	delete pWndEffect;
+	//CTimedEffect* pWndEffect =  dynamic_cast<CTimedEffect*>(pUIEffect);
+	delete pUIEffect;
 	pUIEffect = NULL;
 
 	return TRUE;
@@ -23,7 +23,7 @@ BOOL ReleaseAnimation(IUIEffect* &pUIEffect)
 
 DWORD GetSurportAnimationType(const TCHAR *& strAnimationType)
 {
-	return CWndEffect::InitSurportAnimationType(strAnimationType);
+	return CTimedEffect::InitSurportAnimationType(strAnimationType);
 }
 
 IImageProcess* GetImageProcess(void)
@@ -56,48 +56,86 @@ void ClearContainerData(InternalAnimationParam &pElem)
 	pElem.pEffect = NULL;
 }
 
-CWndEffect::CWndEffect()
+CTimedEffect::CTimedEffect()
 {	
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	Gdiplus::GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, NULL);
+	InitializeCriticalSection(&m_CriticalSection);
 }
 
-CWndEffect::~CWndEffect()
+CTimedEffect::~CTimedEffect()
 {
 	// 清理资源
-	for_each(m_animationContainer.begin(),m_animationContainer.end(),ClearContainerData);
-	m_animationContainer.clear();
+	EnterCriticalSection(&m_CriticalSection);
+	for_each(m_animationContainer.begin(), m_animationContainer.end(), ClearContainerData);
+		m_animationContainer.clear();
 
-	if(m_gdiplusToken != 0)
+	//通知线程退出
+	m_bExitThread = TRUE;
+	if (m_hThreadEvent != NULL)
 	{
-		Gdiplus::GdiplusShutdown(m_gdiplusToken);
+		SetEvent(m_hThreadEvent);
+		CloseHandle(m_hThreadEvent);
 	}
+
+	if (m_hThread != NULL)
+	{
+		CloseHandle(m_hThread);
+		m_hThread = NULL;
+	}
+
+	LeaveCriticalSection(&m_CriticalSection);
+
+	if (m_gdiplusToken != 0)
+		Gdiplus::GdiplusShutdown(m_gdiplusToken);
+	
+	DeleteCriticalSection(&m_CriticalSection);
 }
 
-DWORD CWndEffect::InitSurportAnimationType(const TCHAR *& strAnimationType)
+BOOL CTimedEffect::InitializeAnimation()
+{
+	m_bExitThread = FALSE;
+
+	BOOL bSuccess = FALSE;
+
+	do 
+	{
+		m_hThreadEvent = CreateEvent(NULL,TRUE,FALSE,NULL);
+		if (m_hThreadEvent == NULL)
+			break;
+
+		m_hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)AnimateThread, this, 0, NULL);
+		if (m_hThread == NULL)
+			break;
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	return bSuccess;
+}
+
+DWORD CTimedEffect::InitSurportAnimationType(const TCHAR *& strAnimationType)
 {
 	strAnimationType = m_animation;
 	return ANIMATIONNUM;
 }
 
-BOOL CWndEffect::AppendAnimation(AnimationParam &aParam)
+BOOL CTimedEffect::AddAnimation(AnimationParam &aParam)
 {
-	if(aParam.animationEffect > ANIMATIONNUM+1 || aParam.animationEffect <= 1)
-	{
+	if (aParam.animationEffect > ANIMATIONNUM+1 || aParam.animationEffect <= 1)
 		return FALSE;
-	}
 
 	InternalAnimationParam internalParam;
 	memcpy(&internalParam.param,&aParam,sizeof(aParam));
-	DWORD dataSize = internalParam.param.bmpSize.cx*internalParam.param.bmpSize.cy*4;
-	internalParam.bmpDataCopy = new BYTE[dataSize];
 
-	if(internalParam.bmpDataCopy == NULL)
-	{
+	SIZE ImageSize = internalParam.param.bmpSize;
+	DWORD dwBMPSize = ImageSize.cx * ImageSize.cy * 4;
+	internalParam.bmpDataCopy = new BYTE[dwBMPSize];
+
+	if (internalParam.bmpDataCopy == NULL)
 		return FALSE;
-	}
 
-	memcpy(internalParam.bmpDataCopy,aParam.pBmpData,dataSize);
+	memcpy(internalParam.bmpDataCopy, aParam.pBmpData, dwBMPSize);
 	internalParam.frameNow = 0;
 	internalParam.bLastFrame = FALSE;
 
@@ -105,78 +143,97 @@ BOOL CWndEffect::AppendAnimation(AnimationParam &aParam)
 	internalParam.pEffect = pEffect;
 	pEffect->InitEffectParam(&internalParam);
 	
+	EnterCriticalSection(&m_CriticalSection);
 	m_animationContainer.push_back(internalParam);
+	LeaveCriticalSection(&m_CriticalSection);
 
 	return TRUE;
 }
 
-BOOL CWndEffect::DependAnimation(WPARAM effectKey)
+BOOL CTimedEffect::DeleteAnimation(WPARAM effectKey)
 {
 	BOOL bFind = FALSE;
-	for(m_itAnimation = m_animationContainer.begin();m_itAnimation != m_animationContainer.end(); m_itAnimation++)
+	EnterCriticalSection(&m_CriticalSection);
+	for (m_itAnimation = m_animationContainer.begin();m_itAnimation != m_animationContainer.end(); m_itAnimation++)
 	{
-		if(m_itAnimation->param.effectKey == effectKey)
+		if (m_itAnimation->param.effectKey == effectKey)
 		{
+			bFind = TRUE;
 			delete []m_itAnimation->bmpDataCopy;
 			CEffect *pEffect = dynamic_cast<CEffect*>(m_itAnimation->pEffect);
 			pEffect->ReleaseEffectParam();
 			delete pEffect;
 			m_animationContainer.erase(m_itAnimation);
 
-			bFind = TRUE;
+			break;
 		}
 	}
 
+	LeaveCriticalSection(&m_CriticalSection);
 	return  bFind;
 }
 
-BOOL CWndEffect::ClearAllAnimation()
+BOOL CTimedEffect::ClearAllAnimation()
 {
+	EnterCriticalSection(&m_CriticalSection);
 	for_each(m_animationContainer.begin(),m_animationContainer.end(),ClearContainerData);
-	m_animationContainer.clear();
+		m_animationContainer.clear();
+
+	LeaveCriticalSection(&m_CriticalSection);
 
 	return TRUE;
 }
 
-BOOL CWndEffect::Animation(IUIEffectCallBack *iDrawEffect,DWORD frameSpin)
-{
-	if (iDrawEffect == NULL)
-	{
+BOOL CTimedEffect::StartAnimation(IUIEffectCallBack *pDrawEffect,DWORD frameSpin)
+{	
+	if (pDrawEffect == NULL)
 		return FALSE;
-	}
 
-	m_pEffectCallback = iDrawEffect;
+	m_pEffectCallback = pDrawEffect;
 
-	CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)AnimateworkThread,this,0,NULL);
+	if (m_hThreadEvent != NULL)
+		SetEvent(m_hThreadEvent);
 
 	return TRUE;
 }
 
-UINT CWndEffect::AnimateworkThread(LPVOID lParam)
+UINT CTimedEffect::AnimateThread(LPVOID lParam)
 {
-	CWndEffect* pEffect = (CWndEffect*)lParam;
+	CTimedEffect* pEffect = (CTimedEffect*)lParam;
 
-	DWORD time_start = clock();
-	DWORD delta_time = 0;
+	DWORD dwStart = clock();
+	DWORD dwDelta = 0;
 
-	// 队列非空，执行动画
-	while (pEffect->m_animationContainer.size() != 0)
+	while(TRUE)
 	{
-		pEffect->ComputeAnimation(pEffect->m_pEffectCallback,delta_time);
+		if (pEffect->m_bExitThread)
+			break;
 
-		pEffect->m_pEffectCallback->OnUiEffectDraw();
+		WaitForSingleObject(pEffect->m_hThreadEvent, INFINITE);
 
-		pEffect->CleanFinishedAnimation(pEffect->m_pEffectCallback);
+		EnterCriticalSection(&pEffect->m_CriticalSection);
+		DWORD dwCount = pEffect->m_animationContainer.size();
+		LeaveCriticalSection(&pEffect->m_CriticalSection);
 
-		Sleep(10);
+		while (dwCount && pEffect->m_bExitThread == FALSE)
+		{
+			EnterCriticalSection(&pEffect->m_CriticalSection);
+			pEffect->ComputeAnimation(pEffect->m_pEffectCallback, dwDelta);
+			pEffect->m_pEffectCallback->OnUiEffectDraw();
+			pEffect->CleanFinishedAnimation(pEffect->m_pEffectCallback);
+			dwCount = pEffect->m_animationContainer.size();
+			LeaveCriticalSection(&pEffect->m_CriticalSection);
 
-		delta_time = clock() - time_start;
+			dwDelta = clock() - dwStart;
+
+			Sleep(10);
+		}	
 	}
 
 	return TRUE;
 }
 
-void CWndEffect::ComputeAnimation(IUIEffectCallBack *iDrawEffect,DWORD timeElapse)
+void CTimedEffect::ComputeAnimation(IUIEffectCallBack *iDrawEffect,DWORD timeElapse)
 {
 	// 此循环过程中不能插入
 	for(m_itAnimation = m_animationContainer.begin();m_itAnimation != m_animationContainer.end(); m_itAnimation++)
@@ -199,13 +256,13 @@ void CWndEffect::ComputeAnimation(IUIEffectCallBack *iDrawEffect,DWORD timeElaps
 	}
 }
 
-void CWndEffect::CleanFinishedAnimation(IUIEffectCallBack *iDrawEffect)
+void CTimedEffect::CleanFinishedAnimation(IUIEffectCallBack *iDrawEffect)
 {
 	// 绘制完成后删除完成的动画
 	int sizeVec = m_animationContainer.size();
-	for(int i = 0; i < sizeVec; i++)
+	for (int i = 0; i < sizeVec; i++)
 	{
-		if(m_animationContainer[i].bLastFrame)
+		if (m_animationContainer[i].bLastFrame)
 		{
 			iDrawEffect->OnUiEffectEnd(m_animationContainer[i].param.effectKey, m_animationContainer[i].param.animationEffect);
 			delete []m_animationContainer[i].bmpDataCopy;
@@ -215,7 +272,6 @@ void CWndEffect::CleanFinishedAnimation(IUIEffectCallBack *iDrawEffect)
 			m_animationContainer.erase(m_animationContainer.begin()+i);
 			sizeVec = m_animationContainer.size();
 		}
-
 	}
 }
 
@@ -224,182 +280,41 @@ void CWndEffect::CleanFinishedAnimation(IUIEffectCallBack *iDrawEffect)
 
 CAnimateMgr::CAnimateMgr()
 {	
-	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
-	Gdiplus::GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, NULL);
+
 }
 
 CAnimateMgr::~CAnimateMgr()
 {
-	// 清理资源
-	/*for_each(m_animationContainer.begin(),m_animationContainer.end(),ClearContainerData);
-	m_animationContainer.clear();
-
-	if(m_gdiplusToken != 0)
-	{
-		Gdiplus::GdiplusShutdown(m_gdiplusToken);
-	}*/
 }
 
-BOOL CAnimateMgr::AppendAnimation(AnimationParam &aParam)
+BOOL CAnimateMgr::AddAnimation(AnimationParam &aParam)
 {
-	if(aParam.animationEffect > ANIMATIONNUM+1 || aParam.animationEffect <= 1)
-	{
-		return FALSE;
-	}
-
-	InternalAnimationParam internalParam;
-	memcpy(&internalParam.param,&aParam,sizeof(aParam));
-	DWORD dataSize = internalParam.param.bmpSize.cx*internalParam.param.bmpSize.cy*4;
-	internalParam.bmpDataCopy = new BYTE[dataSize];
-
-	if(internalParam.bmpDataCopy == NULL)
-	{
-		return FALSE;
-	}
-
-	memcpy(internalParam.bmpDataCopy,aParam.pBmpData,dataSize);
-	internalParam.frameNow = 0;
-	internalParam.bLastFrame = FALSE;
-
-	IEffect *pEffect = CEffectFactory::CreateEffect(aParam.animationEffect);
-	internalParam.pEffect = pEffect;
-	pEffect->InitEffectParam(&internalParam);
-
-	m_animationContainer.AddTail(internalParam);
-
 	return TRUE;
 }
 
-BOOL CAnimateMgr::DependAnimation(WPARAM effectKey)
+BOOL CAnimateMgr::DeleteAnimation(WPARAM effectKey)
 {
 	BOOL bFind = FALSE;
-	/*for(m_itAnimation = m_animationContainer.begin();m_itAnimation != m_animationContainer.end(); m_itAnimation++)
-	{
-		if(m_itAnimation->param.effectKey == effectKey)
-		{
-			delete []m_itAnimation->bmpDataCopy;
-			CEffect *pEffect = dynamic_cast<CEffect*>(m_itAnimation->pEffect);
-			pEffect->ReleaseEffectParam();
-			delete pEffect;
-			m_animationContainer.erase(m_itAnimation);
-
-			bFind = TRUE;
-		}
-	}*/
 
 	return  bFind;
 }
 
 BOOL CAnimateMgr::ClearAllAnimation()
 {
-	/*for_each(m_animationContainer.begin(),m_animationContainer.end(),ClearContainerData);
-	m_animationContainer.clear();*/
-
 	return TRUE;
 }
 
-BOOL CAnimateMgr::Animation(IUIEffectCallBack *iDrawEffect,DWORD frameSpin)
+BOOL CAnimateMgr::RunAnimation(IUIEffectCallBack *iDrawEffect,DWORD frameSpin)
 {
-	if(iDrawEffect == NULL)
-	{
-		return FALSE;
-	}
-
-	DWORD time_start = clock();
-	DWORD delta_time = 0;
-
-	DWORD dwFrame = 0;
-
-	POSITION pos = m_animationContainer.GetHeadPosition();
-	// 队列非空，执行动画
-	while (pos)
-	{
-		//ComputeAnimation(iDrawEffect,delta_time);
-		InternalAnimationParam& AnimationParam = m_animationContainer.GetNext(pos);
-		if (dwFrame != 0)
-			AnimationParam.frameNow = dwFrame;
-		IEffect *pEffect = (IEffect *)AnimationParam.pEffect;
-		if((!AnimationParam.frameNow))
-		{
-			// 第一帧
-			AnimationParam.frameNow++;
-			pEffect->ComputeOneFrame(&AnimationParam);
-			// 通知绘制模块
-			iDrawEffect->OnUiEffectBegin(AnimationParam.param.effectKey, AnimationParam.param.animationEffect);
-		}
-		else if(delta_time / AnimationParam.param.animationFrequency >= AnimationParam.frameNow)
-		{
-			// 符合下一帧条件，重新计算
-			AnimationParam.frameNow++;
-			pEffect->ComputeOneFrame(&AnimationParam);
-		}
-
-		if (AnimationParam.frameNow/2== 12)
-			AnimationParam.bLastFrame = TRUE;
-
-		iDrawEffect->OnUiEffectDraw();
-
-		//CleanFinishedAnimation(iDrawEffect);
-		if (AnimationParam.bLastFrame)
-		{
-			iDrawEffect->OnUiEffectEnd(AnimationParam.param.effectKey, AnimationParam.param.animationEffect);
-			delete []AnimationParam.bmpDataCopy;
-			CEffect *pEffect = dynamic_cast<CEffect*>(AnimationParam.pEffect);
-			pEffect->ReleaseEffectParam();
-			delete pEffect;
-
-			m_animationContainer.RemoveHead();
-		}
-
-		Sleep(10);
-
-		delta_time = clock() - time_start;
-	}
-
 	return TRUE;
 }
 
-void CAnimateMgr::ComputeAnimation(IUIEffectCallBack *iDrawEffect,DWORD timeElapse)
-{
-	// 此循环过程中不能插入
-	//for(m_itAnimation = m_animationContainer.begin();m_itAnimation != m_animationContainer.end(); m_itAnimation++)
-	//{	
-	//	IEffect *pEffect = (IEffect *)m_itAnimation->pEffect;
-	//	if((!m_itAnimation->frameNow))
-	//	{
-	//		// 第一帧
-	//		m_itAnimation->frameNow++;
-	//		pEffect->ComputeOneFrame(&*m_itAnimation);
-	//		// 通知绘制模块
-	//		iDrawEffect->OnUiEffectBegin(m_itAnimation->param.effectKey, m_itAnimation->param.animationEffect);
-	//	}
-	//	else if(timeElapse / m_itAnimation->param.animationFrequency >= m_itAnimation->frameNow)
-	//	{
-	//		// 符合下一帧条件，重新计算
-	//		m_itAnimation->frameNow++;
-	//		pEffect->ComputeOneFrame(&*m_itAnimation);
-	//	}
+IUIEffect* CAnimateMgr::CreateAnimateEffect()
+{	
+	//switch ()
+	//{
 	//}
-}
-
-void CAnimateMgr::CleanFinishedAnimation(IUIEffectCallBack *iDrawEffect)
-{
-	// 绘制完成后删除完成的动画
-	/*int sizeVec = m_animationContainer.size();
-	for(int i = 0; i < sizeVec; i++)
-	{
-		if(m_animationContainer[i].bLastFrame)
-		{
-			iDrawEffect->OnUiEffectEnd(m_animationContainer[i].param.effectKey, m_animationContainer[i].param.animationEffect);
-			delete []m_animationContainer[i].bmpDataCopy;
-			CEffect *pEffect = dynamic_cast<CEffect*>(m_animationContainer[i].pEffect);
-			pEffect->ReleaseEffectParam();
-			delete pEffect;
-			m_animationContainer.erase(m_animationContainer.begin()+i);
-			sizeVec = m_animationContainer.size();
-		}
-
-	}*/
+	return m_pUIEffect;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
