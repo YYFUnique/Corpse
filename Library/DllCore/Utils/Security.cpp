@@ -60,7 +60,7 @@ BOOL InjectProcess(LPCTSTR lpszFilePath, DWORD dwRemoteProcessId, DWORD dwWaitTi
 			SetErrorInfo(SYSTEM_ERROR, 0, _T("打开进程[%d]失败"), dwRemoteProcessId);
 			break;
 		}
-		dwSize = (_tcslen(lpszFilePath)+1)*sizeof(TCHAR);
+		dwSize = (_tcslen(lpszFilePath)+1) * sizeof(TCHAR);
 		//使用VirtualAllocEx函数在远程进程的内存地址空间分配DLL文件名空间
 		pRemoteAddr = (char *) VirtualAllocEx( hRemoteProcess, NULL, dwSize, MEM_COMMIT, PAGE_READWRITE);
 		if (pRemoteAddr == NULL)

@@ -125,3 +125,5 @@
 #include "Control/UIDockPane.h"
 #include "Control/UIPage.h"
 #include "Control/UIRectTracker.h"
+
+#include "Control/UIFrameSeq.h"

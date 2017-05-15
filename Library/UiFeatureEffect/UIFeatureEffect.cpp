@@ -100,7 +100,7 @@ BOOL CTimedEffect::InitializeAnimation()
 
 	do 
 	{
-		m_hThreadEvent = CreateEvent(NULL,TRUE,FALSE,NULL);
+		m_hThreadEvent = CreateEvent(NULL,FALSE,FALSE,NULL);
 		if (m_hThreadEvent == NULL)
 			break;
 
@@ -233,19 +233,20 @@ UINT CTimedEffect::AnimateThread(LPVOID lParam)
 	return TRUE;
 }
 
-void CTimedEffect::ComputeAnimation(IUIEffectCallBack *iDrawEffect,DWORD timeElapse)
+void CTimedEffect::ComputeAnimation(IUIEffectCallBack *iDrawEffect, DWORD timeElapse)
 {
 	// 此循环过程中不能插入
-	for(m_itAnimation = m_animationContainer.begin();m_itAnimation != m_animationContainer.end(); m_itAnimation++)
+	for (m_itAnimation = m_animationContainer.begin();m_itAnimation != m_animationContainer.end(); m_itAnimation++)
 	{	
 		IEffect *pEffect = (IEffect *)m_itAnimation->pEffect;
 		if((!m_itAnimation->frameNow))
 		{
+			// 通知绘制模块
+			iDrawEffect->OnUiEffectBegin(m_itAnimation->param.effectKey, m_itAnimation->param.animationEffect);
+
 			// 第一帧
 			m_itAnimation->frameNow++;
 			pEffect->ComputeOneFrame(&*m_itAnimation);
-			// 通知绘制模块
-			iDrawEffect->OnUiEffectBegin(m_itAnimation->param.effectKey, m_itAnimation->param.animationEffect);
 		}
 		else if(timeElapse / m_itAnimation->param.animationFrequency >= m_itAnimation->frameNow)
 		{

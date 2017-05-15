@@ -254,6 +254,7 @@ protected:                                                                \
 #define  DUI_CTR_ROLLTEXT										(_T("RollText"))
 #define  DUI_CTR_DOCKPANE									(_T("DockPane"))
 #define  DUI_CTR_DOCKITEM									(_T("DockItem"))
+#define  DUI_CTR_FRAMESEQ									(_T("FrameSeq"))
 
 #define  DUI_CTR_CONTAINER									(_T("Container"))
 #define  DUI_CTR_TABLAYOUT									(_T("TabLayout"))
@@ -299,6 +300,6 @@ protected:                                                                \
 //自定义定时器ID
 
 #define	 IME_RICHEDIT_BLINK_TIMER_ID		0x1000		//Richedit定时器ID
-
+#define	 FRAME_ANIMATE_TIME_ID				0x1001		//帧动画定时器ID
 }// namespace DuiLib
 

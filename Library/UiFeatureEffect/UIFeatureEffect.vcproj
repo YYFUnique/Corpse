@@ -197,10 +197,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LsList.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -240,10 +236,6 @@
 			</File>
 			<File
 				RelativePath=".\IEffect.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LsList.h"
 				>
 			</File>
 			<File

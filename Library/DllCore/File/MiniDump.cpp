@@ -71,7 +71,7 @@ LONG CMiniDump::TopLevelExceptionFilter(EXCEPTION_POINTERS* pExceptionInfo)
 		PathRemoveFileSpec(szDumpFileDirPath);
 
 		//É¾³ý¶àÓàÎÄ¼þ
-		//DeleteFileByExtension(szDumpFileDirPath,GetLogModuleFileName(),_T(".dmp"),3);
+		//DeleteFileByTime(szDumpFileDirPath,GetLogModuleFileName(),_T(".dmp"),3);
 
 	} while (FALSE);
 
