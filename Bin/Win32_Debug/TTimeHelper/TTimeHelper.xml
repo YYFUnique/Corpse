@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="190,160" sizebox="4,4,6,6" caption="0,0,0,-1" roundcorner="5,5" maxbox="false" layered="true" >
+    <Font name="微软雅黑" size="13" bold="false" italic="false" />
+	<Font name="微软雅黑" size="12" bold="false" italic="false" />
+    <!--<HorizontalLayout name="VLayoutTotal" bkimage="file=&apos;main.png&apos;">-->
+	<HorizontalLayout name="VLayoutTotal" bkcolor="#01000000">
+		<VerticalLayout name="VLayoutMain" >
+			<HorizontalLayout name="HLayoutHead" pos="0,0,0,20">
+				<HorizontalLayout name="HLayoutTitle" pos="0,0,0,20">
+					<Label name="title" text="电脑管家时间助手" textpadding="10,0,0,0" textcolor="#FFDAE9F7" font="1"/>
+				</HorizontalLayout>
+				<HorizontalLayout name="HLayoutSys" pos="0,0,70,20">
+					<Button name="BtnClose" tooltip="关闭" float="true" pos="56,3,65,12" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,7,7&apos; dest=&apos;2,2,9,9&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;0,7,7,14&apos; dest=&apos;2,2,9,9&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;0,14,7,21&apos; dest=&apos;2,2,9,9&apos;" />
+				</HorizontalLayout>
+			</HorizontalLayout>
+			<Control height="5"/>
+			<HorizontalLayout height="66">
+				<HorizontalLayout name="HLayoutLeft"/>
+				<HorizontalLayout name="HLayoutMain" pos="0,0,204,66" height="66">
+					<FrameSeq name="Frame4" time="200" frame="30" width="42" height="66"/>
+					<FrameSeq name="Frame3" time="200" frame="30" width="42" height="66"/>
+					<Label bkimage="file=&apos;Separtor.png&apos;" width="18" height="66" />
+					<FrameSeq name="Frame2" time="200" frame="30" width="42" height="66"/>
+					<FrameSeq name="Frame1" time="200" frame="30" width="42" height="66"/>
+				</HorizontalLayout>
+				<HorizontalLayout name="HLayoutRight"/>
+			</HorizontalLayout>
+			<Control height="4"/>
+			<HorizontalLayout height="20">
+				<Control width="16"/>
+				<HorizontalLayout name="VLayoutTime" width="176">					
+					<Label name="Date" width="50" align="center" textcolor="#FFDAE9F7" font="1"/>
+					<Label name="DayOfWeek" width="50" align="center" textcolor="#FFDAE9F7" font="1"/>
+					<Label name="LunarDay" width="56" align="center" textcolor="#FFDAE9F7" font="1"/>
+				</HorizontalLayout>
+			</HorizontalLayout>
+			<Control height="4"/>
+			<HorizontalLayout bkimage="file=&apos;Localtion.png&apos;" padding="7,0,0,0" width="176" height="30">
+				<Button name="Weather" text="未知" float="true" pos="15,5,70,25" textcolor="#FFDAE9F7" font="1" textpadding="30,0,0,0" normalimage="file=&apos;sunnynormal.png&apos; dest=&apos;0,0,20,20&apos;" hotimage="file=&apos;sunnyhot.png&apos; dest=&apos;0,0,20,20&apos;" />
+				<Button name="News" text="腾讯新闻" float="true" pos="85,5,160,25" textcolor="#FFDAE9F7" font="1" textpadding="25,0,0,0" bkimage="file=&apos;newsnormal.png&apos; dest=&apos;0,0,20,20&apos;" hotimage="file=&apos;newshot.png&apos; dest=&apos;0,0,20,20&apos;"/>
+			</HorizontalLayout>
+		</VerticalLayout>
+    </HorizontalLayout>
+</Window>

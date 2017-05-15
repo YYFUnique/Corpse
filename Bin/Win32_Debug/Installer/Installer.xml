@@ -24,7 +24,9 @@
                                 <Label name="WizardText" text="欢迎 > 选项 > 安装 > 完成" float="true" pos="31,39,196,69" textpadding="2,0,2,0" textcolor="#000B6C9E" disabledtextcolor="#FFA7A6AA" align="center" />
                             </HorizontalLayout>
                         </HorizontalLayout>
-                        <HorizontalLayout name="HLayoutLicence" />
+                        <HorizontalLayout name="HLayoutLicence" >
+							<Frame name="frame" width="42" height="66" time="100" frame="30"/>
+						</HorizontalLayout>
                         <HorizontalLayout name="HLayoutFunc" pos="0,0,0,50" height="50">
                             <HorizontalLayout name="HLayouInfo" pos="0,0,0,50" height="50">
                                 <Label name="TextTip" text="请您仔细阅读安装协议，继续安装即代表您接受协议内容。" float="true" pos="10,10,321,40" textpadding="2,0,2,0" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
