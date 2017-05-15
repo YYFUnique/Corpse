@@ -16,12 +16,19 @@ CIPTools::~CIPTools()
 
 void CIPTools::OnFinalMessage(HWND hWnd)
 {
+	WSACleanup();
+
 	__super::OnFinalMessage(hWnd);
 	delete this;
 }
 
 void CIPTools::InitWindow()
 {
+	WORD wVer = MAKEWORD(2,2);
+	WSADATA WSAData;
+	if (WSAStartup(wVer,&WSAData) != 0 )
+		return;
+
 	CenterWindow();
 }
 
