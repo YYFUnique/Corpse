@@ -25,4 +25,8 @@
 //					ATL_BASE64_FLAG_NOCRLF 加密数据以空格分割 
 //返 回 值: 函数调用成功返回TRUE,否则返回FALSE
 //==================================================================
-DLL_API BOOL Base64Encode(const BYTE *pbSrcData,int nSrcLen,LPSTR szDest,int *pnDestLen,DWORD dwFlags=ATL_BASE64_FLAG_NONE);
+DLL_API BOOL Base64Encode(LPCTSTR lpszSrcData,int nSrcLen,LPTSTR szDest,int *pnDestLen,DWORD dwFlags=ATL_BASE64_FLAG_NONE);
+
+//DLL_API BOOL URLEncode(LPCWSTR lpwURL, CString& strCryptURL);
+
+//DLL_API BOOL URLDecode(LPCTSTR lpszURL, LPTSTR lpszCrypt, DWORD& dwSize);

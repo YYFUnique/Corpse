@@ -5,8 +5,15 @@
 #define ASSERT(expr)  _ASSERTE(expr)
 #endif
 
+typedef struct LPARAMINFO
+{
+	CLibcurl*  pLibcurl;
+	DWORD	 dwEvent;
+}LPARAMINFO,*PLPARAMINFO;
+
 CLibcurl::CLibcurl() 
 	:m_pCurl(NULL)
+	,m_pCallback(NULL)
 {
 	Init();
 }
@@ -36,9 +43,6 @@ BOOL CLibcurl::Init()
 
 BOOL CLibcurl::SetCallback(ILibcurlCallback* pCallback)
 {
-	if (pCallback == NULL)
-		return FALSE;
-
 	m_pCallback = pCallback;
 	return TRUE;
 }
@@ -57,7 +61,7 @@ BOOL CLibcurl::SetUserAgent(LPCTSTR lpszAgent)
 	return CURLE_OK == m_curlCode; 
 }
 
-BOOL CLibcurl::doHttpPost(LPCTSTR lpszURL, LPCTSTR lpszData, DWORD dwTimeout /*=10*/, DWORD dwHeader /*=0*/)
+BOOL CLibcurl::doHttpPost(DWORD dwEvent, LPCTSTR lpszURL, LPCTSTR lpszData, DWORD dwTimeout /*=10*/, DWORD dwHeader /*=0*/)
 {
     ResetOpt();
     ::curl_easy_setopt(m_pCurl, CURLOPT_HEADER, dwHeader);
@@ -66,28 +70,32 @@ BOOL CLibcurl::doHttpPost(LPCTSTR lpszURL, LPCTSTR lpszData, DWORD dwTimeout /*=
     ::curl_easy_setopt(m_pCurl, CURLOPT_POSTFIELDS, CStringA(lpszData));
     ::curl_easy_setopt(m_pCurl, CURLOPT_TIMEOUT, dwTimeout);
     ::curl_easy_setopt(m_pCurl, CURLOPT_WRITEFUNCTION, CLibcurl::ProcessFunc); 
-    ::curl_easy_setopt(m_pCurl, CURLOPT_WRITEDATA, this);
+
+	//在http请求返回时释放内存
+	LPARAMINFO* plParamInfo = new LPARAMINFO;
+	plParamInfo->pLibcurl = this;
+	plParamInfo->dwEvent = dwEvent;
+
+    ::curl_easy_setopt(m_pCurl, CURLOPT_WRITEDATA, plParamInfo);
     m_curlCode = ::curl_easy_perform(m_pCurl);
 
 	return CURLE_OK == m_curlCode; 
 }
 
-BOOL CLibcurl::doHttpGet(LPCTSTR lpszURL, LPCTSTR lpszData /*=NULL*/, DWORD dwTimeout /*=10*/, DWORD dwHeader /*= 0*/)
+BOOL CLibcurl::doHttpGet(DWORD dwEvent, LPCTSTR lpszURL, LPCTSTR lpszData /*=NULL*/, DWORD dwTimeout /*=10*/, DWORD dwHeader /*= 0*/)
 {
     ResetOpt();
-    size_t URLLen = _tcslen(lpszURL);
     
 	//由于在HTTP中使用GET方式获取网页，对地址长度有限制，故这里直接使用栈内存
-	TCHAR szURL[2048];
-	_tcscpy(szURL, lpszURL);
+	CString strHttpUrl(lpszURL);
+
 	if (lpszData != NULL)
 	{
-		size_t DataLen = _tcslen(lpszData);
-		szURL[URLLen] = _T('?');
-		_tcscpy(szURL + URLLen + 1, lpszData);
+		strHttpUrl.TrimRight(_T("?"));
+		strHttpUrl.AppendFormat(_T("?%s"), lpszData);
 	}
 
-    ::curl_easy_setopt(m_pCurl, CURLOPT_URL, CStringA(szURL));
+    ::curl_easy_setopt(m_pCurl, CURLOPT_URL, CStringA(strHttpUrl));
     ::curl_easy_setopt(m_pCurl, CURLOPT_HTTPGET, 1 );
     ::curl_easy_setopt(m_pCurl, CURLOPT_HEADER, dwHeader);
     ::curl_easy_setopt(m_pCurl, CURLOPT_TIMEOUT, dwTimeout);
@@ -107,11 +115,20 @@ void CLibcurl::ResetOpt()
 
 size_t CLibcurl::ProcessFunc(LPVOID lpData, size_t size, size_t nmemb, LPVOID lParam)
 {
-    CLibcurl* pLibcurl =(CLibcurl*)lParam;
-	if (pLibcurl->m_pCallback != NULL)
-		return pLibcurl->m_pCallback->Progress(lpData, size, nmemb);
+	size_t nSizeRet = 0;
+    LPARAMINFO* plParamInfo =(LPARAMINFO*)lParam;
+	if (plParamInfo == NULL)
+		return nmemb * size;
+
+	if (plParamInfo->pLibcurl->m_pCallback != NULL)
+		nSizeRet = plParamInfo->pLibcurl->m_pCallback->Progress(plParamInfo->dwEvent, lpData, size, nmemb);
 	else
-		return pLibcurl->process(lpData, size, nmemb);
+		nSizeRet = plParamInfo->pLibcurl->process(lpData, size, nmemb);
+
+	delete plParamInfo;
+	plParamInfo = NULL;
+
+	return nSizeRet;
 }
 
 BOOL CLibcurl::GetErrorInfo(CString& strErrorInfo) const

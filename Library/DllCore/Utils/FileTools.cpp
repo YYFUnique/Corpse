@@ -324,3 +324,65 @@ BOOL CreateShortcurLnkFile(LPCTSTR lpszTargetFile, LPCTSTR lpszLnkFile)
 
 	return bSuccess;
 }
+
+BOOL DeleteFileByTime(LPCTSTR lpszFolderPath, LPCTSTR lpszFileFilter ,DWORD dwKeepDays)
+{
+	union FILETIMEINFO
+	{
+		FILETIME					FileTime;
+		ULARGE_INTEGER   uLargeInt;
+	};	// Seems simplest way to do the Win32 time manipulation.
+	WIN32_FIND_DATA FindFileData;
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+
+	BOOL bSuccess = FALSE;
+
+	TCHAR szModulePath[MAX_PATH];
+	GetCurrentDirectory(_countof(szModulePath), szModulePath);	// Ignoring failure!
+	SetCurrentDirectory(lpszFolderPath);
+
+	do 
+	{
+		//如果未指定文件过滤，那么需要使用默认通配符
+		if (lpszFileFilter == NULL)
+			lpszFileFilter = _T("*.*");
+		hFind = FindFirstFile(lpszFileFilter, &FindFileData);
+		if (hFind == INVALID_HANDLE_VALUE)
+			break;
+
+		SYSTEMTIME SysTime;
+		FILETIMEINFO LocalTime;
+
+		GetSystemTime(&SysTime);
+		SystemTimeToFileTime(&SysTime, &LocalTime.FileTime);
+
+		do 
+		{
+			if (FindFileData.dwFileAttributes != FILE_ATTRIBUTE_DIRECTORY)
+			{
+				FILETIMEINFO FileCreateTime;
+				FileCreateTime.FileTime = FindFileData.ftCreationTime;
+
+				//文件创建时间和当前时间相差秒数
+				INT64 dwDeltaDays = (LocalTime.uLargeInt.QuadPart)/10000000 - (FileCreateTime.uLargeInt.QuadPart) / 10000000;	// Seconds.
+				dwDeltaDays /= 24 * 3600;
+
+				//创建时间大于指定时间
+				if (dwDeltaDays >= dwKeepDays)
+					DeleteFile(FindFileData.cFileName);
+			}
+		} while (FindNextFile(hFind, &FindFileData));
+
+		bSuccess = TRUE;
+	} while (FALSE);
+	
+	if (hFind != INVALID_HANDLE_VALUE)
+	{
+		FindClose(hFind);
+		hFind = INVALID_HANDLE_VALUE;
+	}
+	
+	SetCurrentDirectory(szModulePath);
+
+	return bSuccess;
+}

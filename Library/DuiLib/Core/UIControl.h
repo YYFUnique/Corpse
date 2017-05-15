@@ -167,7 +167,6 @@ public:
     CControlUI* ApplyAttributeList(LPCTSTR pstrList);
 
     virtual SIZE EstimateSize(SIZE szAvailable);
-
     virtual void DoPaint(HDC hDC, const RECT& rcPaint);
     virtual void PaintBkColor(HDC hDC);
     virtual void PaintBkImage(HDC hDC);

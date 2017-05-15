@@ -499,6 +499,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Control\UIFrameSeq.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Control\UIIPAddress.cpp"
 					>
 				</File>
@@ -773,6 +777,10 @@
 				</File>
 				<File
 					RelativePath=".\Control\UIFlash.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Control\UIFrameSeq.h"
 					>
 				</File>
 				<File

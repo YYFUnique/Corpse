@@ -1,5 +1,7 @@
 #pragma once
 
+#include <atlstr.h>
+
 #ifdef LS_STATIC_LIB_CALL
 #define DLL_API 
 #elif defined  DLL_EXPORTS
@@ -86,3 +88,13 @@ DLL_API BOOL GetFilePathByLink(LPCTSTR lpszLinkName, CString& strFilePath);
 /* 返  回 值：如果获取成功返回TRUE，否则返回FALSE								   */
 /************************************************************************/
 DLL_API BOOL CreateShortcurLnkFile(LPCTSTR lpszTargetFile, LPCTSTR lpszLnkFile);
+
+/************************************************************************/
+/* 函  数  名：DeleteFileByTime			     				                                   */
+/* 函数功能：在指定目录下搜索文件，并且删除超期时间的文件					   */
+/* 输入参数：lpszFolderPath 需要探索的文件路径									   */
+/*					 lpszFileFilter  需要指定过滤的通配符									   */
+/*					 dwKeepDays 需要保留文件的时间，比如3天							*/
+/* 返  回 值：执行成功返回TRUE，否则返回FALSE									   */
+/************************************************************************/
+DLL_API BOOL DeleteFileByTime(LPCTSTR lpszFolderPath, LPCTSTR lpszFileFilter /*= NULL*/,DWORD dwKeepDays /*= 3*/);

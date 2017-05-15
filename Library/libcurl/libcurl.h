@@ -23,7 +23,7 @@
 class ILibcurlCallback
 {
 public:
-	virtual int Progress(LPVOID lpData, size_t size, size_t nmemb) = 0;
+	virtual int Progress(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb) = 0;
 };
 
 class LIB_CURL_API CLibcurl
@@ -35,20 +35,20 @@ public:
     BOOL Init();
 
 protected:
-    virtual int process( void* data, size_t size, size_t nmemb );
+    virtual int process(void* data, size_t size, size_t nmemb);
 
 public:
 	BOOL SetCallback(ILibcurlCallback* pCallback);
 	BOOL SetUserAgent(LPCTSTR lpAgent);
-    BOOL doHttpPost(LPCTSTR lpszUrl, LPCTSTR lpszData, DWORD dwTimeout = 10 , DWORD dwHeader = 0);
-    BOOL doHttpGet(LPCTSTR lpszUrl, LPCTSTR lpszData = NULL, DWORD dwTimeout = 10 , DWORD dwHeader = 0);
+    BOOL doHttpPost(DWORD dwEvent, LPCTSTR lpszUrl, LPCTSTR lpszData, DWORD dwTimeout = 10 , DWORD dwHeader = 0);
+    BOOL doHttpGet(DWORD dwEvent, LPCTSTR lpszUrl, LPCTSTR lpszData = NULL, DWORD dwTimeout = 10 , DWORD dwHeader = 0);
 	BOOL GetErrorInfo(CString& strErrorInfo) const;
 public:
     //CURLcode setOpt( CURLoption option ); 
     void ResetOpt(); 
     
 private:
-    static size_t ProcessFunc( void* ptr, size_t size, size_t nmemb, void *usrptr );
+    static size_t ProcessFunc(void* ptr, size_t size, size_t nmemb, void *usrptr);
 
 private:
     CURL*					m_pCurl;				//libcurl÷∏’Î

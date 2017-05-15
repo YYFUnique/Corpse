@@ -406,6 +406,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				else if( _tcscmp(pstrClass, DUI_CTR_ROLLTEXT) == 0 )				pControl = new CRollTextUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_DOCKPANE) == 0)			pControl = new CDockPaneUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_DOCKITEM) == 0)			pControl = new CDockItemUI;
+				else if( _tcscmp(pstrClass, DUI_CTR_FRAMESEQ) == 0 )			pControl = new CFrameSeqUI;
                 break;
             case 9:
                 if( _tcscmp(pstrClass, DUI_CTR_CONTAINER) == 0 )					pControl = new CContainerUI;
