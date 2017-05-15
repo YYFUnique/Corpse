@@ -1,29 +1,24 @@
 #include "stdafx.h"
-#include "PCHunter.h"
-
-#include "DllCore/File/MiniDump.h"
+#include "Postman.h"
 
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
-{	 
-	CMiniDump::InitDumpDebugInfo();
-
+{
 	CPaintManagerUI::SetInstance(hInstance);
 	BOOL bSuccess = FALSE;
 	HRESULT hRet = S_FALSE;
-
 	do 
 	{
-		hRet = ::OleInitialize(NULL);
+		hRet = ::CoInitialize(NULL);
 		if (FAILED(hRet)) 
 			break;
 
-		CPCHunter* pPCHunter = new CPCHunter();
-		if (pPCHunter == NULL) 
+		CPostman* pPostman = new CPostman();
+		if (pPostman == NULL) 
 			break;
 
-		pPCHunter->Create(NULL, _T("电脑管家"), UI_WNDSTYLE_FRAME, 0, 0, 0, CW_USEDEFAULT, CW_USEDEFAULT);
-		pPCHunter->CenterWindow();
-		pPCHunter->ShowWindow(true);
+		pPostman->Create(NULL, _T("接口测试工具"), UI_WNDSTYLE_FRAME, 0, 0, 0, 800, 600);
+		pPostman->CenterWindow();
+		pPostman->ShowWindow(true);
 
 		CPaintManagerUI::MessageLoop();
 
@@ -33,7 +28,7 @@ BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSh
 	} while (FALSE);
 
 	if (SUCCEEDED(hRet))
-		::OleUninitialize();
+		::CoUninitialize();
 
 	return bSuccess;
 }

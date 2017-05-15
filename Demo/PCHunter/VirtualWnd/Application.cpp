@@ -181,12 +181,13 @@ void CApplication::OnAppMenu(CControlUI* pControl)
 
 	if (strItemName == _T("Switch"))
 	{
-		//隐藏任务管理器
-		ShowWindow(m_pPaintManager->GetPaintWindow(), SW_SHOWMINNOACTIVE);
+		/*//隐藏任务管理器
+		//ShowWindow(m_pPaintManager->GetPaintWindow(), SW_SHOWMINNOACTIVE);
 		//前置目标任务
 		if (IsIconic(hWnd))
 			ShowWindow(hWnd, SW_RESTORE);
-		SetForegroundWindow(hWnd);
+		SetForegroundWindow(hWnd);*/
+		SwitchToThisWindow(hWnd,TRUE);
 	}
 	else if (strItemName == _T("Advanced"))
 	{

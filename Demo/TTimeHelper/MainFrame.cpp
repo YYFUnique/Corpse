@@ -1,39 +1,37 @@
 #include "stdafx.h"
-#include "PCHunter.h"
-
-#include "DllCore/File/MiniDump.h"
+#include "resource.h"
+#include "TTimeHelper.h"
+#include "MemLeakDetect.h"
 
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
-{	 
-	CMiniDump::InitDumpDebugInfo();
+{
+	CMemLeakDetect MemDetect;
 
 	CPaintManagerUI::SetInstance(hInstance);
 	BOOL bSuccess = FALSE;
 	HRESULT hRet = S_FALSE;
-
 	do 
 	{
-		hRet = ::OleInitialize(NULL);
+		hRet = ::CoInitialize(NULL);
 		if (FAILED(hRet)) 
 			break;
 
-		CPCHunter* pPCHunter = new CPCHunter();
-		if (pPCHunter == NULL) 
+		CTTimeHelper* pTxMiniSkin = new CTTimeHelper();
+		if (pTxMiniSkin == NULL) 
 			break;
 
-		pPCHunter->Create(NULL, _T("电脑管家"), UI_WNDSTYLE_FRAME, 0, 0, 0, CW_USEDEFAULT, CW_USEDEFAULT);
-		pPCHunter->CenterWindow();
-		pPCHunter->ShowWindow(true);
-
+		pTxMiniSkin->Create(NULL, _T("电脑管家时间助手"), UI_WNDSTYLE_DIALOG, WS_EX_TOOLWINDOW, 800, 600);
+		pTxMiniSkin->ShowWindow(true);
 		CPaintManagerUI::MessageLoop();
 
+		//释放打开的压缩包句柄
 		CPaintManagerUI::Term();
 
 		bSuccess = TRUE;
 	} while (FALSE);
 
 	if (SUCCEEDED(hRet))
-		::OleUninitialize();
+		::CoUninitialize();
 
 	return bSuccess;
 }

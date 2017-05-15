@@ -69,6 +69,12 @@ LRESULT CPCHunter::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 	return WindowImplBase::HandleCustomMessage(uMsg,wParam,lParam,bHandled);
 }
 
+void CPCHunter::OnFinalMessage( HWND hWnd )
+{
+	WindowImplBase::OnFinalMessage(hWnd);
+	//delete this;
+}
+
 LPCTSTR CPCHunter::GetWindowClassName() const
 {
 	return _T("PCHunter");
@@ -241,6 +247,7 @@ void CPCHunter::SetBkImage(LPCTSTR lpszBkImage)
 void CPCHunter::OnClick(TNotifyUI& msg)
 {
 	if (msg.pSender == (CButtonUI*)m_PaintManager.FindControl(_T("BtnClose"))){
+		Close(IDOK);
 		PostQuitMessage(0);
 	}	
 	else if (msg.pSender == (CButtonUI*)m_PaintManager.FindControl(_T("BtnMin")))

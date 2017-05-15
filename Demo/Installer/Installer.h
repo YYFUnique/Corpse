@@ -33,4 +33,6 @@ private:
 	int m_nFrameIndex;
 	HBITMAP m_hBitmapBefore;
 	HBITMAP m_hBitmapAfter;
+
+	DWORD m_dwTime;
 };

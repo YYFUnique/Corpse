@@ -270,6 +270,11 @@ void CHostScan::StartScan()
 		m_pThreadTaskMgr->RunThread();
 	}
 
+	WORD wVer = MAKEWORD(2,2);
+	WSADATA WSAData;
+	if (WSAStartup(wVer,&WSAData) != 0 )
+		return;
+
 	CDuiString strTipInfo;
 	do 
 	{
@@ -336,6 +341,8 @@ void CHostScan::StartScan()
 		SwitchScanInfo(false);
 
 	} while (FALSE);	
+
+	WSACleanup();
 
 	if (strTipInfo.IsEmpty() == FALSE)
 		MessageBox(m_pPaintManager->GetPaintWindow(),strTipInfo,_T("ÌבÊ¾"),MB_OK);

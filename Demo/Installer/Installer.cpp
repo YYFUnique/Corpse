@@ -7,10 +7,13 @@
 #pragma comment(lib,"shlwapi.lib")
 #pragma comment(lib,"Msimg32.lib")
 
+#define FRAME_TIMED_ID	0x1004
+
 CInstaller::CInstaller()
 :m_nZStep(40)
 ,m_nYStep(10)
 ,m_nFrameIndex(0)
+,m_dwTime(0)
 {
 	m_hBitmapBefore = NULL;
 	m_hBitmapAfter = NULL;
@@ -85,7 +88,14 @@ void CInstaller::Notify(TNotifyUI& msg)
 		{
 			CTabLayoutUI* pWizardTab = (CTabLayoutUI*)m_PaintManager.FindControl(_T("WizardTab"));
 			if (strCtlName == _T("BtnAccept") || strCtlName == _T("BtnNext"))
-				pWizardTab->SelectItem(pWizardTab->GetCurSel()+1);
+				//pWizardTab->SelectItem(pWizardTab->GetCurSel()+1);
+			{
+				/*CFrameUI* pFrame = (CFrameUI*)m_PaintManager.FindControl(_T("frame"));
+				pFrame->SetFrameImage(_T("C:\\Users\\Unique\\Desktop\\TTimeHelper\\dynamic\\6-18\\1_2.png"));
+				pFrame->Run();*/
+				CFrameUI* pFrame = (CFrameUI*)m_PaintManager.FindControl(_T("frame"));
+				m_PaintManager.SetTimer(pFrame, FRAME_TIMED_ID, 1000);
+			}
 			else if (strCtlName == _T("BtnBack"))
 				pWizardTab->SelectItem(pWizardTab->GetCurSel()-1);
 			else if (strCtlName == _T("BtnCancel"))
@@ -104,8 +114,14 @@ void CInstaller::Notify(TNotifyUI& msg)
 
 void CInstaller::OnInitDialog(TNotifyUI& msg)
 {
-	CAnimLayoutUI* pAniLayout = (CAnimLayoutUI*)msg.pSender->GetInterface(_T("AnimLayout"));
+	CControlUI* pControl = m_PaintManager.FindControl(_T("VLayoutBody"));
+	CAnimLayoutUI* pAniLayout = (CAnimLayoutUI*)pControl->GetInterface(_T("AnimLayout"));
 	pAniLayout->StartEffect();
+
+// 	CControlUI* pControl = m_PaintManager.FindControl(_T("VLayoutTotal"));
+// 	CAnimLayoutUI* pAniLayout = (CAnimLayoutUI*)pControl->GetInterface(_T("AnimLayout"));
+// 	pAniLayout->StartEffect();
+
 	//ShowWindow(true);
 	//CControlUI* pControl = m_PaintManager.FindControl(_T("VLayoutTotal"));
 	//CAnimLayoutUI* pAniLayout = (CAnimLayoutUI*)pControl->GetInterface(_T("AnimLayout"));
@@ -164,6 +180,26 @@ void CInstaller::OnTimer(TNotifyUI& msg)
 			}
 		}
 		++m_nFrameIndex;
+	}
+	else if (msg.pSender == m_PaintManager.FindControl(_T("VLayoutTotal")))
+	{
+		CAnimLayoutUI* pAniLayout = (CAnimLayoutUI*)msg.pSender->GetInterface(_T("AnimLayout"));
+		pAniLayout->StartEffect();
+	}
+	else if (msg.pSender == m_PaintManager.FindControl(_T("frame")))
+	{
+		if (msg.wParam == FRAME_TIMED_ID)
+		{
+			CFrameUI* pFrame = (CFrameUI*)msg.pSender->GetInterface(DUI_CTR_FRAME);
+			CDuiString strTipInfo;
+
+			DWORD dwTime = m_dwTime++%10;
+			DWORD dwNext	 = m_dwTime%10;
+			strTipInfo.Format(_T("C:\\Users\\Unique\\Desktop\\skin\\black\\%d_%d.png"),dwTime,dwNext);
+
+			pFrame->SetFrameImage(strTipInfo);
+			pFrame->Run();
+		}
 	}
 }
 
@@ -233,10 +269,12 @@ void CInstaller::OnClick(DuiLib::TNotifyUI &msg)
 {
 	if (msg.pSender == m_PaintManager.FindControl(_T("BtnMin")))
 	{
-		CControlUI* pControl = m_PaintManager.FindControl(_T("VLayoutBody"));
-		//CAnimLayoutUI* pAniLayout = (CAnimLayoutUI*)pControl->GetInterface(_T("AnimLayout"));
-		//pAniLayout->StartEffect();
-		m_PaintManager.SetTimer(pControl,1001,100);
+		CControlUI* pControl = m_PaintManager.FindControl(_T("VLayoutTotal"));
+		CAnimLayoutUI* pAniLayout = (CAnimLayoutUI*)pControl->GetInterface(_T("AnimLayout"));
+		pAniLayout->StartEffect();
+		
+		/*pControl->DoPaint = pAniLayout->DoPaint;*/
+		m_PaintManager.SetTimer(pControl,1001,50);
 	}
 }
 
