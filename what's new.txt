@@ -1,3 +1,5 @@
+================http://code.taobao.org/svn/Corpses===================
+
 2016-03-09 星期三
 1、完善PCHunter主机扫描功能，获取主机IP
 2、使用SSE4指令集获取二进制中1的个数，_mm_popcnt_u32(MSDN封装)
