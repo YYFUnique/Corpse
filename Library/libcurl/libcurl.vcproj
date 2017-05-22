@@ -176,19 +176,122 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="Static_Release|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="2"
+			InheritedPropertySheets="..\DllProperty.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="NDEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\Release/libcurl.tlb"
+				HeaderFileName=""
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="1"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories=".,..\include,curl"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;CURL_EXPORTS;"
+				StringPooling="true"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				BrowseInformation="0"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="Ws2_32.lib Wldap32.lib"
+				LinkIncremental="1"
+				GenerateDebugInformation="false"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+				SuppressStartupBanner="true"
+				OutputFile=".\Release/libcurl.bsc"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
 	<Files>
 		<Filter
-			Name="Source Files"
+			Name="&#28304;&#25991;&#20214;"
 			>
 			<File
 				RelativePath=".\dllmain.cpp"
 				>
 			</File>
 			<File
+				RelativePath=".\HttpManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HTTPRequest.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpThread.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpThreadPool.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\libcurl.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\stdafx.cpp"
 				>
 			</File>
 			<Filter
@@ -557,10 +660,30 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Header Files"
+			Name="&#22836;&#25991;&#20214;"
 			>
 			<File
+				RelativePath=".\HttpManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HTTPRequest.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpThread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HttpThreadPool.h"
+				>
+			</File>
+			<File
 				RelativePath=".\libcurl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\stdafx.h"
 				>
 			</File>
 			<Filter
@@ -905,7 +1028,7 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="Resource Files"
+			Name="&#36164;&#28304;&#25991;&#20214;"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
 			<File
