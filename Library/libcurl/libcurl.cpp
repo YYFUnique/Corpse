@@ -71,12 +71,11 @@ BOOL CLibcurl::doHttpPost(DWORD dwEvent, LPCTSTR lpszURL, LPCTSTR lpszData, DWOR
     ::curl_easy_setopt(m_pCurl, CURLOPT_TIMEOUT, dwTimeout);
     ::curl_easy_setopt(m_pCurl, CURLOPT_WRITEFUNCTION, CLibcurl::ProcessFunc); 
 
-	//在http请求返回时释放内存
-	LPARAMINFO* plParamInfo = new LPARAMINFO;
-	plParamInfo->pLibcurl = this;
-	plParamInfo->dwEvent = dwEvent;
+	LPARAMINFO lParamInfo;
+	lParamInfo.pLibcurl = this;
+	lParamInfo.dwEvent = dwEvent;
 
-    ::curl_easy_setopt(m_pCurl, CURLOPT_WRITEDATA, plParamInfo);
+	::curl_easy_setopt(m_pCurl, CURLOPT_WRITEDATA, &lParamInfo); 
     m_curlCode = ::curl_easy_perform(m_pCurl);
 
 	return CURLE_OK == m_curlCode; 
@@ -100,10 +99,15 @@ BOOL CLibcurl::doHttpGet(DWORD dwEvent, LPCTSTR lpszURL, LPCTSTR lpszData /*=NUL
     ::curl_easy_setopt(m_pCurl, CURLOPT_HEADER, dwHeader);
     ::curl_easy_setopt(m_pCurl, CURLOPT_TIMEOUT, dwTimeout);
     ::curl_easy_setopt(m_pCurl, CURLOPT_WRITEFUNCTION, CLibcurl::ProcessFunc); 
-    ::curl_easy_setopt(m_pCurl, CURLOPT_WRITEDATA, this); 
+
+	LPARAMINFO lParamInfo;
+	lParamInfo.pLibcurl = this;
+	lParamInfo.dwEvent = dwEvent;
+
+    ::curl_easy_setopt(m_pCurl, CURLOPT_WRITEDATA, &lParamInfo); 
 
     m_curlCode = ::curl_easy_perform(m_pCurl);
-	
+
 	return CURLE_OK == m_curlCode;
 }
 
@@ -124,9 +128,6 @@ size_t CLibcurl::ProcessFunc(LPVOID lpData, size_t size, size_t nmemb, LPVOID lP
 		nSizeRet = plParamInfo->pLibcurl->m_pCallback->Progress(plParamInfo->dwEvent, lpData, size, nmemb);
 	else
 		nSizeRet = plParamInfo->pLibcurl->process(lpData, size, nmemb);
-
-	delete plParamInfo;
-	plParamInfo = NULL;
 
 	return nSizeRet;
 }
