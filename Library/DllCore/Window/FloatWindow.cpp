@@ -13,7 +13,7 @@ CFloatWindow::~CFloatWindow()
 	ReleaseHookWinEvent();
 }
 
-BOOL CFloatWindow::SetWndStickToDesktop(HWND hMainWnd)
+BOOL CFloatWindow::StickWndToDesktop(HWND hMainWnd)
 {	
 	if (m_hEventHook != NULL)
 		return FALSE;
@@ -68,16 +68,16 @@ void CFloatWindow::WinEventHookProc(HWINEVENTHOOK hEventHook, DWORD dwEvent, HWN
 		GetClassName(hWnd, szClassName, _countof(szClassName));
 
 		POSITION pos = m_sHookMainWnd.GetHeadPosition();
-		HWND hWnd = NULL;
+		HWND hFloatWnd = NULL;
 		while(pos)
 		{
 			const EventHookWnd& HookWnd = m_sHookMainWnd.GetNext(pos);
 			if (HookWnd.hEventHook == hEventHook)
-				hWnd = HookWnd.hMainWnd;
+				hFloatWnd = HookWnd.hMainWnd;
 		}
 
 		//如果窗口无效，返回
-		if (hWnd == NULL || IsWindow(hWnd) == FALSE)
+		if (hFloatWnd == NULL || IsWindow(hFloatWnd) == FALSE)
 			return;
 
 		if (dwEvent == EVENT_OBJECT_HIDE)
@@ -86,9 +86,9 @@ void CFloatWindow::WinEventHookProc(HWINEVENTHOOK hEventHook, DWORD dwEvent, HWN
 			if (_tcsicmp(szClassName, _T("WorkerW")) == 0)
 			{
 				//取消窗口置顶属性
-				SetWindowPos(hWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
+				SetWindowPos(hFloatWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
 				//取消窗口前置属性，将窗口放置于所有窗口下面，桌面之上
-				SetWindowPos(hWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
+				SetWindowPos(hFloatWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
 			}
 		}
 		else if (dwEvent == EVENT_OBJECT_SHOW)
@@ -96,7 +96,7 @@ void CFloatWindow::WinEventHookProc(HWINEVENTHOOK hEventHook, DWORD dwEvent, HWN
 			//显示桌面窗口，比如按下显示桌面/Win+D
 			if (_tcsicmp(szClassName, _T("WorkerW")) == 0)
 			{
-				SetWindowPos(hWnd, HWND_TOPMOST,0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
+				SetWindowPos(hFloatWnd, HWND_TOPMOST,0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
 			}
 		}
 	}

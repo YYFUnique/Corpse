@@ -25,7 +25,7 @@ public:
 
 public:
 	void ReleaseHookWinEvent();
-	BOOL SetWndStickToDesktop(HWND hMainWnd);
+	BOOL StickWndToDesktop(HWND hMainWnd);
 	void    CannelWndSticked(HWND hMainWnd);
 protected:
 	static void CALLBACK WinEventHookProc(HWINEVENTHOOK hEventHook, DWORD dwEvent, HWND hWnd, LONG idObject, LONG idChild, DWORD dwEventThread, DWORD dwmsEventTime);
