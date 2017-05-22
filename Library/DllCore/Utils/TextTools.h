@@ -9,6 +9,7 @@
 #endif
 
 #include "StdPtr.h"
+#include <atlstr.h>
 
 /************************************************************************/
 /* 函  数  名：Gb32ToUtf8			                                                               */
@@ -47,3 +48,7 @@ DLL_API BOOL QXUtf8ToUnicode(LPCSTR lpszUTF8, LPWSTR lpwText, DWORD& dwSize);
 /* 返  回 值：转换成功返回TRUE，转换失败返回FALSE	    						   */
 /************************************************************************/
 DLL_API BOOL QXUnicodeToUtf8(LPCWSTR lpwText, LPSTR lpUTF8, DWORD& dwSize);
+
+DLL_API BOOL URLEncode(LPCTSTR lpszSrcURL, CString& strEncodeURL);
+
+DLL_API BOOL URLDecode(LPCSTR lpszEncodeURL, CString& strDecodeURL);

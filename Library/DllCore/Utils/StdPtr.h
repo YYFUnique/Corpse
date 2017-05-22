@@ -8,6 +8,8 @@
 #define DLL_API __declspec(dllimport)
 #endif
 
+#include <atlstr.h>
+
 class DLL_API CStdArray
 {
 public:

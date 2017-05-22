@@ -85,38 +85,3 @@ BOOL Base64Encode(LPCTSTR lpszSrcData,int nSrcLen,LPTSTR szDest,int *pnDestLen,D
 
 	return TRUE;
 }
-
-BOOL URLEncode(LPCWSTR lpwURL, CString& strCryptURL)
-{
-	CHAR szCryptURL[4*1024];
-	CHAR szUTF8Code[4*1024 ];
-	DWORD dwSize = _countof(szUTF8Code);
-	QXUnicodeToUtf8(lpwURL, szUTF8Code, dwSize);
-
-	int n=0;
-	DWORD dwLen = 0;
-	while(szUTF8Code[n] != NULL)
-	{
-		TCHAR szEncode[4];
-		ZeroMemory(szEncode, _countof(szEncode));
-		CHAR szCode = szUTF8Code[n];
-		if (isalpha(szCode) || isdigit(szCode) || szCode == ':' || szCode == '&' || szCode == '=' || szCode == '-' || szCode == '.' || szCode == '~' || szCode == '/' || szCode == '?')
-			szCryptURL[dwLen++] = szUTF8Code[n];
-		else if (szCode == ' ')
-		{
-			szCryptURL[dwLen++] = '+';
-		}
-		else
-		{
-			szCryptURL[dwLen++] = '%';
-			szCryptURL[dwLen++] = (szCode >= 0xA0) ? ((szCode >> 4) - 10 + 'a') : ((szCode >> 4) + '0');
-			szCryptURL[dwLen++] = ((szCode & 0xF) >= 0xA)? ((szCode & 0xF) - 10 + 'a') : ((szCode & 0xF) + '0');
-		}
-		++n;
-	}
-
-	szCryptURL[n] = '\0';
-	strCryptURL = szCryptURL;
-
-	return TRUE;
-}
