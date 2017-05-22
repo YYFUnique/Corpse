@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CityHelper.h"
 #include "libcurl/libcurl.h"
 
 #define HTTP_GET_CITY_LOCATION		0x1000		//通过百度API获取城市名
@@ -12,7 +13,9 @@ public:
 	~CWeatherHelper();
 
 public:
-	//BOOL GetCityLocation();
+	void Init(CCityHelper* pCityHelper);
+	BOOL GetCityLocation();
+	BOOL GetCityWeather(LPCTSTR lpszCityInfo);
 protected:
 	//获取城市名
 	void OnGetCityLocation(LPVOID lpData);
@@ -23,4 +26,5 @@ protected:
 
 private:
 	CLibcurl*				m_pLibcurl;
+	CCityHelper*		m_pCityHelper;
 };

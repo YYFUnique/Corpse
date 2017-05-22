@@ -2,9 +2,10 @@
 
 #include "TxMiniSkin.h"
 #include "WeatherHelper.h"
+#include "CityHelper.h"
 #include "DllCore/Window/FloatWindow.h"
 
-class CTTimeHelper : public WindowImplBase, public ILibcurlCallback
+class CTTimeHelper : public WindowImplBase, public CityInfoReceiver
 {
 	public:
 		CTTimeHelper();
@@ -18,8 +19,12 @@ class CTTimeHelper : public WindowImplBase, public ILibcurlCallback
 		virtual CDuiString GetSkinFolder();
 		UILIB_RESOURCETYPE GetResourceType() const;
 		virtual void Notify(TNotifyUI& msg);
+		virtual BOOL Receive(CityInfoChangedParam CityInfoParam);
 
 		HRESULT HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	public:
+		void SetCityLocation(LPCTSTR lpszCityLocation);
+
 	protected:
 		BOOL PtInRect();
 		void InitWindow();
@@ -43,5 +48,7 @@ class CTTimeHelper : public WindowImplBase, public ILibcurlCallback
 		WORD					m_wDayOfWeek;
 		CFloatWindow*	m_pFloatWindow;
 		CTxMiniSkin*		m_pTxMiniSkin;
+		CCityHelper*		m_pCityInfo;
 		CWeatherHelper* m_pWeatherInfo;
+		CString					m_strCityLocation;
 };

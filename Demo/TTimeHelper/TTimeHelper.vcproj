@@ -161,6 +161,80 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="Static_Release|Win32"
+			ConfigurationType="1"
+			InheritedPropertySheets="..\ExeProperty.vsprops"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LS_STATIC_LIB_CALL"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -170,6 +244,14 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\CityHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Lunar.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\MainFrame.cpp"
 				>
@@ -194,16 +276,24 @@
 				RelativePath=".\WeatherHelper.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\xDate.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\ChangeNotify.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CityHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Lunar.h"
+				>
+			</File>
 			<File
 				RelativePath=".\MemLeakDetect.h"
 				>
@@ -226,10 +316,6 @@
 			</File>
 			<File
 				RelativePath=".\WeatherHelper.h"
-				>
-			</File>
-			<File
-				RelativePath=".\xDate.h"
 				>
 			</File>
 		</Filter>

@@ -180,4 +180,9 @@ class CMemLeakDetect
 		IMAGEHLP_SYMBOL*	m_pSymbol;
 		CaptureStackBackTraceType m_func;
 };
+#else
+class CMemLeakDetect
+{
+
+};
 #endif _DEBUG
