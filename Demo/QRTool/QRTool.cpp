@@ -4,7 +4,6 @@
 #include "QRDlg.h"
 #include "QRCode/qr.h"
 #include "DllCore/Utils/TextTools.h"
-#include <atlstr.h>
 #include <CommDlg.h>
 
 CQRTool::CQRTool()
