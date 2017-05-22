@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "Resource.h"
-#include "xDate.h"
 #include "TTimeHelper.h"
+#include "Lunar.h"
 
 #include "DllCore/Utils/Security.h"
 #include "DllCore/Utils/ErrorInfo.h"
@@ -12,11 +12,32 @@
 #include <dwmapi.h>
 #pragma comment(lib, "shlwapi.lib")
 
-#define FRAME_TIMERD_ID				0x1002
-#define LAYOUT_HEAD_TIMED_ID		0x1003
+#define FRAME_TIMERD_ID						0x1002		//刷新时间的定时器ID
+#define LAYOUT_HEAD_TIMED_ID				0x1003		//检测是否显示标题的定时器ID
+#define WEATHER_SHOW_TIMERD_ID		0x1004		//程序启动后，获取天气信息ID
+#define WEATHER_UPDATE_TIMERD_ID	0x1005		//定时更新天气ID
+
 //#define WM_QUIT_MSG_LOOP			WM_USER+10   //退出消息循环
 const LPCTSTR DayOfWeek[] = {_T("星期天"),_T("星期一"),_T("星期二"),_T("星期三"),_T("星期四"),_T("星期五"),_T("星期六")};
 //#define WM_DWMSENDICONICLIVEPREVIEWBITMAP   0x0326
+
+void FormatLunarDay(DWORD wDay, LPTSTR pLunarDay)
+{   
+	TCHAR szFirst[] = _T("初十廿三");
+	TCHAR szSecond[] = _T("一二三四五六七八九十");
+
+	int n=0;
+	//计算十位标识
+	if (wDay != 20 && wDay !=30)
+		pLunarDay[n++] = szFirst[(wDay-1)/10];
+	else
+		pLunarDay[n++] = szFirst[wDay/10];
+
+	//计算各位标识
+	pLunarDay[n++] = szSecond[(wDay-1)%10];
+	//结束符
+	pLunarDay[n] = _T('\0');
+}
 
 CTTimeHelper::CTTimeHelper()
 {
@@ -33,8 +54,8 @@ CTTimeHelper::CTTimeHelper()
 
 	m_pFloatWindow = NULL;
 	m_pTxMiniSkin = NULL;
-	m_pLibcurl = NULL;
 	m_pWeatherInfo = NULL;
+	m_pCityInfo = NULL;
 }
 
 CTTimeHelper::~CTTimeHelper()
@@ -46,10 +67,10 @@ CTTimeHelper::~CTTimeHelper()
 		m_pFloatWindow = NULL;
 	}
 
-	if (m_pLibcurl != NULL)
+	if (m_pCityInfo != NULL)
 	{
-		delete m_pLibcurl;
-		m_pLibcurl = NULL;
+		delete m_pCityInfo;
+		m_pCityInfo = NULL;
 	}
 
 	if (m_pWeatherInfo != NULL)
@@ -93,15 +114,14 @@ UILIB_RESOURCETYPE CTTimeHelper::GetResourceType() const
 void CTTimeHelper::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
-
-	TCHAR szModuleFile[MAX_PATH];
-	GetModuleFileName(NULL,szModuleFile,_countof(szModuleFile));
-	PathRemoveFileSpec(szModuleFile);
-	PathAppend(szModuleFile,_T("HookWindows.dll"));
 	
 	m_pFloatWindow = new CFloatWindow;
-	m_pFloatWindow->SetWndStickToDesktop(m_hWnd);
+	m_pFloatWindow->StickWndToDesktop(m_hWnd);
 	
+	DWORD dwStyle = GetWindowLongPtr(m_hWnd, GWL_EXSTYLE);
+	dwStyle &= ~WS_EX_TOPMOST;
+	SetWindowLongPtr(m_hWnd, GWL_EXSTYLE, dwStyle);
+
 	HMODULE hModule = LoadLibrary(_T("dwmapi.dll"));
 	if (hModule != NULL)
 	{
@@ -172,81 +192,113 @@ void CTTimeHelper::Notify(TNotifyUI& msg)
 		OnInitDialog();
 }
 
+BOOL CTTimeHelper::Receive(CityInfoChangedParam CityInfoParam)
+{
+	if (CityInfoParam.CityInfoChanged == CITYINFO_CHANGED_LOAD_SUCCESS)
+	{
+		if (m_pWeatherInfo)
+			m_pWeatherInfo->GetCityLocation();
+	}
+	else if (CityInfoParam.CityInfoChanged == CITYINFO_CHANGED_LOCATION)
+	{
+		//保存城市位置信息
+		m_strCityLocation = CityInfoParam.strJsonString;
+		//如果位置信息发生变更，则重新获取天气
+		if (m_pWeatherInfo)
+			m_pWeatherInfo->GetCityWeather(CityInfoParam.strJsonString);
+	}
+	else if (CityInfoParam.CityInfoChanged == CITYINFO_CHANGED_WEATHER)
+	{
+		//城市天气信息获取成功
+		CButtonUI* pWeather = (CButtonUI*)m_PaintManager.FindControl(_T("Weather"));
+		if (pWeather)
+			pWeather->SetText(CityInfoParam.strJsonString);
+	}
+
+	return TRUE;
+}
+
 void CTTimeHelper::OnClick(TNotifyUI& msg)
 {
 	if (msg.pSender == m_PaintManager.FindControl(_T("BtnClose")))
 	{
 		//由于Duilib窗口类，在窗口关闭时，会自动调用OnFinalMessage()，此时将自动delete对象
 		//必须调用关闭窗口才会触发，如果直接PostQuitMessage则不会触发
-		if (m_pTxMiniSkin == NULL)
+		m_pTxMiniSkin = new CTxMiniSkin(m_hWnd);
+
+		UINT nRet = m_pTxMiniSkin->ShowModal();
+
+		if (nRet == IDOK)
 		{
-			m_pTxMiniSkin = new CTxMiniSkin(m_hWnd);
-
-			UINT nRet = m_pTxMiniSkin->ShowModal();
-
-			if (nRet == IDOK)
-			{
-				Close(IDOK);
-				PostQuitMessage(0);
-			}
+			Close(IDOK);
+			PostQuitMessage(0);
 		}
 	}
 	else if (msg.pSender == m_PaintManager.FindControl(_T("News")))
 	{
 		ShellExecute(m_hWnd, _T("open"), _T("http://www.qq.com/"), NULL, NULL, SW_SHOW);
 	}
+	else if (msg.pSender == m_PaintManager.FindControl(_T("Weather")))
+	{
+		if (m_pWeatherInfo != NULL)
+		{
+			if (m_strCityLocation.IsEmpty() != FALSE)
+				m_pWeatherInfo->GetCityLocation();
+			else
+				m_pWeatherInfo->GetCityWeather(m_strCityLocation);
+		}
+	}
 }
 
 void CTTimeHelper::OnTimer(TNotifyUI& msg)
 {
-	if (msg.pSender == m_PaintManager.FindControl(_T("HLayoutMain")))
+	if (msg.wParam == FRAME_TIMERD_ID)
+		SetShowTimer();
+	else	if (msg.wParam == LAYOUT_HEAD_TIMED_ID)
 	{
-		if (msg.wParam == FRAME_TIMERD_ID)
-			SetShowTimer();
-	}
-	else if (msg.pSender == m_PaintManager.FindControl(_T("HLayoutHead")))
-	{
-		if (msg.wParam == LAYOUT_HEAD_TIMED_ID)
+		if (PtInRect() == FALSE && m_bShowChild == TRUE && m_pHLayoutHead)
 		{
-			if (PtInRect() == FALSE && m_bShowChild == TRUE && m_pHLayoutHead)
-			{
-				SetChildVisible(m_pHLayoutHead, FALSE);
-				m_PaintManager.KillTimer(m_pHLayoutHead);
-			}
+			SetChildVisible(m_pHLayoutHead, FALSE);
+			m_PaintManager.KillTimer(m_pHLayoutHead);
 		}
+	}
+	else if (msg.wParam == WEATHER_SHOW_TIMERD_ID)
+	{
+		if (m_pWeatherInfo == NULL)
+		{
+			m_pWeatherInfo = new CWeatherHelper;
+			m_pWeatherInfo->Init(m_pCityInfo);
+		}
+		m_pCityInfo->LoadData();
+
+		CControlUI* pWeatherInfo = m_PaintManager.FindControl(_T("Weather"));
+		m_PaintManager.KillTimer(pWeatherInfo);
+
+		//以后每10分钟刷新一次
+		m_PaintManager.SetTimer(pWeatherInfo, WEATHER_UPDATE_TIMERD_ID, 10*60*1000);
+	}
+	else if (msg.wParam == WEATHER_UPDATE_TIMERD_ID)
+	{
+		if (m_pWeatherInfo)
+			m_pWeatherInfo->GetCityWeather(m_strCityLocation);
 	}
 }
 
 void CTTimeHelper::OnInitDialog()
 {
-	//SetForegroundWindow(m_hWnd);
 	SetShowTimer();
 
 	CControlUI* pControl = m_PaintManager.FindControl(_T("HLayoutMain"));
 	m_PaintManager.SetTimer(pControl, FRAME_TIMERD_ID, 1000);
 
-	LPCTSTR lpszAk = _T("tx0s5wZjHvEunl28nOu1a2s4HbRfZvy6");
-	LPCTSTR lpszBaiDuAPI = _T("http://api.map.baidu.com/location/ip?ak=%s");
-	CDuiString strWeatherInfo;
-	strWeatherInfo.Format(lpszBaiDuAPI, lpszAk);
-	//strWeatherInfo.Format(lpszBaiDuAPI, _T("成都"), lpszAk);
-
-	//CString strCryptURL;
-	//URLEncode(strWeatherInfo, strCryptURL);
-
-	/*TCHAR szBase64Code[1024*2];
-	int nSize = _countof(szBase64Code);
-	Base64Encode((LPCTSTR)strWeatherInfo, strWeatherInfo.GetLength(), szBase64Code, &nSize, ATL_BASE64_FLAG_NOCRLF);
-	*/
-	if (m_pWeatherInfo == NULL)
+	if (m_pCityInfo == NULL)
 	{
-		m_pWeatherInfo = new CWeatherHelper;
-
+		m_pCityInfo = new CCityHelper;
+		m_pCityInfo->Init(this);
 	}
-	/*if (m_pLibcurl == NULL)
-	{
-		
-	}*/
+
+	CControlUI* pWeatherInfo = m_PaintManager.FindControl(_T("Weather"));
+	m_PaintManager.SetTimer(pWeatherInfo, WEATHER_SHOW_TIMERD_ID, 1000);	
 }
 
 void CTTimeHelper::SetShowTimer()
@@ -372,15 +424,17 @@ void CTTimeHelper::SetShowTimer()
 		if (pLunarDay)
 		{
 			WORD wYear,wMonth,wDay;
-			GetLunarDate(SysTime.wYear, SysTime.wMonth, SysTime.wDay, wYear, wMonth, wDay);
+			BOOL bLeapMonth = 0;
+			CLunar Lunar;
+			Lunar.GetLunarDayInfo(SysTime.wYear, SysTime.wMonth, SysTime.wDay, wYear, wMonth, wDay, bLeapMonth);
 
-			TCHAR szLunarMonth[10] = {0};
-			FormatMonth(wMonth, szLunarMonth, TRUE);
+			TCHAR szMonth[] = _T("正二三四五六七八九十冬腊");
+
 			TCHAR szLunarDay[10] = {0};
 			FormatLunarDay(wDay, szLunarDay);
 
 			CDuiString strLunarTime;
-			strLunarTime.Format(_T("%s%s"), szLunarMonth, szLunarDay);
+			strLunarTime.Format(_T("%c月%s"), szMonth[wMonth-1], szLunarDay);
 
 			pLunarDay->SetText(strLunarTime);
 		}
@@ -494,5 +548,3 @@ HRESULT CTTimeHelper::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lPara
 
 	return FALSE;
 }
-
-

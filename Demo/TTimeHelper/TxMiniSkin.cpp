@@ -61,7 +61,7 @@ void CTxMiniSkin::OnClick(TNotifyUI& msg)
 {
 	CDuiString strSendName = msg.pSender->GetName();
 	if (strSendName == _T("BtnClose"))
-		Close(IDOK);
+		Close(IDCANCEL);
 	else if (strSendName == _T("BtnSure"))
 	{
 		COptionUI* pAutoStart = (COptionUI*)m_PaintManager.FindControl(_T("BtnAutoStart"));
