@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="libcurl"
 	ProjectGUID="{87EE9DA4-DE1E-4448-8324-183C98DCA588}"
+	RootNamespace="libcurl"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -47,7 +48,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories=".,..\include,curl"
+				AdditionalIncludeDirectories=".,..\include,curl;&quot;$(SolutionDir)Library&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;CURL_EXPORTS;"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -67,7 +68,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib Wldap32.lib"
+				AdditionalDependencies="Wldap32.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
 			/>
@@ -127,7 +128,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".,..\include,curl"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;CURL_EXPORTS;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -150,7 +151,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib Wldap32.lib"
+				AdditionalDependencies="Wldap32.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -231,7 +232,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Ws2_32.lib Wldap32.lib"
+				AdditionalDependencies="Wldap32.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="false"
 			/>
@@ -271,27 +272,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\HttpManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HTTPRequest.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpThread.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpThreadPool.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\libcurl.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.cpp"
+				RelativePath=".\MultiRequest.cpp"
 				>
 			</File>
 			<Filter
@@ -663,27 +648,11 @@
 			Name="&#22836;&#25991;&#20214;"
 			>
 			<File
-				RelativePath=".\HttpManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HTTPRequest.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpThread.h"
-				>
-			</File>
-			<File
-				RelativePath=".\HttpThreadPool.h"
-				>
-			</File>
-			<File
 				RelativePath=".\libcurl.h"
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.h"
+				RelativePath=".\MultiRequest.h"
 				>
 			</File>
 			<Filter
@@ -1025,6 +994,38 @@
 					RelativePath=".\libcurl\wildcard.h"
 					>
 				</File>
+				<Filter
+					Name="curl"
+					>
+					<File
+						RelativePath=".\libcurl\curl\curl.h"
+						>
+					</File>
+					<File
+						RelativePath=".\libcurl\curl\curlbuild.h"
+						>
+					</File>
+					<File
+						RelativePath=".\libcurl\curl\curlrules.h"
+						>
+					</File>
+					<File
+						RelativePath=".\libcurl\curl\curlver.h"
+						>
+					</File>
+					<File
+						RelativePath=".\libcurl\curl\easy.h"
+						>
+					</File>
+					<File
+						RelativePath=".\libcurl\curl\mprintf.h"
+						>
+					</File>
+					<File
+						RelativePath=".\libcurl\curl\multi.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
