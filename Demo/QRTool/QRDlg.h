@@ -17,6 +17,7 @@ public:
 
 protected:
 	void OnClick(TNotifyUI& msg);
+	void OnLookupFile(TNotifyUI& msg);
 	void OnUpdateQRCode(TNotifyUI& msg);
 private:
 	HWND m_hParent;

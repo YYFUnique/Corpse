@@ -146,6 +146,10 @@ void CQRTool::OnClick(TNotifyUI& msg)
 
 void CQRTool::OnCreate(TNotifyUI& msg)
 {
+	HWND hQRWnd = FindWindow(_T("CQRDlg"), NULL);
+	if (hQRWnd != NULL)
+		return;
+
 	CQRDlg* pQRDlg = new CQRDlg(m_hWnd);
 	
 	pQRDlg->ShowWindow();
@@ -185,7 +189,7 @@ LRESULT CQRTool::OnQRCodeItemInfo(WPARAM wParam, LPARAM lParam)
 
 	LRESULT lRet = FALSE;
 
-	CLabelUI* pLabel = (CButtonUI*)m_PaintManager.FindControl(_T("pic"));
+	CButtonUI* pQRPic = (CButtonUI*)m_PaintManager.FindControl(_T("BtnPic"));
 
 	do 
 	{
@@ -218,11 +222,19 @@ LRESULT CQRTool::OnQRCodeItemInfo(WPARAM wParam, LPARAM lParam)
 
 		qrFreeBMP(lpData);
 
-		if (pLabel)
+		if (pQRPic)
 		{
-			pLabel->SetBkImage(_T("BtnFace.bmp"));
+			pQRPic->SetBkImage(_T("BtnFace.bmp"));
+
+			if (pQRCodeInfo->strLogoFile.IsEmpty() == FALSE)
+			{
+				CDuiString strLogoFile;
+				strLogoFile.Format(_T("file='%s' dest='120,120,180,180'"),pQRCodeInfo->strLogoFile);
+				pQRPic->SetForeImage(strLogoFile);
+			}
+
 			//由于二维码图片名称未发生改变，需要强制刷新
-			pLabel->Invalidate();
+			pQRPic->Invalidate();
 		}
 
 		lRet = TRUE;
@@ -230,8 +242,8 @@ LRESULT CQRTool::OnQRCodeItemInfo(WPARAM wParam, LPARAM lParam)
 
 	if (lRet == FALSE)
 	{
-		pLabel->SetBkImage(_T("error.png"));
-		pLabel->Invalidate();
+		pQRPic->SetBkImage(_T("error.png"));
+		pQRPic->Invalidate();
 	}
 
 	return lRet;
