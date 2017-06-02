@@ -18,7 +18,8 @@
 				</HorizontalLayout>
 			</HorizontalLayout>
 			<VerticalLayout padding="1,1,1,1">
-				<Label name="pic" width="300" height="300" bkimage="error.png" floatalign="center,vcenter"/>
+				<Button enabled="false" name="BtnPic" width="300" height="300" bkimage="error.png" floatalign="center,vcenter"/>
+				<Button enabled="false" name="Pic" width="100" height="100" normalimage="picture_.png" bkimage="user.png" floatalign="center,vcenter"/>
 			</VerticalLayout>
 			<HorizontalLayout height="40">
 				<Button name="BtnCreate" text="制作二维码" float="true" pos="70,5,170,35" textcolor="#FF000000" normalimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,164,38&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" foreimage="file='15_10.png' dest='9,7,24,17'"/>
