@@ -1,9 +1,10 @@
 #include <Windows.h>
-
+#include "libcurl/libcurl/curl/curl.h"
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  dwReason, LPVOID /*lpReserved*/)
 {
 	switch( dwReason ) {
    case DLL_PROCESS_ATTACH:
+	   curl_global_init(CURL_GLOBAL_WIN32);
 	   ::DisableThreadLibraryCalls((HMODULE)hModule);
 	   break;
    case DLL_THREAD_ATTACH:

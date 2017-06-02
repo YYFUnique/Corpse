@@ -6,7 +6,6 @@
 
 #pragma once
 
-
 #ifdef LS_STATIC_LIB_CALL
 #define LIB_CURL_API 
 #elif defined  CURL_EXPORTS
@@ -23,8 +22,27 @@
 class ILibcurlCallback
 {
 public:
-	virtual int Progress(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb) = 0;
+	ILibcurlCallback(){};
+	~ILibcurlCallback(){};
+public:
+	virtual int Progress(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb)
+	{
+		return size * nmemb;
+	}
+	virtual int ProcessFunc(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb)
+	{
+		return size * nmemb;
+	}
 };
+
+// class LIB_CURL_API ICallback : public ILibcurlCallback
+// {
+// public:
+// 	virtual int Progress(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb)
+// 	{
+// 		return size * nmemb;
+// 	}
+// };
 
 class LIB_CURL_API CLibcurl
 {
