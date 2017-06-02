@@ -395,9 +395,9 @@ void CPCMaster::OnClick(TNotifyUI& msg)
 void CPCMaster::OnBtnWeather(TNotifyUI& msg)
 {
 	CLibcurl libcurl;
-	CHTTPResponse HttpResponse;
-	libcurl.SetCallback(&HttpResponse);
-	if (libcurl.doHttpGet(_T("http://www.qq.com")) == FALSE)
+	//CHTTPResponse HttpResponse;
+	//libcurl.SetCallback(&HttpResponse);
+	if (libcurl.doHttpGet(1,_T("http://www.qq.com")) == FALSE)
 	{
 		CString strTipInfo;
 		libcurl.GetErrorInfo(strTipInfo);
