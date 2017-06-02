@@ -5,23 +5,27 @@
 
 CWeatherHelper::CWeatherHelper()
 {
-	m_pLibcurl = NULL;
+	m_pMulti = NULL;
 }
 
 CWeatherHelper::~CWeatherHelper()
 {
-	if (m_pLibcurl != NULL)
+	if (m_pMulti != NULL)
 	{
-		delete m_pLibcurl;
-		m_pLibcurl = NULL;
+		delete m_pMulti;
+		m_pMulti = NULL;
 	}
 }
 
 void CWeatherHelper::Init(CCityHelper* pCityHelper)
 {
-	m_pLibcurl = new CLibcurl;
-	if (m_pLibcurl)
-		m_pLibcurl->SetCallback(this);
+	m_pMulti = new CMultiRequest;
+
+	if (m_pMulti)
+	{
+		m_pMulti->Init();
+		m_pMulti->SetCallback(this);
+	}
 
 	//设置全局城市信息保存指针
 	if (pCityHelper != NULL)
@@ -34,10 +38,10 @@ BOOL CWeatherHelper::GetCityLocation()
 	LPCTSTR lpszBaiDuAPI = _T("http://api.map.baidu.com/location/ip?ak=%s");
 	CDuiString strCityLocation;
 	strCityLocation.Format(lpszBaiDuAPI, lpszAk);
-	if (m_pLibcurl == NULL)
+	if (m_pMulti == NULL)
 		return FALSE;
 
-	return m_pLibcurl->doHttpGet(HTTP_GET_CITY_LOCATION, strCityLocation);
+	return m_pMulti->doHttpGet(HTTP_GET_CITY_LOCATION, strCityLocation);
 }
 
 BOOL CWeatherHelper::GetCityWeather(LPCTSTR lpszCityInfo)
@@ -53,17 +57,17 @@ BOOL CWeatherHelper::GetCityWeather(LPCTSTR lpszCityInfo)
 	strCityTemperature.Format(_T("http://api.k780.com/?app=%s&weaid=%s&appkey=%s&sign=%s&format=json"),
 		lpszAppInfo, lpszCityInfo, lpszAppKey, lpszSign);
 
-	if (m_pLibcurl == NULL)
+	if (m_pMulti == NULL)
 		return FALSE;
 
 	CString strEncodeURL;
 
 	URLEncode(strCityTemperature, strEncodeURL);
 
-	return m_pLibcurl->doHttpGet(HTTP_GET_CITY_WEATHER, strEncodeURL);
+	return m_pMulti->doHttpGet(HTTP_GET_CITY_WEATHER, strEncodeURL);
 }
 
-int CWeatherHelper::Progress(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb)
+int CWeatherHelper::ProcessFunc(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb)
 {
 	if (dwEvent == HTTP_GET_CITY_LOCATION)
 		OnGetCityLocation(lpData);

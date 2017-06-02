@@ -2,6 +2,7 @@
 
 #include "CityHelper.h"
 #include "libcurl/libcurl.h"
+#include "libcurl/MultiRequest.h"
 
 #define HTTP_GET_CITY_LOCATION		0x1000		//通过百度API获取城市名
 #define HTTP_GET_CITY_WEATHER		0x1001		//获取城市天气
@@ -22,9 +23,9 @@ protected:
 	//获取城市天气
 	void OnGetCityWeather(LPVOID lpData);
 	//处理HTTP请求返回内容
-	int Progress(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb);
+	int ProcessFunc(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb);
 
 private:
-	CLibcurl*				m_pLibcurl;
+	CMultiRequest*	m_pMulti;
 	CCityHelper*		m_pCityHelper;
 };

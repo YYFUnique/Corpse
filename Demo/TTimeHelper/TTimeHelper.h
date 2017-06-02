@@ -26,7 +26,7 @@ class CTTimeHelper : public WindowImplBase, public CityInfoReceiver
 		void SetCityLocation(LPCTSTR lpszCityLocation);
 
 	protected:
-		BOOL PtInRect();
+		BOOL PtInRect(LPCTSTR lpszName);
 		void InitWindow();
 		void OnInitDialog();
 		void SetShowTimer();
@@ -39,7 +39,7 @@ class CTTimeHelper : public WindowImplBase, public CityInfoReceiver
 		LRESULT ResponseDefaultKeyEvent(WPARAM wParam);
 		LRESULT OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 		LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-		
+		LRESULT OnMouseHover(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	protected:
 		SYSTEMTIME		m_SysTime;
 		CFrameSeqUI* 	m_pFrame[4];
