@@ -16,6 +16,7 @@ typedef struct tagEventHookWnd
 }EventHookWnd,*PEventHookWnd;
 
 typedef CYjList<EventHookWnd,const EventHookWnd&> CEventMainWnd;
+//typedef std::vector<EventHookWnd> CEventMainWnd;
 
 class DLL_API CFloatWindow
 {
