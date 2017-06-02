@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<Window size="190,160" sizebox="4,4,6,6" caption="0,0,0,-1" roundcorner="5,5" maxbox="false" layered="true" >
+<Window size="190,151" sizebox="4,4,6,6" caption="0,0,0,-1" roundcorner="5,5" maxbox="false" layered="true" >
     <Font name="微软雅黑" size="13" bold="false" italic="false" />
 	<Font name="微软雅黑" size="12" bold="false" italic="false" />
     <!--<HorizontalLayout name="VLayoutTotal" bkimage="file=&apos;main.png&apos;">-->
-	<HorizontalLayout name="VLayoutTotal" bkcolor="#01000000">
+	<HorizontalLayout name="VLayoutTotal" bkcolor="#01000000" >
 		<VerticalLayout name="VLayoutMain" >
 			<HorizontalLayout name="HLayoutHead" pos="0,0,0,20">
 				<HorizontalLayout name="HLayoutTitle" pos="0,0,0,20">
-					<Label name="title" text="电脑管家时间助手" textpadding="10,0,0,0" textcolor="#FFDAE9F7" font="1"/>
+					<Label name="title" text="豆豆时间助手V5.16" textpadding="10,0,0,0" textcolor="#FFDAE9F7" font="1"/>
 				</HorizontalLayout>
 				<HorizontalLayout name="HLayoutSys" pos="0,0,70,20">
 					<Button name="BtnClose" tooltip="关闭" float="true" pos="56,3,65,12" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,7,7&apos; dest=&apos;2,2,9,9&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;0,7,7,14&apos; dest=&apos;2,2,9,9&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;0,14,7,21&apos; dest=&apos;2,2,9,9&apos;" />
