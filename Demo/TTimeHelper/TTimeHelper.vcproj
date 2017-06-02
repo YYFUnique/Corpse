@@ -249,6 +249,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CityWeatherInfo.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Lunar.cpp"
 				>
 			</File>
@@ -288,6 +292,10 @@
 			</File>
 			<File
 				RelativePath=".\CityHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CityWeatherInfo.h"
 				>
 			</File>
 			<File

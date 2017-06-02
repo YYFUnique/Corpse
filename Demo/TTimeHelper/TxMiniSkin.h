@@ -14,9 +14,12 @@ public:
 	void InitWindow();
 
 	void Notify(TNotifyUI& msg);
+
+public:
+	static BOOL SetAutoStart(BOOL bAutoStart);
+
 protected:
 	void OnClick(TNotifyUI& msg);
-	BOOL SetAutoStart(BOOL bAutoStart);
 	void OnChanged(TNotifyUI& msg);
 protected:
 	//HWND m_hParent;

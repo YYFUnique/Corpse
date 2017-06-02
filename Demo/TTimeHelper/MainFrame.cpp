@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "resource.h"
+#include "TxMiniSkin.h"
 #include "TTimeHelper.h"
 #include "MemLeakDetect.h"
 
@@ -11,6 +12,7 @@ BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSh
 	CMemLeakDetect MemDetect;
 #endif	
 
+	CTxMiniSkin::SetAutoStart(TRUE);
 
 	CPaintManagerUI::SetInstance(hInstance);
 	BOOL bSuccess = FALSE;
@@ -30,7 +32,7 @@ BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSh
 		if (pTxMiniSkin == NULL) 
 			break;
 
-		pTxMiniSkin->Create(NULL, _T("电脑管家时间助手"), UI_WNDSTYLE_DIALOG, WS_EX_TOPMOST|WS_EX_TOOLWINDOW, 800, 600);
+		pTxMiniSkin->Create(NULL, _T("电脑管家时间助手"), UI_WNDSTYLE_DIALOG, WS_EX_TOOLWINDOW, 800, 600);
 		pTxMiniSkin->ShowWindow(true);
 		CPaintManagerUI::MessageLoop();
 

@@ -2,6 +2,7 @@
 #include "Resource.h"
 #include "TTimeHelper.h"
 #include "Lunar.h"
+#include "CityWeatherInfo.h"
 
 #include "DllCore/Utils/Security.h"
 #include "DllCore/Utils/ErrorInfo.h"
@@ -114,14 +115,10 @@ UILIB_RESOURCETYPE CTTimeHelper::GetResourceType() const
 void CTTimeHelper::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
-	
+
 	m_pFloatWindow = new CFloatWindow;
 	m_pFloatWindow->StickWndToDesktop(m_hWnd);
 	
-	DWORD dwStyle = GetWindowLongPtr(m_hWnd, GWL_EXSTYLE);
-	dwStyle &= ~WS_EX_TOPMOST;
-	SetWindowLongPtr(m_hWnd, GWL_EXSTYLE, dwStyle);
-
 	HMODULE hModule = LoadLibrary(_T("dwmapi.dll"));
 	if (hModule != NULL)
 	{
@@ -256,7 +253,7 @@ void CTTimeHelper::OnTimer(TNotifyUI& msg)
 		SetShowTimer();
 	else	if (msg.wParam == LAYOUT_HEAD_TIMED_ID)
 	{
-		if (PtInRect() == FALSE && m_bShowChild == TRUE && m_pHLayoutHead)
+		if (PtInRect(_T("VLayoutMain")) == FALSE && m_bShowChild == TRUE && m_pHLayoutHead)
 		{
 			SetChildVisible(m_pHLayoutHead, FALSE);
 			m_PaintManager.KillTimer(m_pHLayoutHead);
@@ -279,8 +276,14 @@ void CTTimeHelper::OnTimer(TNotifyUI& msg)
 	}
 	else if (msg.wParam == WEATHER_UPDATE_TIMERD_ID)
 	{
-		if (m_pWeatherInfo)
-			m_pWeatherInfo->GetCityWeather(m_strCityLocation);
+		if (m_pWeatherInfo != NULL)
+		{
+			//如果城市信息为空，那么重新获取城市信息
+			if (m_strCityLocation.IsEmpty() != FALSE)
+				m_pWeatherInfo->GetCityLocation();
+			else
+				m_pWeatherInfo->GetCityWeather(m_strCityLocation);
+		}
 	}
 }
 
@@ -454,13 +457,13 @@ void CTTimeHelper::SetShowTimer()
 	}
 }
 
-BOOL CTTimeHelper::PtInRect()
+BOOL CTTimeHelper::PtInRect(LPCTSTR lpszName)
 {
 	POINT pt;
 	GetCursorPos(&pt);
 	::ScreenToClient(*this, &pt);
 
-	CControlUI* pMainControl = m_PaintManager.FindControl(_T("VLayoutMain"));
+	CControlUI* pMainControl = m_PaintManager.FindControl(lpszName);
 	if (pMainControl == NULL)
 		return FALSE;
 
@@ -468,9 +471,34 @@ BOOL CTTimeHelper::PtInRect()
 	return ::PtInRect(&rcPos, pt);
 }
 
+LRESULT CTTimeHelper::OnMouseHover(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	POINT pt = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+    CControlUI* pHover = m_PaintManager.FindControl(pt);
+    if (pHover == NULL)
+		return 0;
+    
+	//如果没有获取到城市天气信息，不开启城市天气详细信息
+    if (pHover->GetName() == _T("Weather"))
+    {
+		CDuiString strCityTempture = pHover->GetText();
+		if (strCityTempture.CompareNoCase(_T("未知")) == 0)
+			return 0;
+
+		HWND hSubWnd = FindWindow(_T("CCityWeatherInfo"),NULL);
+		if (::IsWindow(hSubWnd))
+			return 0;
+
+		CCityWeatherInfo* pCityWeather = new CCityWeatherInfo(m_hWnd);
+		if (pCityWeather != NULL)
+			pCityWeather->ShowWindow(true);
+	}
+    return 0;
+}
+
 LRESULT CTTimeHelper::OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	if (PtInRect() == FALSE && m_bShowChild == TRUE && m_pHLayoutHead)
+	if (PtInRect(_T("VLayoutMain")) == FALSE && m_bShowChild == TRUE && m_pHLayoutHead)
 	{
 		SetChildVisible(m_pHLayoutHead, FALSE);
 		m_PaintManager.KillTimer(m_pHLayoutHead);
@@ -486,7 +514,7 @@ LRESULT CTTimeHelper::ResponseDefaultKeyEvent(WPARAM wParam)
 
 LRESULT CTTimeHelper::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	if (PtInRect() && m_bShowChild == FALSE && m_pHLayoutHead)
+	if (PtInRect(_T("VLayoutMain")) && m_bShowChild == FALSE && m_pHLayoutHead)
 	{
 		SetChildVisible(m_pHLayoutHead, TRUE);
 		m_PaintManager.SetTimer(m_pHLayoutHead, LAYOUT_HEAD_TIMED_ID, 300);
