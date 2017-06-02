@@ -70,6 +70,7 @@ public:
 	/* 返 回 值 ：返回磁盘序号															               */
 	/************************************************************************/
 	DWORD GetHardDiskIndexFromVolume(LPCTSTR lpszDiskVolumePath);
+
 public:
 
 	/************************************************************************/
@@ -97,6 +98,11 @@ public:
 	/* 返 回 值 ：返回TRUE表示成功，返回FALSE表示失败					               */
 	/************************************************************************/
 	static BOOL DeleteDiskVolumeLnk(DWORD dwDiskIndex);
+
+	//获取指定存储设备的描述信息
+	static BOOL GetStorageDeviceProperty(HANDLE hDevice, PSTORAGE_DEVICE_DESCRIPTOR pDevDesc);
+	//获取指定序号存储设备的总线类型
+	static BOOL GetStorageDeviceBusType(DWORD dwDiskIndex, STORAGE_BUS_TYPE& StorageBusType);
 protected:
 	BOOL DeviceIoControl(DWORD dwIoControlCode);
 

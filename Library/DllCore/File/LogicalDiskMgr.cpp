@@ -237,6 +237,77 @@ DWORD CLogicalDiskMgr::GetSystemDiskIndex()
 	return dwIndex;
 }
 
+BOOL CLogicalDiskMgr::GetStorageDeviceProperty(HANDLE hDevice, PSTORAGE_DEVICE_DESCRIPTOR pDevDesc)
+{
+	BOOL bResult;														// IOCTL返回值
+	DWORD dwOutBytes;											// IOCTL输出数据长度
+	STORAGE_PROPERTY_QUERY StorageQuery;		// 查询输入参数
+
+	// 指定查询方式
+	StorageQuery.PropertyId = StorageDeviceProperty;
+	StorageQuery.QueryType = PropertyStandardQuery;
+
+	// 用IOCTL_STORAGE_QUERY_PROPERTY取设备属性信息
+	bResult = ::DeviceIoControl(hDevice, // 设备句柄
+													IOCTL_STORAGE_QUERY_PROPERTY,    // 取设备属性信息
+													&StorageQuery, sizeof(STORAGE_PROPERTY_QUERY),    // 输入数据缓冲区
+													pDevDesc, pDevDesc->Size,        // 输出数据缓冲区
+													&dwOutBytes,                     // 输出数据长度
+													(LPOVERLAPPED)NULL);             // 用同步I/O    
+
+	return bResult;
+}
+
+BOOL CLogicalDiskMgr::GetStorageDeviceBusType(DWORD dwDiskIndex, STORAGE_BUS_TYPE& StorageBusType)
+{
+	BOOL bSuccess = FALSE;
+	HANDLE hStorageDevice = INVALID_HANDLE_VALUE;
+	PSTORAGE_DEVICE_DESCRIPTOR pDeviceDesc = NULL;
+	do 
+	{
+		StorageBusType = BusTypeUnknown;
+		TCHAR szPhysicDriverPathFirst[MAX_PATH]={0};
+		_stprintf_s(szPhysicDriverPathFirst,_T("\\\\.\\PHYSICALDRIVE%d"), dwDiskIndex);
+
+		hStorageDevice = CreateFile(szPhysicDriverPathFirst,
+														GENERIC_READ|GENERIC_WRITE,
+														FILE_SHARE_READ | FILE_SHARE_WRITE,
+														NULL, 
+														OPEN_EXISTING, 
+														0,
+														NULL); 
+		if (hStorageDevice == INVALID_HANDLE_VALUE) 
+			break;
+
+		pDeviceDesc = (PSTORAGE_DEVICE_DESCRIPTOR)new BYTE[sizeof(STORAGE_DEVICE_DESCRIPTOR) + 1024*6];	
+		pDeviceDesc->Size = sizeof(STORAGE_DEVICE_DESCRIPTOR) + 1024*6;
+
+		BOOL bGetDriveInfo = CLogicalDiskMgr::GetStorageDeviceProperty(hStorageDevice, pDeviceDesc);
+		if (bGetDriveInfo == FALSE)
+		{
+			SetErrorInfo(SYSTEM_ERROR,0,_T("获取设备信息失败:"));
+			break;
+		}
+
+		StorageBusType = pDeviceDesc->BusType;
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	if (pDeviceDesc != NULL)
+	{
+		delete[] pDeviceDesc;
+		pDeviceDesc = NULL;
+	}
+
+	if (hStorageDevice != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(hStorageDevice);
+		hStorageDevice = INVALID_HANDLE_VALUE;
+	}
+	return bSuccess;
+}
+
 BOOL CLogicalDiskMgr::DeviceIoControl(DWORD dwIoControlCode)
 {
 	if (m_hVolume == INVALID_HANDLE_VALUE)
