@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "QRDlg.h"
 #include "QRTool.h"
+#include <CommDlg.h>
+#define OPEN_FILE_TITLE	_T("请选择需要嵌入到二维码中心的图片")
 
 CQRDlg::CQRDlg(HWND hParent)
 {
@@ -59,6 +61,8 @@ void CQRDlg::OnClick(TNotifyUI& msg)
 		Close();
 	else if (msg.pSender == m_PaintManager.FindControl(_T("BtnUpdate")))
 		OnUpdateQRCode(msg);
+	else if (msg.pSender == m_PaintManager.FindControl(_T("BtnLogo")))
+		OnLookupFile(msg);
 }
 
 void CQRDlg::OnUpdateQRCode(TNotifyUI& msg)
@@ -71,6 +75,31 @@ void CQRDlg::OnUpdateQRCode(TNotifyUI& msg)
 	pQRCodeInfo->dwSize = _ttoi(m_PaintManager.FindControl(_T("Size"))->GetText());
 	pQRCodeInfo->dwMag = _ttoi(m_PaintManager.FindControl(_T("Atom"))->GetText());
 	pQRCodeInfo->dwBorder = _ttoi(m_PaintManager.FindControl(_T("Border"))->GetText());
+	pQRCodeInfo->strLogoFile = m_PaintManager.FindControl(_T("EditLogo"))->GetText();
 	pQRCodeInfo->strQrCode  = m_PaintManager.FindControl(_T("Context"))->GetText();
 	::SendMessage(m_hParent, WM_QRCODEITEM_INFO, (WPARAM)pQRCodeInfo, NULL);
+}
+
+void CQRDlg::OnLookupFile(TNotifyUI& msg)
+{
+	TCHAR szLogoFilePath[MAX_PATH] = {0};
+	OPENFILENAME OFNFileName;
+	ZeroMemory(&OFNFileName ,sizeof(OFNFileName)); 
+	OFNFileName.lStructSize		= sizeof(OFNFileName); 
+	OFNFileName.hwndOwner		= m_hWnd; 
+	OFNFileName.lpstrFile			= szLogoFilePath ; 
+	OFNFileName.nMaxFile			= _countof(szLogoFilePath);
+	OFNFileName.lpstrFilter			= _T("位图文件\0*.bmp\0PNG文件\0*.png\0"); 
+	OFNFileName.nFilterIndex		= 1; 
+	OFNFileName.lpstrFileTitle	= NULL; 
+	OFNFileName.nMaxFileTitle	= 0;
+	OFNFileName.lpstrTitle			= OPEN_FILE_TITLE;
+	OFNFileName.lpstrInitialDir	= NULL; 
+	OFNFileName.Flags				= OFN_PATHMUSTEXIST|OFN_FILEMUSTEXIST ; 
+	if (GetOpenFileName(&OFNFileName))
+	{
+		CEditUI2* pLogoPath = (CEditUI2*)m_PaintManager.FindControl(_T("EditLogo"));
+		if (pLogoPath)
+			pLogoPath->SetText(szLogoFilePath);
+	}
 }

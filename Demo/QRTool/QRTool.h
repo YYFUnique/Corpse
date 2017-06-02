@@ -6,7 +6,8 @@ typedef struct _tagQRCodeItem
 	DWORD dwSize;							//二维码尺寸
 	DWORD dwMag;							//放大倍数
 	DWORD dwBorder;						//边缘留白
-	CDuiString strQrCode;						//二维码内容
+	CDuiString strQrCode;					//二维码内容
+	CDuiString strLogoFile;				//二维码中心图片
 }QRCodeItem,*PQRCodeItem;
 
 #define WM_QRCODEITEM_INFO			(WM_USER+0x1000)			//二维码更新消息
