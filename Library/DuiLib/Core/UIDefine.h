@@ -231,6 +231,7 @@ protected:                                                                \
 #define  DUI_CTR_COMBO											(_T("Combo"))
 #define  DUI_CTR_LABEL											(_T("Label"))
 #define  DUI_CTR_FLASH											(_T("Flash"))
+#define  DUI_CTR_FRAME											(_T("Frame"))
 
 #define  DUI_CTR_BUTTON										(_T("Button"))
 #define  DUI_CTR_OPTION											(_T("Option"))
@@ -254,7 +255,6 @@ protected:                                                                \
 #define  DUI_CTR_ROLLTEXT										(_T("RollText"))
 #define  DUI_CTR_DOCKPANE									(_T("DockPane"))
 #define  DUI_CTR_DOCKITEM									(_T("DockItem"))
-#define  DUI_CTR_FRAMESEQ									(_T("FrameSeq"))
 
 #define  DUI_CTR_CONTAINER									(_T("Container"))
 #define  DUI_CTR_TABLAYOUT									(_T("TabLayout"))

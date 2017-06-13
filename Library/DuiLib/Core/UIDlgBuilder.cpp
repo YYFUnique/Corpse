@@ -384,6 +384,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
                 else if( _tcscmp(pstrClass, DUI_CTR_LABEL) == 0 )					pControl = new CLabelUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_FLASH) == 0 )					pControl = new CFlashUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_EDIT_EX) == 0 )				pControl = new CEditUI2;
+				else if( _tcscmp(pstrClass, DUI_CTR_FRAME) == 0 )					pControl = new CFrameUI;
                 break;
             case 6:
                 if( _tcscmp(pstrClass, DUI_CTR_BUTTON) == 0 )						pControl = new CButtonUI;
@@ -406,7 +407,6 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				else if( _tcscmp(pstrClass, DUI_CTR_ROLLTEXT) == 0 )				pControl = new CRollTextUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_DOCKPANE) == 0)			pControl = new CDockPaneUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_DOCKITEM) == 0)			pControl = new CDockItemUI;
-				else if( _tcscmp(pstrClass, DUI_CTR_FRAMESEQ) == 0 )			pControl = new CFrameSeqUI;
                 break;
             case 9:
                 if( _tcscmp(pstrClass, DUI_CTR_CONTAINER) == 0 )					pControl = new CContainerUI;

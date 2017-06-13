@@ -17,11 +17,11 @@
 			<HorizontalLayout height="66">
 				<HorizontalLayout name="HLayoutLeft"/>
 				<HorizontalLayout name="HLayoutMain" pos="0,0,204,66" height="66">
-					<FrameSeq name="Frame4" time="200" frame="30" width="42" height="66"/>
-					<FrameSeq name="Frame3" time="200" frame="30" width="42" height="66"/>
+					<Frame name="Frame4" time="200" frame="30" width="42" height="66"/>
+					<Frame name="Frame3" time="200" frame="30" width="42" height="66"/>
 					<Label bkimage="file=&apos;Separtor.png&apos;" width="18" height="66" />
-					<FrameSeq name="Frame2" time="200" frame="30" width="42" height="66"/>
-					<FrameSeq name="Frame1" time="200" frame="30" width="42" height="66"/>
+					<Frame name="Frame2" time="200" frame="30" width="42" height="66"/>
+					<Frame name="Frame1" time="200" frame="30" width="42" height="66"/>
 				</HorizontalLayout>
 				<HorizontalLayout name="HLayoutRight"/>
 			</HorizontalLayout>

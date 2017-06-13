@@ -308,6 +308,84 @@ BOOL CLogicalDiskMgr::GetStorageDeviceBusType(DWORD dwDiskIndex, STORAGE_BUS_TYP
 	return bSuccess;
 }
 
+BOOL CLogicalDiskMgr::GetDiskSerialNumber(DWORD dwDiskIndex, CString& strSerialNumber)
+{
+	BOOL bSuccess = FALSE;
+	HANDLE hStorageDevice = INVALID_HANDLE_VALUE;
+	PSTORAGE_DEVICE_DESCRIPTOR pDeviceDesc = NULL;
+
+	do 
+	{
+		//StorageBusType = BusTypeUnknown;
+		TCHAR szPhysicDriverPathFirst[MAX_PATH]={0};
+		_stprintf_s(szPhysicDriverPathFirst,_T("\\\\.\\PHYSICALDRIVE%d"), dwDiskIndex);
+
+		hStorageDevice = CreateFile(szPhysicDriverPathFirst,
+														GENERIC_READ|GENERIC_WRITE,
+														FILE_SHARE_READ | FILE_SHARE_WRITE,
+														NULL, 
+														OPEN_EXISTING, 
+														0,
+														NULL); 
+		if (hStorageDevice == INVALID_HANDLE_VALUE) 
+			break;
+
+
+		STORAGE_PROPERTY_QUERY StoragePropertyQuery = {};
+		StoragePropertyQuery.PropertyId = StorageDeviceProperty;
+		StoragePropertyQuery.QueryType = PropertyStandardQuery;
+
+		DWORD cbBytesReturned;
+		BYTE bData[8096];
+		//调用接口获取
+		if (DeviceIoControl(hStorageDevice, IOCTL_STORAGE_QUERY_PROPERTY, &StoragePropertyQuery, sizeof(STORAGE_PROPERTY_QUERY),
+										bData, _countof(bData), &cbBytesReturned, NULL)==FALSE)
+		{
+			SetErrorTitle(_T("获取磁盘描述信息失败"));
+			break;
+		}
+
+		STORAGE_DEVICE_DESCRIPTOR* pStorageDeviceDescriptor = (STORAGE_DEVICE_DESCRIPTOR *)bData;
+
+		strSerialNumber.Empty();
+		if (pStorageDeviceDescriptor->SerialNumberOffset != -1 && pStorageDeviceDescriptor->SerialNumberOffset != 0)
+		{
+			LPSTR lpszSerialNumberHexText = (char*)pStorageDeviceDescriptor+pStorageDeviceDescriptor->SerialNumberOffset;
+			DWORD dwSerialNumberHexText = strlen(lpszSerialNumberHexText);
+			if (dwSerialNumberHexText <= 20)//U盘返回20字节无需转换
+				strSerialNumber = lpszSerialNumberHexText;
+			else
+			{
+				char szSerialNumber[MAX_PATH];
+				DWORD dwSerialNumberLen = sizeof(szSerialNumber);
+				if (CryptStringToBinaryA(lpszSerialNumberHexText , strlen(lpszSerialNumberHexText) , CRYPT_STRING_HEX , (BYTE*)szSerialNumber , &dwSerialNumberLen , NULL , NULL))
+				{
+					for(DWORD i=0; i<dwSerialNumberLen; i+=2)
+					{
+						char ch = szSerialNumber[i];
+						szSerialNumber[i] = szSerialNumber[i + 1];
+						szSerialNumber[i + 1] = ch;
+					}
+					szSerialNumber[dwSerialNumberLen] = 0;
+					strSerialNumber = szSerialNumber;
+				}
+			}
+			strSerialNumber.TrimLeft(' ');
+			strSerialNumber.TrimRight(' ');
+		}
+
+		bSuccess = FALSE;
+	}while(FALSE)
+
+	if (hStorageDevice != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(hStorageDevice);
+		hStorageDevice = INVALID_HANDLE_VALUE;
+	}
+
+	return bSuccess;
+}
+
 BOOL CLogicalDiskMgr::DeviceIoControl(DWORD dwIoControlCode)
 {
 	if (m_hVolume == INVALID_HANDLE_VALUE)

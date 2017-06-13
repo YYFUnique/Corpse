@@ -120,7 +120,7 @@ namespace DuiLib
 		m_trayData.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
 		m_trayData.uCallbackMessage = m_uMessage = _Message;
 		if(_ToolTipText)
-			wcscpy(m_trayData.szTip,_ToolTipText);
+			wcscpy(m_trayData.szTip, _ToolTipText);
 
 		Shell_NotifyIconW(NIM_ADD,&m_trayData);
 		m_bEnabled = true;

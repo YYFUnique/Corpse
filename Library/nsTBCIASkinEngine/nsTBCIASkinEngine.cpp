@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "SkinEngine.h"
-#include "LsCIASkinEngine.h"
+#include "nsTBCIASkinEngine.h"
 
 #define	NSIS_PROGRESS_ID				1004		//NSIS½ø¶ÈÌõID
 

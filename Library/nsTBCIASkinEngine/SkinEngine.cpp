@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "SkinEngine.h"
-#include "DllCore/File/MiniDump.h"
 
 extern CString strInstallPageName;
 extern BOOL bCancleOrExit;
@@ -16,9 +15,9 @@ namespace DuiLib
 
 	}
 
-	void CSkinEngine::OnFinalMessage( HWND hWnd )
+	void CSkinEngine::OnFinalMessage(HWND hWnd)
 	{
-		m_PaintManager.RemoveNotifier( this );	
+		WindowImplBase::OnFinalMessage(hWnd);
 		delete this; 
 	}
 
@@ -39,12 +38,17 @@ namespace DuiLib
 
 	CDuiString CSkinEngine::GetSkinFolder()
 	{
-		return _T("");
+		return m_strFolderFilePath;
 	}
 
 	UILIB_RESOURCETYPE CSkinEngine::GetResourceType() const
 	{
 		return UILIB_FILE;
+	}
+
+	void CSkinEngine::SetFolderFilePath(LPCTSTR lpszFolderFilePath)
+	{
+		m_strFolderFilePath = lpszFolderFilePath;
 	}
 
 	void CSkinEngine::SetZIPFileName(LPCTSTR lpszZIPFileName)
@@ -91,7 +95,7 @@ namespace DuiLib
 
 	void CSkinEngine::InitWindow()
 	{
-		CMiniDump::InitDumpDebugInfo();
+		/*CMiniDump::InitDumpDebugInfo();*/
 	}
 
 	void CSkinEngine::OnClick(TNotifyUI& msg)
@@ -101,6 +105,7 @@ namespace DuiLib
 		{
 			//提示是否真的需要退出
 			bCancleOrExit = TRUE;
+			Close(IDOK);
 			PostQuitMessage(0);
 		}
 		else if (strCtrlName == _T("BtnMin"))

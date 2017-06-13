@@ -50,7 +50,7 @@ CTTimeHelper::CTTimeHelper()
 	m_SysTime.wSecond = -1;
 	m_SysTime.wDay = -1;
 	m_SysTime.wMonth = -1;
-	m_SysTime.wDayOfWeek = m_wDayOfWeek = -1;
+	m_SysTime.wDayOfWeek = -1;
 	m_hWnd = NULL;
 
 	m_pFloatWindow = NULL;
@@ -166,7 +166,7 @@ void CTTimeHelper::InitWindow()
 	for (int n=0; n<pParent->GetCount(); ++n)
 	{
 		CControlUI* pControl = pParent->GetItemAt(n);
-		CFrameSeqUI* pFrame = (CFrameSeqUI*)pControl->GetInterface(DUI_CTR_FRAMESEQ);
+		CFrameUI* pFrame = (CFrameUI*)pControl->GetInterface(DUI_CTR_FRAME);
 		if (pFrame != NULL)
 			m_pFrame[i++] = pFrame;
 	}
@@ -447,13 +447,14 @@ void CTTimeHelper::SetShowTimer()
 	}
 
 	//显示星期
-	if (m_wDayOfWeek != SysTime.wDayOfWeek)
+	if (m_SysTime.wDayOfWeek != SysTime.wDayOfWeek)
 	{
 		CLabelUI* pDayOfWeek = (CLabelUI*)m_PaintManager.FindControl(_T("DayOfWeek"));
 		if (pDayOfWeek)
+			//设置星期
 			pDayOfWeek->SetText(DayOfWeek[SysTime.wDayOfWeek]);
 
-		m_wDayOfWeek = SysTime.wDayOfWeek;
+		m_SysTime.wDayOfWeek = SysTime.wDayOfWeek;
 	}
 }
 
@@ -489,7 +490,7 @@ LRESULT CTTimeHelper::OnMouseHover(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 		if (::IsWindow(hSubWnd))
 			return 0;
 
-		CCityWeatherInfo* pCityWeather = new CCityWeatherInfo(m_hWnd);
+		CCityWeatherInfo* pCityWeather = new CCityWeatherInfo(m_hWnd, m_pCityInfo);
 		if (pCityWeather != NULL)
 			pCityWeather->ShowWindow(true);
 	}

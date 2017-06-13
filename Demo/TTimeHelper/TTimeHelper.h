@@ -41,14 +41,13 @@ class CTTimeHelper : public WindowImplBase, public CityInfoReceiver
 		LRESULT OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 		LRESULT OnMouseHover(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	protected:
-		SYSTEMTIME		m_SysTime;
-		CFrameSeqUI* 	m_pFrame[4];
+		SYSTEMTIME		m_SysTime;					//保存上一次获取到的系统时间
+		CFrameUI* 			m_pFrame[4];				//用于保存界面上显示时间的4个控件
 		CControlUI*			m_pHLayoutHead;
-		BOOL					m_bShowChild;
-		WORD					m_wDayOfWeek;
-		CFloatWindow*	m_pFloatWindow;
-		CTxMiniSkin*		m_pTxMiniSkin;
-		CCityHelper*		m_pCityInfo;
-		CWeatherHelper* m_pWeatherInfo;
-		CString					m_strCityLocation;
+		BOOL					m_bShowChild;			//
+		CFloatWindow*	m_pFloatWindow;		//用户支持悬浮窗口
+		CTxMiniSkin*		m_pTxMiniSkin;			//用户确定是否退出系统
+		CCityHelper*		m_pCityInfo;				//保存城市位置及天气信息
+		CWeatherHelper* m_pWeatherInfo;		//用于获取城市位置及天气信息
+		CString					m_strCityLocation;		//当前城市位置
 };
