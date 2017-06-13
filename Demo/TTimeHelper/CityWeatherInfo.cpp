@@ -3,8 +3,9 @@
 
 #define CITY_WEATHER_INFO_TIMED_ID		0x1001
 
-CCityWeatherInfo::CCityWeatherInfo(HWND hParent)
+CCityWeatherInfo::CCityWeatherInfo(HWND hParent, CCityHelper* pCityInfo)
 {
+	m_pCityInfo = pCityInfo;
 	m_hParent = hParent;
 	Create(hParent, _T("CityWeatherInfo"), UI_WNDSTYLE_DIALOG, WS_EX_TOOLWINDOW, 0, 0, 0, 0);
 }
@@ -56,6 +57,17 @@ void CCityWeatherInfo::InitWindow()
 	CControlUI* pLayout = m_PaintManager.FindControl(_T("HLayoutTotal"));
 	if (pLayout != NULL)
 		m_PaintManager.SetTimer(pLayout, CITY_WEATHER_INFO_TIMED_ID, 500);
+
+	if (m_pCityInfo != NULL)
+	{
+		CString strCityLocation;
+		m_pCityInfo->GetCityLocation(strCityLocation);
+		CLabelUI* pLocation = (CLabelUI*)m_PaintManager.FindControl(_T("Location"));
+		if (pLocation && strCityLocation.IsEmpty() == FALSE)
+			pLocation->SetText(strCityLocation);
+
+
+	}
 
 	RECT rcWnd;
 	GetWindowRect(m_hParent, &rcWnd);

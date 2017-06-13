@@ -347,7 +347,7 @@ namespace DuiLib
 		}
 		else if (_tcscmp(pstrName, _T("maxrate")) == 0)
 		{
-			SetItemMaxRate(_wtof(pstrValue));
+			SetItemMaxRate(_tstof(pstrValue));
 		}
 		else if (_tcscmp(pstrName, _T("range")) == 0)
 		{

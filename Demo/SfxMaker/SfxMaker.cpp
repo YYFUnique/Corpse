@@ -4,6 +4,9 @@
 #include <Shlwapi.h>
 #pragma comment(lib,"shlwapi.lib")
 
+#include "Lzma/Lzma.h"
+#include "Lzma/MakeSfxFile.h"
+
 CSfxMaker::CSfxMaker()
 {
 
@@ -53,27 +56,27 @@ void CSfxMaker::InitWindow()
 	SetIcon(IDI_MAINFRAME);
 	SetWindowPos(m_hWnd,HWND_TOPMOST,0,0,0,0,SWP_NOMOVE|SWP_NOSIZE);
 
-	OnBtnCheck();
+	//OnBtnCheck();
     //CMakeSfxFile MakeSfx;
  	//MakeSfx.ReleaseData();
  
- 	/*CLzma Lzma;
- 	
-	DWORD dwSize = _countof(lpData);
- 	Lzma.LzmaEncode(_T("C:\\test"),lpData,dwSize);
-*/
-
-	//BYTE lpData[512*1024];
+ //	CLzma Lzma;
+ //	
 	//DWORD dwSize = _countof(lpData);
-	//HANDLE hFile = CreateFile(_T("C:\\test\\test2.zip"),GENERIC_READ|GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,0,NULL);
-	//DWORD dwWrite = 0;
-	//ReadFile(hFile,lpData,dwSize,&dwWrite,NULL);
-	//CloseHandle(hFile);
+ //	Lzma.LzmaEncode(_T("C:\\test"),lpData,dwSize);
 
-	//CLzma Lzma;
-	//Lzma.LzmaDecode(lpData,dwWrite,_T("C:\\test2\\"));
 
- 	/*TCHAR szTargetFileName[MAX_PATH];
+	/*BYTE lpData[512*1024];
+	DWORD dwSize = _countof(lpData);
+	HANDLE hFile = CreateFile(_T("C:\\test\\test2.zip"),GENERIC_READ|GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,0,NULL);
+	DWORD dwWrite = 0;
+	ReadFile(hFile,lpData,dwSize,&dwWrite,NULL);
+	CloseHandle(hFile);
+
+	CLzma Lzma;
+	Lzma.LzmaDecode(lpData,dwWrite,_T("C:\\test2\\"));*/
+
+ 	TCHAR szTargetFileName[MAX_PATH];
  	GetModuleFileName(NULL,szTargetFileName,_countof(szTargetFileName));
  	PathRemoveFileSpec(szTargetFileName);
  	PathAppend(szTargetFileName,_T("Install.exe"));
@@ -94,7 +97,7 @@ void CSfxMaker::InitWindow()
  		MakeSfx.MakeBinaryFile(_T("C:\\DumpOk.exe"));
  
  	delete[] lpData;
- 	lpData = NULL;*/
+ 	lpData = NULL;
 }
 
 LRESULT CSfxMaker::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)

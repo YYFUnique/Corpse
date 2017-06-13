@@ -499,7 +499,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Control\UIFrameSeq.cpp"
+					RelativePath=".\Control\UIFrame.cpp"
 					>
 				</File>
 				<File
@@ -780,7 +780,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Control\UIFrameSeq.h"
+					RelativePath=".\Control\UIFrame.h"
 					>
 				</File>
 				<File

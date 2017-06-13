@@ -24,6 +24,7 @@ namespace DuiLib {
 		virtual LRESULT HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 		virtual CControlUI* CreateControl(LPCTSTR pstrClass);
 
+		void SetFolderFilePath(LPCTSTR lpszFolderFilePath);
 		void SetZIPFileName(LPCTSTR lpszZIPFileName);
 		void SetSkinFile(LPCTSTR lpszSkinFile);
 		CPaintManagerUI& GetPaintManager();
@@ -36,6 +37,7 @@ namespace DuiLib {
 		void OnComplete(TNotifyUI& msg);
 	protected:
 		CDuiString m_strZIPFileName;
+		CDuiString m_strFolderFilePath;
 		CDuiString m_strSkinFile;
 	};
 

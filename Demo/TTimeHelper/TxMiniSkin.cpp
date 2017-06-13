@@ -2,7 +2,7 @@
 #include "TxMiniSkin.h"
 #include "DllCore/Utils/Registry.h"
 
-#define HKCU_SOFTWARE_AUTORUN	_T("Software\\Microsoft\\Windows\\CurrentVersion\\Run")
+#define HKLM_SOFTWARE_AUTORUN	_T("Software\\Microsoft\\Windows\\CurrentVersion\\Run")
 
 CTxMiniSkin::CTxMiniSkin(HWND hParent)
 {
@@ -64,10 +64,6 @@ void CTxMiniSkin::OnClick(TNotifyUI& msg)
 		Close(IDCANCEL);
 	else if (strSendName == _T("BtnSure"))
 	{
-		COptionUI* pAutoStart = (COptionUI*)m_PaintManager.FindControl(_T("BtnAutoStart"));
-		if (pAutoStart)
-			SetAutoStart(pAutoStart->IsSelected());
-
 		//触发OnFinalMessage析构对象
 		Close(IDOK);
 	}
@@ -96,19 +92,19 @@ BOOL CTxMiniSkin::SetAutoStart(BOOL bAutoStart)
 			GetModuleFileName(NULL, szModuleFile, _countof(szModuleFile));
 
 			CString strTimeHelperPath;
-			BOOL bRet = LsRegQueryValue(HKEY_CURRENT_USER , HKCU_SOFTWARE_AUTORUN, _T("TTimeHelper"), strTimeHelperPath);
+			BOOL bRet = LsRegQueryValue(HKEY_LOCAL_MACHINE , HKLM_SOFTWARE_AUTORUN, _T("TTimeHelper"), strTimeHelperPath);
 			if (bRet != FALSE && strTimeHelperPath.CompareNoCase(szModuleFile))
 			{
 				bSuccess = TRUE;
 				break;
 			}
 
-			if (LsRegSetValue(HKEY_CURRENT_USER, HKCU_SOFTWARE_AUTORUN, _T("TTimeHelper"), szModuleFile) == FALSE)
+			if (LsRegSetValue(HKEY_LOCAL_MACHINE, HKLM_SOFTWARE_AUTORUN, _T("TTimeHelper"), szModuleFile) == FALSE)
 				break;
 		}
 		else
 		{
-			if (SHDeleteValue(HKEY_CURRENT_USER, HKCU_SOFTWARE_AUTORUN, _T("TTimeHelper")) != ERROR_SUCCESS)
+			if (SHDeleteValue(HKEY_LOCAL_MACHINE, HKLM_SOFTWARE_AUTORUN, _T("TTimeHelper")) != ERROR_SUCCESS)
 				break;
 		}
 

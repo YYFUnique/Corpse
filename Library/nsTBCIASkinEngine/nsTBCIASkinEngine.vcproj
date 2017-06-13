@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="LsCIASkinEngine"
+	Name="nsTBCIASkinEngine"
 	ProjectGUID="{88C03610-B775-4426-B140-DC429D4FDC2E}"
-	RootNamespace="LsCIASkinEngine"
+	RootNamespace="nsTBCIASkinEngine"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -243,7 +243,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LsCIASkinEngine.cpp"
+				RelativePath=".\nsTBCIASkinEngine.cpp"
 				>
 			</File>
 			<File
@@ -297,7 +297,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LsCIASkinEngine.h"
+				RelativePath=".\nsTBCIASkinEngine.h"
 				>
 			</File>
 			<File

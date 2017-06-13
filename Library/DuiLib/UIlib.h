@@ -126,4 +126,4 @@
 #include "Control/UIPage.h"
 #include "Control/UIRectTracker.h"
 
-#include "Control/UIFrameSeq.h"
+#include "Control/UIFrame.h"

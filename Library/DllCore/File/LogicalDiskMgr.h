@@ -103,6 +103,8 @@ public:
 	static BOOL GetStorageDeviceProperty(HANDLE hDevice, PSTORAGE_DEVICE_DESCRIPTOR pDevDesc);
 	//获取指定序号存储设备的总线类型
 	static BOOL GetStorageDeviceBusType(DWORD dwDiskIndex, STORAGE_BUS_TYPE& StorageBusType);
+	
+	static BOOL GetDiskSerialNumber(DWORD dwDiskIndex, CString& strSerialNumber);
 protected:
 	BOOL DeviceIoControl(DWORD dwIoControlCode);
 

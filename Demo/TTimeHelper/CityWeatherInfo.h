@@ -1,9 +1,10 @@
 #pragma once
+#include "CityHelper.h"
 
 class CCityWeatherInfo : public WindowImplBase
 {
 public:
-	CCityWeatherInfo(HWND hParent);
+	CCityWeatherInfo(HWND hParent, CCityHelper* pCityInfo);
 	~CCityWeatherInfo();
 public:
 	void OnFinalMessage( HWND hWnd );
@@ -19,5 +20,6 @@ protected:
 	LRESULT OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	
 private:
-	HWND m_hParent;
+	HWND				m_hParent;
+	CCityHelper*	m_pCityInfo;
 };
