@@ -4,6 +4,8 @@
 #include "../Utils/ErrorInfo.h"
 #include "../Utils/StdPtr.h"
 
+#pragma comment(lib,"Crypt32.lib")
+
 CLogicalDiskMgr::CLogicalDiskMgr()
 {
 	m_hVolume = INVALID_HANDLE_VALUE;
@@ -338,7 +340,7 @@ BOOL CLogicalDiskMgr::GetDiskSerialNumber(DWORD dwDiskIndex, CString& strSerialN
 		DWORD cbBytesReturned;
 		BYTE bData[8096];
 		//调用接口获取
-		if (DeviceIoControl(hStorageDevice, IOCTL_STORAGE_QUERY_PROPERTY, &StoragePropertyQuery, sizeof(STORAGE_PROPERTY_QUERY),
+		if (::DeviceIoControl(hStorageDevice, IOCTL_STORAGE_QUERY_PROPERTY, &StoragePropertyQuery, sizeof(STORAGE_PROPERTY_QUERY),
 										bData, _countof(bData), &cbBytesReturned, NULL)==FALSE)
 		{
 			SetErrorTitle(_T("获取磁盘描述信息失败"));
@@ -375,7 +377,7 @@ BOOL CLogicalDiskMgr::GetDiskSerialNumber(DWORD dwDiskIndex, CString& strSerialN
 		}
 
 		bSuccess = FALSE;
-	}while(FALSE)
+	}while(FALSE);
 
 	if (hStorageDevice != INVALID_HANDLE_VALUE)
 	{
