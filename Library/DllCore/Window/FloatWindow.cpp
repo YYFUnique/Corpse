@@ -86,13 +86,19 @@ void CFloatWindow::WinEventHookProc(HWINEVENTHOOK hEventHook, DWORD dwEvent, HWN
 		if (dwEvent == EVENT_SYSTEM_FOREGROUND)
 		{
 			if (_tcsicmp(szClassName, _T("WorkerW")) == 0)
+			{
 				SetWindowPos(hFloatWnd, HWND_TOPMOST,0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
+			}
 			else 
 			{
 				//判断当前是否处于顶层窗体，如果是将窗体置于底层
 				DWORD dwStyle = GetWindowLongPtr(hFloatWnd, GWL_EXSTYLE);
 				if (dwStyle & WS_EX_TOPMOST)
-					SetWindowPos(hFloatWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
+				{
+					//不能是无名对话框
+					if (_tcsicmp(szClassName, _T("#32770")) != 0)
+						SetWindowPos(hFloatWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
+				}
 			}
 		}
 	}
