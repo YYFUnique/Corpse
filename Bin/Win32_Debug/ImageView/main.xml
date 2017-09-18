@@ -1,43 +1,47 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<Window caption="0,0,0,-1" bktrans="true">
+<Window size="800,600" mininfo="500,400" caption="0,0,0,50" bktrans="true">
     <Font name="微软雅黑" size="16" bold="false" italic="false" />
-    <Font name="宋体" size="19" bold="false" italic="false" />
-    <VerticalLayout name="VLayout" bordersize="0" pos="189,211,249,241" width="60" height="30" bkimage="file=&apos;MainBg.png&apos; source=&apos;20,20,40,40&apos; fade=&apos;100&apos; ">
-        <HorizontalLayout name="HLayoutHead" bordersize="0" pos="0,0,0,50" height="50">
-            <HorizontalLayout name="HorizontalLayoutUI2" bordersize="0" pos="0,0,100,50" width="100" height="50" />
-            <HorizontalLayout name="HSysTitle" bordersize="0" pos="0,0,0,50" height="50" />
-            <HorizontalLayout name="HToolbar" bordersize="0" pos="0,0,200,50" width="200" height="50" bkimage="file=&apos;ToolbarBg.png&apos; corner=&apos;20,0,20,20&apos;">
-                <Button name="BtnEqual" tooltip="等比查看" bordersize="0" float="true" pos="17,15,38,35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="EqualLookNormal.png" hotimage="EqualLoolHover.png" pushedimage="EqualLookPress.png" />
-                <Button name="BtnDesktop" tooltip="窗口模式" bordersize="0" float="true" pos="49,15,70,35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="ScreenNormal.png" hotimage="ScreenHover.png" pushedimage="ScreenPress.png" />
-                <Button name="BtnTurnLeft" tooltip="向左旋转" bordersize="0" float="true" pos="82,15,103,35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="TurnLeftNormal.png" hotimage="TurnLeftHover.png" pushedimage="TurnLeftPress.png" />
-                <Button name="BtnTurnRight" tooltip="向右旋转" bordersize="0" float="true" pos="113,15,134,35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="TurnRightNormal.png" hotimage="TurnRightHover.png" pushedimage="TurnRightPress.png" />
-                <Label name="LabelUI1" bordersize="0" float="true" pos="147,13,152,38" bkimage="CutLine.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
-                <Button name="BtnShareTo" tooltip="分享到..." bordersize="0" float="true" pos="165,15,186,35" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="ShareToNormal.png" hotimage="ShareToHover.png" pushedimage="ShareToPress.png" />
-            </HorizontalLayout>
-            <HorizontalLayout name="HorizontalLayoutUI1" bordersize="0" pos="0,0,0,50" height="50" />
-            <HorizontalLayout name="HSysBtn" bordersize="0" pos="0,0,100,50" width="100" height="50">
-                <Button name="CloseBtn" tooltip="关闭" bordersize="0" float="true" pos="58,0,100,42" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="CloseNormal.png" hotimage="CloseHover.png" pushedimage="ClosePress.png" />
-            </HorizontalLayout>
-        </HorizontalLayout>
-        <HorizontalLayout name="HLayoutBody" bordersize="0">
-            <VerticalLayout name="HBodyLeft" bordersize="0" pos="0,0,70,0" width="70">
-                <VerticalLayout name="VerticalLayoutUI1" bordersize="0" pos="0,0,70,0" width="70" />
-                <VerticalLayout name="Left" bordersize="0" pos="0,0,70,65" width="70" height="65">
-                    <Button name="BtnUp" tooltip="查看上一张" bordersize="0" float="true" pos="4,1,66,64" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="PreNormal.png" hotimage="PrelHover.png" pushedimage="PrePress.png" />
-                </VerticalLayout>
-                <VerticalLayout name="VerticalLayoutUI2" bordersize="0" pos="0,0,70,0" width="70" />
-            </VerticalLayout>
-            <VerticalLayout name="HBodyCenter" >
-				<VerticalLayout name="VLayoutShow" />
-				<VerticalLayout pos="0,0,0,50"/>
-			</VerticalLayout>
-            <VerticalLayout name="HBodyRight" bordersize="0" pos="0,0,70,0" width="70">
-                <VerticalLayout name="VerticalLayoutUI3" bordersize="0" pos="0,0,70,0" width="70" />
-                <VerticalLayout name="Ritht" bordersize="0" pos="0,0,70,65" width="70" height="65">
-                    <Button name="BtnDown" tooltip="查看下一张" bordersize="0" float="true" pos="4,1,66,64" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="NextNormal.png" hotimage="NextHover.png" pushedimage="NextPress.png" />
-                </VerticalLayout>
-                <VerticalLayout name="VerticalLayoutUI1" bordersize="0" pos="0,0,70,0" width="70" />
-            </VerticalLayout>
-        </HorizontalLayout>
-    </VerticalLayout>
+    <Font name="宋体" size="20" bold="false" italic="false" />
+	<VerticalLayout name="VLayout" childpadding="13,13,13,13" bkimage="file=&apos;MainBg.png&apos; dst=&apos;10,10,10,10&apos; corner=&apos;10,10,10,10&apos; mask=&apos;0xffffffff&apos; fade=&apos;100&apos;">
+		<VerticalLayout name="WinBorder" bkimage="file=&apos;border.png&apos; dst=&apos;13,13,13,13&apos; corner=&apos;5,5,5,5&apos; mask=&apos;0xffffffff&apos; ">
+			<HorizontalLayout name="HLayoutHead" pos="0,0,0,50">
+				<HorizontalLayout name="HSysTitle" pos="0,0,0,50" />
+				<HorizontalLayout name="HToolbar" pos="0,0,200,50" bkimage="file=&apos;ToolbarBg.png&apos; dest=&apos;0,13,200,50&apos; corner=&apos;20,0,20,20&apos;">
+					<Button name="BtnFullScreen" tooltip="全屏查看" float="true" pos="52,20,73,40" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="ScreenNormal.png" hotimage="ScreenHover.png" pushedimage="ScreenPress.png" />
+					<Button name="BtnTurnLeft" tooltip="向左旋转" float="true" pos="85,20,106,40" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="TurnLeftNormal.png" hotimage="TurnLeftHover.png" pushedimage="TurnLeftPress.png" />
+					<Button name="BtnTurnRight" tooltip="向右旋转" float="true" pos="117,20,138,40" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="TurnRightNormal.png" hotimage="TurnRightHover.png" pushedimage="TurnRightPress.png" />
+					<Button name="BtnShareTo" tooltip="分享到..." float="true" pos="163,20,184,40" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="ShareToNormal.png" hotimage="ShareToHover.png" pushedimage="ShareToPress.png" />
+					<Label name="LabelLine" float="true" pos="148,17,153,42" bkimage="CutLine.png" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" />
+					<Button name="BtnEqual" tooltip="等比查看" float="true" pos="20,20,41,40" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="EqualLookNormal.png" hotimage="EqualLoolHover.png" pushedimage="EqualLookPress.png" />
+				</HorizontalLayout>
+				<HorizontalLayout name="HSysBtn" pos="0,0,0,50">
+					<HorizontalLayout pos="0,0,0,50" />
+					<HorizontalLayout pos="0,0,0,50" width="150" height="50" >
+						<Button name="CloseBtn" tooltip="关闭" float="true" pos="123,3,148,28" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="CloseNormal.png" hotimage="CloseHover.png" pushedimage="ClosePress.png" />
+					</HorizontalLayout>
+				</HorizontalLayout>
+			</HorizontalLayout>
+			<HorizontalLayout name="HLayoutBody">
+				<VerticalLayout name="HBodyLeft" pos="0,0,70,0">
+					<VerticalLayout pos="0,0,70,0" />
+					<VerticalLayout pos="0,0,70,70">
+						<Button name="BtnUp" tooltip="查看上一张" float="true" pos="12,11,60,59" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="PreNormal.png" hotimage="PreHover.png" pushedimage="PrePress.png" />
+					</VerticalLayout>
+					<VerticalLayout pos="0,0,70,0" />
+				</VerticalLayout>
+				<VerticalLayout name="HLayoutCenter">
+					<!-- <3DView name="Img" scale="1" bkcolor="#0100FFFF" image="C:\123.bmp"/> -->
+					<3DView name="Img"/>
+					<HorizontalLayout height="50" />
+				</VerticalLayout>
+				<VerticalLayout name="HBodyRight" pos="0,0,70,0">
+				 	<VerticalLayout pos="0,0,70,0" />
+					<VerticalLayout pos="0,0,70,70">
+						<Button name="BtnDown" tooltip="查看下一张" float="true" pos="10,11,58,59" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="NextNormal.png" hotimage="NextHover.png" pushedimage="NextPress.png" />
+					</VerticalLayout>
+					<VerticalLayout pos="0,0,70,0" />
+				</VerticalLayout>
+			</HorizontalLayout>
+		</VerticalLayout>
+	</VerticalLayout>
 </Window>

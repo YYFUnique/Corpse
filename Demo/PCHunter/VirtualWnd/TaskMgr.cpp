@@ -9,6 +9,7 @@ CTaskMgr::CTaskMgr()
 	AddVirtualWnd(_T("csp"),&m_ViewCSP);
 	AddVirtualWnd(_T("cert"),&m_ViewCert);
 	AddVirtualWnd(_T("user"),&m_UserInfo);
+	AddVirtualWnd(_T("job"),&m_TaskJob);
 }
 
 CTaskMgr::~CTaskMgr()
@@ -20,6 +21,7 @@ CTaskMgr::~CTaskMgr()
 	RemoveVirtualWnd(_T("csp"));
 	RemoveVirtualWnd(_T("cert"));
 	RemoveVirtualWnd(_T("user"));
+	RemoveVirtualWnd(_T("job"));
 }
 
 DUI_BEGIN_MESSAGE_MAP(CTaskMgr, CNotifyPump)

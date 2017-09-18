@@ -365,7 +365,7 @@ BOOL GetServiceInfo(CServiceList& serList)
 		SvrInfo.strSvrName = CString (lpEss[i].lpServiceName);
 		SvrInfo.strDisplayName = CString (lpEss[i].lpDisplayName);
 		SvrInfo.strPath = CString (lpSC->lpBinaryPathName);
-		SvrInfo.strDiscruption = CString (lpsd->lpDescription);
+		SvrInfo.strDescription = CString (lpsd->lpDescription);
 
 		SvrInfo.dwPID = lpEss[i].ServiceStatusProcess.dwProcessId;
 		SvrInfo.dwRunStatus = lpEss[i].ServiceStatusProcess.dwCurrentState;

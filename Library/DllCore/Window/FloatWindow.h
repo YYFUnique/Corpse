@@ -1,5 +1,4 @@
 #pragma once
-#include "../Utils/YjList.h"
 
 #ifdef LS_STATIC_LIB_CALL
 #define DLL_API 
@@ -15,7 +14,7 @@ typedef struct tagEventHookWnd
 	HWINEVENTHOOK		hEventHook;	//当前消息钩子句柄
 }EventHookWnd,*PEventHookWnd;
 
-typedef CYjList<EventHookWnd,const EventHookWnd&> CEventMainWnd;
+typedef CDuiList<EventHookWnd,const EventHookWnd&> CEventMainWnd;
 //typedef std::vector<EventHookWnd> CEventMainWnd;
 
 class DLL_API CFloatWindow

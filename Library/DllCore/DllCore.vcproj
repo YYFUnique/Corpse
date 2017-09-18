@@ -452,6 +452,22 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Log"
+				>
+				<File
+					RelativePath=".\Log\LogHelper.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Sync"
+				>
+				<File
+					RelativePath=".\Sync\SyncLock.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -526,6 +542,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Utils\DuiList.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\ErrorInfo.h"
 					>
 				</File>
@@ -555,10 +575,6 @@
 				</File>
 				<File
 					RelativePath=".\Utils\TextTools.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\YjList.h"
 					>
 				</File>
 			</Filter>
@@ -659,6 +675,22 @@
 				>
 				<File
 					RelativePath=".\Window\FloatWindow.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Log"
+				>
+				<File
+					RelativePath=".\Log\LogHelper.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Sync"
+				>
+				<File
+					RelativePath=".\Sync\SyncLock.h"
 					>
 				</File>
 			</Filter>

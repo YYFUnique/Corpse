@@ -51,3 +51,8 @@ void CNetMgr::OnRangeMenu(CControlUI* pControl)
 {
 	m_Scan.OnRangeMenu(pControl);
 }
+
+void CNetMgr::OnRouteInfo(CControlUI* pControl)
+{
+	m_Route.OnRouteInfo(pControl);
+}

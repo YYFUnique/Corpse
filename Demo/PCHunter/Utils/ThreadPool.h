@@ -1,5 +1,5 @@
 #pragma once
-#include "DuiList.h"
+#include "DllCore/Utils/DuiList.h"
 #include <vector>
 using namespace std;
 

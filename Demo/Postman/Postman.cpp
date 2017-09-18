@@ -52,18 +52,6 @@ void CPostman::Notify(TNotifyUI& msg)
 void CPostman::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
-
-
-	for (int n=0;n<10000;++n)
-	{
-		BOOL bRet = PostMessage(WM_TEST_MESSAGE,0,0);
-		if (bRet == FALSE)
-		{
-			CDuiString strTipInfo;
-			strTipInfo.Format(_T("当前检测到错误:%d[%d]."),n+1,GetLastError());
-			MessageBox(m_hWnd,strTipInfo,_T("提示"),MB_OK);
-		}
-	}
 }
 
 void CPostman::OnClick(TNotifyUI& msg)
@@ -107,12 +95,12 @@ void CPostman::ShowBar(BOOL bShowBar)
 	CControlUI* pFunc = m_PaintManager.FindControl(_T("Func"));
 	pFunc->SetVisible(bShowBar != FALSE);
 
-	CButtonUI* pHide = (CButtonUI*)m_PaintManager.FindControl(_T("BtnHide"));
+	/*CButtonUI* pHide = (CButtonUI*)m_PaintManager.FindControl(_T("BtnHide"));
 	CButtonUI* pShow = (CButtonUI*)m_PaintManager.FindControl(_T("BtnShow"));
 	pHide->SetVisible(bShowBar != FALSE);
-	pShow->SetVisible(bShowBar == FALSE);
+	pShow->SetVisible(bShowBar == FALSE);*/
 
-	CControlUI* pSplit = m_PaintManager.FindControl(_T("VSplit"));
+	/*CControlUI* pSplit = m_PaintManager.FindControl(_T("VSplit"));
 
 	RECT rcPos = pFunc->GetPos();
 
@@ -121,5 +109,5 @@ void CPostman::ShowBar(BOOL bShowBar)
 		nLeft = rcPos.right - 12;
 
 	RECT rcCtrl = {nLeft, rcPos.top, nLeft+13, rcPos.bottom };
-	pSplit->SetPos(rcCtrl);
+	pSplit->SetPos(rcCtrl);*/
 }

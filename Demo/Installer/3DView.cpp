@@ -31,9 +31,9 @@ void C3DViewUI::StartEffect(BOOL bStart)
 	m_bPlay = bStart;
 	if (m_bPlay != FALSE)
 	{
-		m_hMemDC = ::CreateCompatibleDC(m_pManager->GetPaintDC());
-		m_hBmpTrans = CRenderEngine::GenerateBitmap(m_pManager, this, m_rcItem); 
-		SelectObject(m_hMemDC, m_hBmpTrans);
+		//m_hMemDC = ::CreateCompatibleDC(m_pManager->GetPaintDC());
+		//m_hBmpTrans = CRenderEngine::GenerateBitmap(m_pManager, this, m_rcItem); 
+		//SelectObject(m_hMemDC, m_hBmpTrans);
 	}
 }
 

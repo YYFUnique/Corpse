@@ -25,3 +25,5 @@ BOOL GetAdaptersInfo(CIpAdapterInfoList& AdapterList);
 BOOL LsIpv4StringToAddress(LPCTSTR lpszIpv4String, SOCKADDR_IN *pAddrIn);
 
 BOOL LsIpv4AddressToString(DWORD dwIPAddr, CDuiString& strIpv4String);
+
+DWORD GetBestSourceIp(DWORD dwTargetIp);

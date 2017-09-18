@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "PCHunter.h"
-
+#include <NetCon.h>
 #include "DllCore/File/MiniDump.h"
 
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)

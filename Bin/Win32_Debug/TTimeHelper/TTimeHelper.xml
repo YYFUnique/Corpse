@@ -15,7 +15,7 @@
 			</HorizontalLayout>
 			<Control height="5"/>
 			<HorizontalLayout height="66">
-				<HorizontalLayout name="HLayoutLeft"/>
+				<Control />
 				<HorizontalLayout name="HLayoutMain" pos="0,0,204,66" height="66">
 					<Frame name="Frame4" time="200" frame="30" width="42" height="66"/>
 					<Frame name="Frame3" time="200" frame="30" width="42" height="66"/>
@@ -23,7 +23,7 @@
 					<Frame name="Frame2" time="200" frame="30" width="42" height="66"/>
 					<Frame name="Frame1" time="200" frame="30" width="42" height="66"/>
 				</HorizontalLayout>
-				<HorizontalLayout name="HLayoutRight"/>
+				<Control />
 			</HorizontalLayout>
 			<Control height="4"/>
 			<HorizontalLayout height="20">

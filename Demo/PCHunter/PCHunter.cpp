@@ -440,6 +440,7 @@ LRESULT CPCHunter::OnMenuClick(WPARAM wParam, LPARAM lParam)
 	if (pControl == NULL)
 		return FALSE;
 
+	//获取菜单对应根节点的控件名称
 	CDuiString strMenuName = pControl->GetManager()->GetRoot()->GetName();
 	if (strMenuName == _T("AppMenu"))
 		m_TaskMgr.OnApplication(pControl);
@@ -447,5 +448,7 @@ LRESULT CPCHunter::OnMenuClick(WPARAM wParam, LPARAM lParam)
 		m_NetMgr.OnHostScanMenu(pControl);
 	else if (strMenuName == _T("RangeMenu"))
 		m_NetMgr.OnRangeMenu(pControl);
+	else if (strMenuName == _T("RouteInfo"))
+		m_NetMgr.OnRouteInfo(pControl);
 	return TRUE;
 }

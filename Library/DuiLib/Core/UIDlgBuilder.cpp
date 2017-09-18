@@ -402,6 +402,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				else if( _tcscmp(pstrClass, DUI_CTR_CHECKBOX) == 0 )			pControl = new CCheckBoxUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_COMBOBOX) == 0 )			pControl = new CComboBoxUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_DATETIME) == 0 )			pControl = new CDateTimeUI;
+				else if( _tcsicmp(pstrClass, DUI_CTR_TREENODE) == 0)			pControl = new CTreeNodeUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_TREEVIEW) == 0 )				pControl = new CTreeViewUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_CALENDAR) == 0 )			pControl = new CCalendarUI;
 				else if( _tcscmp(pstrClass, DUI_CTR_ROLLTEXT) == 0 )				pControl = new CRollTextUI;
@@ -435,6 +436,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
             case 14:
                 if( _tcscmp(pstrClass, DUI_CTR_VERTICALLAYOUT) == 0 )       pControl = new CVerticalLayoutUI;
                 else if( _tcscmp(pstrClass, DUI_CTR_LISTHEADERITEM) == 0 ) pControl = new CListHeaderItemUI;
+				else if(_tcsicmp(pstrClass, DUI_CTR_SPLITTERLAYOUT) == 0)  pControl = new CSplitterLayoutUI;
                 break;
             case 15:
                 if( _tcscmp(pstrClass, DUI_CTR_LISTTEXTELEMENT) == 0 )       pControl = new CListTextElementUI;

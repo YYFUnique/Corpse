@@ -1,7 +1,6 @@
 #pragma once
 
 #include "LsThread.h"
-#include "../Utils/YjList.h"
 
 #ifdef LS_STATIC_LIB_CALL
 #define DLL_API 
@@ -14,7 +13,7 @@
 //template class __declspec(dllexport) CLsList<CLsThread*,CLsThread*>;
 
 //对CLsThread类的管理
-typedef CYjList<CLsThread* , CLsThread*> CLsThreadList;
+typedef CDuiList<CLsThread* , CLsThread*> CLsThreadList;
 
 class DLL_API CLsThreadMgr
 {

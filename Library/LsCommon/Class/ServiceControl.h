@@ -15,7 +15,7 @@ typedef struct tagSERVICEINFO {
 	CString  strSvrName;
 	CString  strDisplayName;
 	CString  strPath;
-	CString  strDiscruption;
+	CString  strDescription;
 	DWORD    dwPID;
 	DWORD    dwRunStatus;
 	DWORD    dwStartType;

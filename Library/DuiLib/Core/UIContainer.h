@@ -85,6 +85,9 @@ public:
 	CControlUI* FindSubControl(LPCTSTR pstrSubControlName);
 	CControlUI* FindSubControlByClassName( LPCTSTR pstrSubControlClassName);
 
+	bool Erase(CControlUI* pControl);
+	bool Erase(int iIndex);
+
     virtual SIZE GetScrollPos() const;
     virtual SIZE GetScrollRange() const;
     virtual void SetScrollPos(SIZE szPos);
@@ -108,8 +111,10 @@ public:
 
 protected:
     virtual void SetFloatPos(int iIndex);
-    virtual void ProcessScrollBar(RECT rc, int cxRequired, int cyRequired);
 
+	void ProcessHScrollBar(RECT rc, int cxRequired);
+	void ProcessVScrollBar(RECT rc, int cyRequired);
+    virtual void ProcessScrollBar(RECT rc, int cxRequired, int cyRequired);
 protected:
     CStdPtrArray m_items;
     RECT m_rcInset;

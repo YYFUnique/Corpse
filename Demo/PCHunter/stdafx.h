@@ -10,13 +10,7 @@
 #include "DuiLib/UIlib.h"
 using namespace DuiLib;
 
-#ifndef __POSITION
-typedef struct __POSITION
-{
-}__POSITION,*POSITION;
-#endif
-
-#include "Utils/DuiList.h"
+#include "DllCore/Utils/DuiList.h"
 
 #include "Utils/TextTools.h"
 
@@ -35,6 +29,7 @@ typedef struct __POSITION
 #include "VirtualWnd/ViewCSP.h"
 #include "VirtualWnd/ViewCert.h"
 #include "VirtualWnd/UserInfo.h"
+#include "VirtualWnd/TaskScheduled.h"
 
 //ÍøÂç·ÖÏí¹¤¾ß
 #include "VirtualWnd/Adapter.h"

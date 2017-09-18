@@ -88,6 +88,7 @@ namespace DuiLib
 
 		int cxExpand = 0;
         int cxNeeded = 0;
+		int cyNeeded = 0;
 		if( nAdjustables > 0 ) cxExpand = MAX(0, (szAvailable.cx - cxFixed) / nAdjustables);
 		// Position the elements
 		SIZE szRemaining = szAvailable;
@@ -135,6 +136,10 @@ namespace DuiLib
 			if( sz.cy < 0 ) sz.cy = 0;
 			if( sz.cy < pControl->GetMinHeight() ) sz.cy = pControl->GetMinHeight();
 			if( sz.cy > pControl->GetMaxHeight() ) sz.cy = pControl->GetMaxHeight();
+
+			int tmp = sz.cy + rcPadding.left + rcPadding.right;
+			cyNeeded = (tmp > cyNeeded) ? tmp: cyNeeded;
+
 			//////////////////////////////////////////////////////////////////////////
 			///corrected by gechunping  on 2014_3_27
 			///origin///  RECT rcCtrl = { iPosX + rcPadding.left, rc.top + rcPadding.top, iPosX + sz.cx + rcPadding.left + rcPadding.right, rc.top + rcPadding.top + sz.cy};
@@ -147,9 +152,9 @@ namespace DuiLib
 			szRemaining.cx -= sz.cx + m_iChildPadding + rcPadding.right;
 		}
         cxNeeded += (nEstimateNum - 1) * m_iChildPadding;
-
+		cyNeeded += (nEstimateNum - 1) * m_iChildPadding;
 		// Process the scrollbar
-		ProcessScrollBar(rc, cxNeeded, 0);
+		ProcessScrollBar(rc, cxNeeded, cyNeeded);
 	}
 
 	void CHorizontalLayoutUI::DoPostPaint(HDC hDC, const RECT& rcPaint)

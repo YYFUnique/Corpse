@@ -38,7 +38,7 @@ void CColorSkinWindow::OnFinalMessage(HWND hWnd)
 void CColorSkinWindow::InitWindow()
 {
 	SIZE size = m_PaintManager.GetInitSize();
-	SetWindowPos(m_hWnd,HWND_TOPMOST,m_lpRectParent.right - size.cx, m_lpRectParent.top, size.cx, size.cy, SWP_SHOWWINDOW);
+	SetWindowPos(m_hWnd,HWND_TOPMOST,m_lpRectParent.right - size.cx-7, m_lpRectParent.top, size.cx, size.cy, SWP_SHOWWINDOW);
 }
 
 CDuiString CColorSkinWindow::GetSkinFile()

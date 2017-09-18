@@ -23,7 +23,7 @@ typedef struct _LS_OS_USER_INFO
 	};
 }LS_OS_USER_INFO,*PLS_OS_USER_INFO;
 
-typedef CYjList<LS_OS_USER_INFO , const LS_OS_USER_INFO&> CLsOsUserInfoList;
+typedef CDuiList<LS_OS_USER_INFO , const LS_OS_USER_INFO&> CLsOsUserInfoList;
 
 //==================================================================
 //º¯ Êý Ãû: ConvertUserSidStringToName

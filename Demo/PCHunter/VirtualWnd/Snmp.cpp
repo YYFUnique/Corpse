@@ -127,7 +127,11 @@ void CSnmp::OnGetRemoteDevSNMP()
 	if (m_pSnmpMgr != NULL)
 	{
 		m_pSnmpMgr->SetOwner(this);
-		m_pSnmpMgr->Init(pAddr->GetText(), pPassword->GetText());
+		if (m_pSnmpMgr->Init(pAddr->GetText(), pPassword->GetText()) == FALSE)
+		{
+			MessageBox(m_pPaintManager->GetPaintWindow(),_T("SNMP初始化失败"),_T("提示"),MB_OK);
+			return;
+		}
 		m_strSmiOid = strSmiOid;
 		m_strSmiOidOld.Empty();
 		SendMsg(strSmiOid);
@@ -170,6 +174,7 @@ void CSnmp::SnmpMsgHandler(smiOID sOid, smiVALUE sValue)
 		pElement->SetText(0,strOid);
 		pElement->SetText(1,strOidValue);
 		TCHAR szLen[20],szType[20];
+		ZeroMemory(szType,sizeof(szType));
 		GetOidValueLenAndType(sValue,szLen,szType);
 		pElement->SetText(2,szLen);
 		pElement->SetText(3,szType);
@@ -209,6 +214,8 @@ void CSnmp::GetOidValueLenAndType(smiVALUE sValue,LPTSTR szLen,LPTSTR szType)
 	case SNMP_SYNTAX_GAUGE32:
 		_stprintf_s(szLen,20,_T("%d"),4);
 		break;
+	default:
+		_stprintf_s(szLen,20,_T("%d"),0);
 	}
 
 	LPCTSTR lpszTypeName = _T("");

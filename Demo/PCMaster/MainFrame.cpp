@@ -1,12 +1,16 @@
 #include "stdafx.h"
 #include "PCMaster.h"
 #include "DllCore/File/MiniDump.h"
+
+_declspec(selectany) CLSID CLSID_GAGetDevNo = { 0xf73069f8, 0xf828, 0x4837, { 0xa9, 0x25, 0xe1, 0xe0, 0x30, 0xe2, 0x4d, 0x7c } };
+
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
 {
 	CPaintManagerUI::SetInstance(hInstance);
 	BOOL bSuccess = FALSE;
 	HRESULT hRet = S_FALSE;
 	HANDLE hMultex = NULL;
+	
 	do 
 	{
 		CString strCmdLine(szCmdLine);

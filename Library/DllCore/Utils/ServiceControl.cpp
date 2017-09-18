@@ -492,9 +492,9 @@ DWORD GetCoreServiceCount()
 	return dwReslut;
 }
 
-BOOL GetServiceInfo(CServiceList& serList)
+BOOL GetServiceInfo(CSrvInfoList& SrvList)
 {
-	serList.RemoveAll();
+	SrvList.RemoveAll();
 	SERVICEINFO SvrInfo;
 	LPENUM_SERVICE_STATUS_PROCESS lpEss;
 	LPQUERY_SERVICE_CONFIG lpSC;
@@ -560,14 +560,14 @@ BOOL GetServiceInfo(CServiceList& serList)
 		SvrInfo.strSvrName = CString (lpEss[i].lpServiceName);
 		SvrInfo.strDisplayName = CString (lpEss[i].lpDisplayName);
 		SvrInfo.strPath = CString (lpSC->lpBinaryPathName);
-		SvrInfo.strDiscruption = CString (lpsd->lpDescription);
+		SvrInfo.strDescription = CString (lpsd->lpDescription);
 		
 		SvrInfo.dwPID = lpEss[i].ServiceStatusProcess.dwProcessId;
 		SvrInfo.dwRunStatus = lpEss[i].ServiceStatusProcess.dwCurrentState;
 		SvrInfo.dwStartType = lpSC->dwStartType;
 		SvrInfo.dwType = lpEss[i].ServiceStatusProcess.dwServiceType;
 		
-        serList.AddTail(SvrInfo);
+        SrvList.AddTail(SvrInfo);
 		
 		VirtualFree(lpsd, 0, MEM_FREE);
 		VirtualFree(lpSC, 0, MEM_FREE);
@@ -580,9 +580,9 @@ BOOL GetServiceInfo(CServiceList& serList)
 	return TRUE;
 }
 
-BOOL GetCoreServiceInfo(CServiceList& serList)
+BOOL GetCoreServiceInfo(CSrvInfoList& SrvList)
 {
-	serList.RemoveAll();
+	SrvList.RemoveAll();
 	SERVICEINFO SvrInfo;
 	LPENUM_SERVICE_STATUS_PROCESS lpEss;
 	LPQUERY_SERVICE_CONFIG lpSC;
@@ -623,14 +623,14 @@ BOOL GetCoreServiceInfo(CServiceList& serList)
  		SvrInfo.strSvrName = CString (lpEss[i].lpServiceName);
 		SvrInfo.strDisplayName = CString (lpEss[i].lpDisplayName);
 		SvrInfo.strPath = CString (lpSC->lpBinaryPathName);
-		SvrInfo.strDiscruption = CString (lpsd->lpDescription);
+		SvrInfo.strDescription = CString (lpsd->lpDescription);
 		
 		SvrInfo.dwPID = lpEss[i].ServiceStatusProcess.dwProcessId;
 		SvrInfo.dwRunStatus = lpEss[i].ServiceStatusProcess.dwCurrentState;
 		SvrInfo.dwStartType = lpSC->dwStartType;
 		SvrInfo.dwType = lpEss[i].ServiceStatusProcess.dwServiceType;
 		
-        serList.AddTail(SvrInfo);
+        SrvList.AddTail(SvrInfo);
 		
 		VirtualFree(lpsd, 0, MEM_FREE);
 		VirtualFree(lpSC, 0, MEM_FREE);

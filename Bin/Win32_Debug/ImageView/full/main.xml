@@ -27,9 +27,10 @@
                 </VerticalLayout>
                 <VerticalLayout name="VerticalLayoutUI2" bordersize="0" pos="0,0,70,0" width="70" />
             </VerticalLayout>
-            <VerticalLayout name="HBodyCenter" >
-				<VerticalLayout name="VLayoutShow" />
-				<VerticalLayout pos="0,0,0,50"/>
+            <VerticalLayout name="HLayoutCenter">
+					<!-- <3DView name="Img" scale="1" bkcolor="#0100FFFF" image="C:\123.bmp"/> -->
+				<3DView name="Img"/>
+				<HorizontalLayout height="50" />
 			</VerticalLayout>
             <VerticalLayout name="HBodyRight" bordersize="0" pos="0,0,70,0" width="70">
                 <VerticalLayout name="VerticalLayoutUI3" bordersize="0" pos="0,0,70,0" width="70" />

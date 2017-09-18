@@ -31,7 +31,7 @@ public:
     // 文本相关
     virtual CDuiString GetText() const;
     virtual void SetText(LPCTSTR pstrText);
-
+	void SetTextId(LPCTSTR pstrValue);
     // 图形相关
     DWORD GetBkColor() const;
     void SetBkColor(DWORD dwBackColor);
@@ -220,6 +220,7 @@ protected:
     TRelativePosUI m_tRelativePos;
 
     CDuiString m_sText;
+	CDuiString m_sTextId;
     CDuiString m_sToolTip;
     TCHAR m_chShortcut;
     CDuiString m_sUserData;

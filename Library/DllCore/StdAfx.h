@@ -26,7 +26,7 @@
 #include <crtdbg.h> 
 #include <atlstr.h>
 
-#include "Utils/YjList.h"
+#include "Utils/DuiList.h"
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 
