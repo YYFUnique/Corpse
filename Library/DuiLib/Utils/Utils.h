@@ -173,10 +173,18 @@ namespace DuiLib
 			memmove(&m_pVoid + (iIndex+1) * m_iElementSize, &m_pVoid + iIndex * m_iElementSize,m_iElementSize);
 			::CopyMemory(m_pVoid + (iIndex * m_iElementSize), &pData, m_iElementSize);
 			return true;
-		}
+		};
+		bool SetAt(int iIndex, const T pData) {
+			if( iIndex < 0 || iIndex > m_nCount ) return false;
+			::CopyMemory(m_pVoid + (iIndex * m_iElementSize), &pData, m_iElementSize);
+			return true;
+		};
 		T GetData(){return static_cast<T>(CStdValArray::GetData());};
+		bool SetData() {
+
+		};
 		T GetAt(int iIndex) const {return *static_cast<T1*>(CStdValArray::GetAt(iIndex));};
-		T operator[] (int nIndex) const{return (T)CStdValArray:::operator[](nIndex);};
+		T operator[](int nIndex) const{return (T)CStdValArray::operator[](nIndex);};
 	};
 
 	/////////////////////////////////////////////////////////////////////////////////////

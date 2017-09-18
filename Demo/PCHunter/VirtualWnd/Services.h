@@ -1,4 +1,5 @@
 #pragma once
+#include "DllCore/Utils/ServiceControl.h"
 
 typedef enum tagSVR_TYPE
 {
@@ -30,21 +31,21 @@ typedef enum tagSVR_STATE
 
 typedef CDuiList<CDuiString,LPCTSTR> CDependList;
 
-typedef struct tagSERVICEINFO
-{
-	CDuiString strSvrName;				//服务名称
-	CDuiString strDisplayName;		//显示名称
-	CDuiString strDescription;			//服务描述
-	CDuiString strPath;						//服务路径
-	DWORD    dwPID;						//进程ID
-	SVR_STATE    dwRunStatus;		//服务状态
-	SVR_STARTTYPE    dwStartType;	//启动状态
-	SVR_TYPE    dwType;					//服务类型
-	//CStdValArray strDependencies; //依赖服务
-	//CDependList	DependList;			//依赖服务
-}SERVICEINFO;
+//typedef struct tagSERVICEINFO
+//{
+//	CDuiString strSvrName;				//服务名称
+//	CDuiString strDisplayName;		//显示名称
+//	CDuiString strDescription;			//服务描述
+//	CDuiString strPath;						//服务路径
+//	DWORD    dwPID;						//进程ID
+//	SVR_STATE    dwRunStatus;		//服务状态
+//	SVR_STARTTYPE    dwStartType;	//启动状态
+//	SVR_TYPE    dwType;					//服务类型
+//	//CStdValArray strDependencies; //依赖服务
+//	//CDependList	DependList;			//依赖服务
+//}SERVICEINFO;
 
-typedef CDuiList<SERVICEINFO,const SERVICEINFO&> CSvrInfo;
+/*typedef CDuiList<SERVICEINFO,const SERVICEINFO&> CSvrInfo;*/
 
 class CServices : public CBase
 {
@@ -58,11 +59,11 @@ public:
 	void OnMenu(TNotifyUI& msg);
 protected:
 	
-	BOOL GetSvrInfo(CSvrInfo& SvrInfoList);
+	BOOL GetSvrInfo(CSrvInfoList& SvrInfoList);
 
 	void FormatPid(DWORD Pid, CDuiString& strPid);
 	void FormatRunStatus(DWORD dwCurrentState, CDuiString& strRunState);
 	void FormatStartType(DWORD dwStartType, CDuiString& strStartType);
 protected:
-	CSvrInfo	m_ServicesInfo;
+	CSrvInfoList	m_ServicesInfo;
 };

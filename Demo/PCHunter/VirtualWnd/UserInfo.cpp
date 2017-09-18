@@ -20,7 +20,7 @@ void CUserInfo::OnPaint()
 	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("User"));
 	if (pList->GetCount())
 		pList->RemoveAll();
-	CSvrInfo SvrInfoList;
+	//CSvrInfo SvrInfoList;
 
 	BOOL bRet = WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE,NULL,1,&pWtsSessionInfo,&dwCount);
 	CDuiString strSessionInfo;

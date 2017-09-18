@@ -2,14 +2,14 @@
 <Window size="600,400" sizebox="4,4,6,6" caption="0,0,0,40" roundcorner="5,5">
     <Font name="微软雅黑" size="16" bold="false" italic="false" />
 	<Default name="VScrollBar" value="width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file='vscrollbarthumb.png' source='0,0,10,42' corner='5,5,5,5'&quot; thumbhotimage=&quot;file='vscrollbarthumb.png' source='10,0,20,42' corner='5,5,5,5'&quot; thumbpushedimage=&quot;file='vscrollbarthumb.png' source='20,0,30,42' corner='5,5,5,5'&quot; bknormalimage=&quot;file='vscrollbar_bkg.png' corner='5,5,5,5'&quot;"/>
-    <VerticalLayout name="VLayoutTotal" bordersize="0" pos="282,87,342,117" width="60" height="30" bkimage="main_bkg.jpg">
-        <VerticalLayout name="VLayoutBorder" bordersize="0" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;">
-            <HorizontalLayout name="HLayoutHead" bordersize="0" pos="0,0,0,40" height="40">
-                <HorizontalLayout name="HorizontalLayoutUI1" bordersize="0" >
+    <VerticalLayout name="VLayoutTotal" pos="282,87,342,117" width="60" height="30" bkimage="main_bkg.jpg">
+        <VerticalLayout name="VLayoutBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;">
+            <HorizontalLayout name="HLayoutHead" pos="0,0,0,40" height="40">
+                <HorizontalLayout name="HorizontalLayoutUI1"  >
 					<Label name="title" font="0" text="更换皮肤" padding="10,0,0,0" textcolor="#FFFFFFFF"/>
 				</HorizontalLayout>
-                <HorizontalLayout name="HorizontalLayoutUI2" bordersize="0" pos="0,0,39,30" width="39" height="30">
-                    <Button name="BtnClose" tooltip="关闭" bordersize="0" float="true" pos="0,0,39,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
+                <HorizontalLayout name="HorizontalLayoutUI2" pos="0,0,39,30" width="39" height="30">
+                    <Button name="BtnClose" tooltip="关闭" float="true" pos="0,0,39,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
                 </HorizontalLayout>
             </HorizontalLayout>
 			<VerticalLayout inset="1,1,1,1">

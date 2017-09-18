@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "ImageView.h"
 #include "Resource.h"
+#include "UIImageView.h"
+#include "3DView.h"
 #include <Wingdi.h>
 
 CImageView::CImageView()
@@ -31,18 +33,41 @@ CDuiString CImageView::GetSkinFolder()
 
 UILIB_RESOURCETYPE CImageView::GetResourceType() const
 {
-	return UILIB_ZIP;
+	//return UILIB_ZIP;
+	return UILIB_FILE;
 }
 
 void CImageView::Notify(TNotifyUI& msg)
 {
 	if (msg.sType == DUI_MSGTYPE_CLICK)
 		OnClick(msg);
+	else if (msg.sType == DUI_MSGTYPE_WINDOWINIT)
+		OnInitDialog(msg);
+}
+
+void CImageView::OnInitDialog(TNotifyUI& msg)
+{
+	C3DViewUI* pView = (C3DViewUI*)m_PaintManager.FindControl(_T("Img"));
+	
+	pView->SetViewImage(_T("C:\\1234.bmp"));
+	pView->Update();
+	pView->StartEffect(TRUE);
 }
 
 void CImageView::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
+
+	//HBITMAP hBitmap = (HBITMAP)LoadImage(CPaintManagerUI::GetInstance(),_T("C:\\123.bmp"),IMAGE_BITMAP,0,0,LR_LOADFROMFILE );
+	////HBITMAP hBitmap = CRenderEngine::GenerateBitmap(GetManager(),GetManager()->GetRoot(),rcPaint);
+	///*bRet = TRUE;*/
+	//CImageViewUI* pImageView = (CImageViewUI*)m_PaintManager.FindControl(_T("Img"));
+	//HBITMAP hRotate = pImageView->GetRotatedBitmap(hBitmap, 1, 0x00000001);
+	//BITMAP bmp;
+	//::GetObject(hRotate, sizeof(bmp), &bmp);
+	//m_PaintManager->AddImage(_T("test"),hRotate,bmp.bmWidth,bmp.bmWidth,TRUE);
+	//pImageView->SetViewImage(_T("test"));
+
 	::DragAcceptFiles(m_hWnd,TRUE);
 }
 
@@ -63,6 +88,10 @@ LRESULT CImageView::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 CControlUI* CImageView::CreateControl(LPCTSTR pstrClass)
 {
+	if (_tcsicmp(pstrClass, _T("ImageView")) == 0)
+		return new CImageViewUI;
+	else if (_tcsicmp(pstrClass, _T("3DView")) == 0)
+		return new C3DViewUI;
 	return NULL;
 }
 
@@ -108,6 +137,18 @@ void CImageView::OnClick(TNotifyUI& msg)
 		SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
 	else if (msg.pSender->GetName() == _T("BtnDesktop"))
 		SendMessage(WM_SYSCOMMAND, SC_RESTORE, 0);
+	else if (msg.pSender->GetName() == _T("BtnTurnLeft"))
+	{
+		C3DViewUI* pView = (C3DViewUI*)m_PaintManager.FindControl(_T("Img"));
+		pView->Get3dParam().nRotateZ += 90;
+		pView->Update();
+	}
+	else if (msg.pSender->GetName() == _T("BtnTurnRight"))
+	{
+		C3DViewUI* pView = (C3DViewUI*)m_PaintManager.FindControl(_T("Img"));
+		pView->Get3dParam().nRotateZ -= 90;
+		pView->Update();
+	}
 }
 
 LRESULT CImageView::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)

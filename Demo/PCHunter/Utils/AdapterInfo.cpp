@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AdapterInfo.h"
+#include "ErrorInfo.h"
 #include <NetCon.h>
 #include <Ras.h>
 #pragma comment(lib,"Rasapi32.lib")
@@ -20,7 +21,7 @@ BOOL GetAllShowAdapter(CNetPropertiesList& NetPropertiesInfo)
 	do 
 	{
 		//创建一个com对象
-		HRESULT hRet = CoCreateInstance(CLSID_ConnectionManager, NULL, CLSCTX_SERVER, IID_INetConnectionManager, (void**)&pManager);
+		/*HRESULT hRet = CoCreateInstance(CLSID_ConnectionManager, NULL, CLSCTX_SERVER, IID_INetConnectionManager, (void**)&pManager);
 		if (FAILED(hRet))
 			break;
 
@@ -37,9 +38,9 @@ BOOL GetAllShowAdapter(CNetPropertiesList& NetPropertiesInfo)
 			pConnection->Release();
 		}
 
-		if(pEnum) pEnum->Release();
+		if(pEnum) pEnum->Release();*/
 		
-/*
+
 		HRESULT hRet = CoCreateInstance(CLSID_NetSharingManager,NULL,CLSCTX_SERVER,IID_INetSharingManager,(void**)&pNetSharingManager);
 		if (FAILED(hRet))
 			break;
@@ -56,23 +57,21 @@ BOOL GetAllShowAdapter(CNetPropertiesList& NetPropertiesInfo)
 
 		INetConnection* pNetConnection = NULL;
 		ULONG           celt;
-		VARIANT v;  
-	    VariantInit(&v);// 初始化 错误 类型VARIANT（是错误可捕捉）
+		VARIANT vt;  
+	    VariantInit(&vt);// 初始化 错误 类型VARIANT（是错误可捕捉）
 
-		while (pEV->Next(1,&v,&celt) == S_OK)
+		while (pEV->Next(1,&vt,&celt) == S_OK)
 		{
-			if (V_VT(&v) == VT_UNKNOWN)
+			if (V_VT(&vt) == VT_UNKNOWN)
 			{
-
 				INetConnection* pNC = NULL;  
 
-				V_UNKNOWN(&v)->QueryInterface(__uuidof(INetConnection), (void**)&pNC);  // 查询设备是否支持接口 
+				V_UNKNOWN(&vt)->QueryInterface(__uuidof(INetConnection), (void**)&pNC);  // 查询设备是否支持接口 
 				NETCON_PROPERTIES*  Nproperties=NULL;
 				pNC->GetProperties(&Nproperties);
 				NetPropertiesInfo.AddTail(*Nproperties);
 			}
 		}
-*/
 
 		bSuccess = TRUE;
 	} while (FALSE);
@@ -249,4 +248,43 @@ BOOL LsIpv4AddressToString(DWORD dwIPAddr, CDuiString& strIpv4String)
 	strIpv4String = szIpv4String;
 
 	return TRUE;
+}
+
+DWORD GetBestSourceIp(DWORD dwTargetIp)
+{
+	SOCKET UdpSocket;
+	DWORD dwSourceIp=0;
+
+	do 
+	{
+		UdpSocket=socket(AF_INET, SOCK_DGRAM, 0);
+		if (UdpSocket == INVALID_SOCKET)
+		{
+			SetErrorInfo(SYSTEM_ERROR,WSAGetLastError(),_T("获取最佳源地址时创建套接字失败"));
+			break;
+		}
+
+		SOCKADDR_IN sockAddr;
+		memset(&sockAddr,0,sizeof(SOCKADDR_IN));
+		sockAddr.sin_family = AF_INET;
+		sockAddr.sin_addr.S_un.S_addr = dwTargetIp;
+		if (connect(UdpSocket, (SOCKADDR*)&sockAddr, sizeof(sockAddr))==SOCKET_ERROR)
+		{
+			SetErrorInfo(SYSTEM_ERROR,WSAGetLastError(),_T("获取最佳源地址时连接操作失败"));
+			break;
+		}
+
+		int nNameLen = sizeof(sockAddr);
+		if (getsockname(UdpSocket, (SOCKADDR*)&sockAddr, &nNameLen)==SOCKET_ERROR)
+		{
+			SetErrorInfo(SYSTEM_ERROR,WSAGetLastError(),_T("获取最佳源地址时获取本地地址失败"));
+			break;
+		}
+		dwSourceIp=sockAddr.sin_addr.S_un.S_addr;
+	} while (0);
+
+	if (UdpSocket != INVALID_SOCKET)
+		closesocket(UdpSocket);
+
+	return dwSourceIp;
 }

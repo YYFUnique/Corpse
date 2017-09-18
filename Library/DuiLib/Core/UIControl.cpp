@@ -35,7 +35,7 @@ m_dwCaretColor(0xFF000000)
 	m_CursorType = IDC_ARROW;
     m_cXY.cx = m_cXY.cy = 0;
     m_cxyFixed.cx = m_cxyFixed.cy = 0;
-    m_cxyMin.cx = m_cxyMin.cy = 0;
+    m_cxyMin.cx = m_cxyMin.cy = 1;
     m_cxyMax.cx = m_cxyMax.cy = 9999;
     m_cxyBorderRound.cx = m_cxyBorderRound.cy = 0;
 
@@ -108,6 +108,8 @@ CControlUI* CControlUI::GetParent() const
 
 CDuiString CControlUI::GetText() const
 {
+	if (m_sTextId.IsEmpty() == FALSE)
+		return CResourceMgrUI::GetInstance()->GetText(m_sTextId);
     return m_sText;
 }
 
@@ -117,6 +119,16 @@ void CControlUI::SetText(LPCTSTR pstrText)
 
     m_sText = pstrText;
     Invalidate();
+}
+
+void CControlUI::SetTextId(LPCTSTR pstrValue)
+{
+	if (m_sTextId == pstrValue) return;
+
+	m_sTextId = pstrValue;
+	//CDuiString strText = CResourceMgrUI::GetInstance()->GetText(m_sTextId);
+	//SetText(strText);
+	Invalidate();
 }
 
 DWORD CControlUI::GetBkColor() const
@@ -952,6 +964,7 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     else if( _tcscmp(pstrName, _T("maxheight")) == 0 ) SetMaxHeight(_ttoi(pstrValue));
     else if( _tcscmp(pstrName, _T("name")) == 0 ) SetName(pstrValue);
     else if( _tcscmp(pstrName, _T("text")) == 0 ) SetText(pstrValue);
+	else if( _tcscmp(pstrName, _T("textid")) == 0) SetTextId(pstrValue);
     else if( _tcscmp(pstrName, _T("tooltip")) == 0 ) SetToolTip(pstrValue);
     else if( _tcscmp(pstrName, _T("userdata")) == 0 ) SetUserData(pstrValue);
     else if( _tcscmp(pstrName, _T("enabled")) == 0 ) SetEnabled(_tcscmp(pstrValue, _T("true")) == 0);

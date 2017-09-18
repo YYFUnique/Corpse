@@ -33,7 +33,7 @@
 				<Control />
 				<Button name="BtnLogo" width="148" height="62" padding="0,18,10,10" name="BtnLogo" normalimage="logo.png" hotimage="logo.png" pushedimage="logo.png" />
             </HorizontalLayout>
-            <TabLayout name="TabWizard" padding="1,0,1,1" bkimage="file=&apos;white.png&apos;" showanimate="false" frame="20" >
+            <TabLayout name="TabWizard" bkimage="file=&apos;white.png&apos;" padding="1,0,1,0" showanimate="false" frame="20" >
 				<VerticalLayout name="0" virtualwnd="task">
 					<Include source="task.xml" />
 					<!--<Label height="50" text="我心里的一把火" bkcolor="#FFFF0000" bkcolor2="#FF00FF00" bkcolor3="#FF0000FF" />-->

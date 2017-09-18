@@ -739,6 +739,8 @@ namespace DuiLib
 				m_pHorizontalScrollBar->DoPaint(hDC, rcPaint);
 			}
 		}
+		//重新绘制容器控件的边框，绘制子控件后，边框可能不见了
+		PaintBorder(hDC);
 	}
 
 	void CContainerUI::SetFloatPos(int iIndex)
@@ -821,15 +823,51 @@ namespace DuiLib
 		
 	}
 
-	void CContainerUI::ProcessScrollBar(RECT rc, int cxRequired, int cyRequired)
+	//处理横线滚动条是否需要显示或者隐藏
+	void CContainerUI::ProcessHScrollBar(RECT rc, int cxRequired)
 	{
-		if( m_pHorizontalScrollBar != NULL && m_pHorizontalScrollBar->IsVisible() ) {
-			RECT rcScrollBarPos = { rc.left, rc.bottom, rc.right, rc.bottom + m_pHorizontalScrollBar->GetFixedHeight()};
-			m_pHorizontalScrollBar->SetPos(rcScrollBarPos);
+		if (cxRequired > rc.right - rc.left && m_pHorizontalScrollBar != NULL && !m_pHorizontalScrollBar->IsVisible()){
+			m_pHorizontalScrollBar->SetVisible(true);
+			m_pHorizontalScrollBar->SetScrollRange(cxRequired - (rc.right - rc.left));
+			m_pHorizontalScrollBar->SetScrollPos(0);
+			m_bScrollProcess = true;
+			SetPos(m_rcItem);
+			m_bScrollProcess = false;
+			return;
 		}
 
-		if( m_pVerticalScrollBar == NULL ) return;
+		if (m_pHorizontalScrollBar != NULL && m_pHorizontalScrollBar->IsVisible())
+		{
+			int cxScroll = cxRequired - (rc.right - rc.left);
+			if( cxScroll <= 0 && !m_bScrollProcess) {
+				m_pHorizontalScrollBar->SetVisible(false);
+				m_pHorizontalScrollBar->SetScrollPos(0);
+				m_pHorizontalScrollBar->SetScrollRange(0);
+				SetPos(m_rcItem);
+			}
+			else
+			{
+				RECT rcScrollBarPos = { rc.left, rc.bottom,rc.right,rc.bottom + m_pHorizontalScrollBar->GetFixedHeight()};
+				m_pHorizontalScrollBar->SetPos(rcScrollBarPos);
 
+				if( m_pHorizontalScrollBar->GetScrollRange() != cxScroll ) {
+					int iScrollPos = m_pHorizontalScrollBar->GetScrollPos();
+					m_pHorizontalScrollBar->SetScrollRange(::abs(cxScroll));
+					if( m_pHorizontalScrollBar->GetScrollRange() == 0 ) {
+						m_pHorizontalScrollBar->SetVisible(false);
+						m_pHorizontalScrollBar->SetScrollPos(0);
+					}
+					if( iScrollPos > m_pHorizontalScrollBar->GetScrollPos() ) {
+						SetPos(m_rcItem);
+					}
+				}
+			}
+		}
+	}
+
+	//处理竖线滚动条是否需要显示或者隐藏
+	void CContainerUI::ProcessVScrollBar(RECT rc, int cyRequired)
+	{
 		if( cyRequired > rc.bottom - rc.top && !m_pVerticalScrollBar->IsVisible() ) {
 			m_pVerticalScrollBar->SetVisible(true);
 			m_pVerticalScrollBar->SetScrollRange(cyRequired - (rc.bottom - rc.top));
@@ -867,6 +905,14 @@ namespace DuiLib
 				}
 			}
 		}
+	}
+
+	void CContainerUI::ProcessScrollBar(RECT rc, int cxRequired, int cyRequired)
+	{
+		if (m_pHorizontalScrollBar != NULL)
+			ProcessHScrollBar(rc, cxRequired);
+		if (m_pVerticalScrollBar != NULL)
+			ProcessVScrollBar(rc, cyRequired);
 	}
 
 	bool CContainerUI::SetSubControlText( LPCTSTR pstrSubControlName,LPCTSTR pstrText )
@@ -975,4 +1021,26 @@ namespace DuiLib
 		return pSubControl;
 	}
 
+	bool CContainerUI::Erase(CControlUI* pControl)
+	{
+		if( pControl == NULL) return false;
+
+		for( int it = 0; it < m_items.GetSize(); it++ ) {
+			if( static_cast<CControlUI*>(m_items[it]) == pControl ) {
+				NeedUpdate();
+				return m_items.Remove(it);
+			}
+		}
+		return false;
+	}
+
+	bool CContainerUI::Erase(int iIndex)
+	{
+		CControlUI* pControl = GetItemAt(iIndex);
+		if (pControl != NULL) {
+			return CContainerUI::Erase(pControl);
+		}
+
+		return false;
+	}
 } // namespace DuiLib

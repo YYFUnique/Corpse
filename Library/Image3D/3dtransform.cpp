@@ -190,7 +190,7 @@ void C3DTransform::GetQuadByAnimateValue(int nDegreeX, int nDegreeY, int nDegree
 
 void C3DTransform::Render(const PARAM3DTRANSFORM & param3d)
 {
-	RECT rc = {0, 0, m_nSrcWndWidth, m_nSrcWndHeight};
+	RECT rc = {0, 0, m_nSrcWndWidth-1, m_nSrcWndHeight-1};
 
 	// 计算当前的动画窗口屏幕坐标
 	Quad quad;
@@ -328,12 +328,13 @@ BOOL C3DTransform::SetImage( LPBYTE pSour,LPBYTE pDest,int nWid,int nHei,int nBi
 		return FALSE;
 
 	m_nSrcWndWidth=nWid+1,m_nSrcWndHeight=nHei+1;
+	//每一行占用多少个字节
 	m_nSrcPitch=STRIDELEN(m_nSrcWndWidth,nBitsPixel);
 	m_pSrcBits=(LPBYTE)calloc(1,m_nSrcPitch*m_nSrcWndHeight);
 	m_nBitsPixel=nBitsPixel;
 	m_pDstBits=pDest;
 
-	LPBYTE p1=m_pSrcBits+m_nSrcPitch;//bottom-up，跳过最下面一行
+	LPBYTE p1=m_pSrcBits;//+m_nSrcPitch;//bottom-up，跳过最下面一行
 	LPBYTE p2=pSour;
 	int nLen=STRIDELEN(nWid,nBitsPixel);
 	for(int i=0;i<nHei;i++)

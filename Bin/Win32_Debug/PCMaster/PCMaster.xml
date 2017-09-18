@@ -10,7 +10,7 @@
             <VerticalLayout name="VLayoutHead" pos="0,0,0,160" height="160" droptarget="true">
                 <HorizontalLayout name="HLayoutTitle" pos="0,0,0,40" height="40">
                     <HorizontalLayout name="HLayoutWinName" pos="0,0,80,40" width="80" height="40">
-                        <Label name="WindowName" text="大管家" float="true" pos="7,4,67,34" textpadding="2,0,2,0" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
+                        <Label name="WindowName" textid="STRING_LABEL_TITLE" float="true" pos="7,4,67,34" textpadding="2,0,2,0" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
                     </HorizontalLayout>
                     <HorizontalLayout name="HLayoutHeadCenter" />
                     <HorizontalLayout name="HLayoutSys" pos="0,0,96,40" width="96" height="40">

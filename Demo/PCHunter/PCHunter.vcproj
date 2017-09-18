@@ -376,6 +376,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\VirtualWnd\TaskScheduled.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\VirtualWnd\UserInfo.cpp"
 					>
 				</File>
@@ -404,10 +408,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Utils\ErrorInfo.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Utils\PictureUI.cpp"
 					>
 				</File>
@@ -433,6 +433,10 @@
 				>
 				<File
 					RelativePath=".\Wnd\AboutDialog.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Wnd\AddRoute.cpp"
 					>
 				</File>
 				<File
@@ -574,6 +578,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\VirtualWnd\TaskScheduled.h"
+					>
+				</File>
+				<File
 					RelativePath=".\VirtualWnd\UserInfo.h"
 					>
 				</File>
@@ -599,14 +607,6 @@
 				>
 				<File
 					RelativePath=".\Utils\AdapterInfo.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\DuiList.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\ErrorInfo.h"
 					>
 				</File>
 				<File
@@ -643,6 +643,10 @@
 				>
 				<File
 					RelativePath=".\Wnd\AboutDialog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wnd\AddRoute.h"
 					>
 				</File>
 				<File

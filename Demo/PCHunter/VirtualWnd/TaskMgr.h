@@ -22,4 +22,5 @@ protected:
 	CViewCSP	m_ViewCSP;
 	CViewCert	m_ViewCert;
 	CUserInfo   m_UserInfo;
+	CTaskScheduled m_TaskJob;
 };

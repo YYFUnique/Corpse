@@ -393,8 +393,8 @@ bool CListUI::SelectItem(int iIndex, bool bTakeFocus)
     int iOldSel = m_iCurSel;
 
     // We should first unselect the currently selected item
-	BOOL bClearAll = (IsMultiSelect() == false && dwCtrlShiftKey == false);
-    if (bClearAll && m_aSelItems.GetSize() ) {
+	BOOL bClearAll = dwCtrlShiftKey == false;
+    if (bClearAll && m_aSelItems.GetSize()) {
 		DeselectAllItems();
         m_iCurSel = -1;
 		Invalidate();
@@ -402,25 +402,38 @@ bool CListUI::SelectItem(int iIndex, bool bTakeFocus)
 
     if( iIndex < 0 ) return false;
 
+	//清除之前的选择状态
+	if (IsMultiSelect() == false && m_iCurSel != -1)
+	{
+		CControlUI* pControl = GetItemAt(m_iCurSel);
+		IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_LISTITEM));
+		if( pListItem == NULL ) return false;
+		pListItem->Select(false);
+		m_iCurSel = -1;
+	}
+
+	//保存后续选择状态
     CControlUI* pControl = GetItemAt(iIndex);
     if( pControl == NULL ) return false;
     if( !pControl->IsVisible() ) return false;
     if( !pControl->IsEnabled() ) return false;
 
 	//如果返回值!= -1 说明已经存在这个对象
-	if (m_aSelItems.Find(pControl) != -1) return true;
+	if (IsMultiSelect() && m_aSelItems.Find(pControl) != -1) 
+		return true;
 
-    IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
+    IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_LISTITEM));
     if( pListItem == NULL ) return false;
 	
-	//单选模式下，这两个值相同
-	m_iFirstSel = m_iCurSel = iIndex;
     if (!pListItem->Select(true) ) {
         m_iCurSel = -1;
         return false;
     }
+	//单选模式下，这两个值相同
+	m_iCurSel = iIndex;
 
-	m_aSelItems.Add((LPVOID)pControl);
+	if (IsMultiSelect())
+		m_aSelItems.Add((LPVOID)pControl);
 
     EnsureVisible(iIndex);
     if( bTakeFocus ) pControl->SetFocus();
@@ -436,8 +449,11 @@ void CListUI::SeleteRangeItems(int iIndex, int iCurSel)
 	if (IsMultiSelect() == false)
 		return;
 
-	int iOldSel = iCurSel;
+	if (iCurSel == -1)
+		iCurSel = iIndex;
 
+	int iOldSel = iCurSel;
+	m_iCurSel = -1;	//重置当前选择项目为-1，以便下面将选择项目选中
 	DeselectAllItems();
 	//获取2者中的大小顺序
 	int nMin = min(iIndex, iCurSel);

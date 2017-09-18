@@ -16,7 +16,8 @@
 #include "DllCore/Utils/APIs.h"
 #include "DllCore/Utils/TextTools.h"
 #include "DllCore/Utils/FileTools.h"
-
+#include "DllCore/Log/LogHelper.h"
+#include "DllCore/Utils/ErrorInfo.h"
 #include "QRCode/qr.h"
 #include "libcurl/libcurl.h"
 
@@ -50,6 +51,7 @@ CPCMaster::CPCMaster()
 	m_bDrag = FALSE;
 	WM_TASKBARBUTTONCREATED = :: RegisterWindowMessage (TEXT ("TaskbarButtonCreated" ));
 	WM_DI_GETDRAGIMAGE = ::RegisterWindowMessage(DI_GETDRAGIMAGE);
+	WM_DEVICE_MGRREFRESH = ::RegisterWindowMessage(TEXT("DevMgrRefreshOnUnique-PC"));
 	//m_pDraw = NULL;
 	//设置窗口属性，打开自定义缩略图和AeroPeek预览
 	// 	BOOL truth = TRUE;
@@ -63,6 +65,7 @@ CPCMaster::~CPCMaster()
 	{
 		m_pDropTarget->Release();
 	}
+	ReleaseProcessErrorInfo();
 }
 
 
@@ -74,9 +77,11 @@ LRESULT CPCMaster::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (WM_DI_GETDRAGIMAGE == uMsg)
 	{
-	
-
 		return FALSE;
+	}
+	else if(WM_DEVICE_MGRREFRESH == uMsg)
+	{
+		OutputDebugString(_T("HandleMessage WM_DEVICE_MGRREFRESH"));
 	}
 				
 	switch(uMsg)
@@ -127,6 +132,11 @@ CDuiString CPCMaster::GetZIPFileName() const
 CDuiString CPCMaster::GetSkinFile()
 {
 	return _T("PCMaster.xml");
+}
+
+CDuiString CPCMaster::GetLanguageFile() const
+{
+	return _T("lan_en.xml");
 }
 
 CDuiString CPCMaster::GetSkinFolder()
@@ -183,7 +193,7 @@ void CPCMaster::InitWindow()
 	//设置显示图标
 	SetIcon(IDI_MAINFRAME);
 	//设置用户名
-
+	
 	//CreateShortcurLnkFile(_T("C:\\Aquarius.exe"),_T("C:\\Users\\Public\\Desktop\\as.lnk"));
 
 	/*int nCode = QR_ERR_NONE;
@@ -275,6 +285,13 @@ void CPCMaster::OnMenuClick(CControlUI* pControl)
 	CDuiString strName = pControl->GetManager()->GetRoot()->GetName();
 	if (strName == _T("PCStatus"))
 	{
+		if (pControl->GetName() == _T("MenuOnline"))
+			CResourceMgrUI::GetInstance()->LoadLanguage(_T("lan_cn.xml"));
+		else if (pControl->GetName() == _T("MenuQMe"))
+			CResourceMgrUI::GetInstance()->LoadLanguage(_T("lan_en.xml"));
+
+		m_PaintManager.Invalidate();
+
 		CDuiString strBkImage = pControl->GetBkImage();
 		MessageBox(m_hWnd,pControl->GetText(),_T("您点击了菜单项"),MB_YESNO|MB_ICONINFORMATION);
 		UINT nStart = strBkImage.Find(_T("'"));
@@ -299,10 +316,13 @@ void CPCMaster::OnMenuClick(CControlUI* pControl)
 void CPCMaster::OnClick(TNotifyUI& msg)
 {
 	if (msg.pSender == (CButtonUI*)m_PaintManager.FindControl(_T("BtnClose")))
+	{
+		Close(IDOK);
 		PostQuitMessage(0);//Close(0);
+	}
 	else if(msg.pSender == (CButtonUI*)m_PaintManager.FindControl(_T("BtnMin")))
 	{		
-		//PostMessage(WM_SYSCOMMAND,SC_MINIMIZE,0);
+		PostMessage(WM_SYSCOMMAND,SC_MINIMIZE,0);
  		/*m_pEffect = GetAnimation();
  		if (m_pEffect == NULL)
  			return;
@@ -493,6 +513,8 @@ LRESULT CPCMaster::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 		AddThumbnailButtons();
 	}*/
 
+	
+
 	switch(uMsg)
 	{
 		case WM_LBUTTONUP:
@@ -508,6 +530,7 @@ LRESULT CPCMaster::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 			break;
 		case WM_MOUSEMOVE:
 			{
+				return TRUE;
 				if (m_bMouseDown)
 				{
 					if (m_bDrag == FALSE)

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <Window size="140,160" sizebox="4,4,6,6" caption="0,0,0,30" roundcorner="3,3">
     <Font name="微软雅黑" size="16" bold="false" italic="false" />
-    <VerticalLayout name="VLayoutTotal" bordersize="0" pos="228,80,288,110" width="60" height="30" bkimage="file=&apos;bg.bmp&apos; corner=&apos;4,4,2,2&apos; mask=&apos;0xffffffff&apos;" bordercolor="#00000080">
-        <HorizontalLayout name="HLayoutHead" bordersize="0" pos="0,0,0,32" height="32">
-            <Option name="BtnAdjColor" text="调色" tooltip="调整对话框的颜色" bordersize="0" float="true" pos="0,0,70,32" disabledtextcolor="#FFA7A6AA" font="0" align="center" group="groupcolor" selected="true" selectedimage="unsel.bmp" />
-            <Option name="BtnAdjBk" text="底纹" tooltip="调整对话框底纹" bordersize="0" float="true" pos="70,0,140,32" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" align="center" group="groupcolor" selectedimage="unsel.bmp" />
+    <VerticalLayout name="VLayoutTotal" bordersize="0" pos="228,80,288,110" width="60" height="30" bkimage="file=&apos;bg.bmp&apos; corner=&apos;4,4,4,4&apos; mask=&apos;0xffffffff&apos; hole=&apos;false&apos;" bordercolor="#00000080">
+        <HorizontalLayout name="HLayoutHead" bordersize="0" pos="0,0,0,32" height="32" >
+            <Option name="BtnAdjColor" text="调色" tooltip="调整对话框的颜色" float="true" pos="0,0,70,32" disabledtextcolor="#FFA7A6AA" font="0" align="center" group="groupcolor" selected="true" selectedimage="unsel.bmp" />
+            <Option name="BtnAdjBk" text="底纹" tooltip="调整对话框底纹" float="true" pos="70,0,140,32" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" align="center" group="groupcolor" selectedimage="unsel.bmp" />
         </HorizontalLayout>
-        <TabLayout name="TabLayout" bordersize="0" bkimage="list_bk.png">
+        <TabLayout name="TabLayout" >
             <VerticalLayout name="VColorLayout" bordersize="0">
                 <TileLayout name="TileLayoutColor" bordersize="0" pos="0,0,0,60" height="60">
                     <Button name="BtnColorUI1" bordersize="0" float="true" pos="14,7,32,25" bkcolor="#FF66BAEB" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="colour_001.bmp" hotimage="colour_001highlight.bmp" pushedimage="colour_001highlight.bmp" />

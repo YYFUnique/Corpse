@@ -44,11 +44,11 @@ void CAdapter::OnPaint()
 	if (GetAllShowAdapter(NetPropertiesInfo) == FALSE)
 		return;
 
-	PIP_ADAPTER_ADDRESSES pAdapterInfo = pIpAdapterAddress;
+	PIP_ADAPTER_ADDRESSES pAdapterInfo = NULL;
 
 	NETCON_MEDIATYPE MediaType = NCM_NONE;
 	NETCON_STATUS MediaStatus = NCS_DISCONNECTED;
-	do
+	/*do
 	{
 		BOOL bContinue = FALSE;
 		GUID AdapterGuid;
@@ -214,13 +214,200 @@ void CAdapter::OnPaint()
 		InsertNodeLabel(pInPackageNode,strItemText);
 		//显示下一个网卡
 		
-	}while(pAdapterInfo = pAdapterInfo->Next);
+	}while(pAdapterInfo = pAdapterInfo->Next);*/
+
+	POSITION posProperties = NetPropertiesInfo.GetHeadPosition();
+	while(posProperties)
+	{
+		const NETCON_PROPERTIES& NetProperties = NetPropertiesInfo.GetNext(posProperties);
+
+		/*if (IsEqualGUID(AdapterGuid,NetProperties.guidId) != FALSE)
+		{
+			MediaType = NetProperties.MediaType;
+			MediaStatus = NetProperties.Status;
+			//bContinue = TRUE;
+			break;
+		}*/
+
+		//设置网卡名称
+		CTreeNodeUI* pTreeNode = new CTreeNodeUI;
+		pTreeView->Add(pTreeNode);
+
+		//GUID AdapterGuid;
+		//CHAR szGuidString[100];
+		//memcpy_s(szGuidString,_countof(szGuidString),&pAdapterInfo->AdapterName[1],MAX_GUID_STRING_LEN);
+		//szGuidString[strlen(szGuidString)-1] = _T('\0');
+		//RPC_STATUS rpcStatus = UuidFromStringA((BYTE*)szGuidString, (UUID*)&AdapterGuid);
+
+		BSTR strAdapterGUID;
+		StringFromCLSID(NetProperties.guidId, &strAdapterGUID);
+
+		CString strItemText;
+		CString strAdapterFriendlyName(NetProperties.pszwName);
+		CString strAdapterDeviceName(NetProperties.pszwDeviceName);
+		CString strAdapter = strAdapterGUID;
+		strItemText.Format(_T("%s : %s - %s"), strAdapterFriendlyName, strAdapterDeviceName, strAdapterGUID);
+
+		pTreeNode->SetItemText(strItemText);
+		pTreeNode->GetItemButton()->SetFont(0);
+		pTreeNode->SetFixedHeight(33);
+
+		//设置媒体类型
+		CTreeNodeUI* pSubNode1 = new CTreeNodeUI;
+		pTreeNode->Add(pSubNode1);
+
+		pTreeNode->SetChildPadding(10);
+
+		strItemText.Format(_T("媒体类型 : %s"),GetMediaType(NetProperties.MediaType));
+		pSubNode1->SetItemText(strItemText);
+		pSubNode1->SetFixedHeight(20);
+		pSubNode1->SetItemFont(0);
+
+		////显示网卡状态
+		strItemText.Format(_T("状态 : %s"),GetMediaStatus(NetProperties.Status));
+		InsertNodeLabel(pSubNode1,strItemText);
+		if (NetProperties.Status ==  NCS_DISCONNECTED)
+			continue;
+
+		if (GetAdapterInfoByGuid(pIpAdapterAddress, NetProperties.guidId, pAdapterInfo) == FALSE)
+			continue;
+
+		MIB_IFROW MibIfRow = {0};
+		MibIfRow.dwIndex = pAdapterInfo->IfIndex;
+		if (GetIfEntry(&MibIfRow) != NO_ERROR)
+			continue;
+
+		////显示网卡连接时间
+		DWORD dwAdapterChangeTime = 0;
+		POSITION pos = MibIpForwardIpv4.GetHeadPosition();
+		while(pos)
+		{
+			const MIB_IPFORWARDROW& MibIpForwardRow = MibIpForwardIpv4.GetNext(pos);
+			if (MibIpForwardRow.dwForwardIfIndex == pAdapterInfo->IfIndex)
+			{
+				dwAdapterChangeTime = MibIpForwardRow.dwForwardAge;
+				break;
+			}
+		}
+
+		if (dwAdapterChangeTime)
+		{
+			TCHAR szTime[MAX_PATH];
+			StrFromTimeInterval(szTime,_countof(szTime),dwAdapterChangeTime*1000,6);
+			InsertNodeLabel(pSubNode1,szTime);
+		}
+
+		CTreeNodeUI* pSubNode2 = new CTreeNodeUI;
+		strItemText.Format(_T("适配器索引 : %d"),pAdapterInfo->IfIndex);
+		pSubNode2->SetItemText(strItemText);
+		pTreeNode->Add(pSubNode2);
+		pSubNode2->SetItemFont(0);
+
+		strItemText.Format(_T("DHCP : %s"),pAdapterInfo->Dhcpv4Enabled ? _T("启用") : _T("未启用"));
+		InsertNodeLabel(pSubNode2,strItemText);
+
+		strItemText.Format(_T("混杂模式 : %s"),IsAdapterPromiscuous(pAdapterInfo->AdapterName) ? _T("是") : _T("否"));
+		InsertNodeLabel(pSubNode2,strItemText);
+
+		CTreeNodeUI* pAdapterLineInfo = new CTreeNodeUI;
+		CDuiString strAdapterAddr;
+
+		for (UINT n=0;n<pAdapterInfo->PhysicalAddressLength;++n)
+			strAdapterAddr.AppendFormat(_T("%02X-"),pAdapterInfo->PhysicalAddress[n]);
+
+		strAdapterAddr.TrimRight(_T("-"));
+		strItemText.Format(_T("MAC : %s"),strAdapterAddr);
+		pAdapterLineInfo->SetItemText(strItemText);
+		pTreeNode->Add(pAdapterLineInfo);
+		pAdapterLineInfo->SetItemFont(0);
+
+		strItemText.Format(_T("MTU : %d"),pAdapterInfo->Mtu);
+		InsertNodeLabel(pAdapterLineInfo,strItemText);
+
+		int nSpeed = (int)(pAdapterInfo->TransmitLinkSpeed/(1000*1000));
+		if (nSpeed <0)
+			nSpeed = 0;
+		strItemText.Format(_T("速率 : %d Mbps"),nSpeed);
+		InsertNodeLabel(pAdapterLineInfo,strItemText);
+
+		//显示IP地址、网关地址、DNS地址		
+		CIpGatewayDnsList IpGatewayDns;
+		GetIpGateWayDns(pAdapterInfo,IpGatewayDns);
+
+		POSITION posAddress = IpGatewayDns.GetHeadPosition();
+		int n=0;
+		CTreeNodeUI* pIpAddress = NULL;
+		while(posAddress)
+		{
+			const IP_GATEWAY_DNS& IpInfo = IpGatewayDns.GetNext(posAddress);
+			if (n%3==0)
+			{
+				pIpAddress = new CTreeNodeUI;
+				pTreeNode->Add(pIpAddress);
+
+				pIpAddress->SetItemFont(0);
+				pIpAddress->SetItemText(IpInfo.strIPAddress);
+			}
+			else
+				InsertNodeLabel(pIpAddress,IpInfo.strIPAddress);
+
+			++n;
+		}
+
+		CTreeNodeUI* pOutPackageNode = new CTreeNodeUI;
+
+
+		strItemText.Format(_T("已发送 : %s 字节"),StrFormatMoney(MibIfRow.dwOutOctets));
+		pTreeNode->Add(pOutPackageNode);
+		pOutPackageNode->SetItemText(strItemText);
+		pOutPackageNode->SetItemFont(0);
+
+		strItemText.Format(_T("单播包 : %s 个"),StrFormatMoney(MibIfRow.dwOutUcastPkts));
+		InsertNodeLabel(pOutPackageNode,strItemText);
+
+		strItemText.Format(_T("非单播包 : %s 个"),StrFormatMoney(MibIfRow.dwOutNUcastPkts));
+		InsertNodeLabel(pOutPackageNode,strItemText);
+
+		CTreeNodeUI* pInPackageNode = new CTreeNodeUI;
+		pInPackageNode->SetItemFont(0);
+
+		strItemText.Format(_T("已接收 : %s 字节"),StrFormatMoney(MibIfRow.dwInOctets));
+		pTreeNode->Add(pInPackageNode);
+		pInPackageNode->SetItemText(strItemText);
+
+		strItemText.Format(_T("单播包 : %s 个"),StrFormatMoney(MibIfRow.dwInUcastPkts));
+		InsertNodeLabel(pInPackageNode,strItemText);
+
+		strItemText.Format(_T("非单播包 : %s 个"),StrFormatMoney(MibIfRow.dwInNUcastPkts));
+		InsertNodeLabel(pInPackageNode,strItemText);
+	}
+
 	
 	if (pIpAdapterAddress)
 	{
 		delete pIpAdapterAddress;
 		pIpAdapterAddress = NULL;
 	}	
+}
+
+BOOL CAdapter::GetAdapterInfoByGuid(PIP_ADAPTER_ADDRESSES pAdapterInfo, const GUID DeviceGuid,PIP_ADAPTER_ADDRESSES& pIpAdapterInfo)
+{
+	BOOL bSuccess = FALSE;
+	PIP_ADAPTER_ADDRESSES pDeviceInfo = pAdapterInfo;
+	while(pDeviceInfo)
+	{
+		CStringW strAdapterName = pDeviceInfo->AdapterName;
+		GUID DeviceNameGuid;
+		CLSIDFromString(_bstr_t(strAdapterName),&DeviceNameGuid);
+		if (IsEqualGUID(DeviceNameGuid,DeviceGuid))
+		{
+			pIpAdapterInfo = pDeviceInfo;
+			return TRUE;
+		}
+		pDeviceInfo = pDeviceInfo->Next;
+	}
+
+	return bSuccess;
 }
 
 BOOL CAdapter::GetAdapterInfo(PIP_ADAPTER_ADDRESSES& pAdapterAddress)

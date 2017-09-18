@@ -70,11 +70,13 @@
 #include "Core/UIManager.h"
 #include "Core/UIBase.h"
 #include "Utils/DuiFunc.h"
+#include "Core/UIResourceMgr.h"
 #include "Core/UIControl.h"
 #include "Core/UIContainer.h"
 #include "Core/UIMarkup.h"
 #include "Core/UIDlgBuilder.h"
 #include "Core/UIRender.h"
+
 #include "Utils/WinImplBase.h"
 #include "Utils/UITrayIcon.h"
 #include "Effect/UIAnimation.h"
@@ -86,6 +88,7 @@
 #include "Layout/UIChildLayout.h"
 #include "Layout/UIGroupLayout.h"
 #include "Layout/UIAnimationTabLayout.h"
+#include "Layout/UISplitterLayout.h"
 
 #include "Control/UIList.h"
 #include "Control/UICombo.h"

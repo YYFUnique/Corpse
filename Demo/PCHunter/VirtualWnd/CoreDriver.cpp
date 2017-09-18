@@ -10,7 +10,7 @@ CCoreDriver::~CCoreDriver()
 
 }
 
-BOOL CCoreDriver::GetDriverInfo(CSvrInfo& SvrInfoList)
+BOOL CCoreDriver::GetDriverInfo(CSrvInfoList& SvrInfoList)
 {
 	BOOL bSuccess = FALSE;
 	SC_HANDLE hSCMag = NULL;
@@ -88,7 +88,7 @@ void CCoreDriver::OnPaint()
 	if (pList->GetCount())
 		pList->RemoveAll();
 
-	CSvrInfo SvrInfoList;
+	CSrvInfoList SvrInfoList;
 	if (GetDriverInfo(SvrInfoList) == FALSE)
 		return;
 

@@ -18,7 +18,7 @@ void CServices::Notify(TNotifyUI& msg)
 		__super::Notify(msg);
 }
 
-BOOL CServices::GetSvrInfo(CSvrInfo& SvrInfoList)
+BOOL CServices::GetSvrInfo(CSrvInfoList& SvrInfoList)
 {
 	BOOL bSuccess = FALSE;
 	SC_HANDLE hSCMag = NULL;
@@ -101,7 +101,7 @@ void CServices::OnPaint()
 	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("Service"));
 	if (pList->GetCount())
 		pList->RemoveAll();
-	CSvrInfo SvrInfoList;
+	CSrvInfoList SvrInfoList;
 	if (GetSvrInfo(SvrInfoList) == FALSE)
 		return;
 

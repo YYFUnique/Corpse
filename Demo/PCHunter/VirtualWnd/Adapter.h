@@ -31,4 +31,5 @@ protected:
 
 	CString GetMediaStatus(DWORD dwMediaStatus);
 	BOOL IsAdapterPromiscuous(LPCSTR lpszAdapterName);
+	BOOL GetAdapterInfoByGuid(PIP_ADAPTER_ADDRESSES pAdapterInfo, const GUID DeviceGuid,PIP_ADAPTER_ADDRESSES& pIpAdapterInfo);
 };

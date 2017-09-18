@@ -18,18 +18,18 @@
                     <Button name="BtnClose" tooltip="关闭" float="true" pos="57,0,96,20" maxheight="20" maxwidth="39" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
                 </VerticalLayout>
 			</HorizontalLayout>
-			<HorizontalLayout inset="1,1,1,1">
-				<VerticalLayout bkcolor="#FF5D4425">
-					<VerticalLayout bkcolor="#FF103A78" minheight="50" >
+			<SplitterLayout inset="5,0,5,5" vertical="false">
+				<SplitterLayout padding="0,3,0,3">
+					<VerticalLayout bkcolor="#FF52ab45" minheight="50" >
 						<HorizontalLayout height="30">
 							<Option name="Btn1" text="http://10.1.1.131:8000" font="0" textpadding="5,3,5,3" width="120" group="Test" selected="true" align="left"/>
 							<Option name="Btn2" text="http://www.baidu.com" font="0" textpadding="5,3,5,3" width="120" group="Test" align="left"/>
 							<Option name="Btn2" text="http://www.qq.com" font="0" textpadding="5,3,5,3" width="120" group="Test" align="left"/>
 						</HorizontalLayout>
 					</VerticalLayout>
-					<VerticalLayout minheight="50" sepheight="-5" sepimm="true"/>
-				</VerticalLayout>
-				<HorizontalLayout sepwidth="-5" inset="2,0,0,0" sepimm="true" name="Func" width="285" minwidth="200" maxwidth="350" bkcolor="#FF008080" >
+					<VerticalLayout minheight="50" bkcolor="#FF103A78" sepimm="true"/>
+				</SplitterLayout>
+				<HorizontalLayout sepimm="true" name="Func" width="285" minwidth="200" maxwidth="350" bkcolor="#FF008080" >
 					<VerticalLayout>
 						<!--搜索部分-->
 						<!--Tab页部分-->
@@ -42,11 +42,11 @@
 						</TabLayout>
 					</VerticalLayout>
 				</HorizontalLayout>
-				<VerticalLayout name="VSplit" width="13" float="true" >
+				<!--<VerticalLayout name="VSplit" width="13" float="true" >
 					<Button name="BtnShow" visible="false" width="13" height="90" floatalign="vcenter" tooltip="显示侧边" normalimage="left_normal.png" hotimage="left_hover.png" pushedimage="left_down.png" />
 					<Button name="BtnHide" width="13" height="90" floatalign="vcenter" tooltip="隐藏侧边" normalimage="right_normal.png" hotimage="right_hover.png" pushedimage="right_down.png" />
-				</VerticalLayout>
-			</HorizontalLayout>
+				</VerticalLayout>-->
+			</SplitterLayout>
 		</VerticalLayout>
 	</VerticalLayout>
 </Window>

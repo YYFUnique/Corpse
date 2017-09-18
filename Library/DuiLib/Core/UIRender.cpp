@@ -2156,7 +2156,7 @@ HBITMAP CRenderEngine::GenerateBitmap(CPaintManagerUI* pManager, CControlUI* pCo
     BITMAPINFO bmi = { 0 };
     bmi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
     bmi.bmiHeader.biWidth = cx;
-    bmi.bmiHeader.biHeight = cy;
+    bmi.bmiHeader.biHeight = -cy;
     bmi.bmiHeader.biPlanes = 1;
     bmi.bmiHeader.biBitCount = 32;
     bmi.bmiHeader.biCompression = BI_RGB;
@@ -2164,14 +2164,7 @@ HBITMAP CRenderEngine::GenerateBitmap(CPaintManagerUI* pManager, CControlUI* pCo
     LPDWORD pDest = NULL;
     HDC hCloneDC = ::CreateCompatibleDC(pManager->GetPaintDC());
     HBITMAP hBitmap = ::CreateDIBSection(pManager->GetPaintDC(), &bmi, DIB_RGB_COLORS, (LPVOID*) &pDest, NULL, 0);
-	int i=0;
-	if (hBitmap == 0)
-	{
-		//SetErrorInfo(SYSTEM_ERROR, 0, _T("CreateDIBSectionÊ§°Ü"));
-		i= GetLastError();
 
-		//OutputDebugString(GetThreadErrorInfoString());
-	}
     ASSERT(hCloneDC);
     ASSERT(hBitmap);
     if( hBitmap != NULL )
@@ -2369,6 +2362,18 @@ void CRenderEngine::RestoreAlphaColor(LPBYTE pBits, int bitsWidth, PRECT rc)
 			int x = (i*bitsWidth + j) * 4;
 			if((pBits[x + 3] == 0)&& (pBits[x + 0] != 0 || pBits[x + 1] != 0|| pBits[x + 2] != 0))
 				pBits[x + 3] = 255;	
+		}
+	}
+}
+
+void CRenderEngine::SetAlphaColor(LPBYTE pBits, int bitsWidth, PRECT rc, BYTE ThisA)
+{
+	for (int i = rc->top; i < rc->bottom; ++i)
+	{
+		for (int j = rc->left; j < rc->right; ++j)
+		{
+			int x = (i*bitsWidth + j) * 4;
+			pBits[x + 3] = ThisA;
 		}
 	}
 }

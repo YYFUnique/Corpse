@@ -18,6 +18,7 @@ public:
 	CControlUI* CreateControl(LPCTSTR pstrClass);
 protected:
 	void OnClick(TNotifyUI& msg);
+	void OnInitDialog(TNotifyUI& msg);
 	virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 protected:
 	UINT m_nLastState;

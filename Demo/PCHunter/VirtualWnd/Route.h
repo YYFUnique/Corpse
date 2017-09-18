@@ -9,8 +9,10 @@ public:
 	~CRoute();
 
 public:
-	/*virtual void Notify(TNotifyUI& msg);*/
+	virtual void Notify(TNotifyUI& msg);
 	virtual void OnPaint();
+	void OnMenu(TNotifyUI& msg);
+	void OnRouteInfo(CControlUI* pControl);
 protected:
 	void ShowWindow();
 	BOOL GetIpAddress(CMibIpAddressList& MibIpAddress);

@@ -60,6 +60,7 @@ public:
 	static void CheckAlphaColor(DWORD& dwColor);
 	static void ClearAlphaPixel(LPBYTE pBits, int bitsWidth, LPRECT rc);
 	static void RestoreAlphaColor(LPBYTE pBits, int bitsWidth, LPRECT rc);
+	static void SetAlphaColor(LPBYTE pBits, int bitsWidth, PRECT rc, BYTE ThisA);
 	static HBITMAP CreateARGB32Bitmap(HDC hDC, int cx, int cy, BYTE** pBits);
 #ifdef RENDER_GDIPLUS
 	static void DrawGradient(HDC hDC, const RECT& rc, DWORD *dwColors, float*fPositions, int colorCount,bool bVertical,SIZE borderRound,long bTopLeftRound=1,long bTopRightRound=1,long bBottomRightRound=1,long bBottomLeftRound=1);

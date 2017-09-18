@@ -15,13 +15,13 @@ typedef struct tagSERVICEINFO {
 	CString      strSvrName;
 	CString      strDisplayName;
 	CString      strPath;
-	CString		  strDiscruption;
+	CString		  strDescription;
 	DWORD    dwPID;
 	DWORD    dwRunStatus;
 	DWORD    dwStartType;
 	DWORD    dwType;	
 } SERVICEINFO, *LPSERVICEINFO;
-typedef CYjList<SERVICEINFO, const SERVICEINFO&> CServiceList;
+typedef CDuiList<SERVICEINFO, const SERVICEINFO&> CSrvInfoList;
 
 typedef struct _LS_SERVICE_CONFIG
 {
@@ -117,7 +117,7 @@ DLL_API BOOL IsServiceRunning(LPCTSTR lpServiceName);
 //输入参数: [out] serList, 保存应用层服务信息的链表
 //返 回 值: 类型(BOOL), 如果获取成功返回TRUE,否则FALSE
 //==================================================================                                     
-DLL_API BOOL GetServiceInfo(CServiceList& SrvList);  
+DLL_API BOOL GetServiceInfo(CSrvInfoList& SrvList);  
 
 //==================================================================
 //函 数 名: GetCoreServiceInfo
@@ -125,7 +125,7 @@ DLL_API BOOL GetServiceInfo(CServiceList& SrvList);
 //输入参数: [out] serList, 保存核心层服务信息的链表
 //返 回 值: 如果获取成功返回TRUE,否则FALSE
 //==================================================================                            
-DLL_API BOOL GetCoreServiceInfo(CServiceList& SrvList);
+DLL_API BOOL GetCoreServiceInfo(CSrvInfoList& SrvList);
 
 //==================================================================
 //函 数 名: GetServiceConfig

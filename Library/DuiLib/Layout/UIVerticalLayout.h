@@ -32,6 +32,8 @@ namespace DuiLib
 		POINT ptLastMouse;
 		RECT m_rcNewPos;
 		bool m_bImmMode;
+		RECT m_rcFixedPos;
+		BOOL m_bLastResult;
 	};
 }
 #endif // __UIVERTICALLAYOUT_H__

@@ -28,5 +28,6 @@ protected:
 	HBITMAP			m_hBmpTrans;
 	BOOL				m_bPlay;
 	HDC					m_hMemDC;
+	CDuiString		m_strViewImage;
 	PARAM3DTRANSFORM	m_3dParam;
 };

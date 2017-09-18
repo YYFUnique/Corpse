@@ -146,7 +146,7 @@ void CQRTool::OnClick(TNotifyUI& msg)
 
 void CQRTool::OnCreate(TNotifyUI& msg)
 {
-	HWND hQRWnd = FindWindow(_T("CQRDlg"), NULL);
+	HWND hQRWnd = FindWindow(_T("QrCodeDlg"), NULL);
 	if (hQRWnd != NULL)
 		return;
 

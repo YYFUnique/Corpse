@@ -17,7 +17,7 @@ typedef struct _VOLUME_NAME_INFO
 	CString strVolumeName;
 }VOLUME_NAME_INFO,*PVOLUME_NAME_INFO;
 
-typedef CYjList<VOLUME_NAME_INFO,const VOLUME_NAME_INFO&> CVolumeInfo;
+typedef CDuiList<VOLUME_NAME_INFO,const VOLUME_NAME_INFO&> CVolumeInfo;
 
 class DLL_API CVolumeNameToDosName
 {

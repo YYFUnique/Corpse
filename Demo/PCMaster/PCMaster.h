@@ -24,6 +24,7 @@ public:
 	virtual CDuiString GetZIPFileName() const;
 	virtual CDuiString GetSkinFile();
 	virtual CDuiString GetSkinFolder();
+	virtual CDuiString GetLanguageFile() const;
 	virtual void Notify(TNotifyUI& msg);
 	virtual void InitWindow();
 	virtual void OnFinalMessage(HWND hWnd);
@@ -64,6 +65,7 @@ protected:
 	ITaskbarList3* m_pTaskbarList;
 	UINT				WM_TASKBARBUTTONCREATED;
 	UINT				WM_DI_GETDRAGIMAGE;
+	UINT				WM_DEVICE_MGRREFRESH;
 	HICON				m_hIcon,m_hRed,m_hGreen,m_hBlue;
 	CUIDropTarget*	m_pDropTarget;
 	//IUIEffect* m_pEffect;

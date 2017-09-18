@@ -12,6 +12,14 @@ CRoute::~CRoute()
 
 }
 
+void CRoute::Notify(TNotifyUI& msg)
+{
+	if (msg.sType == DUI_MSGTYPE_MENU)
+		OnMenu(msg);
+	else 
+		CBase::Notify(msg);
+}
+
 void CRoute::OnPaint()
 {
 	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("Route"));
@@ -46,6 +54,38 @@ void CRoute::OnPaint()
 		strTipInfo = InterFaceRow.bDescr;
 		pTextElement->SetText(m++,strTipInfo);
 		pTextElement->SetText(m++,GetFormatNum(MibIpRow.dwForwardMetric1));
+	}
+}
+
+void CRoute::OnMenu(TNotifyUI& msg)
+{
+	if (msg.pSender->GetName() == _T("Route"))
+	{
+		CListUI* pList = (CListUI*)msg.pSender;
+		if (pList->GetCurSel() == -1)
+			return;
+
+		CMenuWnd* pMenu = new CMenuWnd;
+		CDuiPoint pt = msg.ptMouse;
+		ClientToScreen(m_pPaintManager->GetPaintWindow(), &pt);
+		STRINGorID strXmlFile(_T("RouteMenu.xml"));
+		pMenu->Init(NULL,strXmlFile, pt,m_pPaintManager);
+	}
+}
+
+void CRoute::OnRouteInfo(CControlUI* pControl)
+{
+	CListUI* pAppList = (CListUI*)m_pPaintManager->FindControl(_T("Route"));
+	if (pAppList->GetCurSel() == -1)
+		return;
+
+	CDuiString strItemName = pControl->GetName();
+	if (strItemName == _T("NewRoute")) {
+
+	} else if (strItemName == _T("DeleteRoute")) {
+
+	} else if (strItemName == _T("SaveList")) {
+
 	}
 }
 

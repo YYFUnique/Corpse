@@ -281,6 +281,7 @@ protected:                                                                \
 
 #define  DUI_CTR_VERTICALLAYOUT							(_T("VerticalLayout"))
 #define  DUI_CTR_LISTHEADERITEM							(_T("ListHeaderItem"))
+#define  DUI_CTR_SPLITTERLAYOUT							(_T("SplitterLayout"))
 
 #define  DUI_CTR_LISTTEXTELEMENT						(_T("ListTextElement"))
 

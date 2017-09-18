@@ -3,7 +3,7 @@
 
 namespace DuiLib
 {
-	CVerticalLayoutUI::CVerticalLayoutUI() : m_iSepHeight(0), m_uButtonState(0), m_bImmMode(false)
+	CVerticalLayoutUI::CVerticalLayoutUI() : m_iSepHeight(0), m_uButtonState(0), m_bImmMode(false),m_bLastResult(FALSE)
 	{
 		ptLastMouse.x = ptLastMouse.y = 0;
 		::ZeroMemory(&m_rcNewPos, sizeof(m_rcNewPos));
@@ -86,6 +86,7 @@ namespace DuiLib
 		// Place elements
 		int cyNeeded = 0;
 		int cyExpand = 0;
+		int cxNeeded = 0;
 		if( nAdjustables > 0 ) cyExpand = MAX(0, (szAvailable.cy - cyFixed) / nAdjustables);
 		// Position the elements
 		SIZE szRemaining = szAvailable;
@@ -137,6 +138,8 @@ namespace DuiLib
 			if( sz.cx < pControl->GetMinWidth() ) sz.cx = pControl->GetMinWidth();
 			if( sz.cx > pControl->GetMaxWidth() ) sz.cx = pControl->GetMaxWidth();
 
+			int tmp = sz.cx + rcPadding.left + rcPadding.right;
+			cxNeeded = (tmp > cxNeeded) ? tmp: cxNeeded;
 			
 			//////////////////////////////////////////////////////////////////////////
 			///corrected by gechunping  on 2014_3_27
@@ -151,8 +154,10 @@ namespace DuiLib
 			szRemaining.cy -= sz.cy + m_iChildPadding + rcPadding.bottom;
 		}
 		cyNeeded += (nEstimateNum - 1) * m_iChildPadding;
+		cxNeeded += (nEstimateNum - 1) * m_iChildPadding;
+
 		// Process the scrollbar
-		ProcessScrollBar(rc, 0, cyNeeded);
+		ProcessScrollBar(rc, cxNeeded, cyNeeded);
 	}
 
 	void CVerticalLayoutUI::DoPostPaint(HDC hDC, const RECT& rcPaint)
@@ -205,6 +210,7 @@ namespace DuiLib
 					m_uButtonState |= UISTATE_CAPTURED;
 					ptLastMouse = event.ptMouse;
 					m_rcNewPos = m_rcItem;
+					m_rcFixedPos = m_rcNewPos;
 					if( !m_bImmMode && m_pManager ) m_pManager->AddPostPaint(this);
 					return;
 				}
@@ -214,7 +220,40 @@ namespace DuiLib
 				if( (m_uButtonState & UISTATE_CAPTURED) != 0 ) {
 					m_uButtonState &= ~UISTATE_CAPTURED;
 					m_rcItem = m_rcNewPos;
-					if( !m_bImmMode && m_pManager ) m_pManager->RemovePostPaint(this);
+					if( !m_bImmMode && m_pManager ) {
+						m_pManager->RemovePostPaint(this);
+
+						do 
+						{
+							//新版本的拖动方式，以前旧的方式不生效了
+							CContainerUI* pContainer = (CContainerUI*)GetParent();
+							int nIndex = pContainer->GetItemIndex(this);
+
+							if (nIndex ==0 || nIndex == pContainer->GetCount() -1)
+								break;
+
+							CContainerUI* pPrev = (CContainerUI*)pContainer->GetItemAt(nIndex -1);
+							CContainerUI* pNext = (CContainerUI*)pContainer->GetItemAt(nIndex+1);
+							if (pPrev->GetInterface(DUI_CTR_CONTAINER) == NULL)
+								break;
+							if (pNext->GetInterface(DUI_CTR_CONTAINER) == NULL)
+								break;
+							RECT rcPos1 = pPrev->GetPos();
+							RECT rcPos2 = pNext->GetPos();
+
+							rcPos1.bottom = m_rcItem.top;
+							rcPos2.top		 = m_rcItem.bottom;
+
+							int nFixedHeightPrev = rcPos1.bottom - rcPos1.top;
+							int nFixedHeightNext = rcPos2.bottom - rcPos2.top;
+							if (nFixedHeightPrev < pPrev->GetMinHeight() || nFixedHeightNext < pNext->GetMinHeight())
+								break;
+
+							pPrev->SetFixedHeight(nFixedHeightPrev);
+							//pNext->SetFixedHeight(nFixedHeightNext);
+
+						} while (FALSE);
+					}
 					NeedParentUpdate();
 					return;
 				}
@@ -224,40 +263,66 @@ namespace DuiLib
 				if( (m_uButtonState & UISTATE_CAPTURED) != 0 ) {
 					LONG cy = event.ptMouse.y - ptLastMouse.y;
 					ptLastMouse = event.ptMouse;
-					RECT rc = m_rcNewPos;
-					if( m_iSepHeight >= 0 ) {
-						if( cy > 0 && event.ptMouse.y < m_rcNewPos.bottom + m_iSepHeight ) return;
-						if( cy < 0 && event.ptMouse.y > m_rcNewPos.bottom ) return;
-						rc.bottom += cy;
-						if( rc.bottom - rc.top <= GetMinHeight() ) {
-							if( m_rcNewPos.bottom - m_rcNewPos.top <= GetMinHeight() ) return;
-							rc.bottom = rc.top + GetMinHeight();
-						}
-						if( rc.bottom - rc.top >= GetMaxHeight() ) {
-							if( m_rcNewPos.bottom - m_rcNewPos.top >= GetMaxHeight() ) return;
-							rc.bottom = rc.top + GetMaxHeight();
-						}
-					}
-					else {
-						if( cy > 0 && event.ptMouse.y < m_rcNewPos.top ) return;
-						if( cy < 0 && event.ptMouse.y > m_rcNewPos.top + m_iSepHeight ) return;
-						rc.top += cy;
-						if( rc.bottom - rc.top <= GetMinHeight() ) {
-							if( m_rcNewPos.bottom - m_rcNewPos.top <= GetMinHeight() ) return;
-							rc.top = rc.bottom - GetMinHeight();
-						}
-						if( rc.bottom - rc.top >= GetMaxHeight() ) {
-							if( m_rcNewPos.bottom - m_rcNewPos.top >= GetMaxHeight() ) return;
-							rc.top = rc.bottom - GetMaxHeight();
-						}
-					}
+					RECT rc = m_bLastResult ? m_rcNewPos : m_rcFixedPos;
+					
+					rc.top += cy;
+					rc.bottom += cy;
 
 					CDuiRect rcInvalidate = GetThumbRect(true);
-					m_rcNewPos = rc;
-					m_cxyFixed.cy = m_rcNewPos.bottom - m_rcNewPos.top;
+
+					BOOL bSuccess = FALSE;
+					CContainerUI* pPrev = NULL;
+					CContainerUI* pNext = NULL;
+					int nFixedHeightPrev = 0, nFixedHeightNext = 0;
+					do 
+					{
+						//新版本的拖动方式，以前旧的方式不生效了
+						CContainerUI* pContainer = (CContainerUI*)GetParent();
+						int nIndex = pContainer->GetItemIndex(this);
+
+						if (nIndex ==0 || nIndex == pContainer->GetCount() -1)
+							break;
+
+						pPrev = (CContainerUI*)pContainer->GetItemAt(nIndex -1);
+						pNext = (CContainerUI*)pContainer->GetItemAt(nIndex+1);
+
+						if (pPrev->GetInterface(DUI_CTR_CONTAINER) == NULL)
+							break;
+						if (pNext->GetInterface(DUI_CTR_CONTAINER) == NULL)
+							break;
+
+						RECT rcPos1 = pPrev->GetPos();
+						RECT rcPos2 = pNext->GetPos();
+
+						rcPos1.bottom = rc.top;
+						rcPos2.top		 = rc.bottom;
+
+						nFixedHeightPrev = rcPos1.bottom - rcPos1.top;
+						nFixedHeightNext = rcPos2.bottom - rcPos2.top;
+						if (nFixedHeightPrev < pPrev->GetMinHeight() || nFixedHeightNext < pNext->GetMinHeight())
+							break;
+
+						if (nFixedHeightPrev > pPrev->GetMaxHeight() || nFixedHeightNext > pNext->GetMaxHeight())
+							break;
+
+						bSuccess = TRUE;
+					} while (FALSE);
+
+					m_bLastResult = bSuccess;
+					if (m_bLastResult != FALSE)
+						m_rcNewPos = rc;
+					else
+						m_rcFixedPos = rc;
 
 					if( m_bImmMode ) {
+						if (m_bLastResult == FALSE)
+							return;
+
 						m_rcItem = m_rcNewPos;
+						
+						pPrev->SetFixedHeight(nFixedHeightPrev);
+						//pNext->SetFixedHeight(nFixedHeightNext);
+					
 						NeedParentUpdate();
 					}
 					else {

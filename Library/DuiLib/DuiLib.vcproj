@@ -402,6 +402,10 @@
 					RelativePath=".\Core\UIRender.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\Core\UIResourceMgr.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Layout"
@@ -420,6 +424,10 @@
 				</File>
 				<File
 					RelativePath=".\Layout\UIHorizontalLayout.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Layout\UISplitterLayout.cpp"
 					>
 				</File>
 				<File
@@ -683,6 +691,10 @@
 					RelativePath=".\Core\UIRender.h"
 					>
 				</File>
+				<File
+					RelativePath=".\Core\UIResourceMgr.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Layout"
@@ -701,6 +713,10 @@
 				</File>
 				<File
 					RelativePath=".\Layout\UIHorizontalLayout.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Layout\UISplitterLayout.h"
 					>
 				</File>
 				<File
