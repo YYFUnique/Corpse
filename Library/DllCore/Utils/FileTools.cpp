@@ -293,7 +293,7 @@ BOOL GetFilePathByLink(LPCTSTR lpszLinkName, CString& strFilePath)
 	return bSuccess;	
 }
 
-BOOL CreateShortcurLnkFile(LPCTSTR lpszTargetFile, LPCTSTR lpszLnkFile)
+BOOL CreateShellLnkFile(LPCTSTR lpszTargetFile, LPCTSTR lpszLnkFile)
 {
 	BOOL bSuccess = FALSE;
 	IShellLink *pShellLink = NULL;

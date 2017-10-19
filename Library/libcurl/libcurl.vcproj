@@ -212,7 +212,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories=".,..\include,curl"
+				AdditionalIncludeDirectories=".,..\include,curl;&quot;$(SolutionDir)Library&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;CURL_EXPORTS;"
 				StringPooling="true"
 				RuntimeLibrary="0"

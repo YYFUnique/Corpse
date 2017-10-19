@@ -1,5 +1,5 @@
 #include <Windows.h>
-#include "libcurl/libcurl/curl/curl.h"
+#include "libcurl/curl/curl.h"
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  dwReason, LPVOID /*lpReserved*/)
 {
 	switch( dwReason ) {

@@ -81,13 +81,13 @@ DLL_API CString GetProgramDataFilePath(LPCTSTR lpszDirName,LPCTSTR lpszExtendNam
 DLL_API BOOL GetFilePathByLink(LPCTSTR lpszLinkName, CString& strFilePath);
 
 /************************************************************************/
-/* 函  数  名：CreateShortcurLnkFile	     				                                   */
+/* 函  数  名：CreateShellLnkFile								                                   */
 /* 函数功能：在指定路径下创建文件快捷方式											   */
 /* 输入参数：lpszTargetFile 快捷方式指向的文件										   */
 /*					 lpszLnkFile  快捷方式文件所在路径										   */
 /* 返  回 值：如果获取成功返回TRUE，否则返回FALSE								   */
 /************************************************************************/
-DLL_API BOOL CreateShortcurLnkFile(LPCTSTR lpszTargetFile, LPCTSTR lpszLnkFile);
+DLL_API BOOL CreateShellLnkFile(LPCTSTR lpszTargetFile, LPCTSTR lpszLnkFile);
 
 /************************************************************************/
 /* 函  数  名：DeleteFileByTime			     				                                   */
