@@ -2081,6 +2081,10 @@ void CListElementUI::DrawItemBk(HDC hDC, const RECT& rcItem)
 		}
 	}
 
+	if (!m_sForeImage.IsEmpty()){
+		if( !DrawImage(hDC, m_sForeImage) ) m_sForeImage.Empty();
+	}
+
     if ( pInfo->dwLineColor != 0 ) {
 		if(pInfo->bShowRowLine) {
 			RECT rcLine = { m_rcItem.left, m_rcItem.bottom - 1, m_rcItem.right, m_rcItem.bottom - 1 };

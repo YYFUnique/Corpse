@@ -49,7 +49,7 @@ CDuiString WindowImplBase::GetZIPFileName() const
 	return _T("");
 }
 
-CDuiString WindowImplBase::GetLanguageFile() const
+LPCTSTR WindowImplBase::GetLanguageFile() const
 {
 	return _T("");
 }
@@ -327,8 +327,10 @@ CControlUI* WindowImplBase::CreateControlByXML()
 	}
 
 	//暂时以zip包和file形式提供的资源有效，应用程序内置的无法解析
-	CResourceMgrUI::GetInstance()->LoadLanguage(GetLanguageFile());
-
+	CDuiString strLanguageFile = GetLanguageFile();
+	if (strLanguageFile.IsEmpty() == FALSE)
+		CDataBuilderUI::GetInstance()->LoadLanguage(strLanguageFile);
+ 
 	CControlUI* pRoot=NULL;
 	if (GetResourceType()==UILIB_RESOURCE)
 	{

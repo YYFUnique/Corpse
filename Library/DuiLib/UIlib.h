@@ -69,11 +69,11 @@
 #include "Core/UIDefine.h"
 #include "Core/UIManager.h"
 #include "Core/UIBase.h"
+#include "Core/UIMarkup.h"
+#include "Core/UIDataBuilder.h"
 #include "Utils/DuiFunc.h"
-#include "Core/UIResourceMgr.h"
 #include "Core/UIControl.h"
 #include "Core/UIContainer.h"
-#include "Core/UIMarkup.h"
 #include "Core/UIDlgBuilder.h"
 #include "Core/UIRender.h"
 
@@ -113,6 +113,7 @@
 
 #include "Control/UIComboBox.h"
 #include "Control/UIRichEdit.h"
+//#include "Control/SMRichEdit.h"
 #include "Control/UIDateTime.h"
 #include "Control/RichEditEx.h"
 

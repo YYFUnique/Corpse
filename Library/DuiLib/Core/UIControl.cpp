@@ -108,8 +108,6 @@ CControlUI* CControlUI::GetParent() const
 
 CDuiString CControlUI::GetText() const
 {
-	if (m_sTextId.IsEmpty() == FALSE)
-		return CResourceMgrUI::GetInstance()->GetText(m_sTextId);
     return m_sText;
 }
 
@@ -126,9 +124,27 @@ void CControlUI::SetTextId(LPCTSTR pstrValue)
 	if (m_sTextId == pstrValue) return;
 
 	m_sTextId = pstrValue;
-	//CDuiString strText = CResourceMgrUI::GetInstance()->GetText(m_sTextId);
-	//SetText(strText);
-	Invalidate();
+// 	CDuiString strText = CResourceMgrUI::GetInstance()->GetText(m_sTextId);
+// 	SetText(strText);
+	SetTextById();
+}
+
+void CControlUI::SetTextById()
+{
+	if (m_sTextId.IsEmpty())
+		return;
+
+	CLanData* pData = static_cast<CLanData*>(CDataBuilderUI::GetInstance()->GetControlData(m_sTextId));
+	if (pData == NULL)
+		return;
+
+	CDuiString strText = pData->GetText();
+	CDuiString strTooltip = pData->GetTooltip();
+
+	if (strText.IsEmpty() == FALSE)
+		SetText(strText);
+	if (strTooltip.IsEmpty() == FALSE)
+		SetToolTip(strTooltip);
 }
 
 DWORD CControlUI::GetBkColor() const
@@ -194,6 +210,19 @@ void CControlUI::SetBkImage(LPCTSTR pStrImage)
 
     m_sBkImage = pStrImage;
     Invalidate();
+}
+
+LPCTSTR CControlUI::GetForeImage()
+{
+	return m_sForeImage;
+}
+
+void CControlUI::SetForeImage(LPCTSTR pStrImage)
+{
+	if (m_sForeImage == pStrImage)	return;
+
+	m_sForeImage = pStrImage;
+	Invalidate();
 }
 
 DWORD CControlUI::GetBorderColor() const

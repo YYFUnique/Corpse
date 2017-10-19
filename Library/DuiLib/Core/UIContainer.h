@@ -73,6 +73,7 @@ public:
     void SetManager(CPaintManagerUI* pManager, CControlUI* pParent, bool bInit = true);
     CControlUI* FindControl(FINDCONTROLPROC Proc, LPVOID pData, UINT uFlags);
 
+	void SetTextById();
 	bool SetSubControlText(LPCTSTR pstrSubControlName,LPCTSTR pstrText);
 	bool SetSubControlFixedHeight(LPCTSTR pstrSubControlName,int cy);
 	bool SetSubControlFixedWdith(LPCTSTR pstrSubControlName,int cx);

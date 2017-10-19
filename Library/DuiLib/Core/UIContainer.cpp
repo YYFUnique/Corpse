@@ -928,6 +928,16 @@ namespace DuiLib
 			return FALSE;
 	}
 
+	void CContainerUI::SetTextById()
+	{
+		for (int it=0;it<m_items.GetSize();++it)
+		{
+			CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
+			if (pControl)
+				pControl->SetTextById();
+		}
+	}
+
 	bool CContainerUI::SetSubControlFixedHeight( LPCTSTR pstrSubControlName,int cy )
 	{
 		CControlUI* pSubControl=NULL;

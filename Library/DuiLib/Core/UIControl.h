@@ -32,6 +32,8 @@ public:
     virtual CDuiString GetText() const;
     virtual void SetText(LPCTSTR pstrText);
 	void SetTextId(LPCTSTR pstrValue);
+	virtual void SetTextById();
+
     // Õº–Œœ‡πÿ
     DWORD GetBkColor() const;
     void SetBkColor(DWORD dwBackColor);
@@ -43,6 +45,8 @@ public:
 	void SetForeColor(DWORD dwForeColor);
     LPCTSTR GetBkImage();
     void SetBkImage(LPCTSTR pStrImage);
+	LPCTSTR GetForeImage();
+	void SetForeImage(LPCTSTR pStrImage);
 	DWORD GetFocusBorderColor() const;
 	void SetFocusBorderColor(DWORD dwBorderColor);
     bool IsColorHSL() const;
