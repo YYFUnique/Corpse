@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "PCMaster.h"
 #include "DllCore/File/MiniDump.h"
-
+#include "DllCore/Log/LogHelper.h"
 _declspec(selectany) CLSID CLSID_GAGetDevNo = { 0xf73069f8, 0xf828, 0x4837, { 0xa9, 0x25, 0xe1, 0xe0, 0x30, 0xe2, 0x4d, 0x7c } };
 
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
@@ -11,6 +11,8 @@ BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSh
 	HRESULT hRet = S_FALSE;
 	HANDLE hMultex = NULL;
 	
+	QLOG_INFO(_T("%s"),_T("alslasdf"));
+
 	do 
 	{
 		CString strCmdLine(szCmdLine);

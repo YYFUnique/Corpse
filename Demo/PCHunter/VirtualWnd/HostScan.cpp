@@ -26,6 +26,10 @@ CHostScan::CHostScan()
 	_tcscpy_s(m_szUserNameFilePath,_countof(m_szUserNameFilePath),m_szMacAddressFilePath);
 	PathAppend(m_szMacAddressFilePath,_T("MacAddress.ini"));
 	PathAppend(m_szUserNameFilePath,_T("HostName.ini"));
+	
+	WORD wVersionRequested = MAKEWORD( 2, 2 );
+	WSAData wsaData;
+	WSAStartup(wVersionRequested,&wsaData);
 }
 
 CHostScan::~CHostScan()
@@ -36,6 +40,8 @@ CHostScan::~CHostScan()
 		delete m_pThreadTaskMgr;
 		m_pThreadTaskMgr = NULL;
 	}
+
+	WSACleanup();
 }
 
 void CHostScan::Notify(TNotifyUI& msg)

@@ -9,14 +9,14 @@
         <VerticalLayout name="WinBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;">
             <VerticalLayout name="VLayoutHead" pos="0,0,0,160" height="160" droptarget="true">
                 <HorizontalLayout name="HLayoutTitle" pos="0,0,0,40" height="40">
-                    <HorizontalLayout name="HLayoutWinName" pos="0,0,80,40" width="80" height="40">
-                        <Label name="WindowName" textid="STRING_LABEL_TITLE" float="true" pos="7,4,67,34" textpadding="2,0,2,0" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
+                    <HorizontalLayout name="HLayoutWinName" height="40">
+                        <Label name="WindowName" textid="STRING_LABEL_TITLE" float="true" pos="7,4,127,34" textpadding="2,0,2,0" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
                     </HorizontalLayout>
-                    <HorizontalLayout name="HLayoutHeadCenter" />
+                    
                     <HorizontalLayout name="HLayoutSys" pos="0,0,96,40" width="96" height="40">
-                        <Button name="BtnSkin" tooltip="换肤" float="true" pos="1,0,29,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnSkin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnSkin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnSkin.png&apos; source=&apos;56,0,84,20&apos;" />
-                        <Button name="BtnMin" tooltip="最小化" float="true" pos="29,0,57,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnMin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMin.png&apos; source=&apos;56,0,84,20&apos;" />
-                        <Button name="BtnClose" tooltip="关闭" float="true" pos="57,0,96,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
+                        <Button name="BtnSkin" textid="STRING_BTN_SKIN" float="true" pos="1,0,29,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnSkin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnSkin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnSkin.png&apos; source=&apos;56,0,84,20&apos;" />
+                        <Button name="BtnMin" textid="STRING_BTN_MIN" float="true" pos="29,0,57,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnMin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMin.png&apos; source=&apos;56,0,84,20&apos;" />
+                        <Button name="BtnClose" textid="STRING_BTN_CLOSE" float="true" pos="57,0,96,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
                     </HorizontalLayout>
                 </HorizontalLayout>
                 <HorizontalLayout name="HLayoutCenter" pos="0,0,0,90" height="90">
@@ -25,7 +25,7 @@
                     </HorizontalLayout>
                     <VerticalLayout name="VLayoutUserInfo">
                         <HorizontalLayout name="HorizontalLayoutUI1" pos="0,0,127,30" width="127" height="30">
-                            <Text name="LabelUserName" text="主人" pos="5,8,44,38" width="39" height="30" maxheight="30" maxwidth="100" textpadding="2,0,2,0" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
+                            <Text name="LabelUserName" textid="STRING_LABEL_MAN" pos="5,8,44,38" width="39" height="30" maxheight="30" maxwidth="100" textpadding="2,0,2,0" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
                             <HorizontalLayout name="HorizontalLayoutUI5" pos="0,0,27,30" width="27" height="30">
                                 <Button name="BtnStatus" tooltip="状态" float="true" pos="3,6,23,26" bkimage="file=&apos;imonline.png&apos; dest=&apos;4,4,16,16&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;imonline.png&apos; dest=&apos;4,4,16,16&apos;" hotimage="btn_hover.png" pushedimage="btn_press.png" />
                             </HorizontalLayout>

@@ -60,13 +60,52 @@ void CCityWeatherInfo::InitWindow()
 
 	if (m_pCityInfo != NULL)
 	{
+		//显示当前城市位置
 		CString strCityLocation;
 		m_pCityInfo->GetCityLocation(strCityLocation);
 		CLabelUI* pLocation = (CLabelUI*)m_PaintManager.FindControl(_T("Location"));
 		if (pLocation && strCityLocation.IsEmpty() == FALSE)
 			pLocation->SetText(strCityLocation);
 
+		//显示当前城市天气温度范围
+		CString strCityTemperatureRange;
+		m_pCityInfo->GetCityTemperatureRange(strCityTemperatureRange);
+		CLabelUI* pRange = (CLabelUI*)m_PaintManager.FindControl(_T("Range"));
+		if (pRange && strCityTemperatureRange.IsEmpty() == FALSE)
+			pRange->SetText(strCityTemperatureRange);
 
+		//显示当前城市天气文字信息
+		CString strCityWeatherInfo;
+		m_pCityInfo->GetCityWeatherInfo(strCityWeatherInfo);
+		CLabelUI* pWeatherInfo = (CLabelUI*)m_PaintManager.FindControl(_T("WeatherInfo"));
+		if (pWeatherInfo && strCityWeatherInfo.IsEmpty() == FALSE)
+			pWeatherInfo->SetText(strCityWeatherInfo);
+
+		//显示当前城市天气图标
+		CLabelUI* pWeatherType = (CLabelUI*)m_PaintManager.FindControl(_T("ImgType"));
+		if (pWeatherType)
+		{
+			TCHAR szWeatherInfoType[MAX_PATH];
+			_stprintf_s(szWeatherInfoType, _countof(szWeatherInfoType), _T("Info/%s.png"), strCityWeatherInfo);
+			pWeatherType->SetBkImage(szWeatherInfoType);
+		}
+
+		//显示当前城市PM2.5具体信息
+		CString strCityPM25Info, strCityPM25Remark;
+		m_pCityInfo->GetCityPM25Info(strCityPM25Info);
+		m_pCityInfo->GetCityPM25Remark(strCityPM25Remark);
+		CLabelUI* pPM25Info = (CLabelUI*)m_PaintManager.FindControl(_T("PM25Info"));
+		if (pPM25Info && strCityPM25Info.IsEmpty() == FALSE)
+		{
+			if (strCityPM25Info.GetLength() > 6)
+			{
+				CLabelUI* pTitle = (CLabelUI*)m_PaintManager.FindControl(_T("PM25Title"));
+				if (pTitle)
+					pTitle->SetVisible(FALSE);
+			}
+			pPM25Info->SetText(strCityPM25Info);
+			pPM25Info->SetToolTip(strCityPM25Remark);
+		}
 	}
 
 	RECT rcWnd;

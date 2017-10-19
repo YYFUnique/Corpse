@@ -24,7 +24,7 @@ public:
 	virtual CDuiString GetZIPFileName() const;
 	virtual CDuiString GetSkinFile();
 	virtual CDuiString GetSkinFolder();
-	virtual CDuiString GetLanguageFile() const;
+	virtual LPCTSTR GetLanguageFile() const;
 	virtual void Notify(TNotifyUI& msg);
 	virtual void InitWindow();
 	virtual void OnFinalMessage(HWND hWnd);
