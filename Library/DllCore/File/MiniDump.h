@@ -8,7 +8,7 @@
 #define DLL_API __declspec(dllimport)
 #endif
 
-#include <Dbghelp.h>
+#include <ImageHlp.h>
 
 class DLL_API CMiniDump
 {

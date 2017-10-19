@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Utils/DuiList.h"
+
 #ifdef LS_STATIC_LIB_CALL
 #define DLL_API 
 #elif defined  DLL_EXPORTS
