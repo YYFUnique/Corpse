@@ -103,7 +103,7 @@ namespace DuiLib
 		bool			  m_bWaterMode;				//水印模式
 		DWORD    m_dwWaterColor;				//水印文字颜色
 		CDuiString m_sWaterText;					//水印文字
-		CDuiString m_strTooltip;						//提示文字
+		//CDuiString m_strTooltip;						//提示文字
 		CDuiString m_sNormalImage;			//编辑框普通状态图片
 		CDuiString m_sFocusedImage;			//编辑框获取焦点状态图片
 		CDuiString m_sHotImage;					

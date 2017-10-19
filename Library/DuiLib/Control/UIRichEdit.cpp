@@ -838,7 +838,7 @@ private:
     unsigned	fTimer				:1;	// A timer is set
     unsigned    fCaptured           :1;
 
-    LONG		lSelBarWidth;			// Width of the selection bar
+    LONG			lSelBarWidth;			// Width of the selection bar
     LONG  		cchTextMost;			// maximum text size
     DWORD		dwEventMask;			// DoEvent mask to pass on to parent window
     LONG		icf;
