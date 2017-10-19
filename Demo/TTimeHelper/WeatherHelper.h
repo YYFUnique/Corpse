@@ -6,7 +6,7 @@
 
 #define HTTP_GET_CITY_LOCATION		0x1000		//通过百度API获取城市名
 #define HTTP_GET_CITY_WEATHER		0x1001		//获取城市天气
-
+#define HTTP_GET_CITY_AQIINFO			0x1002		//获取城市空气质量
 class CWeatherHelper : public ILibcurlCallback
 {
 public:
@@ -17,11 +17,14 @@ public:
 	void Init(CCityHelper* pCityHelper);
 	BOOL GetCityLocation();
 	BOOL GetCityWeather(LPCTSTR lpszCityInfo);
+	BOOL GetCityAQIInfo(LPCTSTR lpszCityInfo);
 protected:
 	//获取城市名
 	void OnGetCityLocation(LPVOID lpData);
 	//获取城市天气
 	void OnGetCityWeather(LPVOID lpData);
+	//获取城市空气质量
+	void OnGetCityPM25Info(LPVOID lpData);
 	//处理HTTP请求返回内容
 	int ProcessFunc(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb);
 

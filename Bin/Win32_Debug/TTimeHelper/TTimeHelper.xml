@@ -36,7 +36,7 @@
 			</HorizontalLayout>
 			<Control height="4"/>
 			<HorizontalLayout bkimage="file=&apos;Localtion.png&apos;" padding="7,0,0,0" width="176" height="30">
-				<Button name="Weather" text="未知" float="true" pos="15,5,70,25" textcolor="#FFDAE9F7" font="1" textpadding="30,0,0,0" normalimage="file=&apos;sunnynormal.png&apos; dest=&apos;0,0,20,20&apos;" hotimage="file=&apos;sunnyhot.png&apos; dest=&apos;0,0,20,20&apos;" />
+				<Button name="Temperature" text="未知" float="true" pos="15,5,70,25" textcolor="#FFDAE9F7" font="1" textpadding="30,0,0,0" normalimage="file=&apos;sunnynormal.png&apos; dest=&apos;0,0,20,20&apos;" hotimage="file=&apos;sunnyhot.png&apos; dest=&apos;0,0,20,20&apos;" />
 				<Button name="News" text="腾讯新闻" float="true" pos="85,5,160,25" textcolor="#FFDAE9F7" font="1" textpadding="25,0,0,0" bkimage="file=&apos;newsnormal.png&apos; dest=&apos;0,0,20,20&apos;" hotimage="file=&apos;newshot.png&apos; dest=&apos;0,0,20,20&apos;"/>
 			</HorizontalLayout>
 		</VerticalLayout>

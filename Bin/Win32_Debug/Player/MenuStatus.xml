@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window roundcorner="5,5">
+  <Font name="微软雅黑" size="12" bold="false" default="true" />
+  <Font name="微软雅黑" size="12" bold="true"/>
+  <Default name="Menu" value="inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='menu_bk.png' corner='30,8,8,8'&quot; mask=&quot;#FFFFFFFF&quot; hole=&quot;false&quot;" />
+  <Menu name="PCStatus" >
+    <MenuElement text="我在线上" name="MenuOnline" bkimage="file='imonline.png' dest='6,6,17,17'"/>
+	<MenuElement text="Q我吧" name="MenuOnline" bkimage="file='Qme.png' dest='6,6,17,17'"/>
+	<MenuElement text="离开" name="MenuOut" bkimage="file='imoffline.png' dest='6,6,17,17'"/>
+	<MenuElement text="忙碌" name="MenuBusy" bkimage="file='busy.png' dest='6,6,17,17'"/>
+	<MenuElement text="请勿打扰" name="MenuOnline" bkimage="file='mute.png' dest='6,6,17,17'"/>
+	<MenuElement text="隐身" name="MenuOff" bkimage="file='invisible.png' dest='6,6,17,17'"/>
+  </Menu>
+</Window>

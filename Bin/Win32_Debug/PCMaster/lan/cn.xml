@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<String>
+	<!-- 标签开始 -->
+	<Lan id="STRING_LABEL_TITLE" text="综合管理软件" />
+	<Lan id="STRING_LABEL_MAN" tooltip="管理员名称" />
+	<!-- 标签结束 -->
+	
+	<!-- 按钮开始 -->
+	<Lan id="STRING_BTN_SKIN" tooltip="换肤" />
+	<Lan id="STRING_BTN_MIN" tooltip="最小化" />
+	<Lan id="STRING_BTN_CLOSE" tooltip="关闭" />
+	<!-- 按钮结束 -->
+</String>

@@ -6,13 +6,19 @@
 		<HorizontalLayout name="HLayoutTotal" padding="15,0,12,0">
 			<VerticalLayout width="100" >
 				<Control height="20" />
-				<Label name="Location" text="四川,成都,龙泉驿" font="1" textcolor="#FFDAE9F7" />
-				<Label name="Range" text="21~29°C" font="1" textcolor="#FFDAE9F7" />
-				<Label name="Desc" text="晴" font="1" textcolor="#FFDAE9F7" />
+				<HorizontalLayout height="20">
+					<Label name="Location" text="" padding="0,0,5,0" font="1" autocalcwidth="true" textcolor="#FFDAE9F7"/>
+					<Label name="WeatherInfo" text="" font="1" textcolor="#FFDAE9F7" />
+				</HorizontalLayout>
+				<Label name="Range" text="" font="1" textcolor="#FFDAE9F7" />
+				<HorizontalLayout height="20">
+					<Label name="PM25Title" text="PM2.5:" font="1" padding="0,0,2,0" autocalcwidth="true" textcolor="#FFDAE9F7" />
+					<Label name="PM25Info" text="" font="1" textcolor="#FFDAE9F7" />
+				</HorizontalLayout>
 			</VerticalLayout>
 			<Control />
 			<VerticalLayout width="60" >
-				<Label name="ImgType" bkimage="Info/00128[60x60x8BPP].png" width="60" height="60" floatalign="center,vcenter"/>
+				<Label name="ImgType" width="60" height="60" floatalign="center,vcenter"/>
 			</VerticalLayout>
 		</HorizontalLayout>
 	</VerticalLayout>

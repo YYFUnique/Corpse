@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="800,500" roundcorner="5,5" sizebox="4,4,6,6" caption="0,0,0,35" bktrans="true" shadow="true" shadowimage="shadow.png" shadowcorner="5,3,5,4" roundcorner="5,5" maxbox="false">
+  <Font name="宋体" size="12" />
+  <Font name="微软雅黑" size="13"/>
+  <Font name="宋体" size="13" />
+  <!--<Default name="VScrollBar" value="bkcolor=&quot;#ffffff&quot; thumbround=&quot;7,7&quot;  button1markcolor=&quot;#ffffff00&quot;"/>-->
+  <Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+  <VerticalLayout bkcolor="#ff54575b" borderround="5,5">
+    
+    <!--标题栏_开始-->
+    <HorizontalLayout height="35" >
+      <Control name="logo" width="48" height="25" padding="11,4,0,0" bkimage="logo.png"/>
+      <Control name="title" width="100" height="18" padding="11,8,0,0" bkimage="title.png"/>
+      <Control /><!--占位-->
+      <Button name="help" tooltip="帮助" width="25" height="12" font="0" padding="0,12,10,0" hottextcolor="#b6b757" textcolor="#969757" text="帮助"/>
+      <Button name="minbtn" tooltip="最小化" width="30" height="25" padding="0,6,0,0" bkimage="min.png" hotimage="min_hot.png" pushedimage="min_down.png"/>
+      <Button name="closebtn" tooltip="关闭" width="32" height="25" padding="0,6,10,0" bkimage="close.png" hotimage="close_hot.png" pushedimage="close_down.png"/>
+    </HorizontalLayout>
+    <!--标题栏结束-->
+
+    <HorizontalLayout padding="1,0,5,0">
+      <!--左边栏开始-->
+      <VerticalLayout width="54" inset="2,0,0,2" childpadding="6">
+        <Option name="systembtn" text="系统" width="51" height="57" textcolor="#87878b" font="0" textpadding="0,35,0,0" foreimage="file='system.png' dest='9,7,39,37'"  selectedimage="file='leftBtnBk.png'" hotimage="file='leftBtnBk_Hot.png'"  group="quickbar" selected="true"/>
+        <Option name="filebtn" text="文件" width="51" height="57" textcolor="#87878b" font="0" textpadding="0,35,0,0" foreimage="file='file.png' dest='9,7,39,37'"  selectedimage="file='leftBtnBk.png'" hotimage="file='leftBtnBk_Hot.png'" group="quickbar" />
+        <Option name="radiobtn" text="音频" width="51" height="57" textcolor="#87878b" font="0" textpadding="0,35,0,0" foreimage="file='audio.png' dest='9,7,39,37'"  selectedimage="file='leftBtnBk.png'" hotimage="file='leftBtnBk_Hot.png'" group="quickbar" />
+        <Option name="bytbtn" text="购买" width="51" height="57" textcolor="#87878b" font="0" textpadding="0,35,0,0" foreimage="file='buy.png' dest='9,7,39,37'"  selectedimage="file='leftBtnBk.png'" hotimage="file='leftBtnBk_Hot.png'" group="quickbar" />
+        <Option name="messagebtn" text="消息" width="51" height="57" textcolor="#87878b" font="0" textpadding="0,35,0,0" foreimage="file='message.png' dest='9,7,39,37'"  selectedimage="file='leftBtnBk.png'" hotimage="file='leftBtnBk_Hot.png'" group="quickbar" />
+        <Option name="setbtn" text="设置" width="51" height="57" textcolor="#87878b" font="0" textpadding="0,35,0,0" foreimage="file='set.png' dest='9,7,39,37'"  selectedimage="file='leftBtnBk.png'" hotimage="file='leftBtnBk_Hot.png'" group="quickbar" />
+      </VerticalLayout >
+      <!--左边栏结束-->
+      
+      
+      <VerticalLayout bkcolor="#ff282a2e" bkcolor2="#ff282a2e" borderround="5,5">
+        <HorizontalLayout bkcolor="#ff1c1d1f" bkcolor2="#ff1c1d1f" height="40" borderround="5,5" roundselect="1,1,0,0"  >
+			<!--        
+			<Combo name="select" width="81" height="28" padding="15,8,0,0"  normalimage="combobk.png" pushedimage="combobkpushed.png" dropbox="bkcolor=&quot;#ff1c1d1f&quot; bordersize=&quot;1&quot; bordercolor=&quot;#ff2c2d2f&quot;"  >
+				<ListLabelElement text="音乐" selected="true" />
+				<ListLabelElement text="视频" />
+				<ListLabelElement text="文件" />
+				<ListLabelElement text="购买" />
+				<ListLabelElement text="消息" />
+			</Combo>
+		  -->
+		  <!--
+          <Label name="mode" text="批处理模式" font="0" textcolor="#ff797b7e" height="28" padding="15,8,0,0"  valign="vcenter"/>
+		  -->
+		  <Control />
+          <Label name="searchlabel" text="搜索" width="25" font="0" textcolor="#ffffffff" height="28" padding="0,8,10,0" />
+          <Edit2 name="serchedit" caretcolor="#FFFFFFFF" watertext="搜音乐" textpadding="10,8,3,5" width="187" height="26" font="0" textcolor="#ffe0e5ed" nativebkcolor="#ff222428" padding="0,8,0,0" normalimage="file='searchbk.png' source='0,0,187,28' corner='10,3,1,3'"/>
+          <Button name="searchbutton" width="28" height="26"  padding="0,8,15,0" normalimage="file='searchbk.png' source='187,0,215,28'" pushedimage="file='searchbtnpushed.png' source='187,0,215,28'" />
+        </HorizontalLayout>
+
+        <HorizontalLayout  bordersize="0,1,0,1" bordercolor="#ff10111d" itemsize="145,30" >
+			<!--
+			<TreeView  name="TreeView" width="145" inset="5,2,0,2" vscrollbar="true">
+				<TreeNode  text="所有音乐"   height="28" itemtextcolor="#ff797b7e" itemhottextcolor="#ff797b7e" selitemtextcolor="#ff797b7e" itemattr="font=&quot;0&quot; textpadding=&quot;4,0,0,0&quot;" folderattr="padding=&quot;5,11,0,0&quot; width=&quot;5&quot; height=&quot;5&quot; selectedimage=&quot;player\treeclose.png&quot; normalimage=&quot;player\treeopen.png&quot;" >
+					<TreeNode text="最新"  height="28" itemtextcolor="#ff797b7e" itemhottextcolor="#ff797b7e" selitemtextcolor="#ff797b7e" itemattr="font=&quot;0&quot; textpadding=&quot;4,0,0,0&quot;" folderattr="padding=&quot;5,11,0,0&quot; width=&quot;5&quot; height=&quot;5&quot; selectedimage=&quot;player\treeclose.png&quot; normalimage=&quot;player\treeopen.png&quot;">
+					</TreeNode>
+					<TreeNode text="流行应用"  height="28" itemtextcolor="#ff797b7e" itemhottextcolor="#ff797b7e" selitemtextcolor="#ff797b7e" itemattr="font=&quot;0&quot; textpadding=&quot;4,0,0,0&quot;" folderattr="padding=&quot;5,11,0,0&quot; width=&quot;5&quot; height=&quot;5&quot; selectedimage=&quot;player\treeclose.png&quot; normalimage=&quot;player\treeopen.png&quot;"> 
+					</TreeNode>
+					<TreeNode text="交响乐"  height="28" itemtextcolor="#ff797b7e" itemhottextcolor="#ff797b7e" selitemtextcolor="#ff797b7e" itemattr="font=&quot;0&quot; textpadding=&quot;4,0,0,0&quot;" folderattr="padding=&quot;5,11,0,0&quot; width=&quot;5&quot; height=&quot;5&quot; selectedimage=&quot;player\treeclose.png&quot; normalimage=&quot;player\treeopen.png&quot;">
+					</TreeNode>
+					<TreeNode text="爵士"  height="28" itemtextcolor="#ff797b7e" itemhottextcolor="#ff797b7e" selitemtextcolor="#ff797b7e" itemattr="font=&quot;0&quot; textpadding=&quot;4,0,0,0&quot;" folderattr="padding=&quot;5,11,0,0&quot; width=&quot;5&quot; height=&quot;5&quot; selectedimage=&quot;player\treeclose.png&quot; normalimage=&quot;player\treeopen.png&quot;">
+					</TreeNode>
+					<TreeNode text="目录"  height="28" itemtextcolor="#ff797b7e" itemhottextcolor="#ff797b7e" selitemtextcolor="#ff797b7e" itemattr="font=&quot;0&quot; textpadding=&quot;4,0,0,0&quot;" folderattr="padding=&quot;5,11,0,0&quot; width=&quot;5&quot; height=&quot;5&quot; selectedimage=&quot;player\treeclose.png&quot; normalimage=&quot;player\treeopen.png&quot;">
+					</TreeNode>
+				</TreeNode>
+			</TreeView>
+			-->
+			<!-- 音乐信息列表 -->
+			<List name="playlist" bkcolor="#FF282A2E" bordercolor="#ff323436" bordersize="1,1,1,0" vscrollbar="true" hscrollbar="true" itemalign="left" menu="true">
+				<ListHeader height="30" menu="true" bordercolor="#ff323436" bordersize="0,0,1,1" >
+					<ListHeaderItem text="序号" font="0"  width="60" textcolor="#ffffffff" normalimage="file='player\listheadbk.png'"  sepimage="file='player\listheadsep.png'" sepwidth="2"/>
+					<ListHeaderItem text="标题" font="0" width="280" textcolor="#ffffffff" normalimage="listheadbk.png" sepimage="listheadsep.png" sepwidth="2"/>
+					<ListHeaderItem text="类型" font="0" width="85" textcolor="#ffffffff" normalimage="listheadbk.png" sepimage="listheadsep.png" sepwidth="2"/>
+					<ListHeaderItem text="大小" font="0" width="80" textcolor="#ffffffff" normalimage="listheadbk.png" sepimage="listheadsep.png" sepwidth="2"/>
+					<ListHeaderItem text="修改日期" font="0" width="130" textcolor="#ffffffff" normalimage="listheadbk.png" sepimage="listheadsep.png" sepwidth="2"/>
+				</ListHeader>
+			</List>
+		</HorizontalLayout>
+
+		<!-- 控制按钮及播放进度控件 -->
+        <HorizontalLayout bkcolor="#ff1c1d1f" bkcolor2="#ff1c1d1f" height="55" borderround="5,5" roundselect="0,0,1,1"  >
+          <HorizontalLayout height="29" padding="15,14,15,0" bkimage="file='bottombtnbk.png' corner='210,2,70,2'">
+            <Button name="play" tooltip="播放" width="13" height="16" padding="26,7,0,0" normalimage="play.png" hotimage="playhot.png"/>
+            <Button name="pause" tooltip="暂停" width="13" height="16" padding="40,7,0,0" normalimage="pause.png" hotimage="pausehot.png"/>
+            <Button name="stop" tooltip="停止" width="13" height="16" padding="35,7,0,0" normalimage="stop.png" hotimage="stophot.png"/>
+            <Button width="13" height="16" padding="35,7,0,0" normalimage="refresh.png" hotimage="refreshhot.png"/>
+            <Progress height="7" padding="40,11,20,0" value="80"  bkimage="file='playprogressbk.png' corner='3,1,3,1'" foreimage="file='playprogressfore.png' corner='2,3,2,3'"/>
+            <Label height="16" text="03:26/06:35" padding="0,7,65,0" font="0" textcolor="#ff797b7e" autocalcwidth="true"/>
+            <Button width="15" height="16" padding="0,7,28,0" normalimage="volume.png" hotimage="volumehot.png"/>
+          </HorizontalLayout>
+        </HorizontalLayout>
+      </VerticalLayout>
+    </HorizontalLayout>
+
+    <!-- 底部容量信息 -->
+    <HorizontalLayout height="48" >
+      <Progress name="progress2" value="50" width="203" height="16" padding="57,16,0,0" bkimage="progress2bk.png" foreimage="progress2fore.png" isstretchfore="false"/>
+      <Label name="capacity" text="容量:" font="0" textcolor="#ffffffff" height="16" padding="20,16,0,0" autocalcwidth="true"/>
+      <Label name="capacity" text="8.01GB" height="16" padding="0,16,0,0" textcolor="#bcbdbf" autocalcwidth="true"/>
+      <Control width="2" height="16" padding="15,16,15,0" bkimage="capacitysep.png"/>
+      <Label name="capacity" text="已用:" font="0" textcolor="#ffffffff" height="16" padding="0,16,0,0" autocalcwidth="true"/>
+      <Label name="capacity" text="4.87GB" height="16" padding="0,16,0,0" textcolor="#bcbdbf" autocalcwidth="true"/>
+    </HorizontalLayout>
+    
+  </VerticalLayout>
+</Window>

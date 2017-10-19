@@ -200,14 +200,17 @@ BOOL CTTimeHelper::Receive(CityInfoChangedParam CityInfoParam)
 	{
 		//保存城市位置信息
 		m_strCityLocation = CityInfoParam.strJsonString;
-		//如果位置信息发生变更，则重新获取天气
+		//如果位置信息发生变更，则重新获取天气和城市控制质量
 		if (m_pWeatherInfo)
+		{
 			m_pWeatherInfo->GetCityWeather(CityInfoParam.strJsonString);
+			m_pWeatherInfo->GetCityAQIInfo(CityInfoParam.strJsonString);
+		}
 	}
-	else if (CityInfoParam.CityInfoChanged == CITYINFO_CHANGED_WEATHER)
+	else if (CityInfoParam.CityInfoChanged == CITYINFO_CHANGED_TEMPERATURE)
 	{
 		//城市天气信息获取成功
-		CButtonUI* pWeather = (CButtonUI*)m_PaintManager.FindControl(_T("Weather"));
+		CButtonUI* pWeather = (CButtonUI*)m_PaintManager.FindControl(_T("Temperature"));
 		if (pWeather)
 			pWeather->SetText(CityInfoParam.strJsonString);
 	}
@@ -235,7 +238,7 @@ void CTTimeHelper::OnClick(TNotifyUI& msg)
 	{
 		ShellExecute(m_hWnd, _T("open"), _T("http://www.qq.com/"), NULL, NULL, SW_SHOW);
 	}
-	else if (msg.pSender == m_PaintManager.FindControl(_T("Weather")))
+	else if (msg.pSender == m_PaintManager.FindControl(_T("Temperature")))
 	{
 		if (m_pWeatherInfo != NULL)
 		{
@@ -268,11 +271,13 @@ void CTTimeHelper::OnTimer(TNotifyUI& msg)
 		}
 		m_pCityInfo->LoadData();
 
-		CControlUI* pWeatherInfo = m_PaintManager.FindControl(_T("Weather"));
-		m_PaintManager.KillTimer(pWeatherInfo);
-
-		//以后每10分钟刷新一次
-		m_PaintManager.SetTimer(pWeatherInfo, WEATHER_UPDATE_TIMERD_ID, 10*60*1000);
+		CControlUI* pWeatherInfo = m_PaintManager.FindControl(_T("Temperature"));
+		if (pWeatherInfo)
+		{
+			m_PaintManager.KillTimer(pWeatherInfo);
+			//以后每10分钟刷新一次
+			m_PaintManager.SetTimer(pWeatherInfo, WEATHER_UPDATE_TIMERD_ID, 10*60*1000);
+		}
 	}
 	else if (msg.wParam == WEATHER_UPDATE_TIMERD_ID)
 	{
@@ -282,7 +287,10 @@ void CTTimeHelper::OnTimer(TNotifyUI& msg)
 			if (m_strCityLocation.IsEmpty() != FALSE)
 				m_pWeatherInfo->GetCityLocation();
 			else
+			{
 				m_pWeatherInfo->GetCityWeather(m_strCityLocation);
+				m_pWeatherInfo->GetCityAQIInfo(m_strCityLocation);
+			}
 		}
 	}
 }
@@ -300,8 +308,9 @@ void CTTimeHelper::OnInitDialog()
 		m_pCityInfo->Init(this);
 	}
 
-	CControlUI* pWeatherInfo = m_PaintManager.FindControl(_T("Weather"));
-	m_PaintManager.SetTimer(pWeatherInfo, WEATHER_SHOW_TIMERD_ID, 1000);	
+	CControlUI* pWeatherInfo = m_PaintManager.FindControl(_T("Temperature"));
+	if (pWeatherInfo)
+		m_PaintManager.SetTimer(pWeatherInfo, WEATHER_SHOW_TIMERD_ID, 1000);	
 }
 
 void CTTimeHelper::SetShowTimer()
@@ -480,7 +489,7 @@ LRESULT CTTimeHelper::OnMouseHover(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 		return 0;
     
 	//如果没有获取到城市天气信息，不开启城市天气详细信息
-    if (pHover->GetName() == _T("Weather"))
+    if (pHover->GetName() == _T("Temperature"))
     {
 		CDuiString strCityTempture = pHover->GetText();
 		if (strCityTempture.CompareNoCase(_T("未知")) == 0)
@@ -565,12 +574,51 @@ HRESULT CTTimeHelper::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lPara
 				GetModuleFileName(NULL, szModuleFile, _countof(szModuleFile));
 				PathRenameExtension(szModuleFile, _T(".ini"));
 
+				//将程序在屏幕上下左右的位置写入配置文件中
+				//左边距离屏幕的距离
 				TCHAR szClientPos[10];
 				_stprintf_s(szClientPos, _countof(szClientPos), _T("%d"), ptClientPos.x);
 				WritePrivateProfileString(_T("POSITION"), _T("left"), szClientPos, szModuleFile);
 
+				//上边距离屏幕的距离
 				_stprintf_s(szClientPos, _countof(szClientPos), _T("%d"), ptClientPos.y);
 				WritePrivateProfileString(_T("POSITION"), _T("top"), szClientPos, szModuleFile);
+
+				RECT rcWnd;
+				GetWindowRect(m_hWnd,&rcWnd);
+
+				//右边距离屏幕的距离
+				_stprintf_s(szClientPos, _countof(szClientPos), _T("%d"), GetSystemMetrics(SM_CXSCREEN) - (ptClientPos.x + rcWnd.right - rcWnd.left));
+				WritePrivateProfileString(_T("POSITION"), _T("right"), szClientPos, szModuleFile);
+				//下边距离屏幕的距离
+				_stprintf_s(szClientPos, _countof(szClientPos), _T("%d"), GetSystemMetrics(SM_CYSCREEN) - (ptClientPos.y + rcWnd.bottom - rcWnd.top));
+				WritePrivateProfileString(_T("POSITION"), _T("bottom"), szClientPos, szModuleFile);
+			}
+			break;
+		case WM_DISPLAYCHANGE:
+			{
+				DWORD dwWidth = LOWORD(lParam);
+				DWORD dwHegiht = HIWORD(lParam);
+
+				TCHAR szModuleFile[MAX_PATH];
+				GetModuleFileName(NULL, szModuleFile, _countof(szModuleFile));
+				PathRenameExtension(szModuleFile, _T(".ini"));
+
+				int nLeft = GetPrivateProfileInt(_T("POSITION"), _T("left"), 0, szModuleFile);
+				int nTop = GetPrivateProfileInt(_T("POSITION"), _T("top"), 0, szModuleFile);
+				int nRight = GetPrivateProfileInt(_T("POSITION"), _T("right"), 0, szModuleFile);
+				int nBottom = GetPrivateProfileInt(_T("POSITION"), _T("bottom"), 0, szModuleFile);
+
+				RECT rcWnd;
+				GetWindowRect(m_hWnd,&rcWnd);
+
+				if (nRight < nLeft)	//左边距离屏幕的距离大于右边距离屏幕的距离
+					nLeft = dwWidth - ( rcWnd.right - rcWnd.left ) - nRight;
+
+				if (nTop > nBottom)	//下边距离屏幕的距离大于上边距离屏幕的距离
+					nTop = dwHegiht - (rcWnd.bottom - rcWnd.top) - nBottom;
+
+				SetWindowPos(m_hWnd, NULL, nLeft, nTop, 0, 0, SWP_NOSIZE|SWP_NOZORDER);
 			}
 			break;
 	}

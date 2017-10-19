@@ -18,6 +18,7 @@
 #include "DllCore/Utils/FileTools.h"
 #include "DllCore/Log/LogHelper.h"
 #include "DllCore/Utils/ErrorInfo.h"
+#include "DllCore/Utils/Registry.h"
 #include "QRCode/qr.h"
 #include "libcurl/libcurl.h"
 
@@ -134,9 +135,13 @@ CDuiString CPCMaster::GetSkinFile()
 	return _T("PCMaster.xml");
 }
 
-CDuiString CPCMaster::GetLanguageFile() const
+LPCTSTR CPCMaster::GetLanguageFile() const
 {
-	return _T("lan_en.xml");
+	CString strLanguageFile;
+	if (LsRegQueryValue(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\PCMaster"), _T("language"), strLanguageFile) == FALSE)
+		strLanguageFile = _T("lan/cn.xml");
+
+	return strLanguageFile;
 }
 
 CDuiString CPCMaster::GetSkinFolder()
@@ -192,9 +197,8 @@ void CPCMaster::InitWindow()
 //  	m_pDropTarget->SetDropTargetHelper(TRUE);
 	//设置显示图标
 	SetIcon(IDI_MAINFRAME);
-	//设置用户名
 	
-	//CreateShortcurLnkFile(_T("C:\\Aquarius.exe"),_T("C:\\Users\\Public\\Desktop\\as.lnk"));
+	//CreateShellLnkFile(_T("C:\\Aquarius.exe"),_T("C:\\Users\\Public\\Desktop\\as.lnk"));
 
 	/*int nCode = QR_ERR_NONE;
 	//qrInit的5个参数分别是version,mode,纠错等级和掩码，
@@ -285,15 +289,24 @@ void CPCMaster::OnMenuClick(CControlUI* pControl)
 	CDuiString strName = pControl->GetManager()->GetRoot()->GetName();
 	if (strName == _T("PCStatus"))
 	{
+		CDuiString strLanguage;
 		if (pControl->GetName() == _T("MenuOnline"))
-			CResourceMgrUI::GetInstance()->LoadLanguage(_T("lan_cn.xml"));
+			strLanguage = _T("lan/cn.xml");
 		else if (pControl->GetName() == _T("MenuQMe"))
-			CResourceMgrUI::GetInstance()->LoadLanguage(_T("lan_en.xml"));
+			strLanguage = _T("lan/en.xml");
 
-		m_PaintManager.Invalidate();
+		//加载语言资源
+		CDataBuilderUI::GetInstance()->LoadLanguage(strLanguage);
+		//保存当前使用的语言，以便下次使用
+		LsRegSetValue(HKEY_LOCAL_MACHINE, _T("SOFTWARE\\PCMaster"), _T("language"), strLanguage);
+
+		//刷新界面，更新内容，这里没有考虑其他已打开的应用窗口
+		CControlUI* pRoot = m_PaintManager.GetRoot();
+		if (pRoot)
+			pRoot->SetTextById();
 
 		CDuiString strBkImage = pControl->GetBkImage();
-		MessageBox(m_hWnd,pControl->GetText(),_T("您点击了菜单项"),MB_YESNO|MB_ICONINFORMATION);
+		//MessageBox(m_hWnd,pControl->GetText(),_T("您点击了菜单项"),MB_YESNO|MB_ICONINFORMATION);
 		UINT nStart = strBkImage.Find(_T("'"));
 		UINT nEnd = strBkImage.Find(_T("'"),nStart+1);
 		CDuiString strBkFileFormat;
@@ -610,7 +623,7 @@ LRESULT CPCMaster::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 							}  
 							else if (dwEffect & DROPEFFECT_COPY)
 							{
-								/*CreateShortcurLnkFile(_T("C:\\log.txt"),_T("C:\\Users\\Public\\Desktop\\log.lnk"));*/
+								/*CreateShellLnkFile(_T("C:\\log.txt"),_T("C:\\Users\\Public\\Desktop\\log.lnk"));*/
 								OutputDebugString(_T("DROPEFFECT_COPY"));
 							}
 							else if (dwEffect & DROPEFFECT_LINK)

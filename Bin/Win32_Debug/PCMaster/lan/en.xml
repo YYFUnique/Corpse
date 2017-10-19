@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<String>	
+	<!-- 标签开始 -->
+	<Lan id="STRING_LABEL_TITLE" text="IM SOFT" />
+	<Lan id="STRING_LABEL_MAN" tooltip="Administrator Name" />
+	<!-- 标签结束 -->
+	
+	<!-- 按钮开始 -->
+	<Lan id="STRING_BTN_SKIN" tooltip="Skin change" />
+	<Lan id="STRING_BTN_MIN" tooltip="Min" />
+	<Lan id="STRING_BTN_CLOSE" tooltip="Close" />
+	<!-- 按钮结束 -->
+</String>

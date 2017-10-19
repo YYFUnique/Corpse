@@ -49,13 +49,12 @@ BOOL CWeatherHelper::GetCityWeather(LPCTSTR lpszCityInfo)
 	if (lpszCityInfo == NULL || _tcslen(lpszCityInfo) == 0)
 		return FALSE;
 	//http://api.k780.com/?app=weather.today&weaid=1&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json
-	LPCTSTR lpszAppInfo = _T("weather.today");
 	LPCTSTR lpszAppKey = _T("25122");
 	LPCTSTR lpszSign = _T("94eaf1a9e74eddd9357947078458fa11");
 	CString strCityTemperature;
 	//http://api.k780.com/?app=weather.today&weaid=1&appkey=25122&sign=94eaf1a9e74eddd9357947078458fa11&format=json
-	strCityTemperature.Format(_T("http://api.k780.com/?app=%s&weaid=%s&appkey=%s&sign=%s&format=json"),
-		lpszAppInfo, lpszCityInfo, lpszAppKey, lpszSign);
+	strCityTemperature.Format(_T("http://api.k780.com/?app=weather.today&weaid=%s&appkey=%s&sign=%s&format=json"),
+		lpszCityInfo, lpszAppKey, lpszSign);
 
 	if (m_pMulti == NULL)
 		return FALSE;
@@ -67,13 +66,36 @@ BOOL CWeatherHelper::GetCityWeather(LPCTSTR lpszCityInfo)
 	return m_pMulti->doHttpGet(HTTP_GET_CITY_WEATHER, strEncodeURL);
 }
 
+BOOL CWeatherHelper::GetCityAQIInfo(LPCTSTR lpszCityInfo)
+{
+	if (lpszCityInfo == NULL || _tcslen(lpszCityInfo) == 0)
+		return FALSE;
+	//http://api.k780.com/?app=weather.today&weaid=1&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json
+	LPCTSTR lpszAppKey = _T("25122");
+	LPCTSTR lpszSign = _T("94eaf1a9e74eddd9357947078458fa11");
+	CString strCityTemperature;
+	//http://api.k780.com/?app=weather.today&weaid=1&appkey=25122&sign=94eaf1a9e74eddd9357947078458fa11&format=json
+	strCityTemperature.Format(_T("http://api.k780.com/?app=weather.pm25&weaid=%s&appkey=%s&sign=%s&format=json"),
+		lpszCityInfo, lpszAppKey, lpszSign);
+
+	if (m_pMulti == NULL)
+		return FALSE;
+
+	CString strEncodeURL;
+
+	URLEncode(strCityTemperature, strEncodeURL);
+
+	return m_pMulti->doHttpGet(HTTP_GET_CITY_AQIINFO, strEncodeURL);
+}
+
 int CWeatherHelper::ProcessFunc(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb)
 {
 	if (dwEvent == HTTP_GET_CITY_LOCATION)
 		OnGetCityLocation(lpData);
 	else if (dwEvent == HTTP_GET_CITY_WEATHER)
 		OnGetCityWeather(lpData);
-
+	else if (dwEvent == HTTP_GET_CITY_AQIINFO)
+		OnGetCityPM25Info(lpData);
 	return size * nmemb;
 }
 
@@ -113,7 +135,7 @@ void CWeatherHelper::OnGetCityWeather(LPVOID lpData)
 		lpwText = new WCHAR[dwSize];
 	QXUtf8ToUnicode((LPCSTR)lpData, lpwText, dwSize);
 
-	CString strWeatherInfo(lpwText);
+	CString strCityWeatherInfo(lpwText);
 	if (lpwText)
 	{
 		delete[] lpwText;
@@ -121,13 +143,14 @@ void CWeatherHelper::OnGetCityWeather(LPVOID lpData)
 	}
 	
 	CJsonObject JsonObject;
-	JsonObject.FromString(strWeatherInfo);
+	JsonObject.FromString(strCityWeatherInfo);
 
 	CString strErrorNo;
 
 	if (JsonObject.IsMember(_T("success")))
 		strErrorNo = JsonObject.GetValue(_T("success"));
 
+	//接口获取数据成功返回1
 	if (strErrorNo.CompareNoCase(_T("1")) != 0)
 		return;
 
@@ -143,9 +166,73 @@ void CWeatherHelper::OnGetCityWeather(LPVOID lpData)
 	if (JsonObjectResult.IsMember(_T("temperature")))
 		strTemperature = JsonObjectResult.GetValue(_T("temperature_curr"));
 
+	CString strWeatherInfo;
+	if (JsonObjectResult.IsMember(_T("weather_curr")))
+		strWeatherInfo = JsonObjectResult.GetValue(_T("weather_curr"));
+
 	if (m_pCityHelper != NULL)
 	{
+		//设置城市当前温度
 		m_pCityHelper->SetCityTemperature(strTemperature);
+		//设置城市温度变化范围
 		m_pCityHelper->SetCityTemperatureRange(strTemperatureRange);
+		//设置城市当前天气信息
+		m_pCityHelper->SetCityWeatherInfo(strWeatherInfo);
+	}
+}
+
+void CWeatherHelper::OnGetCityPM25Info(LPVOID lpData)
+{
+	LPWSTR lpwText = NULL;
+	DWORD dwSize = 0;
+	if (QXUtf8ToUnicode((LPCSTR)lpData, lpwText, dwSize) == FALSE)
+		lpwText = new WCHAR[dwSize];
+	QXUtf8ToUnicode((LPCSTR)lpData, lpwText, dwSize);
+
+	CString strCityPM25Info(lpwText);
+	if (lpwText)
+	{
+		delete[] lpwText;
+		lpwText = NULL;
+	}
+
+	CJsonObject JsonObject;
+	JsonObject.FromString(strCityPM25Info);
+
+	CString strErrorNo;
+
+	if (JsonObject.IsMember(_T("success")))
+		strErrorNo = JsonObject.GetValue(_T("success"));
+
+	//接口获取数据成功返回1
+	if (strErrorNo.CompareNoCase(_T("1")) != 0)
+		return;
+
+	CJsonObject JsonObjectResult;
+
+	if (JsonObject.IsMember(_T("result")))
+		JsonObject.GetValue(_T("result"), &JsonObjectResult);
+
+	CString strCityAQI;
+	if (JsonObjectResult.IsMember(_T("aqi")))
+		strCityAQI = JsonObjectResult.GetValue(_T("aqi"));
+
+	CString strCityAQILevel;
+	if (JsonObjectResult.IsMember(_T("aqi_levnm")))
+		strCityAQILevel = JsonObjectResult.GetValue(_T("aqi_levnm"));
+
+	CString strCityAQIDesc;
+	if (JsonObjectResult.IsMember(_T("aqi_remark")))
+		strCityAQIDesc = JsonObjectResult.GetValue(_T("aqi_remark"));
+
+	if (m_pCityHelper != NULL)
+	{
+		//格式化显示城市空气质量信息
+		TCHAR szCityPM25Info[MAX_PATH];
+		_stprintf_s(szCityPM25Info, _countof(szCityPM25Info), _T("%s(%s)"), strCityAQI, strCityAQILevel);
+		m_pCityHelper->SetCityPM25Info(szCityPM25Info);
+
+		//设置城市空气质量对应户外描述
+		m_pCityHelper->SetCityPM25Remark(strCityAQIDesc);
 	}
 }

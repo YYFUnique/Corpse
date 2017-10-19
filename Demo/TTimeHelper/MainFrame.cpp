@@ -3,8 +3,7 @@
 #include "TxMiniSkin.h"
 #include "TTimeHelper.h"
 #include "MemLeakDetect.h"
-
-/*#include "HttpRequest.h"*/
+#include "DllCore/File/MiniDump.h"
 
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
 {
@@ -12,6 +11,7 @@ BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSh
 	CMemLeakDetect MemDetect;
 #endif	
 
+	CMiniDump::InitDumpDebugInfo(MiniDumpWithPrivateReadWriteMemory);
 	CTxMiniSkin::SetAutoStart(TRUE);
 
 	CPaintManagerUI::SetInstance(hInstance);

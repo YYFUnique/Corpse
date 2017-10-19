@@ -6,12 +6,17 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
 {
 	CPaintManagerUI::SetInstance(hInstance);
 
-	HRESULT Hr = ::CoInitialize(NULL);
-	if( FAILED(Hr) ) return 0;
+	HRESULT hRet = ::CoInitialize(NULL);
+	if (FAILED(hRet)) 
+		return 0;
 
 	CPlayerMain* pPlayerMain = new CPlayerMain();
-	if( pPlayerMain == NULL ) return 0;
-	pPlayerMain->Create(NULL, _T("飞逸无限--播放器"), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 884, 652);
+	if( pPlayerMain == NULL ) 
+		return 0;
+
+	
+	//pPlayerMain->Create(NULL, _T("飞逸无限--播放器"), UI_WNDSTYLE_DIALOG, UI_WNDSTYLE_EX_DIALOG, 0, 0, 884, 652);
+	pPlayerMain->Create(NULL, _T("飞逸无限--播放器"), UI_WNDSTYLE_DIALOG, 0, 0, 0, 884, 652);
 	pPlayerMain->CenterWindow();
 	pPlayerMain->ShowWindow(true);
 	CPaintManagerUI::MessageLoop();
