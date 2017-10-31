@@ -104,7 +104,7 @@ void CWndMagnet::OnMoving(HWND hWnd, LPRECT lpRect)
     {
 		Update2DMatrix(hWnd, lpRect);
         //移动老板窗口时,使其有机会能独立连续移动
-        if (hWnd!=m_hLead) 
+        if (hWnd != m_hLead) 
         {
             UpdateLeadWndSet(hWnd, lpRect);
         }
@@ -230,6 +230,7 @@ void CWndMagnet::Update2DMatrix(HWND hWnd, LPRECT lpRect)
                 POINT ptCenter = { lpRect->left + lOffX, lpRect->top + lOffY };
                 RECT  rcLeft, rcTop, rcRight, rcBottom, rcCenter;
 
+				//计算拖动窗口是否在指定矩形范围内
                 SetRect(&rcLeft, rcTemp.left-s_c_iThreshold-lOffX, rcTemp.top-lOffY, 
                     rcTemp.left-lOffX, rcTemp.bottom+lOffY);
                 SetRect(&rcTop, rcTemp.left-lOffX, rcTemp.top-s_c_iThreshold-lOffY, 
@@ -248,7 +249,7 @@ void CWndMagnet::Update2DMatrix(HWND hWnd, LPRECT lpRect)
                 int nOffset = 0;  
                 if(!m_vec_2DMatrix[uRow][uCol])
                 {
-                    if (PtInRect(&rcLeft, ptCenter))
+					if (PtInRect(&rcLeft, ptCenter))
                     {
                         m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = true;
                         lpRect->right = rcTemp.left - nOffset;
@@ -274,46 +275,48 @@ void CWndMagnet::Update2DMatrix(HWND hWnd, LPRECT lpRect)
                     }
                     else if (PtInRect(&rcCenter, ptCenter))
                     {
-                        m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = true;
+						m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = true;
                     }
-                    
                 }
                 else
                 {
-                    if (!PtInRect(&rcLeft, ptCenter)&&!PtInRect(&rcTop, ptCenter)&&!PtInRect(&rcRight, ptCenter)
-                        &&!PtInRect(&rcBottom, ptCenter)&&!PtInRect(&rcCenter, ptCenter))
+					if (!PtInRect(&rcLeft, ptCenter)&&!PtInRect(&rcTop, ptCenter)&&!PtInRect(&rcRight, ptCenter)
+						&&!PtInRect(&rcBottom, ptCenter)&&!PtInRect(&rcCenter, ptCenter))
+					{
+						m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = false;
+					}
+					else
+					{
+						m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = true;
+						break;
+					}
+				
+                    ++nOffset;
+                    OffsetRect(&rcLeft, -nOffset, 0);  OffsetRect(&rcRight, nOffset, 0);
+                    OffsetRect(&rcTop, 0, -nOffset);   OffsetRect(&rcBottom, 0, nOffset); 
+                    if (PtInRect(&rcLeft, ptCenter))
                     {
+                        lpRect->right = rcTemp.left - s_c_iThreshold;
+                        lpRect->left = lpRect->right - lWidth;
                         m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = false;
                     }
-                    else
+                    else if (PtInRect(&rcTop, ptCenter))
                     {
-                        ++nOffset;
-                        OffsetRect(&rcLeft, -nOffset, 0);  OffsetRect(&rcRight, nOffset, 0);
-                        OffsetRect(&rcTop, 0, -nOffset);   OffsetRect(&rcBottom, 0, nOffset); 
-                        if (PtInRect(&rcLeft, ptCenter))
-                        {
-                            lpRect->right = rcTemp.left - s_c_iThreshold;
-                            lpRect->left = lpRect->right - lWidth;
-                            m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = false;
-                        }
-                        else if (PtInRect(&rcTop, ptCenter))
-                        {
-                            lpRect->bottom = rcTemp.top - s_c_iThreshold;
-                            lpRect->top = lpRect->bottom - lHeight;
-                            m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = false;
-                        }
-                        else if (PtInRect(&rcRight, ptCenter))
-                        {
-                            lpRect->left  = rcTemp.right + s_c_iThreshold;
-                            lpRect->right = lpRect->left + lWidth;
-                            m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = false;
-                        }
-                        else if (PtInRect(&rcBottom, ptCenter))
-                        {
-                            lpRect->top    = rcTemp.bottom + s_c_iThreshold;
-                            lpRect->bottom = lpRect->top + lHeight;
-                            m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = false;
-                        }
+                        lpRect->bottom = rcTemp.top - s_c_iThreshold;
+                        lpRect->top = lpRect->bottom - lHeight;
+                        m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = false;
+                    }
+                    else if (PtInRect(&rcRight, ptCenter))
+                    {
+						m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = false;
+						lpRect->left  = rcTemp.right + s_c_iThreshold;
+						lpRect->right = lpRect->left + lWidth;
+                    }
+                    else if (PtInRect(&rcBottom, ptCenter))
+                    {
+                        lpRect->top    = rcTemp.bottom + s_c_iThreshold;
+                        lpRect->bottom = lpRect->top + lHeight;
+                        m_vec_2DMatrix[uRow][uCol] = m_vec_2DMatrix[uCol][uRow] = false;
                     }
                 }
             }

@@ -68,7 +68,10 @@ LRESULT CQRTool::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch(uMsg)
 	{
 		case WM_MOVING:
-				m_WndMagnet.OnMoving(m_hWnd, (LPRECT)lParam);
+			{
+				RECT rcWnd = *(LPRECT)lParam;
+				m_WndMagnet.OnMoving(m_hWnd, &rcWnd);
+			}
 			break;
 		default:
 			return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
@@ -150,10 +153,11 @@ void CQRTool::OnCreate(TNotifyUI& msg)
 	if (hQRWnd != NULL)
 		return;
 
-	CQRDlg* pQRDlg = new CQRDlg(m_hWnd);
+	CQRDlg* pQRDlg = new CQRDlg(m_hWnd, &m_WndMagnet);
 	
 	pQRDlg->ShowWindow();
 	m_WndMagnet.AddMagnetWnd(pQRDlg->GetHWND());
+
 	RECT rcWnd;
 	GetWindowRect(pQRDlg->GetHWND(),&rcWnd);
 	m_WndMagnet.OnMoving(pQRDlg->GetHWND(),&rcWnd);

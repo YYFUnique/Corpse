@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="2,2" sizebox="4,4,6,6" caption="0,0,0,-1" roundcorner="5,5" maxbox="false" >
+    <Font name="Î¢ÈíÑÅºÚ" size="13" bold="false" italic="false" />
+	<Font name="Î¢ÈíÑÅºÚ" size="12" bold="false" italic="false" />
+    <!--<HorizontalLayout name="VLayoutTotal" bkimage="file=&apos;main.png&apos;">-->
+	<HorizontalLayout name="VLayoutTotal" >
+	</HorizontalLayout>
+</Window>

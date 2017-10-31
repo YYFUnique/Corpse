@@ -4,9 +4,10 @@
 #include <CommDlg.h>
 #define OPEN_FILE_TITLE	_T("请选择需要嵌入到二维码中心的图片")
 
-CQRDlg::CQRDlg(HWND hParent)
+CQRDlg::CQRDlg(HWND hParent, CWndMagnet* pWndMagnet)
 {
 	m_hParent = hParent;
+	m_pWndMagnet = pWndMagnet;
 	Create(hParent,_T("制作二维码"), UI_WNDSTYLE_DIALOG, WS_EX_TOOLWINDOW, 0, 0, 0, 0);
 }
 
@@ -53,6 +54,20 @@ void CQRDlg::InitWindow()
 	GetWindowRect(m_hParent,&rcWnd);
 
 	SetWindowPos(m_hWnd, HWND_NOTOPMOST, rcWnd.right-6, rcWnd.top,  0, 0, SWP_NOSIZE|SWP_SHOWWINDOW);
+}
+
+LRESULT CQRDlg::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+		case WM_MOVING:
+				m_pWndMagnet->OnMoving(m_hWnd,(LPRECT)lParam);
+			break;
+		default:
+			return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
+	}
+
+	return FALSE;
 }
 
 void CQRDlg::OnClick(TNotifyUI& msg)

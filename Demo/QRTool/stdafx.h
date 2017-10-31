@@ -9,3 +9,4 @@
 
 #include "DuiLib/UIlib.h"
 using namespace DuiLib;
+#include "WndMagnet.h"
