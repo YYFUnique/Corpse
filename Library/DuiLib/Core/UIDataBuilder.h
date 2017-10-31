@@ -2,13 +2,6 @@
 
 namespace DuiLib 
 {
-	// 控件文字查询接口
-	class UILIB_API IQueryControlText
-	{
-	public:
-		virtual LPCTSTR QueryControlText(LPCTSTR lpstrId, LPCTSTR lpstrType) = 0;
-	};
-
 	class CControlData
 	{
 	public:
@@ -40,6 +33,13 @@ namespace DuiLib
 		CDuiString m_strData;
 	};
 
+	// 控件文字查询接口
+	class UILIB_API IQueryControlText
+	{
+	public:
+		virtual CControlData* QueryControlText(LPCTSTR lpstrId) = 0;
+	};
+
 	class UILIB_API CDataBuilderUI
 	{
 	public:
@@ -50,6 +50,7 @@ namespace DuiLib
 		void ResetTextMap();
 		BOOL LoadLanguage(LPCTSTR lpszLanguage);
 		CControlData* GetControlData(LPCTSTR lpstrId);
+		void SetTextQueryInterface(IQueryControlText* pQueryText);
 
 	private:
 		CDataBuilderUI();
