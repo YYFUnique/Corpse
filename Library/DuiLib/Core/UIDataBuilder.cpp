@@ -83,6 +83,7 @@ namespace DuiLib
 	}
 
 	CDataBuilderUI::CDataBuilderUI()
+		:m_pQuerypInterface(NULL)
 	{
 
 	}
@@ -146,24 +147,24 @@ namespace DuiLib
 	{
 		if (lpstrId == NULL || _tcslen(lpstrId) == 0) return NULL;
 
-		return (CControlData*)m_mTextResourceHashMap.Find(lpstrId);
+		CControlData* pData = static_cast<CControlData*>(m_mTextResourceHashMap.Find(lpstrId));
+		if (pData == NULL)
+		{
+			if (m_pQuerypInterface != NULL)
+			{
+				pData = m_pQuerypInterface->QueryControlText(lpstrId);
+			}
+		}
+
+		return pData;
 	}
 
-	void CDataBuilderUI::ReloadText()
+	void CDataBuilderUI::SetTextQueryInterface(IQueryControlText* pQueryText)
 	{
-		/*if(m_pQuerypInterface == NULL) return;
-		LPCTSTR lpstrId = NULL;
-		LPCTSTR lpstrText;
-		for( int i = 0; i < m_mTextResourceHashMap.GetSize(); i++ )
-		{
-			lpstrId = m_mTextResourceHashMap.GetAt(i);
-			if (lpstrId == NULL) continue;
-			lpstrText = m_pQuerypInterface->QueryControlText(lpstrId, NULL);
-			if(lpstrText != NULL) {
-				CDuiString * lpStr = static_cast<CDuiString *>(m_mTextResourceHashMap.Find(lpstrId));
-				lpStr->Assign(lpstrText);
-			}
-		}*/
+		if (pQueryText == NULL)
+			return;
+
+		m_pQuerypInterface = pQueryText;
 	}
 
 	void CDataBuilderUI::ResetTextMap()

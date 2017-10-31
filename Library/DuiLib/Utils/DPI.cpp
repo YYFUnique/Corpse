@@ -13,11 +13,10 @@ namespace DuiLib
 			_In_ PROCESS_DPI_AWARENESS value
 			);
 
-		typedef HRESULT (WINAPI *LPGetProcessDpiAwareness)(
-			_In_  HANDLE                hprocess,
-			_Out_ PROCESS_DPI_AWARENESS *value
-			);
-
+	typedef HRESULT (WINAPI *LPGetProcessDpiAwareness)(
+		_In_  HANDLE                hprocess,
+		_Out_ PROCESS_DPI_AWARENESS *value
+		);
 
 	 typedef HRESULT (WINAPI *LPGetDpiForMonitor)(
 	  _In_  HMONITOR         hmonitor,
@@ -34,7 +33,6 @@ namespace DuiLib
 		m_Awareness = PROCESS_PER_MONITOR_DPI_AWARE;
 
 		SetScale(96);
-	
 	}
 
 	int CDPI::GetDPIOfMonitor(HMONITOR hMonitor)

@@ -124,7 +124,8 @@ m_bEnableDrop(false),
 m_pBmpOffscreenBits(NULL),
 m_bShadow(false),
 m_pDropTargetCtrl(NULL),
-m_pDataObject(NULL)
+m_pDataObject(NULL),
+m_pDPI(NULL)
 {
     m_dwDefaultDisabledColor = 0xFFA7A6AA;
     m_dwDefaultFontColor = 0xFF000000;
@@ -1420,7 +1421,7 @@ void CPaintManagerUI::Term()
     }
 }
 
-/*
+
 CDPI * DuiLib::CPaintManagerUI::GetDPIObj()
 {
 	if (m_pDPI == NULL)
@@ -1468,7 +1469,7 @@ void DuiLib::CPaintManagerUI::ResetDPIAssets()
 	}
 	RebuildFont(&m_DefaultFontInfo);
 
-	/for (int it = 0; it < m_SharedResInfo.m_CustomFonts.GetSize(); it++) {
+	//for (int it = 0; it < m_SharedResInfo.m_CustomFonts.GetSize(); it++) {
 	//	TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_SharedResInfo.m_CustomFonts.Find(m_SharedResInfo.m_CustomFonts[it]));
 	//	RebuildFont(pFontInfo);
 	//}
@@ -1496,7 +1497,6 @@ void DuiLib::CPaintManagerUI::RebuildFont(TFontInfo * pFontInfo)
 		::SelectObject(m_hDcPaint, hOldFont);
 	}
 }
-*/
 
 CControlUI* CPaintManagerUI::GetFocus() const
 {
