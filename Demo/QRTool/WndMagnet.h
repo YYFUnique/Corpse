@@ -20,7 +20,7 @@ class CWndMagnet
 {
 public:
     CWndMagnet();
-  virtual ~CWndMagnet();
+	virtual ~CWndMagnet();
 
 public:
     void SetLeadWindow(HWND hWnd) { m_hLead = hWnd; }
@@ -47,11 +47,11 @@ private:
     void DFS(int v, std::vector<bool>& vecVisited, std::vector<int>& vecNeighbor);
 
 private:
-    static const int      s_c_iThreshold = 10; /**////< 偏移阀值
+    static const int      s_c_iThreshold = 15; /**////< 偏移阀值
     HWND                  m_hLead;        ///< 老板窗口
     std::map<HWND,POINT>      m_map_leadWnd;  ///< 粘合窗口列表
-    std::map<HWND,int>        m_map_magWnd;   ///< 需要组合分离的窗口列表
-    std::vector<vector<bool> > m_vec_2DMatrix; ///< 表示任意两个窗口间相交或相切的邻接矩阵
+    std::map<HWND,int>				m_map_magWnd;   ///< 需要组合分离的窗口列表
+    std::vector<vector<bool> >	m_vec_2DMatrix; ///< 表示任意两个窗口间相交或相切的邻接矩阵
 };
 
 #endif

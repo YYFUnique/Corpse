@@ -3,7 +3,7 @@
 class CQRDlg : public WindowImplBase
 {
 public:
-	CQRDlg(HWND hParent);
+	CQRDlg(HWND hParent, CWndMagnet* pWndMagnet);
 	~CQRDlg();
 
 public:
@@ -19,6 +19,9 @@ protected:
 	void OnClick(TNotifyUI& msg);
 	void OnLookupFile(TNotifyUI& msg);
 	void OnUpdateQRCode(TNotifyUI& msg);
+
+	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 private:
 	HWND m_hParent;
+	CWndMagnet* m_pWndMagnet;
 };

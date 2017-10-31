@@ -1,5 +1,5 @@
 #pragma once
-#include "WndMagnet.h"
+
 typedef struct _tagQRCodeItem 
 {
 	DWORD dwLevel;						//¶þÎ¬Âë¾À´í¼¶±ð
