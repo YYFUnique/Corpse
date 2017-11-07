@@ -11,6 +11,7 @@ namespace DuiLib
 	CGroupLayoutUI::CGroupLayoutUI()
 		:m_dwTextColor(0xFF000000)
 		,m_hBackground(NULL)
+		,m_iFont(-1)
 	{
 		m_nBorderSize = 1;
 		m_dwBorderColor = 0xFFCDCDCD;
@@ -120,7 +121,7 @@ namespace DuiLib
 		rcLine.bottom = rcLine.top;
 
 		BitBlt(hDC,rcLine.left,rcLine.top,m_rcTextArea.right-m_rcTextArea.left,m_rcTextArea.bottom-m_rcTextArea.top,m_hBackground,0,0,SRCCOPY);
-		CRenderEngine::DrawText(hDC, m_pManager, rc, m_sText, m_dwTextColor,0, DT_SINGLELINE);
+		CRenderEngine::DrawText(hDC, m_pManager, rc, m_sText, m_dwTextColor, m_iFont, DT_SINGLELINE);
 	}
 
 	void CGroupLayoutUI::PaintStatusImage(HDC hDC)
@@ -154,6 +155,7 @@ namespace DuiLib
 	void CGroupLayoutUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
 		if (_tcscmp(pstrName,_T("roundimage")) == 0)	SetGroupRoundImage(pstrValue);
+		else if (_tcscmp(pstrName, _T("font")) == 0)		SetFont(_ttoi(pstrValue));
 		else
 			CContainerUI::SetAttribute(pstrName,pstrValue);
 	}
@@ -168,6 +170,15 @@ namespace DuiLib
 		if (m_strGroupBoxRoundRectImage == pstrValue)
 			return;
 		m_strGroupBoxRoundRectImage = pstrValue;
+		Invalidate();
+	}
+
+	void CGroupLayoutUI::SetFont(int iFont)
+	{
+		if (m_iFont == iFont)
+			return;
+
+		m_iFont = iFont;
 		Invalidate();
 	}
 }

@@ -19,12 +19,14 @@ namespace DuiLib
 		virtual void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 		virtual void PaintBorder(HDC hDC);
 	public:
+		void SetFont(int iFont);
 		void SetGroupRoundImage(LPCTSTR pstrValue);
 	private:
 		DWORD  m_dwTextColor;
 		HDC			m_hBackground;
 		HBITMAP m_hBitMap;
 		RECT        m_rcTextArea;
+		int			m_iFont;
 		CDuiString m_strGroupBoxRoundRectImage;
 	};
 }
