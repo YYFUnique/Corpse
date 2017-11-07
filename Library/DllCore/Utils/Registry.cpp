@@ -13,14 +13,14 @@ BOOL LsRegSetValue(HKEY hKey , LPCTSTR lpszValueName , DWORD dwValue)
 	return TRUE;
 }
 
-BOOL LsRegSetValue(HKEY hRootKey , LPCTSTR lpszSubKey , LPCTSTR lpszValueName , DWORD dwValue)
+BOOL LsRegSetValue(HKEY hRootKey , LPCTSTR lpszSubKey , LPCTSTR lpszValueName , DWORD dwValue, DWORD dwRegSam /*= KEY_SET_VALUE*/)
 {
 	BOOL bSuccess = FALSE;
 	HKEY hKey = 0;
 
 	do
 	{
-		DWORD dwErrorCode = RegCreateKeyEx(hRootKey , lpszSubKey , 0, NULL, REG_OPTION_VOLATILE, KEY_SET_VALUE, NULL, &hKey, NULL);
+		DWORD dwErrorCode = RegCreateKeyEx(hRootKey , lpszSubKey , 0, NULL, REG_OPTION_VOLATILE, dwRegSam, NULL, &hKey, NULL);
 		if (dwErrorCode != ERROR_SUCCESS)
 		{
 			SetErrorInfo(SYSTEM_ERROR , dwErrorCode , _T("写注册表时打开键失败"));
@@ -39,14 +39,14 @@ BOOL LsRegSetValue(HKEY hRootKey , LPCTSTR lpszSubKey , LPCTSTR lpszValueName , 
 	return bSuccess;
 }
 
-BOOL LsRegSetValue(HKEY hRootKey , LPCTSTR lpszSubKey , LPCTSTR lpszValueName , LPCTSTR lpszValue)
+BOOL LsRegSetValue(HKEY hRootKey , LPCTSTR lpszSubKey , LPCTSTR lpszValueName , LPCTSTR lpszValue, DWORD dwRegSam /*= KEY_SET_VALUE*/)
 {
 	BOOL bSuccess = FALSE;
 	HKEY hKey = 0;
 
 	do
 	{
-		DWORD dwErrorCode = RegCreateKeyEx(hRootKey , lpszSubKey , 0, NULL, REG_OPTION_VOLATILE, KEY_SET_VALUE, NULL, &hKey, NULL);
+		DWORD dwErrorCode = RegCreateKeyEx(hRootKey , lpszSubKey , 0, NULL, REG_OPTION_VOLATILE, dwRegSam, NULL, &hKey, NULL);
 		if (dwErrorCode != ERROR_SUCCESS)
 		{
 			SetErrorInfo(SYSTEM_ERROR , dwErrorCode , _T("写注册表时打开键失败"));
@@ -158,13 +158,13 @@ BOOL LsRegQueryValue(HKEY hKey , LPCTSTR lpszValueName , DWORD& dwValue)
 	return TRUE;
 }
 
-BOOL LsRegQueryValue(HKEY hRootKey , LPCTSTR pszSubKey , LPCTSTR lpszValueName , CString& strValue)
+BOOL LsRegQueryValue(HKEY hRootKey , LPCTSTR pszSubKey , LPCTSTR lpszValueName , CString& strValue, DWORD dwRegSam /*= KEY_READ*/)
 {
 	BOOL bSuccess = FALSE;
 	HKEY hKey = NULL;
 	do 
 	{
-		DWORD dwErrorCode = RegOpenKeyEx(hRootKey , pszSubKey , 0 , KEY_READ , &hKey);
+		DWORD dwErrorCode = RegOpenKeyEx(hRootKey , pszSubKey , 0 , dwRegSam , &hKey);
 		if (dwErrorCode != ERROR_SUCCESS)
 		{
 			SetErrorInfo(SYSTEM_ERROR , dwErrorCode , _T("读取注册表时打开键失败"));
@@ -183,14 +183,14 @@ BOOL LsRegQueryValue(HKEY hRootKey , LPCTSTR pszSubKey , LPCTSTR lpszValueName ,
 	return bSuccess;
 }
 
-BOOL LsRegQueryValue(HKEY hRootKey , LPCTSTR pszSubKey , LPCTSTR lpszValueName , DWORD& dwValue)
+BOOL LsRegQueryValue(HKEY hRootKey , LPCTSTR pszSubKey , LPCTSTR lpszValueName , DWORD& dwValue, DWORD dwRegSam /*= KEY_READ*/)
 {
 	BOOL bSuccess = FALSE;
 	HKEY hKey = 0;
 
 	do 
 	{
-		DWORD dwErrorCode = RegOpenKeyEx(hRootKey , pszSubKey , 0 , KEY_READ , &hKey);
+		DWORD dwErrorCode = RegOpenKeyEx(hRootKey , pszSubKey , 0 , dwRegSam , &hKey);
 		if (dwErrorCode != ERROR_SUCCESS)
 		{
 			SetErrorInfo(SYSTEM_ERROR , dwErrorCode , _T("读取注册表时打开键失败"));
