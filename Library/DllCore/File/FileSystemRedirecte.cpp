@@ -14,6 +14,8 @@ CFileSystemRedirection::CFileSystemRedirection(BOOL bDisableRedirection)
 	m_pOldValue = NULL;
 	if (m_OSType == OSTYPENULL)
 	{
+		//如果当前应用程序是64位，并且是在64位系统下运行，该函数将返回FALSE
+		//该函数仅用于32位程序判断是否在64位系统下运行使用
 		m_OSType = OsIsWow64Process() ? OSTYPEx64 : OSTYPEx86; 
 	}
 
