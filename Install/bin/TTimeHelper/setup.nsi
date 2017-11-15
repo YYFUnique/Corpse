@@ -29,10 +29,11 @@ RequestExecutionLevel admin
 Name "${PRODUCT_NAME}"
 
 # 安装程序文件名.
-IfFileExists
+;IfFileExists
+;CreateDirectory "..\Output\"
 OutFile "..\Output\${INSTALL_OUTPUT_NAME}"
 
-InstallDir "1"
+;InstallDir "1"
 
 # 安装和卸载程序图标
 Icon              "${INSTALL_ICO}"
