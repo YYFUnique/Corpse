@@ -25,6 +25,10 @@ public:
 	ILibcurlCallback(){};
 	~ILibcurlCallback(){};
 public:
+	virtual void LibcurlNotify(DWORD dwEvent, CURLcode curlCode, LPVOID lpData)
+	{
+		return ;
+	}
 	virtual int Progress(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb)
 	{
 		return size * nmemb;

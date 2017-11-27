@@ -1,4 +1,5 @@
 #pragma once
+#include "../DllCore.h"
 #include <BaseTsd.h>
 
 class CNodeData

@@ -5,13 +5,7 @@
 #define _WIN32_WINNT 0x0500
 #endif
 
-#ifndef ASSERT
-#define ASSERT(expr)  _ASSERTE(expr)
-#endif
-
 #pragma warning (disable : 4251)
-/*#include "YCLibCore.h"*/
-
 
 #include <windows.h>
 #include <windowsx.h>

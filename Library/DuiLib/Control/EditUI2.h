@@ -49,15 +49,15 @@ namespace DuiLib
 		void SetText(LPCTSTR pstrText);
 		void SetWaterText(LPCTSTR lpszWaterText);
 		void SetWaterTextColor(DWORD dwWaterColor);
+
+		bool CanPaste();
+		bool IsWaterMode();
 	protected:
 		void OnCut(int nPos,int nLen);
 		int OnPaste(int nMin,int nMax);
 		void OnCopy(int nPos,int nLen);
 		void OnSelectAll();
 
-		bool CanPaste();
-
-		bool IsWaterMode();
 		void SetWaterMode(bool bWaterMode);
 		bool GetEditText(CDuiString& strEditText);
 		void SetPos(RECT rc);
