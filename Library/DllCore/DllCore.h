@@ -17,3 +17,12 @@
 #else
 #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
+
+
+#ifndef FlagOn
+	#define FlagOn(_F,_SF)        ((_F) & (_SF))
+#endif
+
+#ifndef ASSERT
+	#define ASSERT(expr)  _ASSERTE(expr)
+#endif

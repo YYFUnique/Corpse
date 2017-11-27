@@ -119,8 +119,9 @@ size_t CMultiRequest::ProcessFunc(LPVOID lpData, size_t size, size_t nitems, LPV
 {
 	size_t sizeRet = size * nitems;
 	MultiRequestParam* pMultiRequestParam = (MultiRequestParam*)lParam;
-	if (pMultiRequestParam->pMulti->m_pCallback)
+	if (pMultiRequestParam != NULL && pMultiRequestParam->pMulti->m_pCallback)
 		sizeRet = pMultiRequestParam->pMulti->m_pCallback->ProcessFunc(pMultiRequestParam->dwEvent, lpData, size, nitems);
+
 	return sizeRet;
 }
 
@@ -173,8 +174,8 @@ UINT CMultiRequest::TimeFunc(CURLM* pCURLM, LONG nTime, LPVOID lParam)
 	else 
 	{
 		if (nTime == 0)
-			nTime = 1; /* 0 means directly call socket_action, but we'll do it
-							 in a bit */
+			nTime = 1; /* 0 means directly call socket_action, but we'll do it in a bit */
+
 		uv_timer_start(&pMulti->m_Timeout, OnTimeout, nTime, 0);
 	}
 	return 0;
@@ -200,10 +201,19 @@ void CMultiRequest::CheckMultiInfo(CURLM* pCURLM)
 
 				MultiRequestParam* pMultiRequestPrivateParam;
 				curl_easy_getinfo(pEasy, CURLINFO_PRIVATE, &pMultiRequestPrivateParam);
+				
+				//通知外部调用程序，当前进度
+				ILibcurlCallback* pCallback = pMultiRequestPrivateParam->pMulti->m_pCallback;
+				if (pMultiRequestPrivateParam != NULL && pCallback != NULL)
+					pCallback->LibcurlNotify(pMultiRequestPrivateParam->dwEvent, pMsg->data.result, pMsg->data.whatever);
 
 				//释放内存
-				delete pMultiRequestPrivateParam;
-				
+				if (pMultiRequestPrivateParam != NULL)
+				{
+					delete pMultiRequestPrivateParam;
+					pMultiRequestPrivateParam = NULL;
+				}
+								
 				curl_multi_remove_handle(pCURLM, pEasy);
 				curl_easy_cleanup(pEasy);
 			break;

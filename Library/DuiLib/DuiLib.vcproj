@@ -165,7 +165,6 @@
 				GenerateManifest="false"
 				DelayLoadDLLs=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\$(TargetName).pdb"
 				BaseAddress="0x11000000"
 				TargetMachine="1"
 			/>
