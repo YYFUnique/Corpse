@@ -27,7 +27,8 @@ protected:
 	void OnGetCityPM25Info(LPVOID lpData);
 	//处理HTTP请求返回内容
 	int ProcessFunc(DWORD dwEvent, LPVOID lpData, size_t size, size_t nmemb);
-
+	//当前HTTP处理结果，一个请求可能会出现多个结果
+	void LibcurlNotify(DWORD dwEvent, CURLcode curlCode, LPVOID lpData);
 private:
 	CMultiRequest*	m_pMulti;
 	CCityHelper*		m_pCityHelper;
