@@ -99,6 +99,19 @@ int CWeatherHelper::ProcessFunc(DWORD dwEvent, LPVOID lpData, size_t size, size_
 	return size * nmemb;
 }
 
+void CWeatherHelper::LibcurlNotify(DWORD dwEvent, CURLcode curlCode, LPVOID lpData)
+{
+	//如果辅助类不需要进行处理，可以将结果传递给调用程序，由调用程序处理
+	if (dwEvent == HTTP_GET_CITY_LOCATION)
+	{
+		if (curlCode == CURLE_COULDNT_CONNECT)
+			OutputDebugString(_T("网络连接已断开"));
+		else if (curlCode == CURLE_COULDNT_RESOLVE_HOST)
+			OutputDebugString(_T("无法解析DNS域名"));
+	}
+	return;
+}
+
 void CWeatherHelper::OnGetCityLocation(LPVOID lpData)
 {
 	CString strWeatherInfo((LPCSTR)lpData);
