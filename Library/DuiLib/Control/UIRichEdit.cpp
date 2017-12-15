@@ -1749,7 +1749,7 @@ void CTxtWinHost::SetParaFormat(PARAFORMAT2 &p)
 CRichEditUI::CRichEditUI() :m_pCallback(NULL), m_pTwh(NULL),m_pRichEditOle(NULL), m_bVScrollBarFixing(false), m_bWantTab(true), m_bWantReturn(true), 
     m_bWantCtrlReturn(true), m_bRich(true), m_bReadOnly(false), m_bWordWrap(false), m_dwTextColor(0), m_iFont(-1), 
     m_iLimitText(cInitTextMax), m_lTwhStyle(ES_MULTILINE), m_bInited(false), m_chLeadByte(0),m_bNum(false),
-	m_uButtonState(0),m_dwTipValueColor(0xFFBAC0C5),
+	m_uButtonState(0),m_dwTipValueColor(0xFFBAC0C5),m_bShowLineNum(FALSE),
 	m_bShowCaret(FALSE)
 {
 
@@ -2150,6 +2150,21 @@ void CRichEditUI::HideSelection(bool bHide, bool bChangeStyle)
 void CRichEditUI::ScrollCaret()
 {
     TxSendMessage(EM_SCROLLCARET, 0, 0, 0);
+}
+
+LONG CRichEditUI::GetFirstVisibleLine() const
+{
+	LRESULT lRet = S_OK;
+	TxSendMessage(EM_GETFIRSTVISIBLELINE,0, 0, &lRet);
+
+	return (LONG)lRet;
+}
+
+void CRichEditUI::SetMargin(DWORD dwPixels)
+{
+	LRESULT lRet;
+	LRESULT lret = TxSendMessage(EM_SETMARGINS, EC_LEFTMARGIN|EC_RIGHTMARGIN, dwPixels, &lRet);
+	return ;
 }
 
 int CRichEditUI::InsertText(long nInsertAfterChar, LPCTSTR lpstrText, bool bCanUndo)
@@ -2816,6 +2831,20 @@ DWORD CRichEditUI::GetTipValueColor()
 	return m_dwTipValueColor;
 }
 
+void CRichEditUI::SetShowLineNum(BOOL bShowLineNumber)
+{
+	if (m_bShowLineNum == bShowLineNumber)
+		return;
+
+	m_bShowLineNum = bShowLineNumber;
+	Invalidate();
+}
+
+BOOL CRichEditUI::IsShowLineNum()
+{
+	return m_bShowLineNum;
+}
+
 void CRichEditUI::PaintStatusImage(HDC hDC)
 {
 	if( IsFocused() ) m_uButtonState |= UISTATE_FOCUSED;
@@ -3114,6 +3143,7 @@ void CRichEditUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	else if( _tcscmp(pstrName, _T("wordwrap")) == 0 ) {
 		SetWordWrap(_tcsicmp(pstrValue,_T("true")) == 0);
 	}
+	else if (_tcsicmp(pstrName, _T("linenum")) == 0)	SetShowLineNum(_tcsicmp(pstrValue, _T("true")) == 0);
     else CContainerUI::SetAttribute(pstrName, pstrValue);
 }
 
@@ -3200,6 +3230,7 @@ LRESULT CRichEditUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, boo
             bWasHandled = false;
             return 0;
         }
+		GetManager()->SendNotify(this, DUI_MSGTYPE_RBTN_RICHEDIT);
     }
     else
     {

@@ -128,11 +128,12 @@ namespace DuiLib
 			m_bFocused = true;
 			return;
 		}
-		if( event.Type == UIEVENT_KILLFOCUS ) 
+		else if( event.Type == UIEVENT_KILLFOCUS ) 
 		{
 			m_bFocused = false;
 			return;
 		}
+
 		CControlUI::DoEvent(event);
 	}
 

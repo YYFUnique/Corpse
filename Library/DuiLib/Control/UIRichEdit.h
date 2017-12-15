@@ -75,6 +75,8 @@ public:
     CDuiString GetTextRange(long nStartChar, long nEndChar) const;
     void HideSelection(bool bHide = true, bool bChangeStyle = false);
     void ScrollCaret();
+	LONG GetFirstVisibleLine() const;
+	void SetMargin(DWORD dwPixels);
     int InsertText(long nInsertAfterChar, LPCTSTR lpstrText, bool bCanUndo = false);
     int AppendText(LPCTSTR lpstrText, bool bCanUndo = false);
     DWORD GetDefaultCharFormat(CHARFORMAT2 &cf) const;
@@ -156,6 +158,9 @@ public:
 	void SetTipValueColor(LPCTSTR pStrColor);
 	DWORD GetTipValueColor();
 
+	void SetShowLineNum(BOOL bShowLineNum);
+	BOOL IsShowLineNum();
+
     void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
     LRESULT MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled);
@@ -193,6 +198,7 @@ protected:
 	BOOL m_bShowCaret;
 	CDuiString m_sTipValue;
 	DWORD m_dwTipValueColor;
+	BOOL	  m_bShowLineNum;		// «∑Òœ‘ æ––∫≈
 	UINT m_uButtonState;
 	CDuiString m_sNormalImage;
 	CDuiString m_sHotImage;

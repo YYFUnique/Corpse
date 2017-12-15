@@ -51,6 +51,7 @@ union DuiMessageMapFunctions
 #define DUI_MSGTYPE_DROPDOWN         (_T("dropdown"))
 #define DUI_MSGTYPE_SETFOCUS             (_T("setfocus"))
 #define DUI_MSGTYPE_KEYDOWN			 (_T("keydown"))
+#define DUI_MSGTYPE_DBCLICK				 (_T("dbclick"))
 
 #define DUI_MSGTYPE_KILLFOCUS            (_T("killfocus"))
 #define DUI_MSGTYPE_ITEMCLICK 		   	 (_T("itemclick"))
@@ -74,7 +75,8 @@ union DuiMessageMapFunctions
 #define DUI_MSGTYPE_ITEMACTIVATE      (_T("itemactivate"))
 #define DUI_MSGTYPE_VALUECHANGED   (_T("valuechanged"))
 
-#define DUI_MSGTYPE_SELECTCHANGED   (_T("selectchanged"))
+#define DUI_MSGTYPE_SELECTCHANGED		(_T("selectchanged"))
+#define DUI_MSGTYPE_RBTN_RICHEDIT		(_T("rbtn_richedit"))
 
 #define DUI_MSGTYPE_COLORCHANGED		(_T("colorchanged"))
 #define DUI_MSGTYPE_POSCHANGED			(_T("poschanged"))
