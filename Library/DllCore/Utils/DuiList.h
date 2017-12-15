@@ -296,9 +296,9 @@ void CDuiList<TYPE, ARG_TYPE>::AddHead(CDuiList* pNewList)
 template<class TYPE, class ARG_TYPE>
 void CDuiList<TYPE, ARG_TYPE>::AddTail(CDuiList* pNewList)
 {
-	ASSERT_VALID(this);
+	/*ASSERT_VALID(this);
 	ENSURE(pNewList != NULL);
-	ASSERT_VALID(pNewList);
+	ASSERT_VALID(pNewList);*/
 
 	// add a list of same elements
 	POSITION pos = pNewList->GetHeadPosition();
