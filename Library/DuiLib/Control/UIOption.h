@@ -58,7 +58,7 @@ namespace DuiLib
 		CDuiString		m_sSelectedImage;
 		CDuiString		m_sSelectedHotImage;
 		CDuiString       m_sSelectedPressImage;
-		CDuiString		m_sForeImage;
+		//CDuiString		m_sForeImage;
 	};
 
 } // namespace DuiLib

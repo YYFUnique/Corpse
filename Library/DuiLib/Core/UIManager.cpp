@@ -1539,6 +1539,7 @@ void CPaintManagerUI::SetFocus(CControlUI* pControl)
         event.dwTimestamp = ::GetTickCount();
         m_pFocus->Event(event);
         SendNotify(m_pFocus, DUI_MSGTYPE_SETFOCUS);
+		m_bFocusNeeded = false;
     }
 }
 
