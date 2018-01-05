@@ -318,34 +318,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Utils\stb_image.c"
-					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Static_Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
 					RelativePath=".\Utils\UIDelegate.cpp"
 					>
 				</File>
@@ -620,6 +592,10 @@
 				</File>
 				<File
 					RelativePath=".\Utils\observer_impl_base.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\stb_image.h"
 					>
 				</File>
 				<File

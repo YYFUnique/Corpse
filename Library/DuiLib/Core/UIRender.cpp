@@ -1,4 +1,6 @@
 #include "StdAfx.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "..\Utils\stb_image.h"
 #include <Shlwapi.h>
 #pragma comment(lib, "Msimg32.lib")
 ///////////////////////////////////////////////////////////////////////////////////////
