@@ -2163,7 +2163,7 @@ LONG CRichEditUI::GetFirstVisibleLine() const
 void CRichEditUI::SetMargin(DWORD dwPixels)
 {
 	LRESULT lRet;
-	LRESULT lret = TxSendMessage(EM_SETMARGINS, EC_LEFTMARGIN|EC_RIGHTMARGIN, dwPixels, &lRet);
+	LRESULT lret = TxSendMessage(EM_SETMARGINS, EC_LEFTMARGIN|EC_USEFONTINFO , dwPixels, &lRet);
 	return ;
 }
 
@@ -3230,7 +3230,7 @@ LRESULT CRichEditUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, boo
             bWasHandled = false;
             return 0;
         }
-		GetManager()->SendNotify(this, DUI_MSGTYPE_RBTN_RICHEDIT);
+		GetManager()->SendNotify(this, DUI_MSGTYPE_MENU);
     }
     else
     {
