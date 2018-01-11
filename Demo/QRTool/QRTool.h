@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DllCore/Window/MagnetFrame.h"
+
 typedef struct _tagQRCodeItem 
 {
 	DWORD dwLevel;						//¶þÎ¬Âë¾À´í¼¶±ð
@@ -40,5 +42,5 @@ protected:
 	LRESULT OnMoving(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 private:
-	CWndMagnet m_WndMagnet;
+	/*CMagnetFrame m_WndMagnet;*/
 };

@@ -19,8 +19,8 @@ public:
      void Notify(TNotifyUI& msg);
 	 CControlUI* CreateControl(LPCTSTR pstrClassName);
 
-	 void OnTitleChanged(const struct _wkeClientHandler* clientHandler, const wkeString url);
-	 void OnURLChanged(const struct _wkeClientHandler* clientHandler, const wkeString title);
+	static void OnTitleChanged(const struct _wkeClientHandler* clientHandler, const wkeString url);
+	 static void OnURLChanged(const struct _wkeClientHandler* clientHandler, const wkeString title);
 	 LRESULT OnJsNotify(HWND hwnd, WPARAM wParam, LPARAM lParam);
 	 virtual LRESULT HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 protected:
@@ -28,6 +28,9 @@ protected:
 	void OnClick(TNotifyUI& msg);
 	void OnReturn(TNotifyUI& msg);
 	void OnSelectChanged(TNotifyUI& msg);
+
+	//static void OnTitleChanged(const wkeClientHandler* pwkeHandle, LPCTSTR lpszTitleInfo);
+	//static void OnURLChanged(const wkeClientHandler* pwkeHandle, LPCTSTR lpszUrlInfo);
 private:
 	CEditUI2				*m_pURLEdit;
 	CLabelUI				*m_pLblStatusBar;

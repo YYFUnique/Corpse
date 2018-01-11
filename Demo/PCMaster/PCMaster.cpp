@@ -21,6 +21,7 @@
 #include "DllCore/Utils/Registry.h"
 #include "QRCode/qr.h"
 #include "libcurl/libcurl.h"
+#include "RichText/RichEdit.h"
 
 #pragma comment(lib,"shell32.lib")
 #pragma comment(lib,"shlwapi.lib")
@@ -162,6 +163,8 @@ CControlUI* CPCMaster::CreateControl(LPCTSTR pstrClass)
 		return new CToolBarUI;
 	else if (_tcsicmp(pstrClass, _T("SkinFace")) == 0)
 		return new CSkinFaceUI;
+	else if (_tcsicmp(pstrClass, _T("RichText")) == 0)
+		return static_cast<CControlUI*>(CoCreateRichText());
 	return NULL;
 }
 

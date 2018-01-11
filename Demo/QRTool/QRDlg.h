@@ -3,7 +3,7 @@
 class CQRDlg : public WindowImplBase
 {
 public:
-	CQRDlg(HWND hParent, CWndMagnet* pWndMagnet);
+	CQRDlg(HWND hParent/*, CWndMagnet* pWndMagnet*/);
 	~CQRDlg();
 
 public:
@@ -23,5 +23,5 @@ protected:
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 private:
 	HWND m_hParent;
-	CWndMagnet* m_pWndMagnet;
+	/*CMagnetFrame* m_pWndMagnet;*/
 };
