@@ -57,6 +57,8 @@ public:
 	//	设置是否受服务器控制
 	void SetControlledByServer(BOOL bEnabled = TRUE);
 
+	//	针对Win10系统不能显示传统气泡消息封装
+	void SetBalloonNotifications(BOOL bEnable = TRUE, BOOL bKillExplorer = FALSE);
 protected:
 	HKEY	m_hRegKey;				//注册表保存根键
 	CString m_strRegKey;				//	注册表保存路径
