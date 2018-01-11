@@ -67,8 +67,8 @@ void CMsgShowLevel::SaveSettingsToReg()
 			break;
 
 		DWORD dwSize = sizeof(DWORD);
-		RegSetValueEx(hKey, MSG_SHOW_LEVEL_INFO, 0, 0, (LPBYTE)&m_CurrentMsgShowLevel, &dwSize);
-		RegSetValueEx(hKey, MSG_SHOW_LEVEL_CONTROLLED_BY_SERVER, 0, 0, (LPBYTE)&m_bMsgShowLevelControlledByServer, &dwSize);
+		RegSetValueEx(hKey, MSG_SHOW_LEVEL_INFO, 0, 0, (LPBYTE)&m_CurrentMsgShowLevel, dwSize);
+		RegSetValueEx(hKey, MSG_SHOW_LEVEL_CONTROLLED_BY_SERVER, 0, 0, (LPBYTE)&m_bMsgShowLevelControlledByServer, dwSize);
 	} while (FALSE);
 
 	if (hKey != NULL)
@@ -109,4 +109,26 @@ void CMsgShowLevel::SetControlledByServer(BOOL bEnabled /* = TRUE */)
 
 	m_bMsgShowLevelControlledByServer = bEnabled;
 	SaveSettingsToReg();
+}
+
+void CMsgShowLevel::SetBalloonNotifications(BOOL bEnable /*= TRUE*/, BOOL bKillExplorer /*= FALSE*/)
+{
+	HKEY hKey = NULL;
+	do 
+	{
+		if (RegOpenKeyEx(HKEY_CURRENT_USER, _T("SOFTWARE\\Policies\\Microsoft\\Windows\\Explorer"), 0, KEY_WRITE, &hKey) != ERROR_SUCCESS)
+			break;
+
+		RegSetValueEx(hKey, _T("EnableLegacyBalloonNotifications"),0, REG_DWORD, (LPBYTE)&bEnable, sizeof(BOOL));
+	} while (FALSE);
+
+	if (hKey != NULL)
+	{
+		RegCloseKey(hKey);
+		hKey = NULL;
+	}
+
+	//	结束并重启资源管理器
+	if (bKillExplorer)
+		system("taskkill /f /im explorer.exe & start explorer.exe");
 }

@@ -484,6 +484,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="UI"
+				>
+				<File
+					RelativePath=".\UI\MsgShowLevel.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -727,6 +735,14 @@
 				>
 				<File
 					RelativePath=".\Security\Sign.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="UI"
+				>
+				<File
+					RelativePath=".\UI\MsgShowLevel.h"
 					>
 				</File>
 			</Filter>
