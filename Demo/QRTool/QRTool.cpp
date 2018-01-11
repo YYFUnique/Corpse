@@ -65,18 +65,18 @@ CControlUI* CQRTool::CreateControl(LPCTSTR pstrClass)
 
 LRESULT CQRTool::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch(uMsg)
-	{
-		case WM_MOVING:
-			{
-				RECT rcWnd = *(LPRECT)lParam;
-				m_WndMagnet.OnMoving(m_hWnd, &rcWnd);
-			}
-			break;
-		default:
-			return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
-	}
-
+	//switch(uMsg)
+	//{
+	//	case WM_MOVING:
+	//		{
+	//			//RECT rcWnd = *(LPRECT)lParam;
+	//			//m_WndMagnet.OnMoving(m_hWnd, &rcWnd);
+	//		}
+	//		break;
+	//	default:
+	//		return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
+	//}
+return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
 	return FALSE;
 }
 
@@ -95,18 +95,20 @@ LRESULT CQRTool::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 
 LRESULT CQRTool::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	m_WndMagnet.OnSize(m_hWnd, wParam);
+	//m_WndMagnet.OnSize(m_hWnd, wParam);
 
 	return WindowImplBase::OnSize(uMsg, wParam, lParam ,bHandled);
 }
 
 void CQRTool::InitWindow()
 {
-	m_WndMagnet.SetLeadWindow(m_hWnd);
+	//m_WndMagnet.SetLeadWindow(m_hWnd);
 	SetIcon(IDI_MAINFRAME);
 
-	m_WndMagnet.AddMagnetWnd(m_hWnd);
-	/*int nCode = QR_ERR_NONE;
+	/*m_WndMagnet.AddMagnetWnd(m_hWnd);*/
+	CMagnetFrame::GetInstance()->SetMainWnd(m_hWnd);
+	//CMagnetFrame::GetInstance()->AddSubWnd(m_hWnd,ATTCH_MODE_LEFT,ATTCH_ALIGN_TOP,10);
+	int nCode = QR_ERR_NONE;
 	QRCode* pCode = qrInit(6, QR_EM_8BIT, QR_ECL_M, 7, &nCode);
 
 	if (pCode == NULL)
@@ -121,7 +123,7 @@ void CQRTool::InitWindow()
 		return;
 
 	int size = 0;
-	qr_byte_t * buffer = qrSymbolToBMP2(pCode, 1, 6, &size);
+	qr_byte_t * buffer = qrSymbolToBMP(pCode, 1, 6, &size);
 	if (buffer == NULL)
 		return;
 
@@ -132,7 +134,6 @@ void CQRTool::InitWindow()
 	CLabelUI* pLabel = (CButtonUI*)m_PaintManager.FindControl(_T("pic"));
 	if (pLabel)
 		pLabel->SetBkImage(_T("BtnFace.bmp"));
-		*/
 }
 
 void CQRTool::OnClick(TNotifyUI& msg)
@@ -153,14 +154,14 @@ void CQRTool::OnCreate(TNotifyUI& msg)
 	if (hQRWnd != NULL)
 		return;
 
-	CQRDlg* pQRDlg = new CQRDlg(m_hWnd, &m_WndMagnet);
+	CQRDlg* pQRDlg = new CQRDlg(m_hWnd/*, &m_WndMagnet*/);
 	
 	pQRDlg->ShowWindow();
-	m_WndMagnet.AddMagnetWnd(pQRDlg->GetHWND());
+	CMagnetFrame::GetInstance()->AddSubWnd(pQRDlg->GetHWND(), ATTCH_MODE_RIGHT,ATTCH_ALIGN_TOP,5);
 
-	RECT rcWnd;
+	/*RECT rcWnd;
 	GetWindowRect(pQRDlg->GetHWND(),&rcWnd);
-	m_WndMagnet.OnMoving(pQRDlg->GetHWND(),&rcWnd);
+	m_WndMagnet.OnMoving(pQRDlg->GetHWND(),&rcWnd);*/
 }
 
 void CQRTool::OnSave()

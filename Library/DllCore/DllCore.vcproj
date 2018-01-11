@@ -455,6 +455,10 @@
 					RelativePath=".\Window\FloatWindow.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\Window\MagnetFrame.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Log"
@@ -695,6 +699,10 @@
 				>
 				<File
 					RelativePath=".\Window\FloatWindow.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Window\MagnetFrame.h"
 					>
 				</File>
 			</Filter>

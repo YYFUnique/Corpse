@@ -8,30 +8,49 @@
 
 CLogicalDiskMgr::CLogicalDiskMgr()
 {
-	m_hVolume = INVALID_HANDLE_VALUE;
+	m_hStorageDevice = INVALID_HANDLE_VALUE;
 }
 
 CLogicalDiskMgr::~CLogicalDiskMgr()
 {
-	if (m_hVolume != INVALID_HANDLE_VALUE)
+	if (m_hStorageDevice != INVALID_HANDLE_VALUE)
 	{
-		CloseHandle(m_hVolume);
-		m_hVolume = INVALID_HANDLE_VALUE;
+		CloseHandle(m_hStorageDevice);
+		m_hStorageDevice = INVALID_HANDLE_VALUE;
 	}
 }
 
-BOOL CLogicalDiskMgr::OpenDisk(LPCTSTR lpszDiskVolumePath)
+//Device Name=\\?\USBSTOR#Disk&Ven_ADATA&Prod_USB_Flash_Drive&Rev_1.00#1108171000000095&0#{53f56307-b6bf-11d0-94f2-00a0c91efb8b}
+BOOL CLogicalDiskMgr::OpenDisk(LPCTSTR lpszDiskPath)
 {
 	BOOL bSuccess = FALSE;
 	do 
 	{
-		TCHAR szVolumeName[MAX_PATH];
-		_stprintf_s(szVolumeName, _countof(szVolumeName), _T("\\\\.\\%c:"), lpszDiskVolumePath[0]);
-
-		m_hVolume = CreateFile(szVolumeName,GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,0,NULL);
-		if (m_hVolume == INVALID_HANDLE_VALUE)
+		m_hStorageDevice = CreateFile(lpszDiskPath, NULL, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,OPEN_EXISTING,0,NULL);
+		if (m_hStorageDevice == INVALID_HANDLE_VALUE)
 		{
-			SetErrorInfo(SYSTEM_ERROR, 0 , _T("打开%s失败"), szVolumeName);
+			SetErrorInfo(SYSTEM_ERROR, 0 , _T("打开%s失败"), lpszDiskPath);
+			break;
+		}
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	return bSuccess;
+}
+
+BOOL CLogicalDiskMgr::OpenDisk(UINT nPhycialDiskIndex)
+{
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		TCHAR szPhysicalDiskName[MAX_PATH];
+		_stprintf_s(szPhysicalDiskName, _countof(szPhysicalDiskName), _T("\\\\.\\PhysicalDrive%d"), nPhycialDiskIndex);
+
+		m_hStorageDevice = CreateFile(szPhysicalDiskName, GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,0,NULL);
+		if (m_hStorageDevice == INVALID_HANDLE_VALUE)
+		{
+			SetErrorInfo(SYSTEM_ERROR, 0 , _T("打开%s失败"), szPhysicalDiskName);
 			break;
 		}
 
@@ -43,42 +62,19 @@ BOOL CLogicalDiskMgr::OpenDisk(LPCTSTR lpszDiskVolumePath)
 
 HANDLE CLogicalDiskMgr::Detach()
 {
-	HANDLE hLogicalDisk = m_hVolume;
-	m_hVolume = INVALID_HANDLE_VALUE;
+	HANDLE hLogicalDisk = m_hStorageDevice;
+	m_hStorageDevice = INVALID_HANDLE_VALUE;
 
 	return hLogicalDisk;
 }
 
-BOOL CLogicalDiskMgr::GetDiskExtents(PVOLUME_DISK_EXTENTS lpVolumeDiskExtents, DWORD& dwLen)
+BOOL CLogicalDiskMgr::GetDriveProperty(PSTORAGE_DEVICE_DESCRIPTOR pDevDesc)
 {
 	BOOL bSuccess = FALSE;
-	do 
-	{
-		if (m_hVolume == INVALID_HANDLE_VALUE)
-			break;
-
-		BOOL bRet = ::DeviceIoControl(m_hVolume, IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS, NULL, 0,
-																lpVolumeDiskExtents,dwLen, &dwLen, NULL);
-		if (bRet == FALSE)
-		{
-			SetErrorInfo(SYSTEM_ERROR, 0 , _T("获取设备扩展信息失败"));
-			break;
-		}
-		
-		bSuccess = TRUE;
-	} while (FALSE);
-
-	return bSuccess;
-}
-
-BOOL CLogicalDiskMgr::GetDriveProperty(HANDLE hDevice, PSTORAGE_DEVICE_DESCRIPTOR pDevDesc)
-{
-	BOOL bSuccess = FALSE;
-	ASSERT(hDevice);
 
 	do 
 	{
-		if (hDevice == INVALID_HANDLE_VALUE)
+		if (m_hStorageDevice == INVALID_HANDLE_VALUE)
 			break;
 
 		// 查询输入参数
@@ -91,7 +87,7 @@ BOOL CLogicalDiskMgr::GetDriveProperty(HANDLE hDevice, PSTORAGE_DEVICE_DESCRIPTO
 		Query.QueryType = PropertyStandardQuery;
 
 		// 用IOCTL_STORAGE_QUERY_PROPERTY取设备属性信息
-		bSuccess = ::DeviceIoControl(hDevice,																// 设备句柄
+		bSuccess = ::DeviceIoControl(m_hStorageDevice,																// 设备句柄
 													IOCTL_STORAGE_QUERY_PROPERTY,						// 获取设备属性信息
 													&Query, sizeof(STORAGE_PROPERTY_QUERY),		// 输入数据缓冲区
 													pDevDesc, pDevDesc->Size,									// 输出数据缓冲区
@@ -106,41 +102,105 @@ BOOL CLogicalDiskMgr::GetDriveProperty(HANDLE hDevice, PSTORAGE_DEVICE_DESCRIPTO
 BOOL CLogicalDiskMgr::GetPhysicalDiskSize(DWORD dwPhysicalIndex, PHYSICAL_DISK_SIZE& PhysicalDiskSize)
 {
 	BOOL bSuccess = FALSE;	
-	DWORD dwBytesReturned;
-
 	HANDLE hPhysical = INVALID_HANDLE_VALUE;
 
 	do 
 	{
-		TCHAR szVolumeName[MAX_PATH];
-		_stprintf_s(szVolumeName, _countof(szVolumeName), _T("\\\\.\\PHYSICALDRIVE%d"), dwPhysicalIndex);
-
-		hPhysical = CreateFile(szVolumeName, GENERIC_READ|GENERIC_WRITE, 
-			FILE_SHARE_READ|FILE_SHARE_WRITE,
-			NULL, OPEN_EXISTING, 0, NULL);
+		TCHAR szPhysicalDrive[MAX_PATH];
+		_stprintf_s(szPhysicalDrive, _countof(szPhysicalDrive), _T("\\\\.\\PHYSICALDRIVE%d"), dwPhysicalIndex);
+		hPhysical = CreateFile(szPhysicalDrive, GENERIC_READ|GENERIC_WRITE, 
+											FILE_SHARE_READ|FILE_SHARE_WRITE,
+											NULL, OPEN_EXISTING, 0, NULL);
 		if (hPhysical == INVALID_HANDLE_VALUE)
 		{
 			SetErrorInfo(SYSTEM_ERROR, 0, _T("打开磁盘设备失败"));
 			break;
 		}
 
-		DISK_GEOMETRY_EX  GeoEx;
-		if (::DeviceIoControl(hPhysical, 
-				IOCTL_DISK_GET_DRIVE_GEOMETRY_EX, NULL, 0, 
-				&GeoEx, sizeof(GeoEx), &dwBytesReturned, NULL) == FALSE)
+		DWORD dwBytesReturned;
+		DISK_GEOMETRY_EX  DiskGeoEx;
+		if (::DeviceIoControl(hPhysical, IOCTL_DISK_GET_DRIVE_GEOMETRY_EX, NULL, 0, 
+											&DiskGeoEx, sizeof(DISK_GEOMETRY_EX), &dwBytesReturned, NULL) == FALSE)
 		{
 			SetErrorInfo(SYSTEM_ERROR,0,_T("获取可移动设备物理总大小失败"));
 			break;
 		}
 
-		if (GeoEx.Geometry.BytesPerSector == 0)
-			GeoEx.Geometry.BytesPerSector = 512;
+		if (DiskGeoEx.Geometry.BytesPerSector == 0)
+			DiskGeoEx.Geometry.BytesPerSector = 512;
 
-		PhysicalDiskSize.dwBytesPerSector = GeoEx.Geometry.BytesPerSector;
-		PhysicalDiskSize.DiskSectors.QuadPart = GeoEx.DiskSize.QuadPart / GeoEx.Geometry.BytesPerSector;
+		PhysicalDiskSize.dwBytesPerSector = DiskGeoEx.Geometry.BytesPerSector;
+		PhysicalDiskSize.DiskSectors.QuadPart = DiskGeoEx.DiskSize.QuadPart / DiskGeoEx.Geometry.BytesPerSector;
 
 		bSuccess = TRUE;
 
+	} while (FALSE);
+
+	if (hPhysical != INVALID_HANDLE_VALUE)
+	{
+		CloseHandle(hPhysical);
+		hPhysical = INVALID_HANDLE_VALUE;
+	}
+
+	return bSuccess;
+}
+
+BOOL CLogicalDiskMgr::EnumVolumeForDisk(DWORD dwPhysicalDiskNumber , ULONGLONG ullStartingOffset , ULONGLONG ullExtentLength , CStdArray& strVolumeArray)
+{
+	BOOL bSuccess = FALSE;
+
+	do 
+	{
+		if (CDiskVolumeInfo::EnumAllVolume(strVolumeArray) == FALSE)
+			break;
+
+		int nItemCount = (int)strVolumeArray.GetCount();
+		for(int i=nItemCount-1;i>=0;i--)
+		{
+			const CString& strVolume = strVolumeArray.GetAt(i);
+
+			CDiskVolumeInfo DiskVolume;
+			if (DiskVolume.OpenVolume(strVolume) == FALSE)
+			{
+				strVolumeArray.RemoveAt(i);
+				continue;
+			}
+
+			BYTE DiskInfoBuffer[sizeof(DWORD) + 100 * sizeof(DISK_EXTENT )];
+			PVOLUME_DISK_EXTENTS pVolumeDiskExtents = (PVOLUME_DISK_EXTENTS)DiskInfoBuffer;
+			pVolumeDiskExtents->NumberOfDiskExtents = 100;
+
+			DWORD dwSize = _countof(DiskInfoBuffer);
+
+			if (DiskVolume.GetDiskExtents(pVolumeDiskExtents, dwSize) == FALSE)
+			{
+				strVolumeArray.RemoveAt(i);
+				continue;
+			}
+
+			DWORD dwIndex = 0;
+			for (dwIndex=0; dwIndex<pVolumeDiskExtents->NumberOfDiskExtents; ++dwIndex)
+			{
+				if (pVolumeDiskExtents->Extents[dwIndex].DiskNumber != dwPhysicalDiskNumber)
+					continue;
+
+				if (ullExtentLength == 0)
+					break;
+
+				if ((ULONGLONG)pVolumeDiskExtents->Extents[dwIndex].StartingOffset.QuadPart >= ullStartingOffset &&
+					(ULONGLONG)pVolumeDiskExtents->Extents[dwIndex].StartingOffset.QuadPart < ullStartingOffset + ullExtentLength)
+					break;
+
+				if ((ULONGLONG)pVolumeDiskExtents->Extents[dwIndex].StartingOffset.QuadPart + pVolumeDiskExtents->Extents[dwIndex].ExtentLength.QuadPart > ullStartingOffset &&
+					(ULONGLONG)pVolumeDiskExtents->Extents[dwIndex].StartingOffset.QuadPart + pVolumeDiskExtents->Extents[dwIndex].ExtentLength.QuadPart <= ullStartingOffset + ullExtentLength)
+					break;
+			}
+
+			if (dwIndex == pVolumeDiskExtents->NumberOfDiskExtents)
+				strVolumeArray.RemoveAt(i);
+		}
+
+		bSuccess = TRUE;
 	} while (FALSE);
 
 	return bSuccess;
@@ -151,8 +211,7 @@ BOOL CLogicalDiskMgr::DeleteDiskVolumeLnk(DWORD dwDiskIndex)
 	BOOL bSuccess = FALSE;
 	do 
 	{
-		CLogicalDiskMgr LogicalDisk;
-		DWORD dwIndex = LogicalDisk.GetSystemDiskIndex();
+		DWORD dwIndex = CLogicalDiskMgr::GetSystemDiskIndex();
 		if (dwIndex == dwDiskIndex || dwDiskIndex == -1)
 			break;
 
@@ -168,7 +227,7 @@ BOOL CLogicalDiskMgr::DeleteDiskVolumeLnk(DWORD dwDiskIndex)
 		DiskSize.QuadPart = PhysicalDisk.DiskSectors.QuadPart*PhysicalDisk.dwBytesPerSector;
 
 		CStdArray strVolumeArray;
-		if (CDiskVolumeInfo::EnumVolumeForDisk(dwDiskIndex, 0, DiskSize.QuadPart, strVolumeArray) != FALSE)
+		if (CLogicalDiskMgr::EnumVolumeForDisk(dwDiskIndex, 0, DiskSize.QuadPart, strVolumeArray) != FALSE)
 		{
 			int nIndex = 0;
 			DWORD dwVolumeCount = (DWORD)strVolumeArray.GetCount();
@@ -192,13 +251,14 @@ DWORD CLogicalDiskMgr::GetHardDiskIndexFromVolume(LPCTSTR lpszDiskVolumePath)
 	do 
 	{
 		//如果打开卷设备失败，直接返回-1
-		if (OpenDisk(lpszDiskVolumePath) == FALSE)
+		CDiskVolumeInfo DiskVolume;
+		if (DiskVolume.OpenVolume(lpszDiskVolumePath) == FALSE)
 			break;
 
 		BYTE lpData[1024];
 		PVOLUME_DISK_EXTENTS lpVolumeDiskExtents = (PVOLUME_DISK_EXTENTS)lpData;
 		DWORD dwSize = _countof(lpData);
-		if (GetDiskExtents(lpVolumeDiskExtents,dwSize) == FALSE)
+		if (DiskVolume.GetDiskExtents(lpVolumeDiskExtents,dwSize) == FALSE)
 			break;
 
 		if (lpVolumeDiskExtents->NumberOfDiskExtents != 0)
@@ -332,8 +392,7 @@ BOOL CLogicalDiskMgr::GetDiskSerialNumber(DWORD dwDiskIndex, CString& strSerialN
 		if (hStorageDevice == INVALID_HANDLE_VALUE) 
 			break;
 
-
-		STORAGE_PROPERTY_QUERY StoragePropertyQuery = {};
+		STORAGE_PROPERTY_QUERY StoragePropertyQuery;
 		StoragePropertyQuery.PropertyId = StorageDeviceProperty;
 		StoragePropertyQuery.QueryType = PropertyStandardQuery;
 
@@ -386,37 +445,4 @@ BOOL CLogicalDiskMgr::GetDiskSerialNumber(DWORD dwDiskIndex, CString& strSerialN
 	}
 
 	return bSuccess;
-}
-
-BOOL CLogicalDiskMgr::DeviceIoControl(DWORD dwIoControlCode)
-{
-	if (m_hVolume == INVALID_HANDLE_VALUE)
-		return FALSE;
-
-	DWORD dwReturnBytes = 0;
-	return ::DeviceIoControl(m_hVolume,dwIoControlCode,NULL,0,NULL,0,&dwReturnBytes,NULL);
-}
-
-BOOL CLogicalDiskMgr::LockVolume()
-{
-	if (m_hVolume == INVALID_HANDLE_VALUE)
-		return FALSE;
-
-	return DeviceIoControl(FSCTL_LOCK_VOLUME);
-}
-
-BOOL CLogicalDiskMgr::UnlockVolume()
-{
-	if (m_hVolume == INVALID_HANDLE_VALUE)
-		return FALSE;
-
-	return DeviceIoControl(FSCTL_UNLOCK_VOLUME);
-}
-
-BOOL CLogicalDiskMgr::DismountVolume()
-{
-	if (m_hVolume == INVALID_HANDLE_VALUE)
-		return FALSE;
-
-	return DeviceIoControl(FSCTL_DISMOUNT_VOLUME);
 }

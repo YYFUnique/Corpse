@@ -529,6 +529,15 @@ public:
 	/* 返 回 值：转换成功返回TRUE，否则返回FALSE											*/
 	/*************************************************************************/
 	BOOL GetLunarDayInfo(WORD wYear, WORD wMonth, WORD wDay, WORD &wLunarYear, WORD &wLunarMonth, WORD &wLunarDay, BOOL &bLeapMonth);
+
+	/*************************************************************************/
+	/* 函数名称：FormatLunarDay																		*/
+	/* 函数功能：格式化显示农历日期，如初一，十一等										*/
+	/* 输入参数：wDay				需要转换的农历时间											*/
+	/*					 lpszLunarDay 转换后的农历格式化时间									*/
+	/* 返 回 值： 无																							*/
+	/*************************************************************************/
+	static void FormatLunarDay(WORD wDay, LPTSTR lpszLunarDay);
 protected:
 
 	BOOL DateCheck(WORD wYear, WORD wMonth, WORD wDay);

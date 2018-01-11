@@ -83,24 +83,24 @@ void CWkeBrowser::InitWindow()
 	m_pURLEdit = static_cast<CEditUI2*>(m_PaintManager.FindControl(_T("urlEdit")));
 	m_pLblStatusBar = static_cast<CLabelUI*>(m_PaintManager.FindControl(_T("statusbar")));
 
-	/*CWkeBrowserUI* pWke = static_cast<CWkeBrowserUI*>(m_PaintManager.FindControl(_T("ie")));
+	CWkeBrowserUI* pWke = static_cast<CWkeBrowserUI*>(m_PaintManager.FindControl(_T("ie")));
 	if (pWke)
 	{
 		pWke->InitBrowser(wkeCreateWebView(),1000);
 		
 		//jsBindFunction("msgBox", js_msgBox, 2);//这里绑定js函数，让js主动调用c++函数
-// 		m_pWkeHandler.onTitleChanged = OnTitleChanged;
-// 		m_pWkeHandler.onURLChanged = OnURLChanged;
-// 		pWke->SetClientHandler(&m_pWkeHandler);
+		m_pWkeHandler.onTitleChanged = &CWkeBrowser::OnTitleChanged;
+ 		m_pWkeHandler.onURLChanged = &CWkeBrowser::OnURLChanged;
+ 		pWke->SetClientHandler(&m_pWkeHandler);
 		//m_pWke->SetFile(_T("Html/index.html")msg.pSender->GetText().GetData());
 		//m_pWke->SetURL(L"http://mudcu.be/sketchpad/"); //一个漂亮的网站，大家可以自己试试
-		//pWke->Navigate(_T("10.3.1.253:8000"));
-	}*/
-	CWebBrowserUI* pWeb = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("ie2")));
+		pWke->Navigate(_T("http://www.baidu.com"));
+	}
+	/*CWebBrowserUI* pWeb = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("ie2")));
 	m_pWebBrowserEventHandler = new CWebBrowserEventHandler;
 	pWeb->SetWebBrowserEventHandler(m_pWebBrowserEventHandler);
 	if (pWeb)
-		pWeb ->Navigate2(_T("http://www.duilib.com")); 
+		pWeb ->Navigate2(_T("http://www.duilib.com")); */
 }
 
 LRESULT CWkeBrowser::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -117,6 +117,22 @@ LRESULT CWkeBrowser::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam
 	}
 	return WindowImplBase::HandleCustomMessage(uMsg,wParam,lParam,bHandled);
 }
+
+/*
+void CWkeBrowser::OnTitleChanged(const wkeClientHandler* pwkeHandle, LPCTSTR lpszTitleInfo)
+{
+}
+*/
+//void CWkeBrowser::OnURLChanged(const wkeClientHandler* pwkeHandle, LPCTSTR lpszUrlInfo)
+//{
+	/*CMainWnd *pWnd = (CMainWnd *)handler->pdata;
+	DUIRichEdit *pRichEdit = pWnd->FindChildByNameT<DUIRichEdit>(L"web_url");
+	DUIWebKit *pWebKit = pWnd->FindChildByNameT<DUIWebKit>(L"webobj");
+	if (pRichEdit&&pWebKit)
+	{
+		pRichEdit->SetWindowText(pWebKit->GetWebView()->toStringW(url));
+	}*/
+//}
 
 LRESULT CWkeBrowser::ResponseDefaultKeyEvent(WPARAM wParam)
 {
@@ -176,18 +192,18 @@ void CWkeBrowser::OnSelectChanged(TNotifyUI& msg)
 
 void CWkeBrowser::OnTitleChanged(const struct _wkeClientHandler* clientHandler, const wkeString title)
 {
-	m_Title = (LPCTSTR)title;
+	//m_Title = (LPCTSTR)title;
 	CDuiString strText;
-	strText.Format(_T("网站标题：%s     网站网址:%s"),(LPCTSTR)m_Title,(LPCTSTR)m_URL);
-	m_pLblStatusBar->SetText(strText);
+	//strText.Format(_T("网站标题：%s     网站网址:%s"),(LPCTSTR)m_Title,(LPCTSTR)m_URL);
+	//m_pLblStatusBar->SetText(strText);
 }
 
 void CWkeBrowser::OnURLChanged(const struct _wkeClientHandler* clientHandler, const wkeString url)
 {
-	m_URL =(LPCTSTR) url;
+	//m_URL =(LPCTSTR) url;
 	CDuiString strText;
-	strText.Format(_T("网站标题：%s     网站网址:%s"),(LPCTSTR)m_Title,(LPCTSTR)m_URL);
-	m_pLblStatusBar->SetText(strText);
+	//strText.Format(_T("网站标题：%s     网站网址:%s"),(LPCTSTR)m_Title,(LPCTSTR)m_URL);
+	//m_pLblStatusBar->SetText(strText);
 }
 
 LRESULT CWkeBrowser::OnJsNotify(HWND hwnd, WPARAM wParam, LPARAM lParam)

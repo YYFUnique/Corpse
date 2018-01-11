@@ -22,24 +22,6 @@
 const LPCTSTR DayOfWeek[] = {_T("星期天"),_T("星期一"),_T("星期二"),_T("星期三"),_T("星期四"),_T("星期五"),_T("星期六")};
 //#define WM_DWMSENDICONICLIVEPREVIEWBITMAP   0x0326
 
-void FormatLunarDay(DWORD wDay, LPTSTR pLunarDay)
-{   
-	TCHAR szFirst[] = _T("初十廿三");
-	TCHAR szSecond[] = _T("一二三四五六七八九十");
-
-	int n=0;
-	//计算十位标识
-	if (wDay != 20 && wDay !=30)
-		pLunarDay[n++] = szFirst[(wDay-1)/10];
-	else
-		pLunarDay[n++] = szFirst[wDay/10];
-
-	//计算各位标识
-	pLunarDay[n++] = szSecond[(wDay-1)%10];
-	//结束符
-	pLunarDay[n] = _T('\0');
-}
-
 CTTimeHelper::CTTimeHelper()
 {
 	m_pHLayoutHead = NULL;
@@ -443,7 +425,7 @@ void CTTimeHelper::SetShowTimer()
 			TCHAR szMonth[] = _T("正二三四五六七八九十冬腊");
 
 			TCHAR szLunarDay[10] = {0};
-			FormatLunarDay(wDay, szLunarDay);
+			CLunar::FormatLunarDay(wDay, szLunarDay);
 
 			CDuiString strLunarTime;
 			strLunarTime.Format(_T("%c月%s"), szMonth[wMonth-1], szLunarDay);

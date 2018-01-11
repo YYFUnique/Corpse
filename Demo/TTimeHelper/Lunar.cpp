@@ -257,7 +257,8 @@ BOOL CLunar::GetLunarDayInfo(WORD wYear, WORD wMonth, WORD wDay, WORD &wLunarYea
 	wLunarYear = wYear;
 
 	//农历新年在公历年内序数，剩余天数
-	WORD wIndexOfLunarNewYear = 0, wRemainDays = 0;
+	WORD wIndexOfLunarNewYear = 0;
+	int  nRemainDays = 0;		//可能存在负数的情况，所以需要使用有符号类型
 	//农历上一年闰月，今年闰月
 	WORD wPreLeapMonth = 0, wLeapMonth = 0;
 	wIndexOfLunarNewYear = GetIndexOfNewYear(wLunarYear);
@@ -272,7 +273,7 @@ BOOL CLunar::GetLunarDayInfo(WORD wYear, WORD wMonth, WORD wDay, WORD &wLunarYea
 		wLeapMonth = GetLeapMonth(wLunarYear);//上一年没有闰月，则查询今年闰月
 
 	bLeapMonth = FALSE;
-	wRemainDays = wIndexDays - wIndexOfLunarNewYear;//距离农历新年天数
+	nRemainDays = wIndexDays - wIndexOfLunarNewYear;//距离农历新年天数
 
 	int i=0;
 	if (wPreLeapMonth > 10)
@@ -283,10 +284,10 @@ BOOL CLunar::GetLunarDayInfo(WORD wYear, WORD wMonth, WORD wDay, WORD &wLunarYea
 	if (wIndexOfLunarNewYear > wIndexDays)//早于农历新年
 	{
 		wLunarYear -= 1;//农历年减1
-		while(wRemainDays < 0)
+		while(nRemainDays < 0)
 		{
 			--i;//第一次先减去是因为当前i是正月，减1表示上一年十二月（或闰十二月）
-			wRemainDays += DaysOfLunarMonth[i];//加上上一年十二月、十一月的总天数（含闰月）直到日数大于0
+			nRemainDays += DaysOfLunarMonth[i];//加上上一年十二月、十一月的总天数（含闰月）直到日数大于0
 		}
 
 		//如果上一年十一月或十二月存在闰月
@@ -323,12 +324,12 @@ BOOL CLunar::GetLunarDayInfo(WORD wYear, WORD wMonth, WORD wDay, WORD &wLunarYea
 		{
 			wLunarMonth = 11 + i;
 		}
-		wLunarDay = wRemainDays;
+		wLunarDay = nRemainDays;
 	}else
 	{
-		while (wRemainDays >= DaysOfLunarMonth[i])
+		while (nRemainDays >= DaysOfLunarMonth[i])
 		{
-			wRemainDays -= DaysOfLunarMonth[i];//寻找农历月
+			nRemainDays -= DaysOfLunarMonth[i];//寻找农历月
 			i++;//移至下个月
 		}
 		if (wPreLeapMonth > 10)
@@ -353,12 +354,30 @@ BOOL CLunar::GetLunarDayInfo(WORD wYear, WORD wMonth, WORD wDay, WORD &wLunarYea
 			{
 				wLunarMonth = i - 1;
 			}
-		}
-		wLunarDay = wRemainDays;
+		} 
+		wLunarDay = nRemainDays;
 	}
 
 	wLunarDay += 1;//索引转换到数量
 	return TRUE;
+}
+
+void CLunar::FormatLunarDay(WORD wDay, LPTSTR pLunarDay)
+{   
+	TCHAR szFirst[] = _T("初十廿三");
+	TCHAR szSecond[] = _T("一二三四五六七八九十");
+
+	int n=0;
+	//计算十位标识
+	if (wDay != 20 && wDay !=30)
+		pLunarDay[n++] = szFirst[(wDay-1)/10];
+	else
+		pLunarDay[n++] = szFirst[wDay/10];
+
+	//计算各位标识
+	pLunarDay[n++] = szSecond[(wDay-1)%10];
+	//结束符
+	pLunarDay[n] = _T('\0');
 }
 
 BOOL CLunar::GetMonthInfo(WORD wYear,UINT& uData)

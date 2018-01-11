@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "DiskVolumeInfo.h"
 #include "LogicalDiskMgr.h"
+#include "../Utils/ErrorInfo.h"
 
 CDiskVolumeInfo::CDiskVolumeInfo()
 {
@@ -10,6 +11,82 @@ CDiskVolumeInfo::CDiskVolumeInfo()
 CDiskVolumeInfo::~CDiskVolumeInfo()
 {
 
+}
+
+BOOL CDiskVolumeInfo::OpenVolume(LPCTSTR lpszDiskVolumePath)
+{
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		TCHAR szVolumeName[MAX_PATH];
+		_stprintf_s(szVolumeName, _countof(szVolumeName), _T("\\\\.\\%c:"), lpszDiskVolumePath[0]);
+
+		m_hVolume = CreateFile(szVolumeName,GENERIC_READ,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,0,NULL);
+		if (m_hVolume == INVALID_HANDLE_VALUE)
+		{
+			SetErrorInfo(SYSTEM_ERROR, 0 , _T("打开%s失败"), szVolumeName);
+			break;
+		}
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	return bSuccess;
+}
+
+BOOL CDiskVolumeInfo::GetDiskExtents(PVOLUME_DISK_EXTENTS lpVolumeDiskExtents, DWORD& dwLen)
+{
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		if (m_hVolume == INVALID_HANDLE_VALUE)
+			break;
+
+		BOOL bRet = ::DeviceIoControl(m_hVolume, IOCTL_VOLUME_GET_VOLUME_DISK_EXTENTS, NULL, 0,
+			lpVolumeDiskExtents,dwLen, &dwLen, NULL);
+		if (bRet == FALSE)
+		{
+			SetErrorInfo(SYSTEM_ERROR, 0 , _T("获取设备扩展信息失败"));
+			break;
+		}
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	return bSuccess;
+}
+
+BOOL CDiskVolumeInfo::LockVolume()
+{
+	if (m_hVolume == INVALID_HANDLE_VALUE)
+		return FALSE;
+
+	return DeviceIoControl(FSCTL_LOCK_VOLUME);
+}
+
+BOOL CDiskVolumeInfo::UnlockVolume()
+{
+	if (m_hVolume == INVALID_HANDLE_VALUE)
+		return FALSE;
+
+	return DeviceIoControl(FSCTL_UNLOCK_VOLUME);
+}
+
+BOOL CDiskVolumeInfo::DismountVolume()
+{
+	if (m_hVolume == INVALID_HANDLE_VALUE)
+		return FALSE;
+
+	return DeviceIoControl(FSCTL_DISMOUNT_VOLUME);
+}
+
+BOOL CDiskVolumeInfo::DeviceIoControl(DWORD dwIoControlCode)
+{
+	if (m_hVolume == INVALID_HANDLE_VALUE)
+		return FALSE;
+
+	DWORD dwReturnBytes = 0;
+	return ::DeviceIoControl(m_hVolume, dwIoControlCode, NULL, 0, NULL, 0, &dwReturnBytes, NULL);
 }
 
 BOOL CDiskVolumeInfo::EnumAllVolume(CStdArray& strVolumeArray)
@@ -31,67 +108,6 @@ BOOL CDiskVolumeInfo::EnumAllVolume(CStdArray& strVolumeArray)
 
 		bSuccess = FindNextVolume(hVolume,szVolumeName,_countof(szVolumeName));
 	}while(bSuccess);
-		
+
 	return strVolumeArray.IsEmpty() == FALSE;
-}
-
-BOOL CDiskVolumeInfo::EnumVolumeForDisk(DWORD dwPhysicalDiskNumber , ULONGLONG ullStartingOffset , ULONGLONG ullExtentLength , CStdArray& strVolumeArray)
-{
-	BOOL bSuccess = FALSE;
-
-	do 
-	{
-		if (EnumAllVolume(strVolumeArray) == FALSE)
-			break;
-
-		int nItemCount = (int)strVolumeArray.GetCount();
-		for(int i=nItemCount-1;i>=0;i--)
-		{
-			const CString& strVolume = strVolumeArray.GetAt(i);
-
-			CLogicalDiskMgr LogicalDisk;
-			if (LogicalDisk.OpenDisk(strVolume) == FALSE)
-			{
-				strVolumeArray.RemoveAt(i);
-				continue;
-			}
-
-			BYTE DiskInfoBuffer[sizeof(DWORD) + 100 * sizeof(DISK_EXTENT )];
-			PVOLUME_DISK_EXTENTS pVolumeDiskExtents = (PVOLUME_DISK_EXTENTS)DiskInfoBuffer;
-			pVolumeDiskExtents->NumberOfDiskExtents = 100;
-
-			DWORD dwSize = _countof(DiskInfoBuffer);
-
-			if (LogicalDisk.GetDiskExtents(pVolumeDiskExtents, dwSize) == FALSE)
-			{
-				strVolumeArray.RemoveAt(i);
-				continue;
-			}
-
-			DWORD j;
-			for (j=0;j<pVolumeDiskExtents->NumberOfDiskExtents;j++)
-			{
-				if (pVolumeDiskExtents->Extents[j].DiskNumber != dwPhysicalDiskNumber)
-					continue;
-
-				if (ullExtentLength == 0)
-					break;
-
-				if ((ULONGLONG)pVolumeDiskExtents->Extents[j].StartingOffset.QuadPart >= ullStartingOffset &&
-					(ULONGLONG)pVolumeDiskExtents->Extents[j].StartingOffset.QuadPart < ullStartingOffset + ullExtentLength)
-					break;
-
-				if ((ULONGLONG)pVolumeDiskExtents->Extents[j].StartingOffset.QuadPart + pVolumeDiskExtents->Extents[j].ExtentLength.QuadPart > ullStartingOffset &&
-					(ULONGLONG)pVolumeDiskExtents->Extents[j].StartingOffset.QuadPart + pVolumeDiskExtents->Extents[j].ExtentLength.QuadPart <= ullStartingOffset + ullExtentLength)
-					break;
-			}
-
-			if (j == pVolumeDiskExtents->NumberOfDiskExtents)
-				strVolumeArray.RemoveAt(i);
-		}
-
-		bSuccess = TRUE;
-	} while (FALSE);
-
-	return bSuccess;
 }
