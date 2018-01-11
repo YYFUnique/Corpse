@@ -102,12 +102,11 @@ LRESULT CQRTool::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 
 void CQRTool::InitWindow()
 {
-	//m_WndMagnet.SetLeadWindow(m_hWnd);
 	SetIcon(IDI_MAINFRAME);
 
-	/*m_WndMagnet.AddMagnetWnd(m_hWnd);*/
+	CMagnetFrame::Initialize();
 	CMagnetFrame::GetInstance()->SetMainWnd(m_hWnd);
-	//CMagnetFrame::GetInstance()->AddSubWnd(m_hWnd,ATTCH_MODE_LEFT,ATTCH_ALIGN_TOP,10);
+
 	int nCode = QR_ERR_NONE;
 	QRCode* pCode = qrInit(6, QR_EM_8BIT, QR_ECL_M, 7, &nCode);
 
@@ -157,7 +156,7 @@ void CQRTool::OnCreate(TNotifyUI& msg)
 	CQRDlg* pQRDlg = new CQRDlg(m_hWnd/*, &m_WndMagnet*/);
 	
 	pQRDlg->ShowWindow();
-	CMagnetFrame::GetInstance()->AddSubWnd(pQRDlg->GetHWND(), ATTCH_MODE_RIGHT,ATTCH_ALIGN_TOP,5);
+	CMagnetFrame::GetInstance()->AddSubWnd(pQRDlg->GetHWND(), ATTCH_MODE_RIGHT,ATTCH_ALIGN_TOP);
 
 	/*RECT rcWnd;
 	GetWindowRect(pQRDlg->GetHWND(),&rcWnd);
