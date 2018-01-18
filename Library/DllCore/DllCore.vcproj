@@ -452,6 +452,10 @@
 				Name="Window"
 				>
 				<File
+					RelativePath=".\Window\DwmHelper.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Window\FloatWindow.cpp"
 					>
 				</File>
@@ -705,6 +709,10 @@
 			<Filter
 				Name="Window"
 				>
+				<File
+					RelativePath=".\Window\DwmHelper.h"
+					>
+				</File>
 				<File
 					RelativePath=".\Window\FloatWindow.h"
 					>
