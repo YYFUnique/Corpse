@@ -446,3 +446,12 @@ BOOL CLogicalDiskMgr::GetDiskSerialNumber(DWORD dwDiskIndex, CString& strSerialN
 
 	return bSuccess;
 }
+
+BOOL CLogicalDiskMgr::FlushDiskDev()
+{
+	if (m_hStorageDevice == INVALID_HANDLE_VALUE) 
+		return FALSE;
+
+	DWORD dwSize = 0;
+	return ::DeviceIoControl(m_hStorageDevice,IOCTL_DISK_UPDATE_PROPERTIES,NULL,0,NULL,0,&dwSize,NULL);
+}

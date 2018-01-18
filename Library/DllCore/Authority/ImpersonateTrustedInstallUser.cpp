@@ -79,7 +79,6 @@ BOOL CImpersonateTrustedInstallUser::ChangeFileName(LPCTSTR lpszFileName)
 		_tcscpy_s(szBootBakFile,_countof(szBootBakFile),lpszFileName);
 		PathRemoveFileSpec(szBootBakFile);
 		strBootLoaderFile.Format(_T("%s\\boot\\winload.exe"),szBootBakFile);
-		OutputDebugString(strBootLoaderFile);
 		if (PathFileExists(strBootLoaderFile))
 		{
 			if (Impersonate(strBootLoaderFile,_T("Everyone")) == FALSE)
