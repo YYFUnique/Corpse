@@ -213,10 +213,12 @@ LRESULT CRichEdit::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandle
 {
 	if ( IsWindowVisible(m_hWnd) && (wParam == SIZE_MAXIMIZED || wParam == SIZE_RESTORED))
 	{
-		CButtonUI* pMax = (CButtonUI*)m_PaintManager.FindControl(_T("BtnMax"));
+		/*CButtonUI* pMax = (CButtonUI*)m_PaintManager.FindControl(_T("BtnMax"));
 		CButtonUI* pRestor = (CButtonUI*)m_PaintManager.FindControl(_T("BtnRestore"));
 		pMax->SetVisible(wParam == SIZE_RESTORED);
-		pRestor->SetVisible(wParam != SIZE_RESTORED);
+		pRestor->SetVisible(wParam != SIZE_RESTORED);*/
+		COptionUI* pMax = (COptionUI*)m_PaintManager.FindControl(_T("BtnMax"));
+		pMax->Selected(wParam == SIZE_MAXIMIZED);
 	}
 
 	return WindowImplBase::OnSize(uMsg,wParam,lParam,bHandled);
@@ -232,23 +234,24 @@ void CRichEdit::OnClick(TNotifyUI& msg)
 {
 	if (msg.pSender->GetName() == _T("BtnClose"))
 		PostQuitMessage(0);
-	else if (msg.pSender->GetName() == _T("BtnMax"))
-	{
-		m_PaintManager.FindControl(_T("BtnMax"))->SetVisible(false);
-		m_PaintManager.FindControl(_T("BtnRestore"))->SetVisible(true);
-		SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
-	}
+	//else if (msg.pSender->GetName() == _T("BtnMax"))
+	//{
+	//	COptionUI* pMax = (COptionUI*)m_PaintManager.FindControl(_T("BtnMax"));
+	//	//pMax->Selected(pMax->IsSelected() == FALSE);
+
+	//	
+	//}
 	else if (msg.pSender == (CControlUI*)m_PaintManager.FindControl(_T("BtnMin")))
 	{
 		RestoreBtnStatus(msg.pSender);
 		SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
 	}
-	else if (msg.pSender == (CControlUI*)m_PaintManager.FindControl(_T("BtnRestore")))
+	/*else if (msg.pSender == (CControlUI*)m_PaintManager.FindControl(_T("BtnRestore")))
 	{
 		m_PaintManager.FindControl(_T("BtnMax"))->SetVisible(true);
 		m_PaintManager.FindControl(_T("BtnRestore"))->SetVisible(false);
 		SendMessage(WM_SYSCOMMAND, SC_RESTORE, 0);
-	}
+	}*/
 	else if (msg.pSender == m_PaintManager.FindControl(_T("BtnImage")))
 		OnSelectBtnImage(msg);
 	else if (msg.pSender == m_PaintManager.FindControl(_T("BtnColor")))
@@ -283,6 +286,15 @@ void CRichEdit::OnSelectChanged(TNotifyUI& msg)
 		OnSelectBtnFace(msg);
 	else if (msg.pSender == m_PaintManager.FindControl(_T("BtnScreenShots")))
 		OnSelectBtnScreenShots(msg);
+	else if (msg.pSender == m_PaintManager.FindControl(_T("BtnMax")))
+	{
+		COptionUI* pMax = (COptionUI*)msg.pSender;
+		WPARAM wParam = SC_RESTORE;
+		if (pMax->IsSelected())
+			wParam = SC_MAXIMIZE;
+
+		SendMessage(WM_SYSCOMMAND, wParam, 0);
+	}
 }
 
 void CRichEdit::SetRichEditDefaultFont(const CFontInfo* pFontInfo,CRichEditUI* pRichEdit)
