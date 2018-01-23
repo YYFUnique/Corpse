@@ -58,6 +58,7 @@
 #include <crtdbg.h>
 #include <malloc.h>
 #include <shellapi.h>
+#include <atlstr.h>
 #ifdef RENDER_GDIPLUS
 #include "Utils/GraphicsRoundRectPath.h"
 #endif
