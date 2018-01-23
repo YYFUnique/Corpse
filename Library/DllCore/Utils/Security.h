@@ -11,12 +11,13 @@
 typedef ULONG (WINAPI *PFNNtUnmapViewOfSection)(IN HANDLE ProcessHandle, IN PVOID BaseAddress);
 
 /************************************************************************/
-/* 函数名称：EnableDebugPriv                                                                  */
+/* 函数名称：EnablePrivilege	                                                                  */
 /* 函数作用：调整进程权限				     													   */
 /* 输入参数：lpszPrivilegeName 权限描述符   如:SE_DEBUG_NAME		   */
+/*					 bEnable 是否使能特权															   */
 /*	返 回 值：成功返回TRUE，失败返回FALSE								               */
 /************************************************************************/
-DLL_API BOOL EnableDebugPriv(LPCTSTR lpszPrivilegeName);
+DLL_API BOOL EnablePrivilege(LPCTSTR lpszPrivilegeName, BOOL bEnable = TRUE);
 
 /************************************************************************/
 /* 函数名称：InjectProcess                                                                         */
@@ -26,7 +27,7 @@ DLL_API BOOL EnableDebugPriv(LPCTSTR lpszPrivilegeName);
 /*					dwWaitTime 等待时间，-1为一直等待，直到响应，单位毫秒  */
 /*	返 回 值：成功返回TRUE，失败返回FALSE								              */
 /************************************************************************/
-DLL_API BOOL InjectProcess(LPCTSTR lpszFilePath, DWORD dwRemoteProcessId, DWORD dwWaitTime);
+//DLL_API BOOL InjectProcess(LPCTSTR lpszFilePath, DWORD dwRemoteProcessId, DWORD dwWaitTime);
 
 /************************************************************************/
 /* 函数名称：UnLoadViewOfModule                                                         */

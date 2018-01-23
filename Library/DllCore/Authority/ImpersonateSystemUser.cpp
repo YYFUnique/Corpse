@@ -22,7 +22,7 @@ BOOL CImpersonateSystemUser::Impersonate()
 	if (m_bSystemUser == TRUE)
 		return TRUE;
 
-	EnableDebugPriv(SE_DEBUG_NAME);
+	EnablePrivilege(SE_DEBUG_NAME);
 	DWORD dwWinlogonProcessId = FindWinlogonProcess();
 	if (dwWinlogonProcessId == 0)
 		return FALSE;

@@ -484,6 +484,10 @@
 				Name="Security"
 				>
 				<File
+					RelativePath=".\Security\RemoteThreadInject.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Security\Sign.cpp"
 					>
 				</File>
@@ -741,6 +745,10 @@
 			<Filter
 				Name="Security"
 				>
+				<File
+					RelativePath=".\Security\RemoteThreadInject.h"
+					>
+				</File>
 				<File
 					RelativePath=".\Security\Sign.h"
 					>
