@@ -1,0 +1,11 @@
+EXPORTS
+	APlayerDlna_Initialize
+	APlayerDlna_UnInitialize
+	APlayerDlna_Open
+	APlayerDlna_Close
+	APlayerDlna_SelectDevice
+	APlayerDlna_Play
+	APlayerDlna_Pause
+	APlayerDlna_Stop
+	APlayerDlna_SetPosition
+	APlayerDlna_GetPosition
