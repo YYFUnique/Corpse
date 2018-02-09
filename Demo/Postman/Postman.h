@@ -1,4 +1,5 @@
 #pragma once
+#include "LibDlna/LibDlna.h"
 
 class CPostman : public WindowImplBase
 {
@@ -21,6 +22,8 @@ protected:
 	void ShowBar(BOOL bShowBar);
 	
 	LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+protected:
+	static void OnDlnaEvent(DLNA_EVENT_INFO* pDlnaEventInfo, LPARAM lParam);
 private:
 	BOOL m_bShowBar;
 };

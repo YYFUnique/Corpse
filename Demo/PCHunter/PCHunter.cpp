@@ -6,7 +6,7 @@
 #include <atlstr.h>
 #include "Wnd/AboutDialog.h"
 
-#include "DllCore/Process/Process.h"
+#include "DllCore/Authority/Process.h"
 
 #define		TIMER_PCHUNTER_ID			0x1000
 #define		WM_TRAYICON					WM_USER+0x1000

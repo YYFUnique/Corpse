@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "Postman.h"
 #include "Resource.h"
+#include "LibDlna/LibDlna.h"
 
 #define WM_TEST_MESSAGE		(WM_USER+0x1000)
 
@@ -23,7 +24,7 @@ void CPostman::OnFinalMessage(HWND hWnd)
 
 LPCTSTR CPostman::GetWindowClassName() const
 {
-	return _T("Postman");
+	return _T("APlayer_NotifyWindowClass");
 }
 
 UILIB_RESOURCETYPE CPostman::GetResourceType() const
@@ -52,6 +53,23 @@ void CPostman::Notify(TNotifyUI& msg)
 void CPostman::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
+
+	// 
+	BOOL bRet = APlayerDlna_Initialize(NULL, (LPDLNA_EVENT_ROUTINE)&CPostman::OnDlnaEvent, NULL);
+	APlayerDlna_Open(_T("D:\\电影\\射雕英雄传\\射雕英雄传HDTV03.mp4"), NULL);
+}
+
+void CPostman::OnDlnaEvent(DLNA_EVENT_INFO* pDlnaEventInfo, LPARAM lParam)
+{
+	switch (pDlnaEventInfo->dwEventCode)
+	{
+		case DLNAEVENT_TYPE_ERROR:
+				OutputDebugString(_T("Dlna发生错误"));
+			break;
+		case DLNAEVENT_TYPE_DEVICE_CHANGED:
+				OutputDebugString(_T("Dlna发生改变"));
+			break;
+	}
 }
 
 void CPostman::OnClick(TNotifyUI& msg)

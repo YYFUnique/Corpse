@@ -744,6 +744,14 @@ public:
 		return pserv;
 	}
 
+	ITextDocument* GetTextDocument()
+	{
+		if (NULL == m_pDocument)
+			return NULL;
+		m_pDocument->AddRef();
+		return m_pDocument;
+	}
+
 	BOOL SetOleCallback(IRichEditOleCallback* pCallback)
 	{
 		if (NULL == pserv)
@@ -824,6 +832,7 @@ private:
     CRichEditUI *m_re;
     ULONG	cRefs;					// Reference Count
     ITextServices	*pserv;		    // pointer to Text Services object
+	ITextDocument* m_pDocument;
     // Properties
 
     DWORD		dwStyle;				// style bits
@@ -946,6 +955,7 @@ CTxtWinHost::~CTxtWinHost()
 {
     pserv->OnTxInPlaceDeactivate();
     pserv->Release();
+	m_pDocument->Release();
 }
 
 ////////////////////// Create/Init/Destruct Commands ///////////////////////
@@ -1021,6 +1031,7 @@ BOOL CTxtWinHost::Init(CRichEditUI *re, const CREATESTRUCT *pcs)
 
     hr = pUnk->QueryInterface(IID_ITextServices,(void **)&pserv);
 
+	hr = pUnk->QueryInterface(__uuidof(ITextDocument),(void**)&m_pDocument);
     // Whether the previous call succeeded or failed we are done
     // with the private interface.
     pUnk->Release();
@@ -2366,6 +2377,17 @@ int CRichEditUI::CharFromPos(CDuiPoint pt) const
     return (int)lResult; 
 }
 
+void  CRichEditUI::GetVisibleCharRange(CHARRANGE& chr)
+{
+	int nFirstVisibleLine = GetFirstVisibleLine();
+	chr.cpMin = LineIndex(nFirstVisibleLine);
+
+	//CRect  rcClient;
+	RECT* prcClient = m_pTwh->GetClientRect();
+	POINT  ptRightBottom = {prcClient->right, prcClient->bottom};
+	chr.cpMax = CharFromPos(ptRightBottom);
+}
+
 void CRichEditUI::EmptyUndoBuffer()
 { 
     TxSendMessage(EM_EMPTYUNDOBUFFER, 0, 0, 0); 
@@ -3312,13 +3334,16 @@ bool CRichEditUI::IsAccumulateDBCMode()
 
 ITextDocument* CRichEditUI::GetDoc()
 {
-	HRESULT hRet;
+	/*HRESULT hRet;
 	ITextDocument* m_pTextDoc = NULL;
 	IRichEditOle* pRichEditOle = NULL;
 	TxSendMessage(EM_GETOLEINTERFACE,0, (LPARAM)&pRichEditOle,&hRet);
 	hRet = pRichEditOle->QueryInterface(__uuidof(ITextDocument), (void**)&m_pTextDoc);
 	pRichEditOle->Release();
-	return m_pTextDoc;
+	return m_pTextDoc;*/
+	if (NULL == m_pTwh)
+		return NULL;
+	return m_pTwh->GetTextDocument();
 }
 
 ITextHost * CRichEditUI::GetTextHost()
