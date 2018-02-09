@@ -445,7 +445,7 @@ PC_Session PushController_PushFile(PC_Token token,
 					unsigned long long file_size = 0;
 					g_FileIO->Seek(f, 0, SEEK_END);
 					g_FileIO->Tell(f, &file_size);
-                    pcSession->FileLength = file_size;
+                    pcSession->FileLength = (unsigned long)file_size;
 				}
 			}
 

@@ -43,7 +43,7 @@
 						</VerticalLayout>
 						<!-- <List name="MsgList" >
 						</List> -->
-						<RichEdit name="RichRecv" readonly="true" float="true" wantreturn="true" return="true" rich="true" vscrollbar="true" >
+						<RichEdit name="RichRecv" readonly="false" float="true" wantreturn="true" return="true" rich="true" vscrollbar="true" >
 						</RichEdit>
                     </HorizontalLayout>
                     <HorizontalLayout name="FontBar" pos="0,0,0,30" height="30" bkimage="file=&apos;font_bk.bmp&apos; corner=&apos;0,1,1,0&apos;" inset="4,4,4,4" visible="true" visible="false">

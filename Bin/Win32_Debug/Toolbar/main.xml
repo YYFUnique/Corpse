@@ -4,7 +4,7 @@
     <Font name="楷体" size="16" bold="false" italic="false" />
     <Font name="微软雅黑" size="12" bold="true" italic="false" />
 	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
-    <VerticalLayout name="VLayoutTotal" pos="0,1,0,1" bkimage="file=&apos;main_bkg.jpg&apos; corner=&apos;600,200,1,1&apos; fade=&apos;150&apos;">
+    <VerticalLayout name="VLayoutTotal" pos="0,1,0,1" bkimage="file=&apos;main_bkg.jpg&apos; corner=&apos;600,200,1,1&apos; fade=&apos;150&apos;" borderround="5,5">
         <VerticalLayout name="WinBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos; mask=&apos;0xffffffff&apos; fade=&apos;200&apos;" relativepos="0,0,0,0">
 			<!--<HorizontalLayout name="HLayoutHead" >
 				<Control />

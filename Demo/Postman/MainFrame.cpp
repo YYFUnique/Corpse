@@ -16,7 +16,7 @@ BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSh
 		if (pPostman == NULL) 
 			break;
 
-		pPostman->Create(NULL, _T("接口测试工具"), UI_WNDSTYLE_FRAME, 0, 0, 0, 800, 600);
+		pPostman->Create(NULL, _T("接口调试工具"), UI_WNDSTYLE_FRAME, 0, 0, 0, 800, 600);
 		pPostman->CenterWindow();
 		pPostman->ShowWindow(true);
 

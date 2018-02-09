@@ -101,6 +101,7 @@ public:
     long LineFromChar(long nIndex) const;
     CDuiPoint PosFromChar(UINT nChar) const;
     int CharFromPos(CDuiPoint pt) const;
+	void  GetVisibleCharRange(CHARRANGE& chr);
     void EmptyUndoBuffer();
     UINT SetUndoLimit(UINT nLimit);
     long StreamIn(int nFormat, EDITSTREAM &es);

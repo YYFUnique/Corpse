@@ -70,6 +70,38 @@ void CRichEdit::Notify(TNotifyUI& msg)
 		OnSelectChanged(msg);
 }
 
+void ChangeFontNameSizeBold(ITextSelection *pSel)
+{
+	ITextFont *pFontSel = NULL/*, *pFontDuplicate = NULL*/;
+
+	// Get ITextFont version of non-duplicated font.
+	if (FAILED(pSel->GetFont(&pFontSel)))
+		return;
+
+	// Duplicate the font.
+	/*pFontSel->GetValue(&pFontDuplicate);
+	pFontSel->Release();
+	if(!pFontDuplicate)
+		return;*/
+
+	// Changes here happen only to the underlying data structure, 
+	// such as a CHARFORMAT, in the duplicate - NOT to the actual 
+	// story text.
+	//BSTR bstrTemp = ;   // Font name
+	pFontSel->SetName(_T("Î¢ÈíÑÅºÚ"));
+	//SysFreeString(bstrTemp);
+	pFontSel->SetBold(tomTrue);    // Bold
+	pFontSel->SetSize(10.5);       // 10.5 point font. 
+	//pFontDuplicate->SetAnimation(tomBlackMarchingAnts);
+
+	// Now apply change to text as one change: one screen 
+	// update, one undo. You can also apply the font object 
+	// to different ranges before you free it.
+	pSel->SetFont(pFontSel);
+	pFontSel->Release();
+}
+
+
 void CRichEdit::InitWindow()
 {
 	m_bReturnSendMsg = TRUE;
@@ -83,6 +115,33 @@ void CRichEdit::InitWindow()
 	m_pChatView->OnSize += MakeDelegate(this, &CRichEdit::ChatViewSizeChange);
 	
 	m_pRecvRichEdit->OnEvent += MakeDelegate(this, &CRichEdit::ChatViewEvent);
+
+	m_pRecvRichEdit->SetText(_T("The quick brown fox jumped over the lazy dog.The quick brown fox jumped over the lazy dog."));
+	
+	ITextRange* pRange = NULL;
+	ITextFont* pFont = NULL;
+	ITextPara* pPara = NULL;
+	m_pRecvRichEdit->GetDoc()->Range(0,20,&pRange);
+	HRESULT hRet = pRange->GetFont(&pFont);
+	hRet = pFont->SetSize((float)15);
+	pRange->GetPara(&pPara);
+	pPara->SetIndents(20,5,0);
+
+	m_pRecvRichEdit->AppendText(_T("\r\nThe quick brown fox jumped over the lazy dog."));
+	m_pRecvRichEdit->GetDoc()->Range(91,136,&pRange);
+	pRange->GetFont(&pFont);
+	pFont->SetSize((float)16);
+	pFont->SetForeColor(0x00FF00FF);
+	//hRet = pRange->SetFont(pFont);
+	//int n=0;
+	/*ITextDocument* pDocument = NULL;
+	LPRICHEDITOLE pRicheditOle = m_pRecvRichEdit->GetRichEditOle();
+	pRicheditOle->QueryInterface(__uuidof(ITextDocument),(LPVOID*)&pDocument);
+	pDocument->Range(0,20,&pRange);*/
+	
+	//m_pRecvRichEdit->GetDoc()->GetSelection(&pSel);
+
+	//ChangeFontNameSizeBold(pSel);
 
 	/*CListDWord LsListDWord;
 	DWORD dwIndex = 5;
@@ -243,8 +302,29 @@ void CRichEdit::OnClick(TNotifyUI& msg)
 	//}
 	else if (msg.pSender == (CControlUI*)m_PaintManager.FindControl(_T("BtnMin")))
 	{
-		RestoreBtnStatus(msg.pSender);
-		SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
+		ITextRange* pRange;
+		//m_pRecvRichEdit->SetSel(0,46);
+		m_pRecvRichEdit->GetDoc()->Range(0,46,&pRange);
+		ITextFont* pFont;
+		//pRange->GetFont(&pFont);
+		//pFont->SetForeColor(0xFF00FF00);
+		//pFont->SetSize(16);
+
+		pRange->GetFont(&pFont);
+		pFont->SetForeColor(0xFF00FF00);
+		pFont->SetSize(16);
+
+		ITextPara* pPara;
+		pRange->GetPara(&pPara);
+		pPara->SetIndents(20,20,0);
+		//pRange->SetPara(pPara);
+
+		pPara->Release();
+		pFont->Release();
+		pRange->Release();
+
+		//RestoreBtnStatus(msg.pSender);
+		//SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
 	}
 	/*else if (msg.pSender == (CControlUI*)m_PaintManager.FindControl(_T("BtnRestore")))
 	{
