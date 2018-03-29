@@ -1,0 +1,8 @@
+[  
+      implicit_handle(handle_t  DEAMON_Binding)  
+]  
+
+interface Deamon
+{
+
+}

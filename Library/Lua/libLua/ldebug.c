@@ -50,7 +50,7 @@ static int currentline (CallInfo *ci) {
 /*
 ** this function can be called asynchronous (e.g. during a signal)
 */
-LUA_API int lua_sethook (lua_State *L, lua_Hook func, int mask, int count) {
+LUALIB_API int lua_sethook (lua_State *L, lua_Hook func, int mask, int count) {
   if (func == NULL || mask == 0) {  /* turn off hooks? */
     mask = 0;
     func = NULL;
@@ -65,22 +65,22 @@ LUA_API int lua_sethook (lua_State *L, lua_Hook func, int mask, int count) {
 }
 
 
-LUA_API lua_Hook lua_gethook (lua_State *L) {
+LUALIB_API lua_Hook lua_gethook (lua_State *L) {
   return L->hook;
 }
 
 
-LUA_API int lua_gethookmask (lua_State *L) {
+LUALIB_API int lua_gethookmask (lua_State *L) {
   return L->hookmask;
 }
 
 
-LUA_API int lua_gethookcount (lua_State *L) {
+LUALIB_API int lua_gethookcount (lua_State *L) {
   return L->basehookcount;
 }
 
 
-LUA_API int lua_getstack (lua_State *L, int level, lua_Debug *ar) {
+LUALIB_API int lua_getstack (lua_State *L, int level, lua_Debug *ar) {
   int status;
   CallInfo *ci;
   if (level < 0) return 0;  /* invalid (negative) level */
@@ -141,7 +141,7 @@ static const char *findlocal (lua_State *L, CallInfo *ci, int n,
 }
 
 
-LUA_API const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n) {
+LUALIB_API const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n) {
   const char *name;
   lua_lock(L);
   if (ar == NULL) {  /* information about non-active function? */
@@ -163,7 +163,7 @@ LUA_API const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n) {
 }
 
 
-LUA_API const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n) {
+LUALIB_API const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n) {
   StkId pos = 0;  /* to avoid warnings */
   const char *name = findlocal(L, ar->i_ci, n, &pos);
   lua_lock(L);
@@ -263,7 +263,7 @@ static int auxgetinfo (lua_State *L, const char *what, lua_Debug *ar,
 }
 
 
-LUA_API int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
+LUALIB_API int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
   int status;
   Closure *cl;
   CallInfo *ci;
