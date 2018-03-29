@@ -141,17 +141,17 @@
 ** LUA_BUILD_AS_DLL to get it).
 */
 
-#ifdef LS_STATIC_LIB_CALL
-#define LUA_API 
-#elif defined  LS_EXPORTS
-#define LUA_API __declspec(dllimport)
-#else
-#define LUA_API __declspec(dllexport)
-#endif
+//#ifdef LS_STATIC_LIB_CALL
+//#define LUA_API 
+//#elif defined  LS_EXPORTS
+//#define LUA_API __declspec(dllimport)
+//#else
+//#define LUA_API __declspec(dllexport)
+//#endif
 
 /* more often than not the libs go together with the core */
-#define LUALIB_API	LUA_API
-#define LUAMOD_API	LUALIB_API
+#define LUALIB_API	
+#define LUAMOD_API	
 
 
 /*

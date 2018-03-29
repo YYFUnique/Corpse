@@ -1,0 +1,15 @@
+﻿[
+uuid(cc866d51-e5c0-4623-8ec0-6ee92591ddf9),
+version(1.0)
+]
+interface Deamon
+{
+	//	检测 RPC 服务是否开启
+	boolean RpcTest();
+	
+	//	通知服务程序，应用程序主动退出
+	void RpcUserAppExitNotify([in]unsigned long dwProcessId);
+	
+	//	设置服务为可退出状态
+	void RpcSetService([in]unsigned long dwType);
+}
