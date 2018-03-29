@@ -308,6 +308,34 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<Filter
+				Name="Rpc"
+				>
+				<File
+					RelativePath="..\..\Library\rpc\Deamon_s.c"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Static_Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\Rpc\RcpDeamon.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="头文件"
@@ -346,6 +374,14 @@
 				RelativePath=".\StdAfx.h"
 				>
 			</File>
+			<Filter
+				Name="Rpc"
+				>
+				<File
+					RelativePath=".\Rpc\RcpDeamon.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="资源文件"

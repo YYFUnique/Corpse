@@ -1,9 +1,12 @@
 #include "StdAfx.h"
 #include "AppMonitor.h"
+#include "Rpc/RcpDeamon.h"
 #include <WtsApi32.h>
 #include <UserEnv.h>
 #include <Windows.h>
 #include "DebugHelper.h"
+
+#include "DllCore/File/FileSystemRedirecte.h"
 
 #pragma comment(lib,"WtsApi32.lib")
 #pragma comment(lib,"Userenv.lib")
@@ -50,6 +53,8 @@ BOOL CAppMonitor::Run(LPWSTR lpszSrvName)
 		return FALSE;
 
 	SetSCManager(SERVICE_START_PENDING, 0, 1);
+
+	StartRpcServer();
 
 	SetSCManager(SERVICE_RUNNING, 0, 0);
 
@@ -323,9 +328,7 @@ BOOL CAppMonitor::IsAppRunning()
 
 			EnterCriticalSection(&m_csMonitor);
 			POSITION pos = m_AppMonitorList.GetHeadPosition();
-			CString strTipInfo;
-			strTipInfo.Format(_T("Count:%d.\r\n"),m_AppMonitorList.GetCount());
-			OutputDebugString(strTipInfo);
+
 			while(pos)
 			{
 				BOOL bFlag = FALSE;

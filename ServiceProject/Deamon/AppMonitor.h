@@ -12,7 +12,7 @@
 
 typedef struct tagAPPMONITOR_INFO
 {
-	CString		strFilePath;				// 文件路径
+	CString		strFilePath;				// 文件路径	；请使用实际目录，无需考虑重定向问题
 	CString		strProcessName;		// 进程名称
 	BOOL		bAppActive;			//	是否有效
 }APPMONITOR_INFO,*PAPPMONITOR_INFO;
