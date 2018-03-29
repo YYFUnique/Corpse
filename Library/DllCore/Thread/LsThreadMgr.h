@@ -32,13 +32,13 @@ public:
 	BOOL RemoveThreadFromList(CLsThread* pLsThread);
 
 	//从链表删除一个线程(从链表中摘除，并停止线程及回收资源)
-	BOOL RemoveThreadFromList(YJ_THREAD_APP_ID LsThreadAppId , DWORD dwWaitTime = 2000);
+	BOOL RemoveThreadFromList(THREAD_APP_ID LsThreadAppId , DWORD dwWaitTime = 2000);
 
 	//删除所有线程(停止并回收所有线程对象资源)
 	BOOL DeleteAllThread();
 
 	//根据线程ID查找线程
-	CLsThread* FindThreadById(YJ_THREAD_APP_ID LsThreadAppId , BOOL bRemoveFromList);
+	CLsThread* FindThreadById(THREAD_APP_ID LsThreadAppId , BOOL bRemoveFromList);
 
 	//返回管理对象是否完成初始化
 	BOOL IsInitComplete();

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "UIMenu.h"
 
 namespace DuiLib 
@@ -769,7 +769,13 @@ namespace DuiLib
 			}
 			else
 			{
-				SetChecked(!GetChecked());
+				// 如果菜单项不存在互斥对象，可以直接取消勾选
+				//	如果菜单项存在互斥对象，并且当前为已勾选状态，
+				//	那么不能设置为非勾选状态，只能通过设置其他互斥对象为勾选状态来取消当前勾选状态
+				bool bChecked = GetChecked();
+				if (m_strGroupName.IsEmpty() || (m_strGroupName.IsEmpty() == FALSE && bChecked != true))
+					SetChecked(!bChecked);
+
 				ContextMenuParam param;
 				param.hWnd = m_pManager->GetPaintWindow();
 				param.wParam = KILL_TARGET_WND_TYPE_SELF;
@@ -866,6 +872,29 @@ namespace DuiLib
 		return m_rcLinePadding;
 	}
 
+	void CMenuElementUI::SetGroup(LPCTSTR lpszGroupName)
+	{
+		// 由于菜单控件特殊性，核心渲染类，需要每次重新实例化，故直接使用主程序核心渲染类
+		CPaintManagerUI* pManager = CMenuWnd::GetGlobalContextMenuObserver().GetManager();
+
+		if (lpszGroupName == NULL) {
+			if( m_strGroupName.IsEmpty() ) return;
+			m_strGroupName.Empty();
+		}
+		else {
+			if (m_strGroupName == lpszGroupName) return;
+			if (!m_strGroupName.IsEmpty() && pManager) pManager->RemoveOptionGroup(m_strGroupName, this);
+			m_strGroupName = lpszGroupName;
+		}
+
+		if (m_strGroupName.IsEmpty() == FALSE) {
+			if (pManager) pManager->AddOptionGroup(m_strGroupName, this);
+		}
+		else {
+			if (m_pManager) m_pManager->RemoveOptionGroup(m_strGroupName, this);
+		}
+	}
+
 	void CMenuElementUI::SetIcon(LPCTSTR strIcon)
 	{
 		if ( strIcon != _T("") )
@@ -882,6 +911,29 @@ namespace DuiLib
 	{
 		if (!m_bCheckItem || CMenuWnd::GetGlobalContextMenuObserver().GetMenuCheckInfo() == NULL )
 			return;
+
+		if (GetChecked() == bCheck)
+			return;
+		
+		// 由于菜单控件特殊性，核心渲染类，需要每次重新实例化，故直接使用主程序核心渲染类
+		CPaintManagerUI* pManager = CMenuWnd::GetGlobalContextMenuObserver().GetManager();
+
+		if (pManager != NULL) {
+			if (m_strGroupName.IsEmpty() == FALSE) {
+				if (bCheck) {
+					CStdPtrArray* aOptionGroup = pManager->GetOptionGroup(m_strGroupName);
+					for( int i = 0; i < aOptionGroup->GetSize(); i++ ) {
+						CMenuElementUI* pControl = static_cast<CMenuElementUI*>(aOptionGroup->GetAt(i));
+						if(pControl != this)
+							pControl->SetChecked(false);
+					}
+					//m_pManager->SendNotify(this, DUI_MSGTYPE_SELECTCHANGED);
+				}
+			}
+			else {
+				//m_pManager->SendNotify(this, DUI_MSGTYPE_SELECTCHANGED);
+			}
+		}
 
 		std::map<CDuiString,bool>::iterator it = CMenuWnd::GetGlobalContextMenuObserver().GetMenuCheckInfo()->find(GetName());
 		if (it == CMenuWnd::GetGlobalContextMenuObserver().GetMenuCheckInfo()->end())
@@ -963,6 +1015,8 @@ namespace DuiLib
 		else if	( _tcsicmp(pstrName, _T("height")) == 0){
 			SetFixedHeight(_ttoi(pstrValue));
 		}
+		else if (_tcsicmp(pstrName, _T("group")) == 0)
+			SetGroup(pstrValue);
 		else
 			CListContainerElementUI::SetAttribute(pstrName, pstrValue);
 	}

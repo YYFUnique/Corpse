@@ -72,7 +72,7 @@ BOOL CLsThreadMgr::RemoveThreadFromList(CLsThread* pLsThread)
 	return pos != NULL;//返回是否进行删除操作
 }
 
-BOOL CLsThreadMgr::RemoveThreadFromList(YJ_THREAD_APP_ID LsThreadAppId , DWORD dwWaitTime)
+BOOL CLsThreadMgr::RemoveThreadFromList(THREAD_APP_ID LsThreadAppId , DWORD dwWaitTime)
 {
 	BOOL bRemoveThread = FALSE;
 
@@ -125,7 +125,7 @@ BOOL CLsThreadMgr::DeleteAllThread()
 	return bSuccess;
 }
 
-CLsThread* CLsThreadMgr::FindThreadById(YJ_THREAD_APP_ID LsThreadAppId , BOOL bRemoveFromList)
+CLsThread* CLsThreadMgr::FindThreadById(THREAD_APP_ID LsThreadAppId , BOOL bRemoveFromList)
 {
 	CLsThread* pReturnThread = NULL;
 

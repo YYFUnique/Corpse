@@ -347,6 +347,9 @@ namespace DuiLib {
 		DWORD GetLineColor() const;
 		void SetLinePadding(RECT rcInset);
 		RECT GetLinePadding() const;
+
+		void SetGroup(LPCTSTR lpszGroupName);
+
 		void SetIcon(LPCTSTR strIcon);
 		void SetIconSize(LONG cx, LONG cy);
 		void DrawItemIcon(HDC hDC, const RECT& rcItem);
@@ -372,6 +375,7 @@ namespace DuiLib {
 		bool		m_bCheckItem;
 
 		bool		m_bShowExplandIcon;
+		CDuiString	m_strGroupName;
 	};
 
 } // namespace DuiLib

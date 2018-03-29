@@ -2,6 +2,14 @@
 #include "Registry.h"
 #include "ErrorInfo.h"
 
+CString GetRegistryPath(LPCTSTR lpszAppKeyName)
+{
+	CString strRegistryPath;
+	strRegistryPath.Format(_T("Software\\Corpse\\%s"), lpszAppKeyName);
+
+	return strRegistryPath;
+}
+
 BOOL LsRegSetValue(HKEY hKey , LPCTSTR lpszValueName , DWORD dwValue)
 {
 	LONG nErrorCode = RegSetValueEx(hKey,lpszValueName,NULL,REG_DWORD,(BYTE *)&dwValue,sizeof(DWORD)) ;
@@ -91,7 +99,6 @@ BOOL LsRegSetValue(HKEY hKey , LPCTSTR lpszValueName , const CStdArray& strValue
 		dwBufferLen += dwTextLen;
 	}
 	dwBufferLen +=1;
-	dwBufferLen = dwBufferLen*sizeof(TCHAR);
 
 	const DWORD dwLen = 4*1024;
 	TCHAR szBuff[dwLen];
@@ -99,7 +106,7 @@ BOOL LsRegSetValue(HKEY hKey , LPCTSTR lpszValueName , const CStdArray& strValue
 
 	if (dwBufferLen > dwLen)
 	{
-		lpszOutputString = new TCHAR[dwBufferLen/sizeof(TCHAR)];
+		lpszOutputString = new TCHAR[dwBufferLen];
 		if (lpszOutputString == NULL )
 		{
 			SetErrorInfo(CUSTOM_ERROR,0,_T("∑÷≈‰ƒ⁄¥Ê ß∞‹"));

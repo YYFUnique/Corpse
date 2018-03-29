@@ -9,19 +9,19 @@
 #endif
 
 //线程功能ID
-typedef enum _YJ_THREAD_APP_ID
+typedef enum tagTHREAD_APP_ID
 {
-	YJ_THREAD_APP_ID_UNKNOWN,													//未知线程
-	YJ_THREAD_APP_ID_LOGIN,															//主程序连接线程
-	YJ_THREAD_APP_ID_HEART_BEAT,													//心跳包线程
-	YJ_THREAD_APP_ID_UPDATE_ICON_INFO,									//下载客户端显示图标
-	YJ_THREAD_APP_ID_REPORT_EVENT_INFO,									//上报安全事件
-	YJ_THREAD_APP_ID_REPORT_SAFETY_RULE_SUCCESS_RESULT,	//上报安全事件成功结果
-	YJ_THREAD_APP_ID_LS_RULE_REPORT_INFO,								//上报LsRule事件
-	YJ_THREAD_APP_ID_LS_RULE_PRINT_MGR,									//打印管理
-	YJ_THREAD_APP_ID_ROUTE_CHANGED,										//路由变化通知处理线程
-	LS_THREAD_APP_ID_ENCRYPT,														//终端安全手机客户端压缩线程
-}YJ_THREAD_APP_ID;
+	THREAD_APP_ID_UNKNOWN,												//	未知线程
+	THREAD_APP_ID_LOGIN,														//	主程序连接线程
+	THREAD_APP_ID_HEART_BEAT,												//	心跳包线程
+	THREAD_APP_ID_UPDATE_ICON_INFO,									//	下载客户端显示图标
+	THREAD_APP_ID_REPORT_EVENT_INFO,								//	上报安全事件
+	THREAD_APP_ID_REPORT_SAFETY_RULE_SUCCESS_RESULT,//	上报安全事件成功结果
+	THREAD_APP_ID_LS_RULE_REPORT_INFO,								//	上报LsRule事件
+	THREAD_APP_ID_LS_RULE_PRINT_MGR,								//	打印管理
+	THREAD_APP_ID_ROUTE_CHANGED,										//	路由变化通知处理线程
+	THREAD_APP_ID_ENCRYPT,													//	终端安全手机客户端压缩线程
+}THREAD_APP_ID;
 
 class DLL_API CLsThread
 {
@@ -31,10 +31,10 @@ public:
 	virtual ~CLsThread(void);
 
 	//获取线程ID
-	YJ_THREAD_APP_ID GetThreadId();
+	THREAD_APP_ID GetThreadId();
 
 	//设置线程ID
-	void SetThreadId(YJ_THREAD_APP_ID LsThreadAppId);
+	void SetThreadId(THREAD_APP_ID ThreadAppId);
 
 	//设置线程参数信息
 	void SetThreadParam(LPVOID pThreadParam);
@@ -67,7 +67,7 @@ protected:
 	LPVOID m_pThreadParam;
 
 	//线程ID标识(仅作为标识，不会对实际运行造成任何影响)
-	YJ_THREAD_APP_ID m_LsThreadAppId;	
+	THREAD_APP_ID m_ThreadAppId;	
 
 	//外部通知线程退出
 	BOOL m_bExitThread;
