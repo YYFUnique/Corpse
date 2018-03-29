@@ -320,10 +320,10 @@ void CMemLeakDetect::dumpMemoryTrace()
 		{
 			symFunctionInfoFromAddresses(p[0].addrPC.Offset, p[0].addrFrame.Offset, symInfo, _countof(symInfo));
 			symSourceInfoFromAddress(p[0].addrPC.Offset, srcInfo, _countof(srcInfo));
-			_stprintf_s(szDataBuf, _countof(szDataBuf), _T("%s : %s()\n"), srcInfo, symInfo);
-			AfxTrace(szDataBuf);
-
-			strMemLeakDetected = szDataBuf;
+			//_stprintf_s(szDataBuf, _countof(szDataBuf), _T("%s : %s()\n"), srcInfo, symInfo);
+			//AfxTrace(szDataBuf);
+			strMemLeakDetected.Format(_T("%s : %s()\n"), srcInfo, symInfo);
+			//strMemLeakDetected = szDataBuf;
 			myfile << strMemLeakDetected;
 
 			p++;
@@ -519,7 +519,13 @@ BOOL CMemLeakDetect::symFunctionInfoFromAddresses(ADDR fnAddress, ADDR stackAddr
 	// Get symbol info for IP
 	if (SymGetSymFromAddr(m_hProcess, (ADDR)fnAddress, &dwDisp, m_pSymbol))
 	{
-		CString strFunlName(m_pSymbol->Name);
+		CString strFunlName(m_pSymbol->Name,m_pSymbol->MaxNameLength);
+		if (m_pSymbol->MaxNameLength > BufSizeTCHARs)
+		{
+			_stprintf_s(lpszSymbol, BufSizeTCHARs, _T("0x%08X"), fnAddress);
+			return FALSE;
+		}
+		
 		_tcscpy_s(lpszSymbol, BufSizeTCHARs, strFunlName);
 		return TRUE;
 	}

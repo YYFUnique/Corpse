@@ -41,11 +41,11 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
@@ -114,10 +114,10 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -257,6 +257,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MailHelper.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrame.cpp"
 				>
 			</File>
@@ -267,6 +271,22 @@
 			<File
 				RelativePath=".\stdafx.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\TTimeHelper.cpp"
@@ -280,6 +300,58 @@
 				RelativePath=".\WeatherHelper.cpp"
 				>
 			</File>
+			<Filter
+				Name="Mail"
+				>
+				<File
+					RelativePath=".\Mail\Base64Helper.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\Mail\SMailer.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="Thread"
+				>
+				<File
+					RelativePath=".\Thread\SendMailThread.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="头文件"
@@ -300,6 +372,10 @@
 			</File>
 			<File
 				RelativePath=".\Lunar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MailHelper.h"
 				>
 			</File>
 			<File
@@ -326,6 +402,34 @@
 				RelativePath=".\WeatherHelper.h"
 				>
 			</File>
+			<Filter
+				Name="Mail"
+				>
+				<File
+					RelativePath=".\Mail\Base64Helper.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Mail\FileHelper.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Mail\SMailer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Mail\WinSockHelper.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Thread"
+				>
+				<File
+					RelativePath=".\Thread\SendMailThread.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="资源文件"

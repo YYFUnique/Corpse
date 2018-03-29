@@ -7,9 +7,9 @@
 
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
 {
-#ifdef _DEBUG
-	CMemLeakDetect MemDetect;
-#endif	
+//#ifdef _DEBUG
+//	CMemLeakDetect MemDetect;
+//#endif	
 
 	CMiniDump::InitDumpDebugInfo(MiniDumpWithPrivateReadWriteMemory);
 	CTxMiniSkin::SetAutoStart(TRUE);
