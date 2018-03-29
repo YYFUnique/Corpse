@@ -10,7 +10,7 @@ extern HINSTANCE ghModule;
 
 void WINAPI ServiceMain(int nArgc, LPWSTR lpszArgv[])
 {
-	EnableDebugPriv(SE_TCB_NAME);
+	EnablePrivilege(SE_TCB_NAME);
 
 	CAppMonitor* pAppMonitor = CAppMonitor::GetInstance();
 
@@ -21,7 +21,6 @@ void WINAPI ServiceMain(int nArgc, LPWSTR lpszArgv[])
 																PAGE_EXECUTE_READWRITE, 0, sizeof(CAppMonitor),lpszFileMap);
 	if (hMap != NULL)
 	{
-		OutputDebugString(_T("CreateFileMapping"));
 		LPVOID pBuffer = MapViewOfFile(hMap, FILE_MAP_ALL_ACCESS, 0, 0, 0);
 		CopyMemory(pBuffer, pAppMonitor, sizeof(CAppMonitor));
 	}
