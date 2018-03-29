@@ -38,6 +38,8 @@ void QLogImpl::WriteLog(LOG_LEVEL LogLevel, LPCTSTR lpszLogInfo)
 			break;
 
 		DWORD dwMovePointer = SetFilePointer(hLogFile, 0, 0, FILE_END);
+
+#if UNICODE
 		//返回值为空，表示移动文件指针距离为0，也就是打开空文件，需要给文件头添加0xFF,0xFE
 		if (dwMovePointer == NULL)
 		{
@@ -45,6 +47,7 @@ void QLogImpl::WriteLog(LOG_LEVEL LogLevel, LPCTSTR lpszLogInfo)
 			DWORD dwDataLen = _countof(szUTF8Head);
 			WriteFile(hLogFile, szUTF8Head, dwDataLen, &dwDataLen, 0);
 		}
+#endif // !UNICODE
 
 		DWORD dwNumberOfBytesWritten;
 		CString strDebugLogInfo(lpszLogInfo);

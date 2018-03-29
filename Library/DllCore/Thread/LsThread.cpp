@@ -5,7 +5,7 @@
 CLsThread::CLsThread(void)
 {
 	m_hThread = NULL;
-	m_LsThreadAppId = YJ_THREAD_APP_ID_UNKNOWN;
+	m_ThreadAppId = THREAD_APP_ID_UNKNOWN;
 	m_pfnThreadProc = NULL;
 	m_pThreadParam = NULL;
 	m_bExitThread = FALSE;
@@ -22,15 +22,15 @@ CLsThread::~CLsThread(void)
 }
 
 //获取线程ID
-YJ_THREAD_APP_ID CLsThread::GetThreadId()
+THREAD_APP_ID CLsThread::GetThreadId()
 {
-	return m_LsThreadAppId;
+	return m_ThreadAppId;
 }
 
 //设置线程ID
-void CLsThread::SetThreadId(YJ_THREAD_APP_ID LsThreadAppId)
+void CLsThread::SetThreadId(THREAD_APP_ID LsThreadAppId)
 {
-	m_LsThreadAppId = LsThreadAppId;
+	m_ThreadAppId = LsThreadAppId;
 }
 
 //设置线程参数信息

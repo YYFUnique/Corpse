@@ -168,7 +168,9 @@ LRESULT WindowImplBase::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 		pt.x >= rcClient.left + rcCaption.left && pt.x < rcClient.right - rcCaption.right && 
 		pt.y >= rcCaption.top && pt.y < rcCaption.bottom ) {
 			CControlUI* pControl = static_cast<CControlUI*>(m_PaintManager.FindControl(pt));
-			if ( pControl && pControl->GetInterface(DUI_CTR_CONTAINER) != NULL)
+			if ( pControl && pControl->GetInterface(DUI_CTR_CONTAINER) != NULL ||
+										pControl->GetInterface(DUI_CTR_TEXT) != NULL/* ||
+										pControl->GetInterface(DUI_CTR_LABEL) != NULL*/)
 				return HTCAPTION;
 	}
 
