@@ -314,28 +314,45 @@ namespace DuiLib
 		SIZE szInit = m_pm.GetInitSize();
 		CDuiRect rc;
 		CDuiPoint point = m_BasedPoint;
-		rc.left = point.x;
-		rc.top = point.y;
-		rc.right = rc.left + szInit.cx;
-		rc.bottom = rc.top + szInit.cy;
-
-		int nWidth = rc.GetWidth();
-		int nHeight = rc.GetHeight();
-
-		if (m_dwAlignment & eMenuAlignment_Right)
-		{
+		// 计算菜单窗口坐标
+		if (m_dwAlignment & eMenuAlignment_Left) {
+			rc.left = point.x;
+			rc.right = rc.left + szInit.cx;
+		} else if (m_dwAlignment & eMenuAlignment_Right) {
 			rc.right = point.x;
-			rc.left = rc.right - nWidth;
+			rc.left = rc.right - szInit.cx;
 		}
 
-		if (m_dwAlignment & eMenuAlignment_Bottom)
-		{
+		if (m_dwAlignment & eMenuAlignment_Top) {
+			rc.top = point.y;
+			rc.bottom = rc.top + szInit.cy;
+		} else if (m_dwAlignment & eMenuAlignment_Bottom) {
 			rc.bottom = point.y;
-			rc.top = rc.bottom - nHeight;
+			rc.top = rc.bottom - szInit.cy;
+		}
+
+		int nScreenX = GetSystemMetrics(SM_CXSCREEN);
+		int nScreenY = GetSystemMetrics(SM_CYSCREEN);
+		//	如果横向被屏幕隐藏，则重新计算
+		if (rc.right > nScreenX)
+		{
+			m_dwAlignment &= ~eMenuAlignment_Left;
+			m_dwAlignment |= eMenuAlignment_Right;
+			ResizeMenu();
+			return;
+		}
+
+		// 如果纵向被屏幕隐藏，则重新计算
+		if (rc.bottom > nScreenY)
+		{
+			m_dwAlignment &= ~eMenuAlignment_Top;
+			m_dwAlignment |= eMenuAlignment_Bottom;
+			ResizeMenu();
+			return;
 		}
 
 		SetForegroundWindow(m_hWnd);
-		MoveWindow(m_hWnd, rc.left, rc.top, rc.GetWidth(), rc.GetHeight(), FALSE);
+		//MoveWindow(m_hWnd, rc.left, rc.top, rc.GetWidth(), rc.GetHeight(), FALSE);
 		SetWindowPos(m_hWnd, HWND_TOPMOST, rc.left, rc.top,
 			rc.GetWidth(), rc.GetHeight() + pMenuRoot->GetInset().bottom + pMenuRoot->GetInset().top,
 			SWP_SHOWWINDOW);
