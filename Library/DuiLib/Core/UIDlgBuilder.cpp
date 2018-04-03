@@ -259,6 +259,9 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
 					else if( _tcsicmp(pstrName,_T("enabledrop")) == 0){
 						pManager->SetDropEnable(_tcsicmp(pstrValue,_T("true")) == 0);
 					}
+					else if (_tcsicmp(pstrName, _T("esckey")) == 0){
+						pManager->SetEnableEscKey(_tcsicmp(pstrValue, _T("true")) == 0);
+					}
                 }
             }
         }

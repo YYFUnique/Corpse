@@ -2019,6 +2019,14 @@ void CListElementUI::DoEvent(TEventUI& event)
         }
         return;
     }
+	if (event.Type == UIEVENT_RBUTTONUP)
+	{
+		if (IsEnabled()){
+			Select(true);
+			Invalidate();
+		}
+		return;
+	}
     if( event.Type == UIEVENT_KEYDOWN && IsEnabled() )
     {
         if( event.chKey == VK_RETURN ) {

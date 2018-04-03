@@ -210,6 +210,9 @@ public:
 	bool GetDropEnable();
 	void SetDropEnable(bool bEnable = true);
 
+	bool IsEnableEscKey();
+	void	SetEnableEscKey(bool bEnableEscKey = true);
+
     static HINSTANCE GetInstance();
     static CDuiString GetInstancePath();
     static CDuiString GetCurrentPath();
@@ -383,7 +386,7 @@ private:
     bool m_bShowUpdateRect;
 	bool m_bMaxSizeBox;
 	bool m_bEnableDrop;
-
+	bool m_bEnableEscKey;
 	//对高像素设备支持
 	CDPI* m_pDPI;
     

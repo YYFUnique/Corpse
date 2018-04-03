@@ -9,6 +9,9 @@ namespace DuiLib {
 /////////////////////////////////////////////////////////////////////////////////////
 //
 
+//	自定义内容
+#define	INVALID_ITEM_INDEX						((DWORD)-1)		// List控件中，当前选择项无效
+
 typedef int (CALLBACK *PULVCompareFunc)(UINT_PTR, UINT_PTR, UINT_PTR);
 
 class CListHeaderUI;

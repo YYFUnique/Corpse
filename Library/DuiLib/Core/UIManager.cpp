@@ -121,6 +121,7 @@ m_pParentResourcePM(NULL),
 m_pBmpBackgroundBits(NULL),
 m_bMaxSizeBox(true),
 m_bEnableDrop(false),
+m_bEnableEscKey(true),
 m_pBmpOffscreenBits(NULL),
 m_bShadow(false),
 m_pDropTargetCtrl(NULL),
@@ -600,6 +601,16 @@ void CPaintManagerUI::SetDropEnable(bool bEnable/* = true*/)
 	if (m_bEnableDrop == bEnable)
 		return;
 	m_bEnableDrop = bEnable;
+}
+
+bool CPaintManagerUI::IsEnableEscKey()
+{
+	return m_bEnableEscKey;
+}
+
+void CPaintManagerUI::SetEnableEscKey(bool bEnableEscKey /*= true*/)
+{
+	m_bEnableEscKey = bEnableEscKey;
 }
 
 bool CPaintManagerUI::PreMessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& /*lRes*/)
