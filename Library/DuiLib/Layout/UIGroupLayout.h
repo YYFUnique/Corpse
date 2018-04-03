@@ -20,6 +20,7 @@ namespace DuiLib
 		virtual void PaintBorder(HDC hDC);
 	public:
 		void SetFont(int iFont);
+		void SetTextOffset(int nTextOffset);
 		void SetGroupRoundImage(LPCTSTR pstrValue);
 	private:
 		DWORD  m_dwTextColor;
@@ -27,6 +28,7 @@ namespace DuiLib
 		HBITMAP m_hBitMap;
 		RECT        m_rcTextArea;
 		int			m_iFont;
+		DWORD	m_dwTextOffset;
 		CDuiString m_strGroupBoxRoundRectImage;
 	};
 }

@@ -3,7 +3,6 @@
 
 namespace DuiLib
 {
-
 	#define	GROUPBOX_ROUNDRECT_OFFSET_X		5
 	#define   GROUPBOX_ROUNDRECT_OFFSET_Y		10
 	#define	GROUPBOX_TEXT_OFFSET						20
@@ -12,6 +11,7 @@ namespace DuiLib
 		:m_dwTextColor(0xFF000000)
 		,m_hBackground(NULL)
 		,m_iFont(-1)
+		,m_dwTextOffset(GROUPBOX_TEXT_OFFSET)
 	{
 		m_nBorderSize = 1;
 		m_dwBorderColor = 0xFFCDCDCD;
@@ -111,14 +111,15 @@ namespace DuiLib
 	void CGroupLayoutUI::PaintText(HDC hDC)
 	{
 		RECT rc = m_rcItem;
-		rc.left += GROUPBOX_TEXT_OFFSET;
-		rc.right += GROUPBOX_TEXT_OFFSET;
+		rc.left += m_dwTextOffset;
+		rc.right += m_dwTextOffset;
 
 		RECT rcLine = m_rcItem;
-		rcLine.left += GROUPBOX_TEXT_OFFSET;
-		rcLine.top += GROUPBOX_ROUNDRECT_OFFSET_Y;
+		rcLine.left += m_dwTextOffset;
+		//rcLine.top += GROUPBOX_ROUNDRECT_OFFSET_Y ;//(m_rcTextArea.bottom - m_rcTextArea.top)/2;
+		rcLine.top = m_rcItem.top;// + (m_rcTextArea.bottom - m_rcTextArea.top - m_nBorderSize)/2;
 		rcLine.right = rcLine.left + m_rcTextArea.right-m_rcTextArea.left;
-		rcLine.bottom = rcLine.top;
+		rcLine.bottom = rcLine.top+m_nBorderSize;
 
 		BitBlt(hDC,rcLine.left,rcLine.top,m_rcTextArea.right-m_rcTextArea.left,m_rcTextArea.bottom-m_rcTextArea.top,m_hBackground,0,0,SRCCOPY);
 		CRenderEngine::DrawText(hDC, m_pManager, rc, m_sText, m_dwTextColor, m_iFont, DT_SINGLELINE);
@@ -134,8 +135,9 @@ namespace DuiLib
 		
 		if (m_hBackground == NULL)
 		{
+			//	保存绘制圆角矩形文字下面的背景
 			DWORD dwTextLen = _tcslen(m_sText);
-			CRenderEngine::DrawText(hDC, m_pManager, m_rcTextArea, m_sText, m_dwTextColor,0, DT_CALCRECT);
+			CRenderEngine::DrawText(hDC, m_pManager, m_rcTextArea, m_sText, m_dwTextColor, m_iFont, DT_CALCRECT);
 
 			m_hBackground = CreateCompatibleDC(hDC);
 			UINT nWidth = m_rcTextArea.right-m_rcTextArea.left ;
@@ -143,8 +145,15 @@ namespace DuiLib
 			m_hBitMap = CreateCompatibleBitmap(hDC,nWidth,nHeight);
 			SelectObject(m_hBackground,m_hBitMap);
 			
-			BitBlt(m_hBackground,m_rcTextArea.left,m_rcTextArea.top,nWidth,nHeight,hDC,rc.left,rc.top,SRCCOPY);
+			RECT rcTextBackground = m_rcItem;
+			rcTextBackground.left = m_dwTextOffset;
+			rcTextBackground.top = m_rcItem.top;// + (m_rcTextArea.bottom - m_rcTextArea.top - m_nBorderSize)/2;
+			//	保存圆角矩形文字下的背景
+			BitBlt(m_hBackground,0,0,nWidth,nHeight,hDC,rcTextBackground.left,rcTextBackground.top,SRCCOPY);
+			//CRenderEngine::SaveBitmapFile(m_hBitMap,_T("C:\\test.bmp"));
 		}		
+
+		rc.top = m_rcItem.top + (m_rcTextArea.bottom - m_rcTextArea.top - m_nBorderSize)/2;
 
  		if (m_strGroupBoxRoundRectImage.IsEmpty())
  			CRenderEngine::DrawRoundRect(hDC,rc,m_nBorderSize,m_cxyBorderRound.cx,m_cxyBorderRound.cy,m_dwBorderColor);
@@ -156,6 +165,7 @@ namespace DuiLib
 	{
 		if (_tcscmp(pstrName,_T("roundimage")) == 0)	SetGroupRoundImage(pstrValue);
 		else if (_tcscmp(pstrName, _T("font")) == 0)		SetFont(_ttoi(pstrValue));
+		else if (_tcsicmp(pstrName, _T("textoffset")) == 0) SetTextOffset(_ttoi(pstrValue));
 		else
 			CContainerUI::SetAttribute(pstrName,pstrValue);
 	}
@@ -179,6 +189,15 @@ namespace DuiLib
 			return;
 
 		m_iFont = iFont;
+		Invalidate();
+	}
+
+	void CGroupLayoutUI::SetTextOffset(int nTextOffset)
+	{
+		if (m_dwTextOffset == nTextOffset)
+			return;
+
+		m_dwTextOffset = nTextOffset;
 		Invalidate();
 	}
 }
