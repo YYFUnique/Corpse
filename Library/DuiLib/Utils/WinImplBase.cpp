@@ -27,8 +27,11 @@ LRESULT WindowImplBase::ResponseDefaultKeyEvent(WPARAM wParam)
 		return FALSE;
 	else if (wParam == VK_ESCAPE)
 	{
-		PostQuitMessage(0);
-		return TRUE;
+		if (m_PaintManager.IsEnableEscKey())
+		{
+			PostQuitMessage(0);
+			return TRUE;
+		}
 	}
 
 	return FALSE;
@@ -248,7 +251,9 @@ LRESULT WindowImplBase::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	if (wParam == SC_CLOSE)
 	{
 		bHandled = TRUE;
-		SendMessage(WM_CLOSE);
+		//SendMessage(WM_CLOSE);
+		//	为了在任务栏点击关闭窗口时，退出应用程序，如果有其他需要，请重写该函数
+		PostQuitMessage(0);
 		return 0;
 	}
 
