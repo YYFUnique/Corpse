@@ -769,7 +769,8 @@ void CControlUI::DoEvent(TEventUI& event)
 {
     if( event.Type == UIEVENT_SETCURSOR && IsEnabled())
     {
-        ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(m_CursorType)));
+        //::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(m_CursorType)));
+		::SetCursor(::LoadCursor(NULL, m_CursorType));
         return;
     }
     if( event.Type == UIEVENT_SETFOCUS ) 

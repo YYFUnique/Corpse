@@ -199,6 +199,7 @@ public:
 	void SetShadow(bool bShadow);
 	bool IsShadow();
 	void SetShadowCorner(RECT rcCorner);
+	RECT GetShadowCorner();
 	void SetShadowImage(LPCTSTR lpszShadowImage);
 	void ShowShadow(HDC hPaint,RECT& rcPaint);
 	void CalRealRootRect(RECT& rcPos);

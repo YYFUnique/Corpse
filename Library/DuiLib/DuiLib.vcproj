@@ -314,10 +314,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Utils\DuiFunc.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Utils\UIDelegate.cpp"
 					>
 				</File>
@@ -506,6 +502,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Control\UIPicture.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Control\UIProgress.cpp"
 					>
 				</File>
@@ -576,10 +576,6 @@
 				</File>
 				<File
 					RelativePath=".\Utils\DPI.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\DuiFunc.h"
 					>
 				</File>
 				<File
@@ -796,6 +792,10 @@
 				</File>
 				<File
 					RelativePath=".\Control\UIPage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Control\UIPicture.h"
 					>
 				</File>
 				<File
