@@ -131,4 +131,5 @@
 #include "Control/UIPage.h"
 #include "Control/UIRectTracker.h"
 
+#include "Control/UIPicture.h"
 #include "Control/UIFrame.h"

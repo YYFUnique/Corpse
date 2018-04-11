@@ -6,7 +6,6 @@
 #endif
 
 namespace DuiLib {
-#include "../Utils/DuiFunc.h"
 /////////////////////////////////////////////////////////////////////////////////////
 //
 //
@@ -252,15 +251,8 @@ HWND CWindowWnd::Create(HWND hwndParent, LPCTSTR pstrName, DWORD dwStyle, DWORD 
     if( GetSuperClassName() != NULL && !RegisterSuperclass() ) return NULL;
     if( GetSuperClassName() == NULL && !RegisterWindowClass() ) return NULL;
 
-	//保存创建句柄到全局类中
-	CDuiLibMgr& AfxDuilib = GetDuiLibMgr();
-	if (AfxDuilib.GetMainApp() == NULL)
-		AfxDuilib.SetMainApp(this);
-
     m_hWnd = ::CreateWindowEx(dwExStyle, GetWindowClassName(), pstrName, dwStyle, x, y, cx, cy, hwndParent, hMenu, CPaintManagerUI::GetInstance(), this);
     ASSERT(m_hWnd!=NULL);
-	if (AfxDuilib.GetMainWndHandle() == NULL)
-		AfxDuilib.SetMainWndHandle(m_hWnd);
     return m_hWnd;
 }
 

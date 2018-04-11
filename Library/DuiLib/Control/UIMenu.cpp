@@ -261,10 +261,22 @@ namespace DuiLib
 					m_pLayout->Add(static_cast<CControlUI*>(m_pOwner->GetItemAt(i)));
 				}
 			}
+			CPaintManagerUI* pOwnerManager = m_pOwner->GetManager();
 			//设置菜单圆角
-			SIZE szRoundCorner = m_pOwner->GetManager()->GetRoundCorner();
+			SIZE szRoundCorner = pOwnerManager->GetRoundCorner();
 			if (szRoundCorner.cx != 0 && szRoundCorner.cy != 0)
 				m_pm.SetRoundCorner(szRoundCorner.cx, szRoundCorner.cy);
+
+			//m_pm.SetLayered(pOwnerManager->IsLayered());
+			//	由于Duilib 针对菜单阴影不完善，故不推荐使用阴影
+			////	设置阴影
+			//if (pOwnerManager->IsShadow())
+			//{
+			//	RECT rcShadow = pOwnerManager->GetShadowCorner();
+			//	m_pm.SetShadow(true);
+			//	m_pm.SetShadowCorner(rcShadow);
+			//	m_pm.SetShadowImage(_T("shadow.png"));
+			//}
 
 			m_pm.AttachDialog(m_pLayout);
 			m_pm.AddNotifier(this);
@@ -305,6 +317,12 @@ namespace DuiLib
 	#endif
 		SIZE szAvailable = { rcWork.right - rcWork.left, rcWork.bottom - rcWork.top };
 		szAvailable = pRoot->EstimateSize(szAvailable);
+		if (m_pm.IsShadow())
+		{
+			RECT rcShadow = m_pm.GetShadowCorner();
+			szAvailable.cx += rcShadow.left + rcShadow.right;
+			szAvailable.cy += rcShadow.top + rcShadow.bottom;
+		}
 		m_pm.SetInitSize(szAvailable.cx, szAvailable.cy);
 
 		//必须是Menu标签作为xml的根节点
@@ -743,21 +761,16 @@ namespace DuiLib
 					hasSubMenu = TRUE;
 				}
 			}
+
+			m_pOwner->SelectItem(GetIndex(), true);
 			if (hasSubMenu)
-			{
-				m_pOwner->SelectItem(GetIndex(), true);
 				CreateMenuWnd();
-			}
 			else
 			{
 				ContextMenuParam param;
 				param.hWnd = m_pManager->GetPaintWindow();
 				param.wParam = KILL_TARGET_WND_TYPE_PARENT;
 				CMenuWnd::GetGlobalContextMenuObserver().RBroadcast(param);
-				//取消当前选中的Item
-				int nSel = m_pOwner->GetCurSel();
-				if (nSel != -1 && nSel != GetIndex())
-					m_pOwner->SelectItem(-1,false);
 			}
 			return;
 		}
