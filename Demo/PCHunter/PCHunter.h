@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Task.h"
-#include "wndtask.h"
-#include "MessageTip.h"
-#include "Image3D/3dTransform.h"
+//进程管理工具
+#include "VirtualWnd/Task/TaskMgr.h"
+#include "VirtualWnd/Network/NetworkMgr.h"
 
 class CPCHunter : public WindowImplBase
 {
@@ -20,14 +19,12 @@ public:
 	virtual CDuiString GetZIPFileName() const;
 	virtual CDuiString GetSkinFile();
 	virtual CDuiString GetSkinFolder();
-	virtual void Notify(TNotifyUI& msg);
 	virtual void InitWindow();
+	virtual CControlUI* CreateControl(LPCTSTR pstrClass);
 	CPaintManagerUI* GetMainWndPaintManager();
-	virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
-	virtual CControlUI* CreateControl(LPCTSTR pstrClass);
-
+	
 	DWORD GetBkColor();
 	void SetBkColor(DWORD crColor);
 	CDuiString GetBkImage();
@@ -45,13 +42,13 @@ public:
 	LRESULT OnTrayIcon(WPARAM wParam, LPARAM lParam);
 	LRESULT OnMenuClick(WPARAM wParam, LPARAM lParam);
 protected:
+	DUI_DECLARE_MESSAGE_MAP()
 	void OnClick(TNotifyUI& msg);
 	void OnTabSelect(TNotifyUI& msg);
 	void OnValueChanged(TNotifyUI& msg);
 	void OnSelectChanged(TNotifyUI& msg);
 	
-	CVirtualWnd* FindObjectByName(LPCTSTR lpszVirtualWndName);
-
+protected:
 	//主机扫描相关菜单
 	void OnRemoteDesktop(CListTextElementUI* pItem);
 	void OnPing(CListTextElementUI* pItem);
@@ -65,14 +62,19 @@ protected:
 	CControlUI* m_pCurrentPage;
 
 	CTaskMgr		m_TaskMgr;
-	CNetMgr			m_NetMgr;
-	CSysInfoMgr	m_SysInfoMgr;
-	CHardNotify    m_HardNotify;
-	CStdPtrArray	m_SubNotifys;
+	CNetworkMgr	m_NetworkMgr;
+	/*CTask				m_task;
+	CApplication	m_app;
+	CServices			m_service;
+	CUserInfo		m_userinfo;
+
+	CNetworkMgr	m_network;
+	CRoute				m_route;*/
+	//CStdPtrArray	m_SubNotifys;
 
 	CUITrayIcon m_Tray;
-	CMessageTip* m_pMsgTip;
-	CUIDropTarget* m_pDropTarget;
+	//CMessageTip* m_pMsgTip;
+	//CUIDropTarget* m_pDropTarget;
 	//IMAGE3D::PARAM3DTRANSFORM _3dParam;
 	//IMAGE3D::C3DTransform image3d;
 };

@@ -1,11 +1,9 @@
 #include "stdafx.h"
 #include "Resource.h"
 #include "PCHunter.h"
-#include "SkinPickerDialog.h"
-#include "Utils/TextTools.h"
+#include "Utils/ControlBuilder.h"
 #include <atlstr.h>
-#include "Wnd/AboutDialog.h"
-
+#include "DllCore/Utils/ErrorInfo.h"
 #include "DllCore/Authority/Process.h"
 
 #define		TIMER_PCHUNTER_ID			0x1000
@@ -18,35 +16,31 @@ CPCHunter::CPCHunter()
 	,m_pLastPage(NULL)
 	,m_pCurrentPage(NULL)
 {
-	AddVirtualWnd(_T("task"),&m_TaskMgr);
-	AddVirtualWnd(_T("network"),&m_NetMgr);
-	AddVirtualWnd(_T("sysinfo"),&m_SysInfoMgr);
-	AddVirtualWnd(_T("hard"),&m_HardNotify);
-	m_pMsgTip = NULL;
+	// 转移主程序代码量压力
+	AddVirtualWnd(VIRTUAL_WND_TASK,&m_TaskMgr);
+	m_TaskMgr.SetVirtualWnd(this, &m_PaintManager);
+
+	AddVirtualWnd(VIRTUAL_WND_NETWORK, &m_NetworkMgr);
+	m_NetworkMgr.SetVirtualWnd(this, &m_PaintManager);
 }
 
 CPCHunter::~CPCHunter()
 {
-	RemoveVirtualWnd(_T("task"));
-	RemoveVirtualWnd(_T("network"));
-	RemoveVirtualWnd(_T("sysinfo"));
-	RemoveVirtualWnd(_T("hard"));
+	RemoveVirtualWnd(VIRTUAL_WND_TASK);
+	m_TaskMgr.ClearVirtualWnd(this);
 
-	if (m_pDropTarget)
-		m_pDropTarget->DragDropRevoke(m_hWnd);
+	RemoveVirtualWnd(VIRTUAL_WND_NETWORK);
+	m_NetworkMgr.ClearVirtualWnd(this);
 
 	//m_Tray.DeleteTrayIcon();
+	//	释放线程存储空间
+	ReleaseProcessErrorInfo();
 }
 
-LRESULT CPCHunter::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch(uMsg)
-	{
-		case WM_DEVICECHANGE:
-			return	m_HardNotify.DeviceChanged(wParam, lParam);
-	}
-	return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
-}
+DUI_BEGIN_MESSAGE_MAP(CPCHunter, CNotifyPump)  
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK, OnClick)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_SELECTCHANGED, OnSelectChanged)
+DUI_END_MESSAGE_MAP()  
 
 LRESULT CPCHunter::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
@@ -72,7 +66,7 @@ LRESULT CPCHunter::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 void CPCHunter::OnFinalMessage( HWND hWnd )
 {
 	WindowImplBase::OnFinalMessage(hWnd);
-	//delete this;
+	delete this;
 }
 
 LPCTSTR CPCHunter::GetWindowClassName() const
@@ -97,121 +91,27 @@ CDuiString CPCHunter::GetSkinFile()
 
 CDuiString CPCHunter::GetSkinFolder()
 {
-//#ifdef _DEBUG
 	return _T("PCHunter");
-//#else
-//	return _T("");
-//#endif
 }
 
 UILIB_RESOURCETYPE CPCHunter::GetResourceType() const
 {
-/*#ifdef _DEBUG
 	return UILIB_FILE;
-#else
-	return UILIB_ZIP;
-#endif*/
-	return UILIB_FILE;
-}
-
-CControlUI* CPCHunter::CreateControl(LPCTSTR pstrClass)
-{
-	CControlUI* pControl = NULL;
-
-	/*if (_tcsicmp(pstrClass, DUI_CTR_DOCKPANE) == 0)
-	{
-		pControl = new CDockPaneUI;
-	}
-	else if (_tcsicmp(pstrClass, DUI_CTR_DOCKITEM) == 0)
-		pControl = new CDockItemUI;
-	else
-	{
-		CDuiString strControlName;
-		strControlName.Format(_T("%s 没有定义！请确认"),pstrClass);
-		ASSERT(FALSE && _T("控件没有定义"));
-	}*/
-
-	return pControl;
-}
-
-void CPCHunter::Notify(TNotifyUI& msg)
-{
-	if (msg.sVirtualWnd.IsEmpty() == false)
-	{
-		CVirtualWnd* pObject = FindObjectByName(msg.sVirtualWnd);
-		if (pObject != NULL)
-			pObject->Notify(msg);
-		else 
-			__super::Notify(msg);
-	}
-	else if (msg.sType == DUI_MSGTYPE_CLICK)
-		OnClick(msg);
-	else if (msg.sType == DUI_MSGTYPE_VALUECHANGED)
-		OnValueChanged(msg);
-	else if (msg.sType == DUI_MSGTYPE_SELECTCHANGED)
-		OnSelectChanged(msg);
-}
-
-CVirtualWnd* CPCHunter::FindObjectByName(LPCTSTR lpszVirtualWndName)
-{
-	for (int n=0;n<m_SubNotifys.GetSize();++n)
-	{
-		CVirtualWnd* pObject = (CVirtualWnd*)m_SubNotifys.GetAt(n);
-		if (pObject && StrStrI(pObject->GetVirtualWnd(),lpszVirtualWndName) != NULL)
-			return pObject;
-	}
-
-	return NULL;
 }
 
 void CPCHunter::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
 
-	CPageUI* pPage = (CPageUI*)m_PaintManager.FindControl(_T("page"));
-
-	CListUI* pList = (CListUI*)m_PaintManager.FindControl(_T("App"));
-	//for (int n=0;n<pList->GetCount();++n)
-	{
-		CListBodyUI* pListBody = (CListBodyUI*)pList->GetList();
-		if (pListBody)
-		{
-			pPage->SetPage(pListBody);
-			pPage->SetCount(10);
-			pPage->SetTotal(pList->GetCount());
-		}
-	}
-
-	//CString strTipInfo;
-	//strTipInfo.Format(_T("编译时间:%s,%s"),__DATE__,__TIME__);
-	//MessageBoxA(m_hWnd,strTipInfo,"编译时间",MB_OK);
-
-	/*SYSTEMTIME BuildTime;
-	if (GetBuildSystemTime(&BuildTime) != FALSE)
-	{
-		CString strTipInfo;
-		strTipInfo.Format(_T("编译时间:%d-%02d-%02d %02d:%02d:%02d"), 
-										BuildTime.wYear, BuildTime.wMonth, BuildTime.wDay,
-										BuildTime.wHour, BuildTime.wMinute, BuildTime.wSecond);
-		MessageBox(m_hWnd,strTipInfo,_T("编译时间"),MB_OK);
-	}*/
-
-	//创建系统托盘图标
-	//m_Tray.CreateTrayIcon(m_hWnd,IDI_MAINFRAME,_T("系统信息查看工具 V1.0"),WM_TRAYICON);
-	//注册应用程序拖拽功能
-	m_pDropTarget = new CUIDropTarget;
-	m_pDropTarget->DragDropRegister(m_hWnd,NULL,&m_PaintManager);
-
-	CVirtualWnd::SetPaintMagager(&m_PaintManager);
-
-	m_SubNotifys.Add(&m_TaskMgr);
-	m_SubNotifys.Add(&m_NetMgr);
-	m_SubNotifys.Add(&m_SysInfoMgr);
-	m_SubNotifys.Add(&m_HardNotify);
-
 	CHorizontalLayoutUI* pControl = (CHorizontalLayoutUI*)m_PaintManager.FindControl(_T("TabSwitch"));
 	if (pControl)
 		m_PaintManager.SendNotify(pControl->GetItemAt(0), DUI_MSGTYPE_SELECTCHANGED);
+}
+
+CControlUI* CPCHunter::CreateControl(LPCTSTR pstrClass)
+{
+	CControlBuilder RootBuilder;
+	return RootBuilder.CreateControl(pstrClass);
 }
 
 CPaintManagerUI* CPCHunter::GetMainWndPaintManager()
@@ -301,10 +201,10 @@ void CPCHunter::OnSelectChanged(TNotifyUI& msg)
 
 		UINT nIndex = _ttoi(msg.pSender->GetUserData());
 		pTabLayout->SelectItem(nIndex);
-		
+
 		CControlUI* pMsgNotify = GetViewObject(pTabLayout,nIndex);
 		if (pMsgNotify)
-			m_PaintManager.SendNotify(pMsgNotify,DUI_MSGTYPE_SETFOCUS);
+			m_PaintManager.SendNotify(pMsgNotify, DUI_MSGTYPE_LOADITEM);
 	}
 }
 
@@ -409,14 +309,14 @@ LRESULT CPCHunter::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 		m_Tray.OnMouseMove(); 
 	else if (uMsgId == WM_MOUSEHOVER)
 	{
-		if (m_pMsgTip == NULL)
+		/*if (m_pMsgTip == NULL)
 			m_pMsgTip = new CMessageTip(m_hWnd,_T(""),0xFFFFFFFF,_T("我欲飞翔"),_T(""));
 		
-		m_pMsgTip->ShowWindow(true);
+		m_pMsgTip->ShowWindow(true);*/
 	}
 	else if (uMsgId == WM_MOUSELEAVE)
 	{
-		POINT pt;
+		/*POINT pt;
 		GetCursorPos(&pt);
 		RECT rcPos;
 		GetWindowRect(m_pMsgTip->GetHWND(),&rcPos);
@@ -427,7 +327,7 @@ LRESULT CPCHunter::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 		else if (m_pMsgTip->GetHWND() != NULL && IsWindow(m_pMsgTip->GetHWND()))
 		{
 			m_pMsgTip->ShowWindow(false);
-		}
+		}*/
 	}
 
 	return TRUE;
@@ -443,12 +343,8 @@ LRESULT CPCHunter::OnMenuClick(WPARAM wParam, LPARAM lParam)
 	//获取菜单对应根节点的控件名称
 	CDuiString strMenuName = pControl->GetManager()->GetRoot()->GetName();
 	if (strMenuName == _T("AppMenu"))
-		m_TaskMgr.OnApplication(pControl);
+		m_TaskMgr.OnAppMenu(pControl);
 	else if (strMenuName == _T("ScanResultMenu"))
-		m_NetMgr.OnHostScanMenu(pControl);
-	else if (strMenuName == _T("RangeMenu"))
-		m_NetMgr.OnRangeMenu(pControl);
-	else if (strMenuName == _T("RouteInfo"))
-		m_NetMgr.OnRouteInfo(pControl);
+		m_TaskMgr.OnServiceMenu(pControl);
 	return TRUE;
 }

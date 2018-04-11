@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "AdapterInfo.h"
-#include "ErrorInfo.h"
+#include "DllCore/Utils/ErrorInfo.h"
 #include <NetCon.h>
 #include <Ras.h>
 #pragma comment(lib,"Rasapi32.lib")
