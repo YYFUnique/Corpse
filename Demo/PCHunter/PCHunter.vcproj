@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library&quot;;&quot;$(SolutionDir)Demo/PCHunter&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -253,23 +253,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MessageTip.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\PCHunter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\PopupWidget.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SkinPickerDialog.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SkinPickerPictureItem.cpp"
 				>
 			</File>
 			<File
@@ -300,133 +284,53 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\Wndtask.cpp"
-				>
-			</File>
 			<Filter
 				Name="VirtualWnd"
 				>
 				<File
-					RelativePath=".\VirtualWnd\Adapter.cpp"
+					RelativePath=".\VirtualWnd\IVirtualWndMgr.cpp"
 					>
 				</File>
-				<File
-					RelativePath=".\VirtualWnd\Application.cpp"
+				<Filter
+					Name="Task"
 					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Base.cpp"
+					<File
+						RelativePath=".\VirtualWnd\Task\Application.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Task\CoreDriver.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Task\Process.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Task\Services.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Task\TaskMgr.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Task\UserInfo.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Network"
 					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Connect.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\CoreDriver.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\HardNotify.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Hardware.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\HostScan.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\NetMgr.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\OsInfo.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Process.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Provider.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Route.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Services.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Snmp.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\SysInfoMgr.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\TaskMgr.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\TaskScheduled.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\UserInfo.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\ViewCert.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\ViewCSP.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\VirtualWnd.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Wlan.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Utils"
-				>
-				<File
-					RelativePath=".\Utils\AdapterInfo.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\PictureUI.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\SnmpMgr.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\TextTools.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\TimeInfo.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\WMITools.cpp"
-					>
-				</File>
+					<File
+						RelativePath=".\VirtualWnd\Network\NetworkMgr.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Network\Route.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Wnd"
@@ -452,11 +356,63 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Wnd\MsgWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Wnd\PopupWidget.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Wnd\SkinPickerDialog.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Wnd\SkinPickerPictureItem.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Wnd\StaticArpDialog.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Wnd\WakeOnLan.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Utils"
+				>
+				<File
+					RelativePath=".\Utils\AdapterInfo.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\ControlBuilder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\CRawSocket.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\SnmpMgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\TextTools.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\TimeInfo.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\UIFileList.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\WMITools.cpp"
 					>
 				</File>
 			</Filter>
@@ -467,11 +423,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\ChangeEvent.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MessageTip.h"
+				RelativePath=".\MacroDefine.h"
 				>
 			</File>
 			<File
@@ -479,164 +431,60 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PopupWidget.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ProcessData.h"
-				>
-			</File>
-			<File
 				RelativePath=".\resource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SkinPickerDialog.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SkinPickerPictureItem.h"
 				>
 			</File>
 			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>
-			<File
-				RelativePath=".\wndtask.h"
-				>
-			</File>
 			<Filter
 				Name="VirtualWnd"
 				>
 				<File
-					RelativePath=".\VirtualWnd\Adapter.h"
+					RelativePath=".\VirtualWnd\IVirtualWndMgr.h"
 					>
 				</File>
-				<File
-					RelativePath=".\VirtualWnd\Application.h"
+				<Filter
+					Name="Task"
 					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Base.h"
+					<File
+						RelativePath=".\VirtualWnd\Task\Application.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Task\CoreDriver.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Task\Process.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Task\Services.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Task\TaskMgr.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Task\UserInfo.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Network"
 					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Connect.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\CoreDriver.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\HardNotify.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Hardware.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\HostScan.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\NetMgr.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\OsInfo.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Process.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Provider.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Route.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Services.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Snmp.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\SysInfoMgr.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\TaskMgr.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\TaskScheduled.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\UserInfo.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\ViewCert.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\ViewCSP.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\VirtualWnd.h"
-					>
-				</File>
-				<File
-					RelativePath=".\VirtualWnd\Wlan.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Utils"
-				>
-				<File
-					RelativePath=".\Utils\AdapterInfo.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\PictureUI.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\SnmpMgr.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\TextTools.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\ThreadPool.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\ThreadPool.template"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\TimeInfo.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\WMITools.h"
-					>
-				</File>
+					<File
+						RelativePath=".\VirtualWnd\Network\NetworkMgr.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Network\Route.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Wnd"
@@ -662,11 +510,71 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Wnd\MsgWnd.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wnd\PopupWidget.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wnd\SkinPickerDialog.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wnd\SkinPickerPictureItem.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Wnd\StaticArpDialog.h"
 					>
 				</File>
 				<File
 					RelativePath=".\Wnd\WakeOnLan.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Utils"
+				>
+				<File
+					RelativePath=".\Utils\AdapterInfo.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\ControlBuilder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\CRawSocket.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\SnmpMgr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\TextTools.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\ThreadPool.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\ThreadPool.template"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\TimeInfo.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\UIFileList.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\WMITools.h"
 					>
 				</File>
 			</Filter>

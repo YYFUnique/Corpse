@@ -2,14 +2,14 @@
 
 //////////////////////////////////////////////////////////////////////////
 ///
-#define MSGID_OK		1
-#define MSGID_CANCEL	0
+//#define MSGID_OK		1
+//#define MSGID_CANCEL	0
 
-typedef enum MSGID
+typedef enum tagMSGID
 {
 	MSGID_CANCEL = 0,	//取消按钮
 	MSGID_OK		    = 1,	//确定按钮
-};
+}MSGID;
 
 class CMsgWnd : public WindowImplBase
 {
