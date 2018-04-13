@@ -17,6 +17,8 @@ namespace DuiLib
 
 		void SetTextStyle(UINT uStyle);
 		UINT GetTextStyle() const;
+		void AppendTextStyle(UINT uStyle);
+		void ReduceTextStyle(UINT uStyle);
 		void SetTextColor(DWORD dwTextColor);
 		DWORD GetTextColor() const;
 		void SetDisabledTextColor(DWORD dwTextColor);

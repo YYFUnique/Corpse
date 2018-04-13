@@ -44,6 +44,16 @@ namespace DuiLib
 		return m_uTextStyle;
 	}
 
+	void CLabelUI::AppendTextStyle(UINT uStyle)
+	{
+		m_uTextStyle |= uStyle;
+	}
+
+	void CLabelUI::ReduceTextStyle(UINT uStyle)
+	{
+		m_uTextStyle &= ~uStyle;
+	}
+
 	void CLabelUI::SetTextColor(DWORD dwTextColor)
 	{
 		m_dwTextColor = dwTextColor;
@@ -183,13 +193,9 @@ namespace DuiLib
 		}
 		else if( _tcsicmp(pstrName, _T("noprefix")) == 0 ) {
 			if( _tcsicmp(pstrValue, _T("true")) == 0)
-			{
 				m_uTextStyle |= DT_NOPREFIX;
-			}
 			else
-			{
 				m_uTextStyle = m_uTextStyle & ~DT_NOPREFIX;
-			}
 		}
 		else if( _tcsicmp(pstrName, _T("font")) == 0 ) SetFont(_ttoi(pstrValue));
 		else if( _tcsicmp(pstrName, _T("textcolor")) == 0 ) {
