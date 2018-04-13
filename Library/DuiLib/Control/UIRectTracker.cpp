@@ -91,7 +91,7 @@ namespace DuiLib
 		m_nHandleSize = 5*m_nBorderSize;
 		m_sizeMin.cy = m_sizeMin.cx = m_nHandleSize;
 		m_rectLast.Empty();
-		m_sizeLast.cx = m_sizeLast.cy = 0;
+		m_sizeLast.cx = m_sizeLast.cy = -1;
 		m_bFinalErase =  FALSE;
 
 		m_nStyle = solidLine|resizeOutside;
