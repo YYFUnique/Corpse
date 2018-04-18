@@ -1209,6 +1209,40 @@ bool DrawImage(HDC hDC, CPaintManagerUI* pManager, const RECT& rc, const RECT& r
 	return true;
 }
 
+bool CRenderEngine::DrawImage(HDC hDC, CPaintManagerUI* pManager, const RECT& rcControl, const RECT& rcPaint, CImageAttribute& image)
+{
+	if (pManager == NULL || hDC == NULL)
+		return false;
+
+	CDuiString strImage(image.GetImage());
+	if (strImage.IsEmpty())
+		return false;
+
+	TImageInfo* data = image.GetImageInfo();
+	if (data == NULL)
+		return false;
+
+	RECT rcDest = image.GetDestRect();
+	rcDest.left += rcControl.left;
+	rcDest.top += rcControl.top;
+	rcDest.right = rcDest.left + rcControl.right;
+	rcDest.bottom = rcDest.top + rcControl.bottom;
+	if (rcDest.right > rcControl.right)
+		rcDest.right = rcControl.right;
+	if (rcDest.bottom > rcControl.bottom)
+		rcDest.bottom = rcControl.bottom;
+
+	RECT rcTmp;
+	if (!::IntersectRect(&rcTmp, &rcDest, &rcControl)) return true;
+	if (!::IntersectRect(&rcTmp, &rcDest, &rcPaint)) return true;
+	
+	CRenderEngine::DrawImage(hDC, data->hBitmap, rcDest, rcPaint, image.GetSourceRect(), image.GetCornerRect(),  
+		       pManager->IsLayered() ? true : data->bAlpha,  
+		       image.GetFade(), image.IsHole(), image.IsTiledX(), image.IsTiledY());  
+	 
+	return true;
+}
+
 bool CRenderEngine::DrawImageString(HDC hDC, CPaintManagerUI* pManager, const RECT& rc, const RECT& rcPaint, 
                                           LPCTSTR pStrImage, LPCTSTR pStrModify)
 {

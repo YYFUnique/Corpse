@@ -268,12 +268,15 @@ protected:                                                                \
 #define  DUI_CTR_WEBBROWSER								(_T("WebBrowser"))
 #define  DUI_CTR_WKEBROWSER								(_T("WkeBrowser"))
 
+/////11
 #define  DUI_CTR_CHILDLAYOUT								(_T("ChildLayout"))
 #define  DUI_CTR_GROUPLAYOUT							(_T("GroupLayout"))
 #define  DUI_CTR_LISTELEMENT								(_T("ListElement"))
 #define  DUI_CTR_SLIDERRANGE								(_T("SliderRange"))
 #define  DUI_CTR_MENUELEMENT							(_T("MenuElement"))
 #define  DUI_CTR_RECTTRACKER								(_T("RectTracker"))
+#define  DUI_CTR_SPLITLAYOUT								(_T("SplitLayout"))
+/////12
 #define  DUI_CTR_COLORPALETTE							(_T("ColorPalette"))
 
 #define  DUI_CTR_MENULISTLABEL							(_T("MenuListLabel"))
@@ -282,7 +285,6 @@ protected:                                                                \
 
 #define  DUI_CTR_VERTICALLAYOUT							(_T("VerticalLayout"))
 #define  DUI_CTR_LISTHEADERITEM							(_T("ListHeaderItem"))
-#define  DUI_CTR_SPLITTERLAYOUT							(_T("SplitterLayout"))
 
 #define  DUI_CTR_LISTTEXTELEMENT						(_T("ListTextElement"))
 

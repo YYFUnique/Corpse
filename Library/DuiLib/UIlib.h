@@ -76,6 +76,7 @@
 #include "Core/UIControl.h"
 #include "Core/UIContainer.h"
 #include "Core/UIDlgBuilder.h"
+#include "Core/ImageAttribute.h"
 #include "Core/UIRender.h"
 
 #include "Utils/WinImplBase.h"
@@ -89,7 +90,7 @@
 #include "Layout/UIChildLayout.h"
 #include "Layout/UIGroupLayout.h"
 #include "Layout/UIAnimationTabLayout.h"
-#include "Layout/UISplitterLayout.h"
+#include "Layout/UISplitLayout.h"
 
 #include "Control/UIList.h"
 #include "Control/UICombo.h"
