@@ -1069,11 +1069,11 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             m_pEventClick = pControl;
 			/******************************************************************************/
 			/* 如果应用程序响应了UIEVENT_DBLCLICK对应Notify											 */
-			/*	如果切换程序焦点后，可能导致系统不会向窗口发送WM_LBUTTONUP消息  	 */
+			/*	消息切换程序焦点后，可能导致系统不会向窗口发送WM_LBUTTONUP消息  	 */
 			/******************************************************************************/
 			HWND hCapture = GetCapture();
 			if (hCapture == NULL || hCapture != m_hWndPaint)
-				SetCapture();
+				PostMessage(m_hWndPaint, WM_LBUTTONUP, wParam, lParam);
         }
         break;
     case WM_LBUTTONUP:

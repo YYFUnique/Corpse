@@ -342,6 +342,10 @@
 				Name="Core"
 				>
 				<File
+					RelativePath=".\Core\ImageAttribute.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Core\UIBase.cpp"
 					>
 				</File>
@@ -394,7 +398,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Layout\UISplitterLayout.cpp"
+					RelativePath=".\Layout\UISplitLayout.cpp"
 					>
 				</File>
 				<File
@@ -631,6 +635,10 @@
 				Name="Core"
 				>
 				<File
+					RelativePath=".\Core\ImageAttribute.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Core\UIBase.h"
 					>
 				</File>
@@ -687,7 +695,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Layout\UISplitterLayout.h"
+					RelativePath=".\Layout\UISplitLayout.h"
 					>
 				</File>
 				<File
