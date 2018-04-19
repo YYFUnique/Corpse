@@ -18,6 +18,7 @@ DUI_END_MESSAGE_MAP()
 void CNetworkMgr::ClearVirtualWnd(CNotifyPump* pNotifyPump)
 {
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_ROUTE);
+	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_HOSTSCAN);
 }
 
 void CNetworkMgr::SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPaintManager)
@@ -26,6 +27,9 @@ void CNetworkMgr::SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPain
 
 	m_Route.SetPaintMagager(pPaintManager);
 	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_ROUTE, &m_Route);
+
+	m_HostScan.SetPaintManager(pPaintManager);
+	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_HOSTSCAN, &m_HostScan);
 }
 
 void CNetworkMgr::OnSelectChanged( TNotifyUI &msg )
@@ -40,4 +44,19 @@ void CNetworkMgr::OnSelectChanged( TNotifyUI &msg )
 
 	if (pMsgNotify)
 		m_pPaintManager->SendNotify(pMsgNotify, DUI_MSGTYPE_LOADITEM);
+}
+
+void CNetworkMgr::OnHostScanMenu(CControlUI* pControl)
+{
+	m_HostScan.OnHostScanMenu(pControl);
+}
+
+void CNetworkMgr::OnRangeMenu(CControlUI* pControl)
+{
+	m_HostScan.OnRangeMenu(pControl);
+}
+
+void CNetworkMgr::OnRouteInfo(CControlUI* pControl)
+{
+	m_Route.OnRouteInfo(pControl);
 }

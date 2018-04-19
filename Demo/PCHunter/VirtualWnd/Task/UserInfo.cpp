@@ -39,7 +39,6 @@ void CUserInfo::OnPaint(TNotifyUI& msg)
 		CListTextElementUI* pTextElement = new CListTextElementUI;
 		pList->Add(pTextElement);
 
-
 		TCHAR szType[20];
 		_stprintf_s(szType,_countof(szType),_T("%d"),WtsSessionInfo.SessionId);
 		pTextElement->SetText(0,szType);

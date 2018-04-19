@@ -1,9 +1,5 @@
 #pragma once
 
-//进程管理工具
-#include "VirtualWnd/Task/TaskMgr.h"
-#include "VirtualWnd/Network/NetworkMgr.h"
-
 class CPCHunter : public WindowImplBase
 {
 public:
@@ -22,9 +18,10 @@ public:
 	virtual void InitWindow();
 	virtual CControlUI* CreateControl(LPCTSTR pstrClass);
 	CPaintManagerUI* GetMainWndPaintManager();
+	virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 
-	
+
 	DWORD GetBkColor();
 	void SetBkColor(DWORD crColor);
 	CDuiString GetBkImage();
@@ -63,14 +60,7 @@ protected:
 
 	CTaskMgr		m_TaskMgr;
 	CNetworkMgr	m_NetworkMgr;
-	/*CTask				m_task;
-	CApplication	m_app;
-	CServices			m_service;
-	CUserInfo		m_userinfo;
-
-	CNetworkMgr	m_network;
-	CRoute				m_route;*/
-	//CStdPtrArray	m_SubNotifys;
+	CHardMgr		m_HardMgr;
 
 	CUITrayIcon m_Tray;
 	//CMessageTip* m_pMsgTip;

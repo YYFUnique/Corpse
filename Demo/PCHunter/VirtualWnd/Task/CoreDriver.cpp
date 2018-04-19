@@ -72,15 +72,14 @@ void CCoreDriver::OnLoadItem(TNotifyUI& msg)
 		pLabelTitle->SetFont(pListInfo->nFont);
 		pLabelTitle->SetForeColor(pListInfo->dwTextColor);
 		// 如果文字过长显示...
-		DWORD dwTextStyle = pLabelTitle->GetTextStyle();
-		pLabelTitle->SetTextStyle(dwTextStyle | DT_END_ELLIPSIS);
+		pLabelTitle->AppendTextStyle(DT_END_ELLIPSIS);
 
 		// 显示名称
 		CLabelUI* pDispaly = (CLabelUI*)pFileItem->FindSubControl(_T("Display"));
 		pDispaly->SetText(SvrInfo.strDisplayName);
 		pDispaly->SetFont(pListInfo->nFont);
 		pDispaly->SetForeColor(pListInfo->dwTextColor);
-		pDispaly->SetTextStyle(dwTextStyle | DT_END_ELLIPSIS);
+		pDispaly->AppendTextStyle(DT_END_ELLIPSIS);
 
 		//	描述
 		/*CLabelUI* pDesc = (CLabelUI*)pFileItem->FindSubControl(_T("Desc"));
@@ -95,8 +94,7 @@ void CCoreDriver::OnLoadItem(TNotifyUI& msg)
 		CLabelUI* pDriverType = (CLabelUI*)pFileItem->FindSubControl(_T("DriverType"));
 		CCoreDriver::FormatDriverType(SvrInfo.dwType, strDriverInfo);
 		pDriverType->SetText(strDriverInfo);
-		/*DWORD*/ dwTextStyle = pDriverType->GetTextStyle();
-		pDriverType->SetTextStyle(dwTextStyle | DT_END_ELLIPSIS);
+		pDriverType->AppendTextStyle(DT_END_ELLIPSIS);
 		pDriverType->SetForeColor(pListInfo->dwTextColor);
 		pDriverType->SetFont(pListInfo->nFont);
 
@@ -104,7 +102,7 @@ void CCoreDriver::OnLoadItem(TNotifyUI& msg)
 		CLabelUI* pRunStatus = (CLabelUI*)pFileItem->FindSubControl(_T("RunStatus"));
 		CCoreDriver::FormatRunStatus(SvrInfo.dwRunStatus, strDriverInfo);
 		pRunStatus->SetText(strDriverInfo);
-		pRunStatus->SetTextStyle(dwTextStyle | DT_END_ELLIPSIS);
+		pRunStatus->AppendTextStyle(DT_END_ELLIPSIS);
 		pRunStatus->SetForeColor(pListInfo->dwTextColor);
 		pRunStatus->SetFont(pListInfo->nFont);
 
@@ -112,7 +110,7 @@ void CCoreDriver::OnLoadItem(TNotifyUI& msg)
 		CLabelUI* pStartType = (CLabelUI*)pFileItem->FindSubControl(_T("StartType"));
 		CCoreDriver::FormatStartType(SvrInfo.dwStartType, strDriverInfo);
 		pStartType->SetText(strDriverInfo);
-		pStartType->SetTextStyle(dwTextStyle | DT_END_ELLIPSIS);
+		pStartType->AppendTextStyle(DT_END_ELLIPSIS);
 		pStartType->SetForeColor(pListInfo->dwTextColor);
 		pStartType->SetFont(pListInfo->nFont);
 	}

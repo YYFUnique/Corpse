@@ -81,7 +81,9 @@ void CApplication::OnItemActive(TNotifyUI& msg)
 
 	//前置显示窗口
 	//SetForegroundWindow(hWnd);
-	SwitchToThisWindow(hWnd,FALSE);
+	if (IsIconic(hWnd))
+		ShowWindow(hWnd, SW_RESTORE);
+	SwitchToThisWindow(hWnd, TRUE);
 }
 
 void CApplication::OnAppMenu(CControlUI* pControl)
@@ -101,6 +103,8 @@ void CApplication::OnAppMenu(CControlUI* pControl)
 	{
 		//隐藏任务管理器
 		//前置目标任务
+		if (IsIconic(hWnd))
+			ShowWindow(hWnd, SW_RESTORE);
 		SwitchToThisWindow(hWnd,TRUE);
 	}
 	else if (strItemName == _T("Advanced"))
@@ -260,21 +264,18 @@ void CApplication::FillAppInfoIntoList(HWND hWnd)
 		pLabelTitle->SetText(szWindowTitle);
 		pLabelTitle->SetFont(pListInfo->nFont);
 		pLabelTitle->SetForeColor(pListInfo->dwTextColor);
-		DWORD dwTextStyle = pLabelTitle->GetTextStyle();
-		pLabelTitle->SetTextStyle(dwTextStyle | DT_END_ELLIPSIS);
+		pLabelTitle->AppendTextStyle(DT_END_ELLIPSIS);
 
 		CLabelUI* pClassName = (CLabelUI*)pFileItem->FindSubControl(_T("ClassName"));
 		pClassName->SetText(szClassName);
 		pClassName->SetFont(pListInfo->nFont);
 		pClassName->SetForeColor(pListInfo->dwTextColor);
-		dwTextStyle = pClassName->GetTextStyle();
-		pClassName->SetTextStyle(dwTextStyle | DT_END_ELLIPSIS);
+		pClassName->AppendTextStyle(DT_END_ELLIPSIS);
 
 		CLabelUI* pRunInfo = (CLabelUI*)pFileItem->FindSubControl(_T("RunInfo"));
 		pRunInfo->SetText(lpszAppInfo);
 		pRunInfo->SetFont(pListInfo->nFont);
 		pRunInfo->SetForeColor(pListInfo->dwTextColor);
-		dwTextStyle = pRunInfo->GetTextStyle();
-		pRunInfo->SetTextStyle(dwTextStyle | DT_END_ELLIPSIS);
+		pRunInfo->AppendTextStyle(DT_END_ELLIPSIS);
 	}
 }

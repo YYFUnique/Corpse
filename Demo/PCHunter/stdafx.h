@@ -6,13 +6,16 @@
 #include <windows.h>
 #include <objbase.h>
 #include <zmouse.h>
-
+#include <Dbt.h>
+#include <Cryptuiapi.h>
+#include <atltime.h>
 #include "DuiLib/UIlib.h"
 using namespace DuiLib;
 
 #include "DllCore/Utils/DuiList.h"
 
 #include "MacroDefine.h"
+#include "WndLib.h"
 
 #define	DUI_MSGTYPE_REFRESH		_T("refresh")
 #define	DUI_MSGTYPE_LOADITEM	_T("loaditem")

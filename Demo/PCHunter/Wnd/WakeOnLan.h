@@ -39,7 +39,7 @@ public:
 	LRESULT ResponseDefaultKeyEvent(WPARAM wParam);
 protected:
 	void OnClick(TNotifyUI& msg);
-	//void OnWOLSend(TNotifyUI& msg);
+	void OnWOLSend(TNotifyUI& msg);
 	void OnItemSelect(TNotifyUI& msg);
 private:
 	TCHAR m_szHostNameFilePath[MAX_PATH];
