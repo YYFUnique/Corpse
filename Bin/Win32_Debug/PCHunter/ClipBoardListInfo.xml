@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+	<FileListItem>
+		<HorizontalLayout>
+			<Label name="Index" text="" align="right" textpadding="3,0,20,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Picture name="Pic" visible="false" width="16" height="16" padding="3,5,0,0"/>
+			<Label name="Content" text="" textpadding="5,0,0,0" />
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="Time" text="" align="center"/>
+		</HorizontalLayout>
+	</FileListItem>
+</Window>

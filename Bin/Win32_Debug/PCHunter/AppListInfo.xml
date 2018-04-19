@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+	<FileListItem>
+		<HorizontalLayout>
+			<CheckBox name="check" visible="false" />
+			<Picture name="Pic" visible="false" width="16" height="16" padding="3,5,0,0"/>
+			<Label name="Title" text="" textpadding="3,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Picture name="Pic2" visible="false" width="16" height="16" float="true" pos="3,5,0,0" foreimage="file=&apos;Title.png&apos;" />
+			<Label name="ClassName" text="" textpadding="5,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Picture name="Pic3" visible="false" width="16" height="16" float="true" pos="3,5,0,0" foreimage="file=&apos;Title.png&apos;" />
+			<Label name="RunInfo" text="" align="center"/>
+		</HorizontalLayout>
+	</FileListItem>
+</Window>

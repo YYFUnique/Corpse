@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Window>
+<Window roundcorner="5,5">
   <Font name="微软雅黑" size="12" bold="false" default="true" />
   <Font name="微软雅黑" size="12" bold="true"/>
   <Default name="Menu" value="inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='menu_bk.png' corner='30,8,8,8'&quot; mask=&quot;#FFFFFFFF&quot; hole=&quot;false&quot;" />
@@ -7,6 +7,7 @@
   	<MenuElement text="启动服务" name="StartSvr"/>
 	<MenuElement text="重启服务" name="ReStartSvr"/>
 	<MenuElement text="停止服务" name="StopSvr"/>
+	<MenuElement linetype="true" />
 	<MenuElement text="终止进程" name="StopProcess"/>
 	<MenuElement linetype="true" />
 	<MenuElement text="启动类型" name="StartType" >

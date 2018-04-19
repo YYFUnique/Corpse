@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<Window size="400,250" sizebox="4,4,6,6" caption="0,0,0,35" mininfo="267,645" roundcorner="5,5" layered="true">
+<Window size="400,220" sizebox="4,4,6,6" caption="0,0,0,35" mininfo="267,645" roundcorner="5,5" layered="true">
 	<Font name="微软雅黑" size="13" bold="false" italic="false" />
 	<Font name="微软雅黑" size="16" bold="false" italic="false" />
     <Font name="楷体" size="16" bold="false" italic="false" />
@@ -19,12 +19,12 @@
 				<VerticalLayout>
 					<Label name="Logo" float="true" pos="125,40,0,0" width="148" height="62" bkimage="logo.png"/>
 				</VerticalLayout>
-				<VerticalLayout pos="0,0,0,50" height="50">
+				<VerticalLayout pos="0,0,0,50" height="50" padding="1,0,1,0" bkcolor="#FFCDCDCD" borderround="5,5">
 					<Label name="BuildTime" textcolor="#FF000000" text="编译时间:2016-06-17 12:00:00" float="true" pos="5,0,395,25" align="center" font="0"/>
 					<Label name="CopyRight" textcolor="#FF000000" text="CopyRight © 2013-2016 , All Rights Reserved" float="true"  pos="5,25,395,50" align="center" font="0" />
 				</VerticalLayout>
 			</VerticalLayout>
-			<HorizontalLayout name="HLayoutFoot" pos="0,0,0,35" bkcolor="#FF696969">
+			<HorizontalLayout name="HLayoutFoot" visible="false" >
 			</HorizontalLayout>
 		</VerticalLayout>
 	</VerticalLayout>
