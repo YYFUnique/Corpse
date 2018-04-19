@@ -1,9 +1,4 @@
 #pragma once
-#include "../IVirtualWndMgr.h"
-#include "Application.h"
-#include "Services.h"
-#include "UserInfo.h"
-#include "CoreDriver.h"
 
 class CTaskMgr : public CNotifyPump, public IVirtualWndMgr
 {
@@ -26,5 +21,6 @@ private:
 	CServices					m_Service;
 	CUserInfo				m_UserInfo;
 	CCoreDriver				m_CoreDriver;
+	CViewCert				m_ViewCert;
 	CPaintManagerUI* m_pPaintManager;
 };

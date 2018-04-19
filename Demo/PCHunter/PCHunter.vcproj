@@ -115,7 +115,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Library&quot;;&quot;$(SolutionDir)Demo\PCHunter&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -318,16 +318,40 @@
 						RelativePath=".\VirtualWnd\Task\UserInfo.cpp"
 						>
 					</File>
+					<File
+						RelativePath=".\VirtualWnd\Task\ViewCert.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Network"
 					>
+					<File
+						RelativePath=".\VirtualWnd\Network\HostScan.cpp"
+						>
+					</File>
 					<File
 						RelativePath=".\VirtualWnd\Network\NetworkMgr.cpp"
 						>
 					</File>
 					<File
 						RelativePath=".\VirtualWnd\Network\Route.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="HardWizard"
+					>
+					<File
+						RelativePath=".\VirtualWnd\HardWizard\ClipBoardMonitor.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\HardWizard\DeviceNotify.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\HardWizard\HardMgr.cpp"
 						>
 					</File>
 				</Filter>
@@ -438,6 +462,10 @@
 				RelativePath=".\stdafx.h"
 				>
 			</File>
+			<File
+				RelativePath=".\WndLib.h"
+				>
+			</File>
 			<Filter
 				Name="VirtualWnd"
 				>
@@ -472,16 +500,40 @@
 						RelativePath=".\VirtualWnd\Task\UserInfo.h"
 						>
 					</File>
+					<File
+						RelativePath=".\VirtualWnd\Task\ViewCert.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Network"
 					>
+					<File
+						RelativePath=".\VirtualWnd\Network\HostScan.h"
+						>
+					</File>
 					<File
 						RelativePath=".\VirtualWnd\Network\NetworkMgr.h"
 						>
 					</File>
 					<File
 						RelativePath=".\VirtualWnd\Network\Route.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="HardWizard"
+					>
+					<File
+						RelativePath=".\VirtualWnd\HardWizard\ClipBoardMonitor.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\HardWizard\DeviceNotify.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\HardWizard\HardMgr.h"
 						>
 					</File>
 				</Filter>

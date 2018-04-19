@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "Resource.h"
 #include "PCHunter.h"
 #include "Utils/ControlBuilder.h"
@@ -22,6 +22,9 @@ CPCHunter::CPCHunter()
 
 	AddVirtualWnd(VIRTUAL_WND_NETWORK, &m_NetworkMgr);
 	m_NetworkMgr.SetVirtualWnd(this, &m_PaintManager);
+
+	AddVirtualWnd(VIRTUAL_WND_HARD, &m_HardMgr);
+	m_HardMgr.SetVirtualWnd(this, &m_PaintManager);
 }
 
 CPCHunter::~CPCHunter()
@@ -32,6 +35,9 @@ CPCHunter::~CPCHunter()
 	RemoveVirtualWnd(VIRTUAL_WND_NETWORK);
 	m_NetworkMgr.ClearVirtualWnd(this);
 
+	RemoveVirtualWnd(VIRTUAL_WND_HARD);
+	m_HardMgr.ClearVirtualWnd(this);
+
 	//m_Tray.DeleteTrayIcon();
 	//	释放线程存储空间
 	ReleaseProcessErrorInfo();
@@ -41,6 +47,22 @@ DUI_BEGIN_MESSAGE_MAP(CPCHunter, CNotifyPump)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK, OnClick)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_SELECTCHANGED, OnSelectChanged)
 DUI_END_MESSAGE_MAP()  
+
+LRESULT CPCHunter::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch(uMsg)
+	{
+		case WM_DEVICECHANGE:
+			return	m_HardMgr.DeviceChanged(wParam, lParam);
+		case WM_CHANGECBCHAIN:
+				m_HardMgr.OnChangeCbChain(wParam, lParam);
+			return FALSE;
+		case WM_DRAWCLIPBOARD:
+				m_HardMgr.OnDrawClipboard();
+			return FALSE;
+	}
+	return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
+}
 
 LRESULT CPCHunter::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
@@ -345,6 +367,10 @@ LRESULT CPCHunter::OnMenuClick(WPARAM wParam, LPARAM lParam)
 	if (strMenuName == _T("AppMenu"))
 		m_TaskMgr.OnAppMenu(pControl);
 	else if (strMenuName == _T("ScanResultMenu"))
-		m_TaskMgr.OnServiceMenu(pControl);
+		m_NetworkMgr.OnHostScanMenu(pControl);
+	else if (strMenuName == _T("RangeMenu"))
+		m_NetworkMgr.OnRangeMenu(pControl);
+	else if (strMenuName == _T("RouteInfo"))
+		m_NetworkMgr.OnRouteInfo(pControl);
 	return TRUE;
 }

@@ -11,10 +11,15 @@ public:
 public:
 	void ClearVirtualWnd(CNotifyPump* pNotifyPump);
 	void SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPaintManager);
+public:
+	void OnHostScanMenu(CControlUI* pControl);
+	void OnRangeMenu(CControlUI* pControl);
+	void OnRouteInfo(CControlUI* pControl);
 protected:
 	DUI_DECLARE_MESSAGE_MAP()
 	void OnSelectChanged( TNotifyUI &msg );
 private:
-	CRoute		m_Route;
+	CRoute				m_Route;
+	CHostScan		m_HostScan;
 	CPaintManagerUI* m_pPaintManager;
 };
