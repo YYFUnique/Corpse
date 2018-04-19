@@ -129,7 +129,7 @@ namespace DuiLib
 				CControlUI* pNext = GetItemAt(m_iSepIndex + 1);
 				int nFixed = 0;
 				if (EstimateFixedLength(pNext, rc, nFixed) == false)
-					return;				
+					return;
 
 				ptLastMouse = event.ptMouse;
 				m_rcNewPos = rc;
@@ -234,9 +234,9 @@ namespace DuiLib
 
 	void CSplitLayoutUI::SetPosInHori(RECT rc)
 	{
-		TStdValArray<RECT> rcColRowInfo(sizeof(RECT),m_rcColRowInfo.GetSize());
+		/*TStdValArray<RECT> rcColRowInfo(sizeof(RECT),m_rcColRowInfo.GetSize());
 		for (int n=0;n<m_rcColRowInfo.GetSize();++n)
-			rcColRowInfo.Add(m_rcColRowInfo.GetAt(n));
+			rcColRowInfo.Add(m_rcColRowInfo.GetAt(n));*/
 
 		m_rcColRowInfo.Empty();
 
@@ -347,9 +347,9 @@ namespace DuiLib
 
 	void CSplitLayoutUI::SetPosInVeri(RECT rc)
 	{
-		TStdValArray<RECT> rcColRowInfo(sizeof(RECT),m_rcColRowInfo.GetSize());
+		/*TStdValArray<RECT> rcColRowInfo(sizeof(RECT),m_rcColRowInfo.GetSize());
 		for (int n=0;n<m_rcColRowInfo.GetSize();++n)
-			rcColRowInfo.Add(m_rcColRowInfo.GetAt(n));
+			rcColRowInfo.Add(m_rcColRowInfo.GetAt(n));*/
 
 		m_rcColRowInfo.Empty();
 		// Determine the width of elements that are sizeable

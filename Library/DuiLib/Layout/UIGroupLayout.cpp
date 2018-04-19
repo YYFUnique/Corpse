@@ -140,16 +140,16 @@ namespace DuiLib
 			CRenderEngine::DrawText(hDC, m_pManager, m_rcTextArea, m_sText, m_dwTextColor, m_iFont, DT_CALCRECT);
 
 			m_hBackground = CreateCompatibleDC(hDC);
-			UINT nWidth = m_rcTextArea.right-m_rcTextArea.left ;
-			UINT nHeight = m_rcTextArea.bottom-m_rcTextArea.top;
-			m_hBitMap = CreateCompatibleBitmap(hDC,nWidth,nHeight);
-			SelectObject(m_hBackground,m_hBitMap);
+			UINT nWidth = m_rcTextArea.right - m_rcTextArea.left ;
+			UINT nHeight = m_rcTextArea.bottom - m_rcTextArea.top;
+			m_hBitMap = CreateCompatibleBitmap(hDC, nWidth, nHeight);
+			SelectObject(m_hBackground, m_hBitMap);
 			
 			RECT rcTextBackground = m_rcItem;
-			rcTextBackground.left = m_dwTextOffset;
+			rcTextBackground.left += m_dwTextOffset;
 			rcTextBackground.top = m_rcItem.top;// + (m_rcTextArea.bottom - m_rcTextArea.top - m_nBorderSize)/2;
 			//	保存圆角矩形文字下的背景
-			BitBlt(m_hBackground,0,0,nWidth,nHeight,hDC,rcTextBackground.left,rcTextBackground.top,SRCCOPY);
+			BitBlt(m_hBackground, 0, 0, nWidth, nHeight, hDC, rcTextBackground.left, rcTextBackground.top, SRCCOPY);
 			//CRenderEngine::SaveBitmapFile(m_hBitMap,_T("C:\\test.bmp"));
 		}		
 
