@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+	<FileListItem>
+		<HorizontalLayout>
+			<Picture name="Pic" visible="true" width="16" height="16" padding="3,6,0,0" foreimage="file=&apos;Driver.png&apos;" />
+			<Label name="Name" text="" textpadding="3,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="Display" text="" textpadding="5,0,0,0"/>
+		</HorizontalLayout>
+		<!-- <HorizontalLayout visible="false" bkcolor="#FF00FF00">
+			<Picture name="Pic" visible="false" width="16" height="16" float="true" pos="3,5,0,0" foreimage="file=&apos;Title.png&apos;" />
+			<Label name="Desc" text="" textpadding="5,0,0,0"/>
+		</HorizontalLayout> -->
+		<HorizontalLayout>
+			<Label name="DriverType" text="" align="center"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="RunStatus" text="" align="center"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="StartType" text="123123" align="center"/>
+		</HorizontalLayout>
+	</FileListItem>
+</Window>

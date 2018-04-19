@@ -6,9 +6,9 @@
 	<Style name="OptionTab" value="normalimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;0,0,109,32&apos; &quot; hotimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;109,0,218,32&apos; &quot; selectedimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;218,0,327,32&apos;&quot;" />
 	<VerticalLayout name="VLayout" >
 		<VerticalLayout name="VLayoutTask" height="30" bkimage="subtab_bg.png" >
-			<Option name="OptionUI1" font="0"  text="应用程序" tooltip="应用程序" userdata="0" style="OptionTab" float="true" pos="8,0,92,29" group="task" selected="true"/>
+			<Option name="OptionUI1" font="0" text="应用程序" tooltip="应用程序" userdata="0" style="OptionTab" float="true" pos="8,0,92,29" group="task" selected="true"/>
 			<Option name="OptionUI2" font="0" text="进程" tooltip="进程" userdata="1" float="true" style="OptionTab" pos="90,0,174,29" group="task" />
-			<Option name="OptionUI3" font="0" text="win32服务" tooltip="win32服务" userdata="2" style="OptionTab" float="true" pos="172,0,256,29" group="task"/>
+			<Option name="OptionUI3" font="0" text="Win32服务" tooltip="win32服务" userdata="2" style="OptionTab" float="true" pos="172,0,256,29" group="task"/>
 			<Option name="OptionUI4" font="0" text="核心服务" tooltip="核心服务" userdata="3" style="OptionTab" float="true" pos="254,0,338,29" group="task" />
 			<Option name="OptionUI5" font="0" text="加密服务" tooltip="加密服务" userdata="4" style="OptionTab" float="true" pos="336,0,420,29" group="task" />
 			<Option name="OptionUI6" font="0" text="查看证书" tooltip="查看证书" userdata="5" style="OptionTab" float="true" pos="418,0,502,29" group="task" />
@@ -17,19 +17,31 @@
 		</VerticalLayout>
 		<TabLayout name="TaskWizard" showanimate="false" > 
 			<VerticalLayout name="VLayoutApp" virtualwnd="app">
-				<List name="App" menu="true" itemfont="0" multiexpanding="true" multiselect="false" vscrollbar="true">
+				<!--<List name="App" menu="true" itemfont="0" itemaltbk="true" itembkcolor="#FFCDCDCD" multiexpanding="true" multiselect="false" vscrollbar="true">
 					<ListHeader menu="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
 						<ListHeaderItem text="任务" width="200" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 						<ListHeaderItem text="状态" width="60" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 					</ListHeader>
-				</List>
-				<Page name="page" height="30">
-					<!--<Button text="首页"/>
-					<Button text="首页"/>
-					<Button text="首页"/>
-					<Button text="首页"/>
-					<Button text="首页"/>-->
-				</Page>
+				</List>-->
+				<FileList name="App" menu="true" vscrollbar="true" itemtextcolor="#FFFF0000" itemrowline="true" itemfont="0">
+					<ListHeader menu="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
+						<ListHeaderItem text="窗口标题" width="300" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="类名" width="150" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="状态" width="70" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+					</ListHeader>
+					<!-- <FileListItem height="27">
+						<HorizontalLayout>
+							<CheckBox name="check" visible="false" />
+							<Picture name="Pic" visible="false" width="16" height="16" foreimage="file=&apos;Title.png&apos;" />
+							<Label name="Item" text="asdfadsf" />
+						</HorizontalLayout>
+						<HorizontalLayout>
+							<Picture name="Pic" visible="false" width="16" height="16" float="true" pos="8,5,0,0" foreimage="file=&apos;Title.png&apos;" />
+							<Label name="ItemInfo" text="adsadsfa" align="center"/>
+						</HorizontalLayout>
+					</FileListItem> -->
+				</FileList>
+				<Control height="3"/>
 			</VerticalLayout>
 			<VerticalLayout name="VLayoutProcess" virtualwnd="process">
 				<List name="Process" >
@@ -43,25 +55,28 @@
 				</List>
 			</VerticalLayout>
 			<VerticalLayout name="VLayoutService" virtualwnd="services" linesize="12"  >
-				<List name="Service" menu="true" itemfont="0" multiselect="true" multiexpanding="true" scrollstepsize="200">
+				<List name="Service" menu="true" itemfont="0" multiselect="true" itemendellipsis="true" multiexpanding="true" scrollstepsize="200">
 					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">			
-						<ListHeaderItem text="名称" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="显示名称" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="名称" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="显示名称" width="150" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 						<ListHeaderItem text="进程ID" sepimage="file=&apos;ListHeadSep.png&apos;" width="50" sepwidth="1"/>
 						<ListHeaderItem text="状态" sepimage="file=&apos;ListHeadSep.png&apos;" width="60" sepwidth="1"/>
 						<ListHeaderItem text="启动类型" sepimage="file=&apos;ListHeadSep.png&apos;" width="60" sepwidth="1"/>
 						<ListHeaderItem text="文件路径" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="描述" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="描述" visible="false" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 					</ListHeader>
 				</List>
-				<Control height="1"/>
+				<Control height="3"/>
 			</VerticalLayout>
 			<VerticalLayout name="VLayoutDriver" virtualwnd="driver">
 				<List name="Driver" menu="true" itemfont="0" multiexpanding="true" scrollstepsize="200">
-					<ListHeader scaleheader="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">		
-						<ListHeaderItem text="名称" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="显示名称" sepimage="file=&apos;ListHeadSep.png&apos;" scale="33%" sepwidth="1"/>
-						<ListHeaderItem text="描述" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">		
+						<!-- ListHeader 设置好 scaleheader="true"  scale="15%"  -->
+						<ListHeaderItem text="名称" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="显示名称" width="200" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="类型" width="80" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="状态" width="80" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="启动类型" width="100" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 					</ListHeader>
 				</List>
 				<Control height="1"/>

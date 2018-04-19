@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="List" value="vscrollbar=&quot;true&quot; hscrollbar=&quot;true&quot; itemalign=&quot;left&quot; itemaltbk=&quot;false&quot; itemrowline=&quot;true&quot; itemtextpadding=&quot;5,0,0,0&quot; itemlinecolor=&quot;#FF939393&quot;" />
+	<Style name="OptionTab" value="normalimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;0,0,109,32&apos; &quot; hotimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;109,0,218,32&apos; &quot; selectedimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;218,0,327,32&apos;&quot;" />
+	<VerticalLayout name="VLayout" >
+		<VerticalLayout name="VLayoutNotify" height="30" bkimage="subtab_bg.png" >
+			<Option name="OptionUI1" font="0"  text="监视硬件接口" tooltip="监视硬件接口" align="center" userdata="0" style="OptionTab" float="true" pos="10,0,100,29" group="monitor" selected="true"/>
+			<Option name="OptionUI2" font="0" text="监视文件系统" tooltip="监视文件系统" align="center" userdata="1" float="true" style="OptionTab" pos="98,0,188,29" group="monitor" />
+			<Option name="OptionUI3" font="0" text="监视逻辑驱动器" tooltip="监视逻辑驱动器" align="center" userdata="2" style="OptionTab" float="true" pos="186,0,286,29" group="monitor"/>
+			<Option name="OptionUI4" font="0" text="监视剪切板" tooltip="监视剪切板" align="center" userdata="3" style="OptionTab" float="true" pos="284,0,362,29" group="monitor"/>
+		</VerticalLayout>
+		<TabLayout name="HardWizard" showanimate="false">
+			<VerticalLayout name="VLayoutHard" virtualwnd="device">
+				<List name="Hard" menu="true" hscrollbar="true" itemaltbk="true" itemfont="0" multiexpanding="false" multiselect="false">
+					<ListHeader menu="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
+						<ListHeaderItem text="序号" width="30" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="时间" width="60" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="事件" width="200" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="GUID" width="350" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="信息" width="250" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+					</ListHeader>
+				</List>
+			</VerticalLayout>
+			<VerticalLayout name="VLayoutFile" virtualwnd="file">
+				<List name="File" menu="true" itemfont="0" multiexpanding="false" multiselect="false">
+					<ListHeader menu="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
+						<ListHeaderItem text="序号" width="30" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="时间" width="60" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="事件" width="200" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="GUID" width="350" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="信息" width="250" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+					</ListHeader>
+				</List>
+			</VerticalLayout>
+			<VerticalLayout name="VLayoutFile" virtualwnd="volume">
+				<List name="Volume" menu="true" itemfont="0" multiexpanding="false" multiselect="false">
+					<ListHeader menu="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
+						<ListHeaderItem text="序号" width="30" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="时间" width="60" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="事件" width="200" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="GUID" width="350" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="信息" width="250" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+					</ListHeader>
+				</List>
+			</VerticalLayout>
+			<VerticalLayout name="VLayoutBord" virtualwnd="clipbord">
+				<FileList name="ClipBord" menu="true" vscrollbar="true" itemfont="0" multiexpanding="false" multiselect="false">
+					<ListHeader menu="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
+						<ListHeaderItem text="序号" width="50" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<!--<ListHeaderItem text="类型" width="80" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>-->
+						<ListHeaderItem text="内容" width="480" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="时间" width="150" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+					</ListHeader>
+				</FileList>
+			</VerticalLayout>
+		</TabLayout>
+	</VerticalLayout>
+</Window>

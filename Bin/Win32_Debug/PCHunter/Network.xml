@@ -98,12 +98,12 @@
 					<VerticalLayout >
 						<List name="Scan" itemfont="0" menu="true" multiselect="false" >
 							<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;" menu="true">						
-								<ListHeaderItem text="IP地址" />
-								<ListHeaderItem text="MAC地址" />
-								<ListHeaderItem text="网卡厂商" />
-								<ListHeaderItem text="PING通性" />
-								<ListHeaderItem text="主机名称" />
-								<ListHeaderItem text="备注" />
+								<ListHeaderItem text="IP地址" width="100"/>
+								<ListHeaderItem text="MAC地址" width="128"/>
+								<ListHeaderItem text="网卡厂商" width="100"/>
+								<ListHeaderItem text="PING通性" width="60"/>
+								<ListHeaderItem text="主机名称" width="150"/>
+								<ListHeaderItem text="备注" width="100"/>
 							</ListHeader>
 						</List>
 						<Control height="2"/>

@@ -9,7 +9,7 @@
 		<VerticalLayout name="VLayout" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;" >
             <HorizontalLayout name="HorizontalLayoutUI1" pos="0,0,0,33" height="33" inset="0,3,0,0">
                 <HorizontalLayout name="HorizontalLayoutUI2">
-                    <Label name="TextUI1" text="系统信息查看工具" float="true" pos="22,1,207,41" textpadding="2,0,2,0" textcolor="#FFFFFFFF" font="3"/>
+                    <Label name="TextUI1" text="系统信息查看工具" float="true" pos="7,1,207,41" textpadding="2,0,2,0" textcolor="#FFFFFFFF" font="3"/>
 				</HorizontalLayout>
                 <HorizontalLayout name="HorizontalLayoutUI4" pos="0,0,145,0">
 					<Button name="BtnMedal" maxheight="30" maxwidth="26" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="medal.png" hotimage="medal.png" pushedimage="medal.png" />
