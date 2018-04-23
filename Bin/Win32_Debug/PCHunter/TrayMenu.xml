@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window roundcorner="5,5">
+  <Font name="微软雅黑" size="12" bold="false" default="true" />
+  <Font name="微软雅黑" size="12" bold="true"/>
+  <Default name="Menu" value="inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='menu_bk.png' corner='30,8,8,8'&quot; mask=&quot;#FFFFFFFF&quot; hole=&quot;false&quot;" />
+  <Menu name="TrayMenu">
+  	<MenuElement text="显示图标" name="Show" />
+	<MenuElement linetype="true" />
+	<MenuElement text="发送鼠标左键单击消息" name="LButton" />
+	<MenuElement text="发送鼠标左键双击消息" name="LDButton" />
+	<MenuElement text="发送鼠标右键单击消息" name="RButton" />
+	<MenuElement linetype="true" />
+	<MenuElement text="向上移动" name="Up" />
+    <MenuElement text="向下移动" name="Down" />
+  </Menu>
+</Window>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+	<FileListItem>
+		<HorizontalLayout>
+			<Picture name="Pic" visible="false" width="16" height="16" padding="3,5,0,0"/>
+			<Label name="Title" text="" endellipsis="true" textpadding="3,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="PID" text="" textpadding="0,0,5,0" align="right"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="ProcessName" text="" endellipsis="true" textpadding="5,0,5,0" />
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="Hwnd" text="" textpadding="0,0,5,0" align="right"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="WinTitle" endellipsis="true" text="" textpadding="5,0,0,0" />
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="uID" endellipsis="true" align="right" textpadding="0,0,5,0" />
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="MsgID" endellipsis="true" textpadding="5,0,0,0" />
+		</HorizontalLayout>
+	</FileListItem>
+</Window>

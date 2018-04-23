@@ -15,6 +15,29 @@
 			<HorizontalLayout virtualwnd="osinfo"  name="VLayoutOsInfo">
 				<TreeView name="OsInfo" visiblefolderbtn="false" textpadding="5,0,0,0" vscrollbar="true" visiblecheckbtn="false" />
 			</HorizontalLayout>
+			<HorizontalLayout virtualwnd="osinfo"  name="VLayoutOsInfo">
+				<TreeView name="OsInfo" visiblefolderbtn="false" textpadding="5,0,0,0" vscrollbar="true" visiblecheckbtn="false" />
+			</HorizontalLayout>
+			<HorizontalLayout virtualwnd="osinfo"  name="VLayoutOsInfo">
+				<TreeView name="OsInfo" visiblefolderbtn="false" textpadding="5,0,0,0" vscrollbar="true" visiblecheckbtn="false" />
+			</HorizontalLayout>
+			<VerticalLayout virtualwnd="trayinfo"  name="VLayoutOsInfo">
+				<List name="TrayApp" menu="true" itemfont="0" >
+					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
+						<ListHeaderItem text="图标文字" width="220" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="进程ID" width="50" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="进程名" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="窗口句柄" width="90" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="窗口标题" width="220" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="图标id" width="50" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="托盘消息" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<!--<ListHeaderItem text="进程ID" width="40"  epimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="进程(服务)名" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="路径名称" width="300" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>-->
+					</ListHeader>
+				</List>
+				<Control height="3"/>
+			</VerticalLayout>
 		</TabLayout>
 	</VerticalLayout>
 </Window>

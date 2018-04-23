@@ -25,16 +25,17 @@
 			<VerticalLayout virtualwnd="connect" name="VLayoutConnect" >
 				<List name="Connect" menu="true" itemfont="0" >
 					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
-						<ListHeaderItem text="协议" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="本地地址" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="外部地址" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="状态" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="创建时间" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="进程ID" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="进程(服务)名" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="路径名称" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="协议" width="30" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="本地地址" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="外部地址" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="状态" width="80" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="创建时间" width="60" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="进程ID" width="40"  epimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="进程(服务)名" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="路径名称" width="300" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 					</ListHeader>
 				</List>
+				<Control height="3"/>
 			</VerticalLayout>
 			<VerticalLayout virtualwnd="route" name="VLayoutRoute" >
 				<List name="Route" menu="true" itemfont="0" >
