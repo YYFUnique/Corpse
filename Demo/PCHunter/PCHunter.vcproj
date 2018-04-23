@@ -327,6 +327,10 @@
 					Name="Network"
 					>
 					<File
+						RelativePath=".\VirtualWnd\Network\Connect.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\VirtualWnd\Network\HostScan.cpp"
 						>
 					</File>
@@ -336,6 +340,14 @@
 					</File>
 					<File
 						RelativePath=".\VirtualWnd\Network\Route.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Network\Snmp.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Network\Wlan.cpp"
 						>
 					</File>
 				</Filter>
@@ -352,6 +364,18 @@
 					</File>
 					<File
 						RelativePath=".\VirtualWnd\HardWizard\HardMgr.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="System"
+					>
+					<File
+						RelativePath=".\VirtualWnd\System\SystemMgr.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\System\TrayIcon.cpp"
 						>
 					</File>
 				</Filter>
@@ -509,6 +533,10 @@
 					Name="Network"
 					>
 					<File
+						RelativePath=".\VirtualWnd\Network\Connect.h"
+						>
+					</File>
+					<File
 						RelativePath=".\VirtualWnd\Network\HostScan.h"
 						>
 					</File>
@@ -518,6 +546,14 @@
 					</File>
 					<File
 						RelativePath=".\VirtualWnd\Network\Route.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Network\Snmp.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Network\Wlan.h"
 						>
 					</File>
 				</Filter>
@@ -534,6 +570,18 @@
 					</File>
 					<File
 						RelativePath=".\VirtualWnd\HardWizard\HardMgr.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="System"
+					>
+					<File
+						RelativePath=".\VirtualWnd\System\SystemMgr.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\System\TrayIcon.h"
 						>
 					</File>
 				</Filter>

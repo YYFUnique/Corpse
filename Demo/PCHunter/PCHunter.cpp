@@ -25,6 +25,9 @@ CPCHunter::CPCHunter()
 
 	AddVirtualWnd(VIRTUAL_WND_HARD, &m_HardMgr);
 	m_HardMgr.SetVirtualWnd(this, &m_PaintManager);
+
+	AddVirtualWnd(VIRTUAL_WND_SYSTEM, &m_SystemMgr);
+	m_SystemMgr.SetVirtualWnd(this, &m_PaintManager);
 }
 
 CPCHunter::~CPCHunter()
@@ -38,6 +41,8 @@ CPCHunter::~CPCHunter()
 	RemoveVirtualWnd(VIRTUAL_WND_HARD);
 	m_HardMgr.ClearVirtualWnd(this);
 
+	RemoveVirtualWnd(VIRTUAL_WND_SYSTEM);
+	m_SystemMgr.ClearVirtualWnd(this);
 	//m_Tray.DeleteTrayIcon();
 	//	释放线程存储空间
 	ReleaseProcessErrorInfo();
@@ -372,5 +377,7 @@ LRESULT CPCHunter::OnMenuClick(WPARAM wParam, LPARAM lParam)
 		m_NetworkMgr.OnRangeMenu(pControl);
 	else if (strMenuName == _T("RouteInfo"))
 		m_NetworkMgr.OnRouteInfo(pControl);
+	else if (strMenuName == _T("TrayMenu"))
+		m_SystemMgr.OnTrayMenu(pControl);
 	return TRUE;
 }

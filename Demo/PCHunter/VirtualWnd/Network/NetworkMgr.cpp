@@ -19,6 +19,9 @@ void CNetworkMgr::ClearVirtualWnd(CNotifyPump* pNotifyPump)
 {
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_ROUTE);
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_HOSTSCAN);
+	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_SNMP);
+	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_WLAN);
+	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_CONNECT);
 }
 
 void CNetworkMgr::SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPaintManager)
@@ -30,6 +33,15 @@ void CNetworkMgr::SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPain
 
 	m_HostScan.SetPaintManager(pPaintManager);
 	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_HOSTSCAN, &m_HostScan);
+
+	m_Snmp.SetPaintManager(pPaintManager);
+	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_SNMP, &m_Snmp);
+
+	m_Wlan.SetPaintManager(pPaintManager);
+	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_WLAN, &m_Wlan);
+
+	m_Connect.SetPaintManager(pPaintManager);
+	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_CONNECT, &m_Connect);
 }
 
 void CNetworkMgr::OnSelectChanged( TNotifyUI &msg )

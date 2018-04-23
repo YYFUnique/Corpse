@@ -10,6 +10,7 @@
 #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
 
+#include "Utils/SnmpMgr.h"
 
 #include "VirtualWnd/Task/Application.h"
 #include "VirtualWnd/Task/Services.h"
@@ -19,12 +20,18 @@
 
 #include "VirtualWnd/Network/Route.h"
 #include "VirtualWnd/Network/HostScan.h"
+#include "VirtualWnd/Network/Snmp.h"
+#include "VirtualWnd/Network/Wlan.h"
+#include "VirtualWnd/Network/Connect.h"
 
 #include "VirtualWnd/HardWizard/DeviceNotify.h"
 #include "VirtualWnd/HardWizard/ClipBoardMonitor.h"
+
+#include "VirtualWnd/System/TrayIcon.h"
 
 #include "VirtualWnd/IVirtualWndMgr.h"
 
 #include "VirtualWnd/Task/TaskMgr.h"
 #include "VirtualWnd/Network/NetworkMgr.h"
 #include "VirtualWnd/HardWizard/HardMgr.h"
+#include "VirtualWnd/System/SystemMgr.h"
