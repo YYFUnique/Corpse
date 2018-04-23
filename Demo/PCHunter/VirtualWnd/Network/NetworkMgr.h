@@ -20,6 +20,9 @@ protected:
 	void OnSelectChanged( TNotifyUI &msg );
 private:
 	CRoute				m_Route;
+	CSnmp				m_Snmp;
+	CWlan				m_Wlan;
+	CConnect			m_Connect;
 	CHostScan		m_HostScan;
 	CPaintManagerUI* m_pPaintManager;
 };
