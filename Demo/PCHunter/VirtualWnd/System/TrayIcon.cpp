@@ -108,7 +108,7 @@ void CTrayIcon::OnLoadItem(TNotifyUI& msg)
 		pProcessName->SetFont(pListInfo->nFont);
 		pProcessName->SetForeColor(pListInfo->dwTextColor);
 
-		strTipInfo.Format(_T("0X%08X"), TrayDataInfo.hWnd);
+		strTipInfo.Format(_T("0x%08X"), TrayDataInfo.hWnd);
 		CLabelUI* pHwnd = (CLabelUI*)m_pPaintManager->FindControl(_T("Hwnd"));
 		pHwnd->SetText(strTipInfo);
 		pHwnd->SetFont(pListInfo->nFont);
