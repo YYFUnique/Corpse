@@ -33,16 +33,15 @@
 #include <Windows.h>
 #include <WinDef.h>
 #include "Duilib/UIlib.h"
+
 using namespace DuiLib;
-#include "EngineMsg.h"
 #include <atlstr.h>
-/*#include <WinDef.h>*/
 #include <olectl.h>
 
-#define lengthof(x) (sizeof(x)/sizeof(*x))
-#define MAX max
-#define MIN min
-#define CLAMP(x,a,b) (MIN(b,MAX(a,x)))
+//#define lengthof(x) (sizeof(x)/sizeof(*x))
+//#define MAX max
+//#define MIN min
+//#define CLAMP(x,a,b) (MIN(b,MAX(a,x)))
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
