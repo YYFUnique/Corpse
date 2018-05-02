@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="370,155" sizebox="4,4,6,6" caption="0,0,0,34" roundcorner="5,5" maxbox="false" layered="true" >
+    <Font name="微软雅黑" size="13" bold="false" italic="false" />
+	<Font name="微软雅黑" size="12" bold="false" italic="false" />
+	<VerticalLayout name="VLayoutTotal" bkimage="file=&apos;main.png&apos;">
+		<HorizontalLayout name="HLayoutHead" height="34">
+			<Button width="11" height="11" name="BtnClose" tooltip="关闭" float="true" pos="349,12,360,23" normalimage="file=&apos;BtnClose2.png&apos; source=&apos;0,0,11,11&apos;" hotimage="file=&apos;BtnClose2.png&apos; source=&apos;11,0,22,11&apos;" pushedimage="file=&apos;BtnClose2.png&apos; source=&apos;22,0,33,11&apos;"/>
+		</HorizontalLayout>
+		<VerticalLayout >
+			<HorizontalLayout height="85" />
+			<HorizontalLayout>
+				<Option name="BtnAutoStart" width="100" height="18" float="true" pos="10,5,100,25" text="开机自启动" font="0" textcolor="#FF696969" textpadding="23,0,0,0" align="left" selected="true" normalimage="file=&apos;option.png&apos; source=&apos;0,0,15,15&apos; dest=&apos;3,2,18,17&apos;" hotimage="file=&apos;option.png&apos; source=&apos;15,0,30,15&apos; dest=&apos;3,2,18,17&apos;" pushedimage="file=&apos;option.png&apos; source=&apos;30,0,45,15&apos; dest=&apos;3,2,18,17&apos;" selectedimage="file=&apos;option.png&apos; source=&apos;120,0,135,15&apos; dest=&apos;3,2,18,17&apos;" selectedhotimage="file=&apos;option.png&apos; source=&apos;135,0,150,15&apos; dest=&apos;3,2,18,17&apos;"/>
+				<Button name="BtnSure" width="75" height="28" text="确定" float="true" pos="200,0,275,28" font="0" textcolor="#FF696969" normalimage="file=&apos;sure.png&apos; source=&apos;0,0,77,27&apos;" hotimage="file=&apos;sure.png&apos; source=&apos;77,0,154,27&apos;" pushedimage="file=&apos;sure.png&apos; source=&apos;154,0,231,27&apos;"/>	
+				<Button name="BtnCannel" width="75" height="27" text="取消" float="true" pos="285,0,360,27" font="0" textcolor="#FFFFFFFF" normalimage="file=&apos;cannel.png&apos; source=&apos;0,0,7,23&apos;" hotimage="file=&apos;cannel.png&apos; source=&apos;7,0,14,23&apos;" pushedimage="file=&apos;cannel.png&apos; source=&apos;14,0,21,23&apos;"/>
+			</HorizontalLayout>
+		</VerticalLayout>
+	</VerticalLayout>
+</Window>
