@@ -1,7 +1,5 @@
 #pragma once
 
-#include "LsThread.h"
-
 #ifdef LS_STATIC_LIB_CALL
 #define DLL_API 
 #elif defined  DLL_EXPORTS
@@ -10,6 +8,8 @@
 #define DLL_API __declspec(dllimport)
 #endif
 
+#include "LsThread.h"
+#include "../Utils/DuiList.h"
 //template class __declspec(dllexport) CLsList<CLsThread*,CLsThread*>;
 
 //对CLsThread类的管理

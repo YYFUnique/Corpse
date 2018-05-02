@@ -3,7 +3,7 @@
 
 BOOL OsIsWow64Process()
 {
-	static BOOL bWow64Process=-1;
+	static BOOL bWow64Process = -1;
 
 	if (bWow64Process==TRUE || bWow64Process==FALSE)
 		return bWow64Process;
@@ -17,7 +17,7 @@ BOOL OsIsWow64Process()
 
 	LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(hModule,"IsWow64Process");
 	if (fnIsWow64Process==NULL)
-		return FALSE;//win2000
+		return FALSE; //win2000
 
 	bWow64Process=FALSE;
 	if (fnIsWow64Process(GetCurrentProcess(),&bWow64Process)==FALSE)
