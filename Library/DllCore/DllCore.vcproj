@@ -335,6 +335,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Utils\Policies.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\Registry.cpp"
 					>
 				</File>
@@ -590,6 +594,10 @@
 				</File>
 				<File
 					RelativePath=".\Utils\OsInfo.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\Policies.h"
 					>
 				</File>
 				<File
