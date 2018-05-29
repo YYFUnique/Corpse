@@ -30,6 +30,7 @@ namespace DuiLib
 		if( m_bShowText == bShowText ) return;
 		m_bShowText = bShowText;
 		if(!m_bShowText) SetText(_T(""));
+		UpdateText();
 	}
 
 	bool CProgressUI::IsHorizontal()
@@ -98,6 +99,7 @@ namespace DuiLib
 		else if( _tcscmp(pstrName, _T("min")) == 0 ) SetMinValue(_ttoi(pstrValue));
 		else if( _tcscmp(pstrName, _T("max")) == 0 ) SetMaxValue(_ttoi(pstrValue));
 		else if( _tcscmp(pstrName, _T("value")) == 0 ) SetValue(_ttoi(pstrValue));
+		else if( _tcsicmp(pstrName, _T("showtext")) == 0) SetShowText(_tcsicmp(pstrValue, _T("true")) == 0 ? true : false);
 		else if( _tcscmp(pstrName, _T("isstretchfore"))==0) SetStretchForeImage(_tcscmp(pstrValue, _T("true")) == 0? true : false);
 		else CLabelUI::SetAttribute(pstrName, pstrValue);
 	}
