@@ -33,7 +33,9 @@ BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSh
 			break;
 
 		pTxMiniSkin->Create(NULL, _T("电脑管家时间助手"), UI_WNDSTYLE_DIALOG, WS_EX_TOOLWINDOW, 800, 600);
-		pTxMiniSkin->ShowWindow(true);
+		//pTxMiniSkin->ShowWindow(true);
+		// 不需要在最前端显示
+		SetWindowPos(pTxMiniSkin->GetHWND(), HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 		CPaintManagerUI::MessageLoop();
 
 		//释放打开的压缩包句柄
