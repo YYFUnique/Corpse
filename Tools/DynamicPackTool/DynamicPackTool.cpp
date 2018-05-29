@@ -5,7 +5,6 @@
 #include "helper/UmPath.h"
 #include "DuiLib/Layout/UITreeLayout.h"
 #include "DuiLib/Layout/UISplitLayout.h"
-#include "DuiLib/Layout/UISplitterLayout.h"
 #include "Scintilla/include/Scintilla.h"
 
 #include <shlobj.h>
