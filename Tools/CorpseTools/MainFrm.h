@@ -17,10 +17,12 @@ public:
 // 操作
 public:
 
+	BOOL ReadRegFromLanToolNode(LPCTSTR lpKeyName,DWORD &dwValue);
+	BOOL WriteRegFromLanToolNode(LPCTSTR lpKeyName, DWORD dwValue);
 // 重写
 public:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
-
+	virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
 // 实现
 public:
 	virtual ~CMainFrame();
@@ -32,12 +34,12 @@ public:
 
 protected:  // 控件条嵌入成员
 	//CStatusBar        m_wndStatusBar;
-
+	CSplitterWnd		m_WndSplitter;
 // 生成的消息映射函数
 protected:
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	DECLARE_MESSAGE_MAP()
-
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnClose();
 };
 
 

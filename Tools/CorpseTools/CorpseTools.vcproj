@@ -339,6 +339,14 @@
 					>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="Common"
+				>
+				<File
+					RelativePath=".\Common\Common.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -400,6 +408,14 @@
 					Name="SystemSetting"
 					>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Common"
+				>
+				<File
+					RelativePath=".\Common\Common.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
