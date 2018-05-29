@@ -19,14 +19,13 @@ namespace DuiLib
 
 	void TBCIAMainWnd::OnFinalMessage(HWND hWnd)
 	{
-		OutputDebugString(_T("OnFinalMessage"));
 		WindowImplBase::OnFinalMessage(hWnd);
 		delete this; 
 	}
 
 	LPCTSTR TBCIAMainWnd::GetWindowClassName() const
 	{
-		return _T("LsCIASkinEngine");
+		return _T("TBCIASkinEngine");
 	}
 
 	UILIB_RESOURCETYPE TBCIAMainWnd::GetResourceType() const
@@ -90,13 +89,16 @@ namespace DuiLib
 		TCHAR szModuleName[MAX_PATH];
 		GetModuleFileName(NULL, szModuleName, _countof(szModuleName));
 
+		// 获取大图标
 		SHFILEINFO shFileInfo;
 		SHGetFileInfo(szModuleName, NULL, &shFileInfo, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_LARGEICON);
-
 		// 设置大图标
-		::SendMessage(m_hWnd, WM_SETICON, (WPARAM) TRUE, (LPARAM) shFileInfo.hIcon);
+		::SendMessage(m_hWnd, WM_SETICON, ICON_BIG, (LPARAM) shFileInfo.hIcon);
+
+		// 获取小图标
+		SHGetFileInfo(szModuleName, NULL, &shFileInfo, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_SMALLICON);
 		//	设置小图标
-		::SendMessage(m_hWnd, WM_SETICON, (WPARAM) FALSE, (LPARAM) shFileInfo.hIcon);
+		::SendMessage(m_hWnd, WM_SETICON, ICON_SMALL, (LPARAM) shFileInfo.hIcon);
 	}
 
 	void TBCIAMainWnd::SaveToControlCallbackMap(CDuiString strName, int nCallback)
