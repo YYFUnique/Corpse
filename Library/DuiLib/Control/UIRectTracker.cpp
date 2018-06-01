@@ -352,7 +352,7 @@ namespace DuiLib
 	{
 		CDuiRect rect = *lpRect;
 		rect.Normalize();
-		CSize size(0, 0);
+		CDuiSize size(0, 0);
 
 		if (!m_bFinalErase)
 		{

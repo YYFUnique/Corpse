@@ -8,9 +8,17 @@ namespace DuiLib {
 //
 
 class CControlUI;
-
+class CPaintManagerUI;
 /////////////////////////////////////////////////////////////////////////////////////
 //
+
+//typedef enum tagUILIB_RESTYPE
+//{
+//	UILIB_FILE					= 1,		//	来自磁盘文件
+//	UILIB_ZIP						=	2,		// 来自磁盘ZIP压缩包
+//	UILIB_RESOURCE			=	3,		// 来自资源
+//	UILIB_ZIPRESOURCE	=	4,		//	来自资源ZIP压缩包
+//}UILIB_RESTYPE;
 
 typedef enum EVENTTYPE_UI
 {
@@ -109,6 +117,43 @@ typedef struct tagTImageInfo
     CDuiString sResType;
     DWORD dwMask;
 } TImageInfo;
+
+typedef struct UILIB_API tagTDrawInfo
+{
+	tagTDrawInfo();
+	void Parse(LPCTSTR pStrImage, LPCTSTR pStrModify, CPaintManagerUI *pPaintManager);
+	void Clear();
+
+	CDuiString sDrawString;
+	CDuiString sDrawModify;
+	CDuiString sImageName;
+	CDuiString sResType;
+	RECT rcDest;
+	RECT rcSource;
+	RECT rcCorner;
+	DWORD dwMask;
+	BYTE uFade;
+	bool bHole;
+	bool bTiledX;
+	bool bTiledY;
+	bool bHSL;
+}TDrawInfo,*PTDrawInfo;
+
+typedef struct UILIB_API tagTResInfo
+{
+	DWORD m_dwDefaultDisabledColor;
+	DWORD m_dwDefaultFontColor;
+	DWORD m_dwDefaultLinkFontColor;
+	DWORD m_dwDefaultLinkHoverFontColor;
+	DWORD m_dwDefaultSelectedBkColor;
+	TFontInfo m_DefaultFontInfo;
+	//CStdStringPtrMap m_aCustomFonts;
+	CStdPtrArray m_aCustomFonts;
+	CStdStringPtrMap m_ImageHash;
+	CStdStringPtrMap m_DefaultAttrHash;
+	CStdStringPtrMap m_StyleHash;
+	CStdStringPtrMap m_DrawInfoHash;
+}TResInfo, *PTResInfo;
 
 // Structure for notifications from the system
 // to the control implementation.
@@ -275,6 +320,10 @@ public:
     void RemoveAllImages();
     void ReloadAllImages();
 
+	const TDrawInfo* GetDrawInfo(LPCTSTR pStrImage, LPCTSTR pStrModify);
+	void RemoveDrawInfo(LPCTSTR pStrImage, LPCTSTR pStrModify);
+	void RemoveAllDrawInfos();
+
     void AddDefaultAttributeList(LPCTSTR pStrControlName, LPCTSTR pStrControlAttrList);
     LPCTSTR GetDefaultAttributeList(LPCTSTR pStrControlName) const;
     bool RemoveDefaultAttributeList(LPCTSTR pStrControlName);
@@ -433,9 +482,12 @@ private:
     CStdPtrArray m_aFoundControls;
     CStdStringPtrMap m_mNameHash;
     CStdStringPtrMap m_mOptionGroup;
+
+	/*TResInfo m_ResInfo;*/
+
     //
     CPaintManagerUI* m_pParentResourcePM;
-    DWORD m_dwDefaultDisabledColor;
+    /*DWORD m_dwDefaultDisabledColor;
     DWORD m_dwDefaultFontColor;
     DWORD m_dwDefaultLinkFontColor;
     DWORD m_dwDefaultLinkHoverFontColor;
@@ -445,7 +497,8 @@ private:
 
     CStdStringPtrMap m_mImageHash;
     CStdStringPtrMap m_DefaultAttrHash;
-	CStdStringPtrMap m_StyleHash;
+	CStdStringPtrMap m_StyleHash;*/
+	TResInfo m_ResInfo;
     //
     static HINSTANCE m_hInstance;
     static HINSTANCE m_hResourceInstance;
@@ -453,6 +506,8 @@ private:
     static CDuiString m_pStrResourceZip;
     static bool m_bCachedResourceZip;
     static HANDLE m_hResourceZip;
+	static int m_nResType;
+	static bool m_bUseHSL;
     static short m_H;
     static short m_S;
     static short m_L;

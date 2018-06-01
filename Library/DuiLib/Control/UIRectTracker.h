@@ -69,8 +69,8 @@ namespace DuiLib
 
 			CDuiRect m_rect;
 			CDuiRect m_rectLast;
-			CSize m_sizeMin;
-			CSize m_sizeLast;
+			CDuiSize m_sizeMin;
+			CDuiSize m_sizeLast;
 			static HCURSOR m_hCursors[10];
 	};
 }

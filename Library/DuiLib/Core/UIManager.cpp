@@ -78,6 +78,125 @@ bool IsRectNull(LPRECT lpRect)
 	return bSuccess;	
 }
 
+tagTDrawInfo::tagTDrawInfo()
+{
+	Clear();
+}
+
+void tagTDrawInfo::Parse(LPCTSTR pStrImage, LPCTSTR pStrModify, CPaintManagerUI *pPaintManager)
+{
+	// 1、aaa.jpg
+	// 2、file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' 
+	// mask='#FF0000' fade='255' hole='false' xtiled='false' ytiled='false'
+	sDrawString = pStrImage;
+	sDrawModify = pStrModify;
+	sImageName = pStrImage;
+
+	CDuiString sItem;
+	CDuiString sValue;
+	LPTSTR pstr = NULL;
+	for( int i = 0; i < 2; ++i ) {
+		if( i == 1) pStrImage = pStrModify;
+		if( !pStrImage ) continue;
+		while( *pStrImage != _T('\0') ) {
+			sItem.Empty();
+			sValue.Empty();
+			while( *pStrImage > _T('\0') && *pStrImage <= _T(' ') ) pStrImage = ::CharNext(pStrImage);
+			while( *pStrImage != _T('\0') && *pStrImage != _T('=') && *pStrImage > _T(' ') ) {
+				LPTSTR pstrTemp = ::CharNext(pStrImage);
+				while( pStrImage < pstrTemp) {
+					sItem += *pStrImage++;
+				}
+			}
+			while( *pStrImage > _T('\0') && *pStrImage <= _T(' ') ) pStrImage = ::CharNext(pStrImage);
+			if( *pStrImage++ != _T('=') ) break;
+			while( *pStrImage > _T('\0') && *pStrImage <= _T(' ') ) pStrImage = ::CharNext(pStrImage);
+			if( *pStrImage++ != _T('\'') ) break;
+			while( *pStrImage != _T('\0') && *pStrImage != _T('\'') ) {
+				LPTSTR pstrTemp = ::CharNext(pStrImage);
+				while( pStrImage < pstrTemp) {
+					sValue += *pStrImage++;
+				}
+			}
+			if( *pStrImage++ != _T('\'') ) break;
+			if( !sValue.IsEmpty() ) {
+				if( sItem == _T("file") || sItem == _T("res") ) {
+					sImageName = sValue;
+				}
+				else if( sItem == _T("restype") ) {
+					sResType = sValue;
+				}
+				else if( sItem == _T("dest") ) {
+					rcDest.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);    
+					rcDest.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
+					rcDest.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
+					rcDest.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);  
+					pPaintManager->GetDPIObj()->Scale(&rcDest);
+				}
+				else if( sItem == _T("source") ) {
+					rcSource.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);    
+					rcSource.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
+					rcSource.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
+					rcSource.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+					pPaintManager->GetDPIObj()->Scale(&rcSource);
+				}
+				else if( sItem == _T("corner") ) {
+					rcCorner.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);    
+					rcCorner.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
+					rcCorner.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
+					rcCorner.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+					pPaintManager->GetDPIObj()->Scale(&rcCorner);
+				}
+				else if( sItem == _T("mask") ) {
+					if( sValue[0] == _T('#')) dwMask = _tcstoul(sValue.GetData() + 1, &pstr, 16);
+					else dwMask = _tcstoul(sValue.GetData(), &pstr, 16);
+				}
+				else if( sItem == _T("fade") ) {
+					uFade = (BYTE)_tcstoul(sValue.GetData(), &pstr, 10);
+				}
+				else if( sItem == _T("hole") ) {
+					bHole = (_tcsicmp(sValue.GetData(), _T("true")) == 0);
+				}
+				else if( sItem == _T("xtiled") ) {
+					bTiledX = (_tcsicmp(sValue.GetData(), _T("true")) == 0);
+				}
+				else if( sItem == _T("ytiled") ) {
+					bTiledY = (_tcsicmp(sValue.GetData(), _T("true")) == 0);
+				}
+				else if( sItem == _T("hsl") ) {
+					bHSL = (_tcsicmp(sValue.GetData(), _T("true")) == 0);
+				}
+			}
+			if( *pStrImage++ != _T(' ') ) break;
+		}
+	}
+
+	// 调整DPI资源
+	if (pPaintManager->GetDPIObj()->GetScale() != 100) {
+		CDuiString sScale;
+		sScale.Format(_T("@%d."), pPaintManager->GetDPIObj()->GetScale());
+		sImageName.Replace(_T("."), sScale);
+	}
+}
+
+void tagTDrawInfo::Clear()
+{
+	sDrawString.Empty();
+	sDrawModify.Empty();
+	sImageName.Empty();
+
+	ZeroMemory(&rcDest, sizeof(RECT));
+	ZeroMemory(&rcSource, sizeof(RECT));
+	ZeroMemory(&rcCorner, sizeof(RECT));
+
+	dwMask = 0;
+	uFade = 0xFF;
+	bHole = false;
+	bTiledX = false;
+	bTiledY = false;
+	bHSL = false;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////
 
 HPEN m_hUpdateRectPen = NULL;
@@ -88,6 +207,7 @@ CDuiString CPaintManagerUI::m_pStrResourcePath;
 CDuiString CPaintManagerUI::m_pStrResourceZip;
 bool CPaintManagerUI::m_bCachedResourceZip = false;
 HANDLE CPaintManagerUI::m_hResourceZip = NULL;
+bool CPaintManagerUI::m_bUseHSL = false;
 short CPaintManagerUI::m_H = 180;
 short CPaintManagerUI::m_S = 100;
 short CPaintManagerUI::m_L = 100;
@@ -128,11 +248,11 @@ m_pDropTargetCtrl(NULL),
 m_pDataObject(NULL),
 m_pDPI(NULL)
 {
-    m_dwDefaultDisabledColor = 0xFFA7A6AA;
-    m_dwDefaultFontColor = 0xFF000000;
-    m_dwDefaultLinkFontColor = 0xFF0000FF;
-    m_dwDefaultLinkHoverFontColor = 0xFFD3215F;
-    m_dwDefaultSelectedBkColor = 0xFFBAE4FF;
+    m_ResInfo.m_dwDefaultDisabledColor = 0xFFA7A6AA;
+    m_ResInfo.m_dwDefaultFontColor = 0xFF000000;
+    m_ResInfo.m_dwDefaultLinkFontColor = 0xFF0000FF;
+    m_ResInfo.m_dwDefaultLinkHoverFontColor = 0xFFD3215F;
+    m_ResInfo.m_dwDefaultSelectedBkColor = 0xFFBAE4FF;
     LOGFONT lf = { 0 };
     ::GetObject(::GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &lf);
     lf.lfCharSet = DEFAULT_CHARSET;
@@ -140,13 +260,13 @@ m_pDPI(NULL)
 		_tcscpy_s(lf.lfFaceName, LF_FACESIZE, CPaintManagerUI::m_pStrDefaultFontName.GetData());
 
     HFONT hDefaultFont = ::CreateFontIndirect(&lf);
-    m_DefaultFontInfo.hFont = hDefaultFont;
-    m_DefaultFontInfo.sFontName = lf.lfFaceName;
-    m_DefaultFontInfo.iSize = -lf.lfHeight;
-    m_DefaultFontInfo.bBold = (lf.lfWeight >= FW_BOLD);
-    m_DefaultFontInfo.bUnderline = (lf.lfUnderline == TRUE);
-    m_DefaultFontInfo.bItalic = (lf.lfItalic == TRUE);
-    ::ZeroMemory(&m_DefaultFontInfo.tm, sizeof(m_DefaultFontInfo.tm));
+    m_ResInfo.m_DefaultFontInfo.hFont = hDefaultFont;
+    m_ResInfo.m_DefaultFontInfo.sFontName = lf.lfFaceName;
+    m_ResInfo.m_DefaultFontInfo.iSize = -lf.lfHeight;
+    m_ResInfo.m_DefaultFontInfo.bBold = (lf.lfWeight >= FW_BOLD);
+    m_ResInfo.m_DefaultFontInfo.bUnderline = (lf.lfUnderline == TRUE);
+    m_ResInfo.m_DefaultFontInfo.bItalic = (lf.lfItalic == TRUE);
+    ::ZeroMemory(&m_ResInfo.m_DefaultFontInfo.tm, sizeof(m_ResInfo.m_DefaultFontInfo.tm));
 
     if( m_hUpdateRectPen == NULL ) {
         m_hUpdateRectPen = ::CreatePen(PS_SOLID, 1, RGB(220, 0, 0));
@@ -181,7 +301,7 @@ CPaintManagerUI::~CPaintManagerUI()
 		m_pRoot = NULL;
 	}
 
-    ::DeleteObject(m_DefaultFontInfo.hFont);
+    ::DeleteObject(m_ResInfo.m_DefaultFontInfo.hFont);
     RemoveAllFonts();
     RemoveAllImages();
     RemoveAllDefaultAttributeList();
@@ -196,6 +316,12 @@ CPaintManagerUI::~CPaintManagerUI()
     if( m_hbmpBackground != NULL ) ::DeleteObject(m_hbmpBackground);
     if( m_hDcPaint != NULL ) ::ReleaseDC(m_hWndPaint, m_hDcPaint);
     m_aPreMessages.Remove(m_aPreMessages.Find(this));
+
+	// DPI管理对象
+	if (m_pDPI != NULL) {
+		delete m_pDPI;
+		m_pDPI = NULL;
+	}
 }
 
 void CPaintManagerUI::Init(HWND hWnd)
@@ -386,7 +512,7 @@ SIZE CPaintManagerUI::GetClientSize() const
 {
     RECT rcClient = { 0 };
     ::GetClientRect(m_hWndPaint, &rcClient);
-    return CSize(rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
+    return CDuiSize(rcClient.right - rcClient.left, rcClient.bottom - rcClient.top);
 }
 
 SIZE CPaintManagerUI::GetInitSize()
@@ -1444,8 +1570,7 @@ void CPaintManagerUI::Term()
     }
 }
 
-
-CDPI * DuiLib::CPaintManagerUI::GetDPIObj()
+CDPI * CPaintManagerUI::GetDPIObj()
 {
 	if (m_pDPI == NULL)
 		m_pDPI = new CDPI;
@@ -1453,10 +1578,12 @@ CDPI * DuiLib::CPaintManagerUI::GetDPIObj()
 	return m_pDPI;
 }
 
-void DuiLib::CPaintManagerUI::SetDPI(int iDPI)
+void CPaintManagerUI::SetDPI(int iDPI)
 {
 	int scale1 = GetDPIObj()->GetScale();
-	GetDPIObj()->SetScale(iDPI);
+	if (GetDPIObj()->SetScale(iDPI) == FALSE)
+		return;
+
 	int scale2 = GetDPIObj()->GetScale();
 	ResetDPIAssets();
 	RECT rcWnd = {0};
@@ -1473,7 +1600,7 @@ void DuiLib::CPaintManagerUI::SetDPI(int iDPI)
 	::PostMessage(GetPaintWindow(), WM_USER_SET_DPI, 0, 0);
 }
 
-void DuiLib::CPaintManagerUI::SetAllDPI(int iDPI)
+void CPaintManagerUI::SetAllDPI(int iDPI)
 {
 	for (int i = 0; i < m_aPreMessages.GetSize(); i++) {
 		CPaintManagerUI* pManager = static_cast<CPaintManagerUI*>(m_aPreMessages[i]);
@@ -1481,16 +1608,16 @@ void DuiLib::CPaintManagerUI::SetAllDPI(int iDPI)
 	}
 }
 
-void DuiLib::CPaintManagerUI::ResetDPIAssets()
+void CPaintManagerUI::ResetDPIAssets()
 {
-	//RemoveAllDrawInfos();
+	RemoveAllDrawInfos();
 	RemoveAllImages();
 
-	for (int it = 0; it < m_aCustomFonts.GetSize(); it++) {
-		TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[it]);
+	for (int it = 0; it < m_ResInfo.m_aCustomFonts.GetSize(); it++) {
+		TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_aCustomFonts[it]);
 		RebuildFont(pFontInfo);
 	}
-	RebuildFont(&m_DefaultFontInfo);
+	RebuildFont(&m_ResInfo.m_DefaultFontInfo);
 
 	//for (int it = 0; it < m_SharedResInfo.m_CustomFonts.GetSize(); it++) {
 	//	TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_SharedResInfo.m_CustomFonts.Find(m_SharedResInfo.m_CustomFonts[it]));
@@ -1499,7 +1626,7 @@ void DuiLib::CPaintManagerUI::ResetDPIAssets()
 	//RebuildFont(&m_SharedResInfo.m_DefaultFontInfo);
 }
 
-void DuiLib::CPaintManagerUI::RebuildFont(TFontInfo * pFontInfo)
+void CPaintManagerUI::RebuildFont(TFontInfo * pFontInfo)
 {
 	::DeleteObject(pFontInfo->hFont);
 	LOGFONT lf = { 0 };
@@ -1866,68 +1993,68 @@ CPaintManagerUI* CPaintManagerUI::GetParentResource() const
 DWORD CPaintManagerUI::GetDefaultDisabledColor() const
 {
     if( m_pParentResourcePM ) return m_pParentResourcePM->GetDefaultDisabledColor();
-    return m_dwDefaultDisabledColor;
+    return m_ResInfo.m_dwDefaultDisabledColor;
 }
 
 void CPaintManagerUI::SetDefaultDisabledColor(DWORD dwColor)
 {
-    m_dwDefaultDisabledColor = dwColor;
+    m_ResInfo.m_dwDefaultDisabledColor = dwColor;
 }
 
 DWORD CPaintManagerUI::GetDefaultFontColor() const
 {
     if( m_pParentResourcePM ) return m_pParentResourcePM->GetDefaultFontColor();
-    return m_dwDefaultFontColor;
+    return m_ResInfo.m_dwDefaultFontColor;
 }
 
 void CPaintManagerUI::SetDefaultFontColor(DWORD dwColor)
 {
-    m_dwDefaultFontColor = dwColor;
+    m_ResInfo.m_dwDefaultFontColor = dwColor;
 }
 
 DWORD CPaintManagerUI::GetDefaultLinkFontColor() const
 {
     if( m_pParentResourcePM ) return m_pParentResourcePM->GetDefaultLinkFontColor();
-    return m_dwDefaultLinkFontColor;
+    return m_ResInfo.m_dwDefaultLinkFontColor;
 }
 
 void CPaintManagerUI::SetDefaultLinkFontColor(DWORD dwColor)
 {
-    m_dwDefaultLinkFontColor = dwColor;
+    m_ResInfo.m_dwDefaultLinkFontColor = dwColor;
 }
 
 DWORD CPaintManagerUI::GetDefaultLinkHoverFontColor() const
 {
     if( m_pParentResourcePM ) return m_pParentResourcePM->GetDefaultLinkHoverFontColor();
-    return m_dwDefaultLinkHoverFontColor;
+    return m_ResInfo.m_dwDefaultLinkHoverFontColor;
 }
 
 void CPaintManagerUI::SetDefaultLinkHoverFontColor(DWORD dwColor)
 {
-    m_dwDefaultLinkHoverFontColor = dwColor;
+    m_ResInfo.m_dwDefaultLinkHoverFontColor = dwColor;
 }
 
 DWORD CPaintManagerUI::GetDefaultSelectedBkColor() const
 {
     if( m_pParentResourcePM ) return m_pParentResourcePM->GetDefaultSelectedBkColor();
-    return m_dwDefaultSelectedBkColor;
+    return m_ResInfo.m_dwDefaultSelectedBkColor;
 }
 
 void CPaintManagerUI::SetDefaultSelectedBkColor(DWORD dwColor)
 {
-    m_dwDefaultSelectedBkColor = dwColor;
+    m_ResInfo.m_dwDefaultSelectedBkColor = dwColor;
 }
 
 TFontInfo* CPaintManagerUI::GetDefaultFontInfo()
 {
     if( m_pParentResourcePM ) return m_pParentResourcePM->GetDefaultFontInfo();
 
-    if( m_DefaultFontInfo.tm.tmHeight == 0 ) {
-        HFONT hOldFont = (HFONT) ::SelectObject(m_hDcPaint, m_DefaultFontInfo.hFont);
-        ::GetTextMetrics(m_hDcPaint, &m_DefaultFontInfo.tm);
+    if( m_ResInfo.m_DefaultFontInfo.tm.tmHeight == 0 ) {
+        HFONT hOldFont = (HFONT) ::SelectObject(m_hDcPaint, m_ResInfo.m_DefaultFontInfo.hFont);
+        ::GetTextMetrics(m_hDcPaint, &m_ResInfo.m_DefaultFontInfo.tm);
         ::SelectObject(m_hDcPaint, hOldFont);
     }
-    return &m_DefaultFontInfo;
+    return &m_ResInfo.m_DefaultFontInfo;
 }
 
 void CPaintManagerUI::SetDefaultFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic)
@@ -1943,24 +2070,24 @@ void CPaintManagerUI::SetDefaultFont(LPCTSTR pStrFontName, int nSize, bool bBold
     HFONT hFont = ::CreateFontIndirect(&lf);
     if( hFont == NULL ) return;
 
-    ::DeleteObject(m_DefaultFontInfo.hFont);
-    m_DefaultFontInfo.hFont = hFont;
-    m_DefaultFontInfo.sFontName = pStrFontName;
-    m_DefaultFontInfo.iSize = nSize;
-    m_DefaultFontInfo.bBold = bBold;
-    m_DefaultFontInfo.bUnderline = bUnderline;
-    m_DefaultFontInfo.bItalic = bItalic;
-    ::ZeroMemory(&m_DefaultFontInfo.tm, sizeof(m_DefaultFontInfo.tm));
+    ::DeleteObject(m_ResInfo.m_DefaultFontInfo.hFont);
+    m_ResInfo.m_DefaultFontInfo.hFont = hFont;
+    m_ResInfo.m_DefaultFontInfo.sFontName = pStrFontName;
+    m_ResInfo.m_DefaultFontInfo.iSize = nSize;
+    m_ResInfo.m_DefaultFontInfo.bBold = bBold;
+    m_ResInfo.m_DefaultFontInfo.bUnderline = bUnderline;
+    m_ResInfo.m_DefaultFontInfo.bItalic = bItalic;
+    ::ZeroMemory(&m_ResInfo.m_DefaultFontInfo.tm, sizeof(m_ResInfo.m_DefaultFontInfo.tm));
     if( m_hDcPaint ) {
         HFONT hOldFont = (HFONT) ::SelectObject(m_hDcPaint, hFont);
-        ::GetTextMetrics(m_hDcPaint, &m_DefaultFontInfo.tm);
+        ::GetTextMetrics(m_hDcPaint, &m_ResInfo.m_DefaultFontInfo.tm);
         ::SelectObject(m_hDcPaint, hOldFont);
     }
 }
 
 DWORD CPaintManagerUI::GetCustomFontCount() const
 {
-    return m_aCustomFonts.GetSize();
+    return m_ResInfo.m_aCustomFonts.GetSize();
 }
 
 HFONT CPaintManagerUI::AddFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic)
@@ -1969,7 +2096,7 @@ HFONT CPaintManagerUI::AddFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool
     ::GetObject(::GetStockObject(DEFAULT_GUI_FONT), sizeof(LOGFONT), &lf);
     _tcsncpy(lf.lfFaceName, pStrFontName, LF_FACESIZE);
     lf.lfCharSet = DEFAULT_CHARSET;
-    lf.lfHeight = -nSize;
+    lf.lfHeight = -GetDPIObj()->Scale(nSize);
     if( bBold ) lf.lfWeight += FW_BOLD;
     if( bUnderline ) lf.lfUnderline = TRUE;
     if( bItalic ) lf.lfItalic = TRUE;
@@ -1990,7 +2117,7 @@ HFONT CPaintManagerUI::AddFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool
         ::GetTextMetrics(m_hDcPaint, &pFontInfo->tm);
         ::SelectObject(m_hDcPaint, hOldFont);
     }
-    if( !m_aCustomFonts.Add(pFontInfo) ) {
+    if( !m_ResInfo.m_aCustomFonts.Add(pFontInfo) ) {
         ::DeleteObject(hFont);
         delete pFontInfo;
         return NULL;
@@ -2026,7 +2153,7 @@ HFONT CPaintManagerUI::AddFontAt(int index, LPCTSTR pStrFontName, int nSize, boo
         ::GetTextMetrics(m_hDcPaint, &pFontInfo->tm);
         ::SelectObject(m_hDcPaint, hOldFont);
     }
-    if( !m_aCustomFonts.InsertAt(index, pFontInfo) ) {
+    if( !m_ResInfo.m_aCustomFonts.InsertAt(index, pFontInfo) ) {
         ::DeleteObject(hFont);
         delete pFontInfo;
         return NULL;
@@ -2038,8 +2165,8 @@ HFONT CPaintManagerUI::AddFontAt(int index, LPCTSTR pStrFontName, int nSize, boo
 HFONT CPaintManagerUI::GetFont(int index)
 {
 	TFontInfo* pFontInfo = NULL;
-    if (m_aCustomFonts.GetSize() != 0 && index < m_aCustomFonts.GetSize() && index >= 0 ) 
-		pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[index]);
+    if (m_ResInfo.m_aCustomFonts.GetSize() != 0 && index < m_ResInfo.m_aCustomFonts.GetSize() && index >= 0 ) 
+		pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_aCustomFonts[index]);
 
 	if (pFontInfo == NULL)
 	{
@@ -2055,8 +2182,8 @@ HFONT CPaintManagerUI::GetFont(int index)
 HFONT CPaintManagerUI::GetFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic)
 {
     TFontInfo* pFontInfo = NULL;
-    for( int it = 0; it < m_aCustomFonts.GetSize(); it++ ) {
-        pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[it]);
+    for( int it = 0; it < m_ResInfo.m_aCustomFonts.GetSize(); it++ ) {
+        pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_aCustomFonts[it]);
         if( pFontInfo->sFontName == pStrFontName && pFontInfo->iSize == nSize && 
             pFontInfo->bBold == bBold && pFontInfo->bUnderline == bUnderline && pFontInfo->bItalic == bItalic) 
             return pFontInfo->hFont;
@@ -2068,8 +2195,8 @@ HFONT CPaintManagerUI::GetFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool
 bool CPaintManagerUI::FindFont(HFONT hFont)
 {
     TFontInfo* pFontInfo = NULL;
-    for( int it = 0; it < m_aCustomFonts.GetSize(); it++ ) {
-        pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[it]);
+    for( int it = 0; it < m_ResInfo.m_aCustomFonts.GetSize(); it++ ) {
+        pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_aCustomFonts[it]);
         if( pFontInfo->hFont == hFont ) return true;
     }
     if( m_pParentResourcePM ) return m_pParentResourcePM->FindFont(hFont);
@@ -2079,8 +2206,8 @@ bool CPaintManagerUI::FindFont(HFONT hFont)
 bool CPaintManagerUI::FindFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic)
 {
     TFontInfo* pFontInfo = NULL;
-    for( int it = 0; it < m_aCustomFonts.GetSize(); it++ ) {
-        pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[it]);
+    for( int it = 0; it < m_ResInfo.m_aCustomFonts.GetSize(); it++ ) {
+        pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_aCustomFonts[it]);
         if( pFontInfo->sFontName == pStrFontName && pFontInfo->iSize == nSize && 
             pFontInfo->bBold == bBold && pFontInfo->bUnderline == bUnderline && pFontInfo->bItalic == bItalic) 
             return true;
@@ -2092,8 +2219,8 @@ bool CPaintManagerUI::FindFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool
 int CPaintManagerUI::GetFontIndex(HFONT hFont)
 {
     TFontInfo* pFontInfo = NULL;
-    for( int it = 0; it < m_aCustomFonts.GetSize(); it++ ) {
-        pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[it]);
+    for( int it = 0; it < m_ResInfo.m_aCustomFonts.GetSize(); it++ ) {
+        pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_aCustomFonts[it]);
         if( pFontInfo->hFont == hFont ) return it;
     }
     return -1;
@@ -2102,8 +2229,8 @@ int CPaintManagerUI::GetFontIndex(HFONT hFont)
 int CPaintManagerUI::GetFontIndex(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic)
 {
     TFontInfo* pFontInfo = NULL;
-    for( int it = 0; it < m_aCustomFonts.GetSize(); it++ ) {
-        pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[it]);
+    for( int it = 0; it < m_ResInfo.m_aCustomFonts.GetSize(); it++ ) {
+        pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_aCustomFonts[it]);
         if( pFontInfo->sFontName == pStrFontName && pFontInfo->iSize == nSize && 
             pFontInfo->bBold == bBold && pFontInfo->bUnderline == bUnderline && pFontInfo->bItalic == bItalic) 
             return it;
@@ -2114,12 +2241,12 @@ int CPaintManagerUI::GetFontIndex(LPCTSTR pStrFontName, int nSize, bool bBold, b
 bool CPaintManagerUI::RemoveFont(HFONT hFont)
 {
     TFontInfo* pFontInfo = NULL;
-    for( int it = 0; it < m_aCustomFonts.GetSize(); it++ ) {
-        pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[it]);
+    for( int it = 0; it < m_ResInfo.m_aCustomFonts.GetSize(); it++ ) {
+        pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_aCustomFonts[it]);
         if( pFontInfo->hFont == hFont ) {
             ::DeleteObject(pFontInfo->hFont);
             delete pFontInfo;
-            return m_aCustomFonts.Remove(it);
+            return m_ResInfo.m_aCustomFonts.Remove(it);
         }
     }
 
@@ -2128,28 +2255,28 @@ bool CPaintManagerUI::RemoveFont(HFONT hFont)
 
 bool CPaintManagerUI::RemoveFontAt(int index)
 {
-    if( index < 0 || index >= m_aCustomFonts.GetSize() ) return false;
-    TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[index]);
+    if( index < 0 || index >= m_ResInfo.m_aCustomFonts.GetSize() ) return false;
+    TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_aCustomFonts[index]);
     ::DeleteObject(pFontInfo->hFont);
     delete pFontInfo;
-    return m_aCustomFonts.Remove(index);
+    return m_ResInfo.m_aCustomFonts.Remove(index);
 }
 
 void CPaintManagerUI::RemoveAllFonts()
 {
     TFontInfo* pFontInfo;
-    for( int it = 0; it < m_aCustomFonts.GetSize(); it++ ) {
-        pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[it]);
+    for( int it = 0; it < m_ResInfo.m_aCustomFonts.GetSize(); it++ ) {
+        pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_aCustomFonts[it]);
         ::DeleteObject(pFontInfo->hFont);
         delete pFontInfo;
     }
-    m_aCustomFonts.Empty();
+    m_ResInfo.m_aCustomFonts.Empty();
 }
 
 TFontInfo* CPaintManagerUI::GetFontInfo(int index)
 {
-    if( index < 0 || index >= m_aCustomFonts.GetSize() ) return GetDefaultFontInfo();
-    TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[index]);
+    if( index < 0 || index >= m_ResInfo.m_aCustomFonts.GetSize() ) return GetDefaultFontInfo();
+    TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_aCustomFonts[index]);
     if( pFontInfo->tm.tmHeight == 0 ) {
         HFONT hOldFont = (HFONT) ::SelectObject(m_hDcPaint, pFontInfo->hFont);
         ::GetTextMetrics(m_hDcPaint, &pFontInfo->tm);
@@ -2161,8 +2288,8 @@ TFontInfo* CPaintManagerUI::GetFontInfo(int index)
 TFontInfo* CPaintManagerUI::GetFontInfo(HFONT hFont)
 {
     TFontInfo* pFontInfo = NULL;
-    for( int it = 0; it < m_aCustomFonts.GetSize(); it++ ) {
-        pFontInfo = static_cast<TFontInfo*>(m_aCustomFonts[it]);
+    for( int it = 0; it < m_ResInfo.m_aCustomFonts.GetSize(); it++ ) {
+        pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_aCustomFonts[it]);
         if( pFontInfo->hFont == hFont ) {
             if( pFontInfo->tm.tmHeight == 0 ) {
                 HFONT hOldFont = (HFONT) ::SelectObject(m_hDcPaint, pFontInfo->hFont);
@@ -2179,17 +2306,17 @@ TFontInfo* CPaintManagerUI::GetFontInfo(HFONT hFont)
 
 const TImageInfo* CPaintManagerUI::GetImage(LPCTSTR bitmap)
 {
-    TImageInfo* data = static_cast<TImageInfo*>(m_mImageHash.Find(bitmap));
+    TImageInfo* data = static_cast<TImageInfo*>(m_ResInfo.m_ImageHash.Find(bitmap));
     if( !data && m_pParentResourcePM ) return m_pParentResourcePM->GetImage(bitmap);
     else return data;
 }
 
 const TImageInfo* CPaintManagerUI::GetImageEx(LPCTSTR bitmap, LPCTSTR type, DWORD mask)
 {
-    TImageInfo* data = static_cast<TImageInfo*>(m_mImageHash.Find(bitmap));
+    TImageInfo* data = static_cast<TImageInfo*>(m_ResInfo.m_ImageHash.Find(bitmap));
     if( !data ) {
         if( AddImage(bitmap, type, mask) ) {
-            data = static_cast<TImageInfo*>(m_mImageHash.Find(bitmap));
+            data = static_cast<TImageInfo*>(m_ResInfo.m_ImageHash.Find(bitmap));
         }
     }
 
@@ -2213,7 +2340,7 @@ const TImageInfo* CPaintManagerUI::AddImage(LPCTSTR bitmap, LPCTSTR type, DWORD 
     if( !data ) return NULL;
     if( type != NULL ) data->sResType = type;
     data->dwMask = mask;
-    if( !m_mImageHash.Insert(bitmap, data) ) {
+    if( !m_ResInfo.m_ImageHash.Insert(bitmap, data) ) {
         ::DeleteObject(data->hBitmap);
         delete data;
     }
@@ -2226,13 +2353,15 @@ const TImageInfo* CPaintManagerUI::AddImage(LPCTSTR bitmap, HBITMAP hBitmap, int
     if( hBitmap == NULL || iWidth <= 0 || iHeight <= 0 ) return NULL;
 
     TImageInfo* data = new TImageInfo;
+	data->pBits = NULL;
+	data->pSrcBits = NULL;
     data->hBitmap = hBitmap;
     data->nX = iWidth;
     data->nY = iHeight;
     data->bAlpha = bAlpha;
     //data->sResType = _T("");
     data->dwMask = 0;
-    if( !m_mImageHash.Insert(bitmap, data) ) {
+    if( !m_ResInfo.m_ImageHash.Insert(bitmap, data) ) {
         ::DeleteObject(data->hBitmap);
         delete data;
     }
@@ -2246,7 +2375,7 @@ const TImageInfo* CPaintManagerUI::AddImage(LPCTSTR bitmap, LPBYTE pData, DWORD 
 		return NULL;
 
 	TImageInfo* data = CRenderEngine::LoadImage(pData,dwSize,dwMask);
-	if( !m_mImageHash.Insert(bitmap, data) ) {
+	if( !m_ResInfo.m_ImageHash.Insert(bitmap, data) ) {
 		::DeleteObject(data->hBitmap);
 		delete data;
 	}
@@ -2256,26 +2385,26 @@ const TImageInfo* CPaintManagerUI::AddImage(LPCTSTR bitmap, LPBYTE pData, DWORD 
 
 bool CPaintManagerUI::RemoveImage(LPCTSTR bitmap)
 {
-    const TImageInfo* data = GetImage(bitmap);
+    TImageInfo* data = const_cast<TImageInfo*>(GetImage(bitmap));
     if( !data ) return false;
 
-    CRenderEngine::FreeImage(data) ;
+    CRenderEngine::FreeImage(data, TRUE) ;
 
-    return m_mImageHash.Remove(bitmap);
+    return m_ResInfo.m_ImageHash.Remove(bitmap);
 }
 
 void CPaintManagerUI::RemoveAllImages()
 {
     TImageInfo* data;
-    for( int i = 0; i< m_mImageHash.GetSize(); i++ ) {
-        if(LPCTSTR key = m_mImageHash.GetAt(i)) {
-            data = static_cast<TImageInfo*>(m_mImageHash.Find(key, false));
+    for( int i = 0; i< m_ResInfo.m_ImageHash.GetSize(); i++ ) {
+        if(LPCTSTR key = m_ResInfo.m_ImageHash.GetAt(i)) {
+            data = static_cast<TImageInfo*>(m_ResInfo.m_ImageHash.Find(key, false));
 			if (data) {
-				CRenderEngine::FreeImage(data);
+				CRenderEngine::FreeImage(data, TRUE);
 			}
         }
     }
-	m_mImageHash.RemoveAll();
+	m_ResInfo.m_ImageHash.RemoveAll();
 }
 
 void CPaintManagerUI::ReloadAllImages()
@@ -2283,9 +2412,9 @@ void CPaintManagerUI::ReloadAllImages()
     bool bRedraw = false;
     TImageInfo* data;
     TImageInfo* pNewData;
-    for( int i = 0; i< m_mImageHash.GetSize(); i++ ) {
-        if(LPCTSTR bitmap = m_mImageHash.GetAt(i)) {
-            data = static_cast<TImageInfo*>(m_mImageHash.Find(bitmap));
+    for( int i = 0; i< m_ResInfo.m_ImageHash.GetSize(); i++ ) {
+        if(LPCTSTR bitmap = m_ResInfo.m_ImageHash.GetAt(i)) {
+            data = static_cast<TImageInfo*>(m_ResInfo.m_ImageHash.Find(bitmap));
             if( data != NULL ) {
                 if( !data->sResType.IsEmpty() ) {
                     if( isdigit(*bitmap) ) {
@@ -2297,13 +2426,27 @@ void CPaintManagerUI::ReloadAllImages()
                 else {
                     pNewData = CRenderEngine::LoadImage(bitmap, NULL, data->dwMask);
                 }
-                if( pNewData == NULL ) continue;
+
+				CRenderEngine::FreeImage(data, FALSE);
+                if( pNewData == NULL ) {
+					m_ResInfo.m_ImageHash.Remove(bitmap);
+					continue;
+				}
 
                 if( data->hBitmap != NULL ) ::DeleteObject(data->hBitmap);
                 data->hBitmap = pNewData->hBitmap;
                 data->nX = pNewData->nX;
                 data->nY = pNewData->nY;
                 data->bAlpha = pNewData->bAlpha;
+				data->pSrcBits = NULL;
+				if (data->bUseHSL) {
+					DWORD dwLen = data->nX * data->nY * 4;
+					data->pSrcBits = new BYTE[dwLen];
+					::CopyMemory(data->pSrcBits, data->pBits, dwLen);
+				} else
+					data->pSrcBits = NULL;
+				if (m_bUseHSL)
+					CRenderEngine::AdjustImage(true, data, m_H, m_S, m_L);
 
                 delete pNewData;
                 bRedraw = true;
@@ -2313,13 +2456,56 @@ void CPaintManagerUI::ReloadAllImages()
     if( bRedraw && m_pRoot ) m_pRoot->Invalidate();
 }
 
+const TDrawInfo* CPaintManagerUI::GetDrawInfo(LPCTSTR pStrImage, LPCTSTR pStrModify)
+{
+	CDuiString sStrImage = pStrImage;
+	CDuiString sStrModify = pStrModify;
+	CDuiString sKey = sStrImage + sStrModify;
+	TDrawInfo* pDrawInfo = static_cast<TDrawInfo*>(m_ResInfo.m_DrawInfoHash.Find(sKey));
+	if(pDrawInfo == NULL && !sKey.IsEmpty()) {
+		pDrawInfo = new TDrawInfo();
+		pDrawInfo->Parse(pStrImage, pStrModify,this);
+		m_ResInfo.m_DrawInfoHash.Insert(sKey, pDrawInfo);
+	}
+	return pDrawInfo;
+}
+
+void CPaintManagerUI::RemoveDrawInfo(LPCTSTR pStrImage, LPCTSTR pStrModify)
+{
+	CDuiString sStrImage = pStrImage;
+	CDuiString sStrModify = pStrModify;
+	CDuiString sKey = sStrImage + sStrModify;
+	TDrawInfo* pDrawInfo = static_cast<TDrawInfo*>(m_ResInfo.m_DrawInfoHash.Find(sKey));
+	if (pDrawInfo != NULL) {
+		m_ResInfo.m_DrawInfoHash.Remove(sKey);
+		delete pDrawInfo;
+		pDrawInfo = NULL;
+	}
+}
+
+void CPaintManagerUI::RemoveAllDrawInfos()
+{
+	TDrawInfo* pDrawInfo = NULL;
+	for( int i = 0; i< m_ResInfo.m_DrawInfoHash.GetSize(); i++ ) {
+		LPCTSTR key = m_ResInfo.m_DrawInfoHash.GetAt(i);
+		if(key != NULL) {
+			pDrawInfo = static_cast<TDrawInfo*>(m_ResInfo.m_DrawInfoHash.Find(key, false));
+			if (pDrawInfo) {
+				delete pDrawInfo;
+				pDrawInfo = NULL;
+			}
+		}
+	}
+	m_ResInfo.m_DrawInfoHash.RemoveAll();
+}
+
 void CPaintManagerUI::AddDefaultAttributeList(LPCTSTR pStrControlName, LPCTSTR pStrControlAttrList)
 {
 	CDuiString* pDefaultAttr = new CDuiString(pStrControlAttrList);
 	if (pDefaultAttr != NULL)
 	{
-		if (m_DefaultAttrHash.Find(pStrControlName) == NULL)
-			m_DefaultAttrHash.Set(pStrControlName, (LPVOID)pDefaultAttr);
+		if (m_ResInfo.m_DefaultAttrHash.Find(pStrControlName) == NULL)
+			m_ResInfo.m_DefaultAttrHash.Set(pStrControlName, (LPVOID)pDefaultAttr);
 		else
 			delete pDefaultAttr;
 	}
@@ -2327,7 +2513,7 @@ void CPaintManagerUI::AddDefaultAttributeList(LPCTSTR pStrControlName, LPCTSTR p
 
 LPCTSTR CPaintManagerUI::GetDefaultAttributeList(LPCTSTR pStrControlName) const
 {
-    CDuiString* pDefaultAttr = static_cast<CDuiString*>(m_DefaultAttrHash.Find(pStrControlName));
+    CDuiString* pDefaultAttr = static_cast<CDuiString*>(m_ResInfo.m_DefaultAttrHash.Find(pStrControlName));
     if( !pDefaultAttr && m_pParentResourcePM ) return m_pParentResourcePM->GetDefaultAttributeList(pStrControlName);
     
     if( pDefaultAttr ) return pDefaultAttr->GetData();
@@ -2336,28 +2522,28 @@ LPCTSTR CPaintManagerUI::GetDefaultAttributeList(LPCTSTR pStrControlName) const
 
 bool CPaintManagerUI::RemoveDefaultAttributeList(LPCTSTR pStrControlName)
 {
-    CDuiString* pDefaultAttr = static_cast<CDuiString*>(m_DefaultAttrHash.Find(pStrControlName));
+    CDuiString* pDefaultAttr = static_cast<CDuiString*>(m_ResInfo.m_DefaultAttrHash.Find(pStrControlName));
     if( !pDefaultAttr ) return false;
 
     delete pDefaultAttr;
-    return m_DefaultAttrHash.Remove(pStrControlName);
+    return m_ResInfo.m_DefaultAttrHash.Remove(pStrControlName);
 }
 
 const CStdStringPtrMap& CPaintManagerUI::GetDefaultAttribultes() const
 {
-	return m_DefaultAttrHash;
+	return m_ResInfo.m_DefaultAttrHash;
 }
 
 void CPaintManagerUI::RemoveAllDefaultAttributeList()
 {
 	CDuiString* pDefaultAttr;
-	for( int i = 0; i< m_DefaultAttrHash.GetSize(); i++ ) {
-		if(LPCTSTR key = m_DefaultAttrHash.GetAt(i)) {
-			pDefaultAttr = static_cast<CDuiString*>(m_DefaultAttrHash.Find(key));
+	for( int i = 0; i< m_ResInfo.m_DefaultAttrHash.GetSize(); i++ ) {
+		if(LPCTSTR key = m_ResInfo.m_DefaultAttrHash.GetAt(i)) {
+			pDefaultAttr = static_cast<CDuiString*>(m_ResInfo.m_DefaultAttrHash.Find(key));
 			delete pDefaultAttr;
 		}
 	}
-	m_DefaultAttrHash.RemoveAll();
+	m_ResInfo.m_DefaultAttrHash.RemoveAll();
 }
 
 void CPaintManagerUI::AddStyleAttributeList(LPCTSTR pStrControlName, LPCTSTR pStrControlAttrList)
@@ -2365,8 +2551,8 @@ void CPaintManagerUI::AddStyleAttributeList(LPCTSTR pStrControlName, LPCTSTR pSt
 	CDuiString* pStyle = new CDuiString(pStrControlAttrList);
 	if (pStyle != NULL)
 	{
-		if (m_StyleHash.Find(pStrControlName) == NULL)
-			m_StyleHash.Set(pStrControlName, (LPVOID)pStyle);
+		if (m_ResInfo.m_StyleHash.Find(pStrControlName) == NULL)
+			m_ResInfo.m_StyleHash.Set(pStrControlName, (LPVOID)pStyle);
 		else
 			delete pStyle;
 	}
@@ -2374,7 +2560,7 @@ void CPaintManagerUI::AddStyleAttributeList(LPCTSTR pStrControlName, LPCTSTR pSt
 
 LPCTSTR CPaintManagerUI::GetStyleAttributeList(LPCTSTR pName) const
 {
-	CDuiString* pStyle = static_cast<CDuiString*>(m_StyleHash.Find(pName));
+	CDuiString* pStyle = static_cast<CDuiString*>(m_ResInfo.m_StyleHash.Find(pName));
 	if( !pStyle && m_pParentResourcePM ) return m_pParentResourcePM->GetStyleAttributeList(pName);
 	if( pStyle ) return pStyle->GetData();
 	else return NULL;
@@ -2382,28 +2568,28 @@ LPCTSTR CPaintManagerUI::GetStyleAttributeList(LPCTSTR pName) const
 
 bool CPaintManagerUI::RemoveStyleAttributeList(LPCTSTR pName)
 {
-	CDuiString* pStyle = static_cast<CDuiString*>(m_StyleHash.Find(pName));
+	CDuiString* pStyle = static_cast<CDuiString*>(m_ResInfo.m_StyleHash.Find(pName));
 	if( !pStyle ) return FALSE;
 
 	delete pStyle;
-	return m_StyleHash.Remove(pName);
+	return m_ResInfo.m_StyleHash.Remove(pName);
 }
 
 const CStdStringPtrMap& CPaintManagerUI::GetStyleAttributeList() const
 {
-	return m_StyleHash;
+	return m_ResInfo.m_StyleHash;
 }
 
 void CPaintManagerUI::RemoveAllStyleAttributeList()
 {
 	CDuiString* pStyle;
-	for( int i = 0; i< m_StyleHash.GetSize(); i++ ) {
-		if(LPCTSTR key = m_StyleHash.GetAt(i)) {
-			pStyle = static_cast<CDuiString*>(m_StyleHash.Find(key));
+	for( int i = 0; i< m_ResInfo.m_StyleHash.GetSize(); i++ ) {
+		if(LPCTSTR key = m_ResInfo.m_StyleHash.GetAt(i)) {
+			pStyle = static_cast<CDuiString*>(m_ResInfo.m_StyleHash.Find(key));
 			delete pStyle;
 		}
 	}
-	m_StyleHash.RemoveAll();
+	m_ResInfo.m_StyleHash.RemoveAll();
 }
 
 CControlUI* CPaintManagerUI::GetRoot() const

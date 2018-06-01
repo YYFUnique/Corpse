@@ -32,12 +32,15 @@ namespace DuiLib
 		static int GetDPIOfMonitor(HMONITOR hMonitor);
 		static int GetDPIOfMonitorNearestToPoint(POINT pt);
 
+		void SetDPIEnable(BOOL bEnable);
+		BOOL IsDPIEnable();
+
 	public:
 		PROCESS_DPI_AWARENESS GetDPIAwareness();
 		BOOL SetDPIAwareness(PROCESS_DPI_AWARENESS Awareness);
 		UINT GetDPI();
 		UINT GetScale();
-		void SetScale(UINT uDPI);
+		BOOL SetScale(UINT uDPI);
 		RECT Scale(RECT rcRect);
 		void Scale(RECT *pRect);
 		POINT Scale(POINT ptPoint);
@@ -50,6 +53,7 @@ namespace DuiLib
 		void ScaleBack(RECT *pRect);
 
 	private:
+		BOOL m_bEnableDPI;
 		int m_nScaleFactor;
 		int m_nScaleFactorSDA;
 		PROCESS_DPI_AWARENESS m_Awareness;

@@ -108,7 +108,7 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
                 }
                 if( pFontName ) {
                     pManager->AddFont(pFontName, size, bold, underline, italic);
-                    if( defaultfont ) pManager->SetDefaultFont(pFontName, size, bold, underline, italic);
+                    if( defaultfont ) pManager->SetDefaultFont(pFontName, pManager->GetDPIObj()->Scale(size), bold, underline, italic);
                 }
             }
             else if( _tcscmp(pstrClass, _T("Default")) == 0 ) {
@@ -160,7 +160,7 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
                         LPTSTR pstr = NULL;
                         int cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
                         int cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr); 
-                        pManager->SetInitSize(cx, cy);
+                        pManager->SetInitSize(pManager->GetDPIObj()->Scale(cx), pManager->GetDPIObj()->Scale(cy));
                     } 
                     else if( _tcscmp(pstrName, _T("sizebox")) == 0 ) {
                         RECT rcSizeBox = { 0 };

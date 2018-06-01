@@ -647,6 +647,8 @@ TImageInfo* CRenderEngine::LoadImage(STRINGorID bitmap, LPCTSTR type, DWORD mask
     stbi_image_free(pImage);
 
     TImageInfo* data = new TImageInfo;
+	data->pBits = NULL;
+	data->pSrcBits = NULL;
     data->hBitmap = hBitmap;
     data->nX = x;
     data->nY = y;
@@ -712,6 +714,8 @@ TImageInfo* CRenderEngine::LoadImage(LPBYTE pData, DWORD dwSize, DWORD mask)
 	stbi_image_free(pImage);
 
 	TImageInfo* data = new TImageInfo;
+	data->pBits = NULL;
+	data->pSrcBits = NULL;
 	data->hBitmap = hBitmap;
 	data->nX = x;
 	data->nY = y;
@@ -719,12 +723,27 @@ TImageInfo* CRenderEngine::LoadImage(LPBYTE pData, DWORD dwSize, DWORD mask)
 	return data;
 }
 
-void CRenderEngine::FreeImage(const TImageInfo* bitmap)
+void CRenderEngine::FreeImage(TImageInfo* bitmap, BOOL bDelete)
 {
-	if (bitmap->hBitmap) {
+	if (bitmap == NULL) return;
+
+	if (bitmap->hBitmap) 
 		::DeleteObject(bitmap->hBitmap) ; 
+	bitmap->hBitmap = NULL;
+
+	if (bitmap->pBits)
+		delete[] bitmap->pBits;
+	bitmap->pBits = NULL;
+
+	if (bitmap->pSrcBits)
+		delete[] bitmap->pSrcBits;
+	bitmap->pSrcBits = NULL;
+
+	if (bDelete)
+	{
+		delete bitmap ;
+		bitmap = NULL;
 	}
-	delete bitmap ;
 }
 
 void CRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const RECT& rc, const RECT& rcPaint,
@@ -1243,16 +1262,35 @@ bool CRenderEngine::DrawImage(HDC hDC, CPaintManagerUI* pManager, const RECT& rc
 	return true;
 }
 
-bool CRenderEngine::DrawImageString(HDC hDC, CPaintManagerUI* pManager, const RECT& rc, const RECT& rcPaint, 
+bool CRenderEngine::DrawImageInfo(HDC hDC, CPaintManagerUI* pManager, const RECT& rcItem, const RECT& rcPaint, const TDrawInfo* pDrawInfo)
+{
+	if( pManager == NULL || hDC == NULL || pDrawInfo == NULL ) return false;
+	RECT rcDest = rcItem;
+	if( pDrawInfo->rcDest.left != 0 || pDrawInfo->rcDest.top != 0 ||
+		pDrawInfo->rcDest.right != 0 || pDrawInfo->rcDest.bottom != 0 ) {
+			rcDest.left = rcItem.left + pDrawInfo->rcDest.left;
+			rcDest.top = rcItem.top + pDrawInfo->rcDest.top;
+			rcDest.right = rcItem.left + pDrawInfo->rcDest.right;
+			if( rcDest.right > rcItem.right ) rcDest.right = rcItem.right;
+			rcDest.bottom = rcItem.top + pDrawInfo->rcDest.bottom;
+			if( rcDest.bottom > rcItem.bottom ) rcDest.bottom = rcItem.bottom;
+	}
+	bool bRet = DuiLib::DrawImage(hDC, pManager, rcItem, rcPaint, pDrawInfo->sImageName, pDrawInfo->sResType, rcDest, \
+		pDrawInfo->rcSource, pDrawInfo->rcCorner, pDrawInfo->dwMask, pDrawInfo->uFade, pDrawInfo->bHole, pDrawInfo->bTiledX, pDrawInfo->bTiledY);
+
+	return bRet;
+}
+
+bool CRenderEngine::DrawImageString(HDC hDC, CPaintManagerUI* pManager, const RECT& rcItem, const RECT& rcPaint, 
                                           LPCTSTR pStrImage, LPCTSTR pStrModify)
 {
-	if ((pManager == NULL) || (hDC == NULL)) return false;
+	//if ((pManager == NULL) || (hDC == NULL)) return false;
 
     // 1¡¢aaa.jpg
     // 2¡¢file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' 
     // mask='#FF0000' fade='255' hole='false' xtiled='false' ytiled='false'
 
-    CDuiString sImageName = pStrImage;
+    /*CDuiString sImageName = pStrImage;
     CDuiString sImageResType;
     RECT rcItem = rc;
     RECT rcBmpPart = {0};
@@ -1365,7 +1403,10 @@ bool CRenderEngine::DrawImageString(HDC hDC, CPaintManagerUI* pManager, const RE
 	DuiLib::DrawImage(hDC, pManager, rc, rcPaint, sImageName, sImageResType,
 		rcItem, rcBmpPart, rcCorner, dwMask, bFade, bHole, bTiledX, bTiledY);
 
-    return true;
+    return true;*/
+	if ((pManager == NULL ) || (hDC == NULL))	return false;
+	const TDrawInfo* pDrawInfo = pManager->GetDrawInfo(pStrImage, pStrModify);
+	return DrawImageInfo(hDC, pManager, rcItem, rcPaint, pDrawInfo);
 }
 
 void CRenderEngine::DrawGradient(HDC hDC, const RECT& rc, DWORD dwFirst, DWORD dwSecond, bool bVertical, int nSteps)
@@ -2232,28 +2273,16 @@ SIZE CRenderEngine::GetTextSize( HDC hDC, CPaintManagerUI* pManager , LPCTSTR ps
 	return size;
 }
 
-void CRenderEngine::DrawRoundRect(HDC hDC, const RECT& rc, int nSize, int width, int height, DWORD dwPenColor,long bTopLeftRound/*=1*/,long bTopRightRound/*=1*/,long bBottomRightRound/*=1*/,long bBottomLeftRound/*=1*/)
+void CRenderEngine::DrawRoundRect(HDC hDC, const RECT& rc, int nSize, int width, int height, DWORD dwPenColor, int nStyle /*= PS_SOLID*/)
 {
 	ASSERT(::GetObjectType(hDC)==OBJ_DC || ::GetObjectType(hDC)==OBJ_MEMDC);
-#ifdef RENDER_GDIPLUS
-	Graphics graphics(hDC);
-	CGraphicsRoundRectPath roundPath;
-	if(nSize>1)
-		roundPath.AddRoundRect(rc.left+nSize/2-1,rc.top+nSize/2-1,rc.right-rc.left-nSize+1,rc.bottom-rc.top-nSize+1,width,height,bTopLeftRound,bTopRightRound,bBottomRightRound,bBottomLeftRound);
-	else
-		roundPath.AddRoundRect(rc.left,rc.top,rc.right-rc.left-1,rc.bottom-rc.top-1,width,height,bTopLeftRound,bTopRightRound,bBottomRightRound,bBottomLeftRound);
-	Pen pen(Color(dwPenColor),(float)nSize);
-	graphics.SetSmoothingMode(SmoothingModeAntiAlias);
-	graphics.DrawPath(&pen,&roundPath);
-	graphics.SetSmoothingMode(SmoothingModeDefault);
-#else
-	HPEN hPen = ::CreatePen(PS_SOLID | PS_INSIDEFRAME, nSize, RGB(GetBValue(dwPenColor), GetGValue(dwPenColor), GetRValue(dwPenColor)));
+
+	HPEN hPen = ::CreatePen(nStyle, nSize, RGB(GetBValue(dwPenColor), GetGValue(dwPenColor), GetRValue(dwPenColor)));
 	HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
 	::SelectObject(hDC, ::GetStockObject(HOLLOW_BRUSH));
 	::RoundRect(hDC, rc.left, rc.top, rc.right, rc.bottom, width, height);
 	::SelectObject(hDC, hOldPen);
 	::DeleteObject(hPen);
-#endif
 }
 
 
@@ -2435,6 +2464,29 @@ HBITMAP CRenderEngine::CreateARGB32Bitmap(HDC hDC, int cx, int cy, BYTE** pBits)
 	HBITMAP hBitmap = CreateDIBSection (hDC, lpbiSrc, DIB_RGB_COLORS, (void **)pBits, NULL, NULL);
 	delete [] lpbiSrc;
 	return hBitmap;
+}
+
+void CRenderEngine::AdjustImage(bool bUseHSL, TImageInfo* pImageInfo, short H, short S, short L)
+{
+	if( pImageInfo == NULL || pImageInfo->bUseHSL == false || pImageInfo->hBitmap == NULL || 
+		pImageInfo->pBits == NULL || pImageInfo->pSrcBits == NULL ) 
+		return;
+	if( bUseHSL == false || (H == 180 && S == 100 && L == 100)) {
+		::CopyMemory(pImageInfo->pBits, pImageInfo->pSrcBits, pImageInfo->nX * pImageInfo->nY * 4);
+		return;
+	}
+
+	float fH, fS, fL;
+	float S1 = S / 100.0f;
+	float L1 = L / 100.0f;
+	for( int i = 0; i < pImageInfo->nX * pImageInfo->nY; i++ ) {
+		RGBtoHSL(*(DWORD*)(pImageInfo->pSrcBits + i*4), &fH, &fS, &fL);
+		fH += (H - 180);
+		fH = fH > 0 ? fH : fH + 360; 
+		fS *= S1;
+		fL *= L1;
+		HSLtoRGB((DWORD*)(pImageInfo->pBits + i*4), fH, fS, fL);
+	}
 }
 
 #ifdef RENDER_GDIPLUS

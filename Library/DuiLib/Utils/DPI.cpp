@@ -32,6 +32,8 @@ namespace DuiLib
 		m_nScaleFactorSDA = 0;
 		m_Awareness = PROCESS_PER_MONITOR_DPI_AWARE;
 
+		m_bEnableDPI = TRUE;
+
 		SetScale(96);
 	}
 
@@ -109,7 +111,17 @@ namespace DuiLib
 		return bRet;
 	}
 
-	UINT DuiLib::CDPI::GetDPI()
+	void CDPI::SetDPIEnable(BOOL bEnable)
+	{
+		m_bEnableDPI = bEnable;
+	}
+
+	BOOL CDPI::IsDPIEnable()
+	{
+		return m_bEnableDPI;
+	}
+
+	UINT CDPI::GetDPI()
 	{
 		if (m_Awareness == PROCESS_DPI_UNAWARE) {
 			return 96;
@@ -133,13 +145,16 @@ namespace DuiLib
 		return m_nScaleFactor;
 	}
 
-
-	void CDPI::SetScale(UINT uDPI)
+	BOOL CDPI::SetScale(UINT uDPI)
 	{
+		if (m_bEnableDPI == FALSE)
+			return FALSE;
+
 		m_nScaleFactor = MulDiv(uDPI, 100, 96);
 		if (m_nScaleFactorSDA == 0) {
 			m_nScaleFactorSDA = m_nScaleFactor;
 		}
+		return TRUE;
 	}
 
 	int  CDPI::Scale(int iValue)

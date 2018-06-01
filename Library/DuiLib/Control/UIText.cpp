@@ -125,7 +125,8 @@ namespace DuiLib
 
 	SIZE CTextUI::EstimateSize(SIZE szAvailable)
 	{
-		RECT rcText = { 0, 0, MAX(szAvailable.cx, m_cxyFixed.cx), 9999 };
+		//RECT rcText = { 0, 0, MAX(szAvailable.cx, m_cxyFixed.cx), 9999 };
+		RECT rcText = {0, 0, m_bAutoCalcWidth ? 9999 : GetManager()->GetDPIObj()->Scale(m_cxyFixed.cx), 9999};
 		rcText.left += m_rcTextPadding.left;
 		rcText.right -= m_rcTextPadding.right;
 		if( m_bShowHtml ) {   
@@ -138,8 +139,12 @@ namespace DuiLib
 		SIZE cXY = {rcText.right - rcText.left + m_rcTextPadding.left + m_rcTextPadding.right,
 			rcText.bottom - rcText.top + m_rcTextPadding.top + m_rcTextPadding.bottom};
 
-		if( m_cxyFixed.cy != 0 ) cXY.cy = m_cxyFixed.cy;
-		return cXY;
+		//if( m_cxyFixed.cy != 0 ) cXY.cy = m_cxyFixed.cy;
+		//return cXY;
+		if (m_bAutoCalcWidth)
+			m_cxyFixed.cx = MulDiv(cXY.cx, 100, GetManager()->GetDPIObj()->GetScale());
+
+		return CControlUI::EstimateSize(szAvailable);
 	}
 
 	void CTextUI::PaintText(HDC hDC)
@@ -156,10 +161,13 @@ namespace DuiLib
 
 		m_nLinks = lengthof(m_rcLinks);
 		RECT rc = m_rcItem;
-		rc.left += m_rcTextPadding.left;
-		rc.right -= m_rcTextPadding.right;
-		rc.top += m_rcTextPadding.top;
-		rc.bottom -= m_rcTextPadding.bottom;
+		RECT rcTextPadding = m_rcTextPadding;
+		if (m_pManager)
+			m_pManager->GetDPIObj()->ScaleBack(&rcTextPadding);
+		rc.left += rcTextPadding.left;
+		rc.right -= rcTextPadding.right;
+		rc.top += rcTextPadding.top;
+		rc.bottom -= rcTextPadding.bottom;
 
 		DWORD dwTextColor = IsEnabled() ? m_dwTextColor : m_dwDisabledTextColor;
 

@@ -32,10 +32,12 @@ namespace DuiLib
 		rc = m_rcItem;
 
 		// Adjust for inset
-		rc.left += m_rcInset.left;
-		rc.top += m_rcInset.top;
-		rc.right -= m_rcInset.right;
-		rc.bottom -= m_rcInset.bottom;
+		RECT rcInset = m_rcInset;
+		GetManager()->GetDPIObj()->Scale(&rcInset);
+		rc.left += rcInset.left;
+		rc.top += rcInset.top;
+		rc.right -= rcInset.right;
+		rc.bottom -= rcInset.bottom;
 
 		if( m_items.GetSize() == 0) {
 			ProcessScrollBar(rc, 0, 0);

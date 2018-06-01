@@ -150,6 +150,8 @@ namespace DuiLib
 
 	RECT CContainerUI::GetInset() const
 	{
+		if (m_pManager)
+			return m_pManager->GetDPIObj()->Scale(m_rcInset);
 		return m_rcInset;
 	}
 
@@ -161,6 +163,8 @@ namespace DuiLib
 
 	int CContainerUI::GetChildPadding() const
 	{
+		if (m_pManager)
+			return m_pManager->GetDPIObj()->Scale(m_iChildPadding);
 		return m_iChildPadding;
 	}
 
@@ -371,6 +375,8 @@ namespace DuiLib
 
 	int CContainerUI::GetScrollStepSize() const
 	{
+		if (m_pManager)
+			return m_pManager->GetDPIObj()->Scale(m_nScrollStepSize);
 		return m_nScrollStepSize;
 	}
 
@@ -560,6 +566,7 @@ namespace DuiLib
 	{
 		CControlUI::SetPos(rc);
 		if( m_items.IsEmpty() ) return;
+
 		rc.left += m_rcInset.left;
 		rc.top += m_rcInset.top;
 		rc.right -= m_rcInset.right;
@@ -688,11 +695,13 @@ namespace DuiLib
 		CControlUI::DoPaint(hDC, rcPaint);
 
 		if( m_items.GetSize() > 0 ) {
+		RECT rcInset = GetInset();
 		RECT rc = m_rcItem;
-		rc.left += m_rcInset.left;
-		rc.top += m_rcInset.top;
-		rc.right -= m_rcInset.right;
-		rc.bottom -= m_rcInset.bottom;
+		rc.left += rcInset.left;
+		rc.top += rcInset.top;
+		rc.right -= rcInset.right;
+		rc.bottom -= rcInset.bottom;
+
 		if( m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible() ) rc.right -= m_pVerticalScrollBar->GetFixedWidth();
 		if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() ) rc.bottom -= m_pHorizontalScrollBar->GetFixedHeight();
 
@@ -787,7 +796,7 @@ namespace DuiLib
 		else{
 			//暂时未修改原有float浮动代码
 			RECT rcCtrl = { 0 };
-			if( szXY.cx >= 0 ) {
+			/*if( szXY.cx >= 0 ) {
 				rcCtrl.left = m_rcItem.left + szXY.cx;
 				rcCtrl.right = m_rcItem.left + szXY.cx + sz.cx;
 			}
@@ -802,7 +811,13 @@ namespace DuiLib
 			else {
 				rcCtrl.top = m_rcItem.bottom + szXY.cy - sz.cy;
 				rcCtrl.bottom = m_rcItem.bottom + szXY.cy;
-			}
+			}*/
+			LONG width = m_rcItem.right - m_rcItem.left;
+			LONG height = m_rcItem.bottom - m_rcItem.top;
+			rcCtrl.left = szXY.cx+ m_rcItem.left;
+			rcCtrl.top = szXY.cy+ m_rcItem.top;
+			rcCtrl.right = szXY.cx + sz.cx+ m_rcItem.left;
+			rcCtrl.bottom = szXY.cy + sz.cy+ m_rcItem.top;
 			if( pControl->IsRelativePos() )
 			{
 				TRelativePosUI tRelativePos = pControl->GetRelativePos();
@@ -818,6 +833,7 @@ namespace DuiLib
 				}
 				pControl->SetRelativeParentSize(szParent);
 			}
+
 			pControl->SetPos(rcCtrl);
 		}
 		
