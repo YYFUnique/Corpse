@@ -114,7 +114,7 @@ namespace DuiLib
 	CSkinDescribeUI::CSkinDescribeUI(CPaintManagerUI& PaintManager)
 		:CTileListCtrlUI(PaintManager)
 	{
-		SetItemSize(CSize(80,80));
+		SetItemSize(CDuiSize(80,80));
 	}
 
 	LPCTSTR CSkinDescribeUI::GetClass() const
@@ -150,13 +150,15 @@ namespace DuiLib
 	{
 		const SkinFaceInfo* pSkinFaceInfo = (PSkinFaceInfo)lParam;
 		CSkinFaceUI* pSkinFace = NULL;
-		CPCMaster* pMainDlg = (CPCMaster*)GetMainApp();
+		ASSERT(FALSE && _T("不能添加"));
+		// 暂时屏蔽以下代码
+		/*CPCMaster* pMainDlg = (CPCMaster*)GetMainApp();
 		if (m_DialogBuilder.GetMarkup()->IsValid() == false)
 			pSkinFace = (CSkinFaceUI*)m_DialogBuilder.Create(_T("SkinDescribe.xml"),0,pMainDlg,&m_PaintManager);
 		else
 			pSkinFace = (CSkinFaceUI*)m_DialogBuilder.Create(pMainDlg,&m_PaintManager);
 
-		ASSERT(pSkinFace);
+		ASSERT(pSkinFace);*/
 
 		CLabelUI* pLabelAuthor = (CLabelUI*)m_PaintManager.FindSubControlByName(pSkinFace,_T("LabelAuthor"));
 		pLabelAuthor->SetText(pSkinFaceInfo->strAuthor);

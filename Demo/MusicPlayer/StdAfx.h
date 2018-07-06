@@ -12,6 +12,10 @@
 #include <exdisp.h>
 #include <comdef.h>
 
+#include <gdiplus.h>
+using namespace Gdiplus;
+
+
 #include "Duilib/UIlib.h"
 using namespace DuiLib;
 

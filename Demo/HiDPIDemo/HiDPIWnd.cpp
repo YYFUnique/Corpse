@@ -61,12 +61,14 @@ void CHiDPIWnd::OnClick(TNotifyUI& msg)
 		SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
 	else if (strNotifyUIName == _T("BtnMenu"))
 	{
-		RECT rcPos = msg.pSender->GetPos();
-		POINT pt = {rcPos.left,rcPos.top};
-		ClientToScreen(m_hWnd,&pt);
+		//RECT rcPos = msg.pSender->GetPos();
+		
+		POINT pt;// = {rcPos.right,rcPos.bottom};
+		GetCursorPos(&pt);
+		//ClientToScreen(m_hWnd,&pt);
 		//CMenuWnd* pMenu = CMenuWnd::CreateMenu(NULL, _T("menutest.xml"), point, &m_pm, NULL, eMenuAlignment_Bottom);
 		CMenuWnd* pMenu = new CMenuWnd;
-		pMenu->Init(NULL, _T("menutest.xml"),pt,&m_PaintManager,NULL,eMenuAlignment_Top|eMenuAlignment_Left);
+		pMenu->Init(NULL, _T("menutest.xml"),pt,&m_PaintManager,NULL/*,eMenuAlignment_Right|eMenuAlignment_Top*/);
 
 		// 先获取到根项，然后就可以使用rootMenu插到到菜单内的任意子菜单项，然后做添加删除操作
 		CMenuUI* rootMenu = pMenu->GetMenuUI();

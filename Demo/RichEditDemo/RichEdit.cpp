@@ -4,18 +4,18 @@
 #include "RichEditUtil.h"
 #include "Utils.h"
 #include "FileDialogEx.h"
-#include "LsList.h"
+#include "UIBubbleLayout.h"
+#include "BubbleMgr.h"
 #include "ImageOleCtrl/ImageOle.h"
 
 CFontInfo g_BuddyFontInfo;
 
-typedef CLsList<DWORD,DWORD> CListDWord;
+//typedef CDuiList<DWORD,DWORD> CListDWord;
 
 
 CRichEdit::CRichEdit()
-:m_pSendRichEdit(NULL)
-,m_pRecvRichEdit(NULL)
-,m_Inited(FALSE)
+	:m_pSendRichEdit(NULL)
+	,m_pRecvRichEdit(NULL)
 // ,m_pRichEditOleCallBackSendEdit(NULL)
 // ,m_pRichEditOleCallBackRecvEdit(NULL)
 {
@@ -104,34 +104,78 @@ void ChangeFontNameSizeBold(ITextSelection *pSel)
 
 void CRichEdit::InitWindow()
 {
-	m_bReturnSendMsg = TRUE;
-	m_Inited = TRUE;
+	m_bPressEnterToSendMessage = TRUE;
 	SetIcon(IDI_MAINFRAME);
 
-	m_pSendRichEdit = (CRichEditUI*)m_PaintManager.FindControl(_T("RichSend"));
-	m_pRecvRichEdit = (CRichEditUI*)m_PaintManager.FindControl(_T("RichRecv"));
+	m_pSendRichEdit = (CRichTextUI*)m_PaintManager.FindControl(_T("RichSend"));
+	m_pRecvRichEdit = (CRichTextUI*)m_PaintManager.FindControl(_T("RichRecv"));
 
-	m_pChatView = (CVerticalLayoutUI*)m_PaintManager.FindControl(_T("ChatView"));
-	m_pChatView->OnSize += MakeDelegate(this, &CRichEdit::ChatViewSizeChange);
+	//m_pChatView = (CVerticalLayoutUI*)m_PaintManager.FindControl(_T("ChatView"));
+	//m_pChatView->OnSize += MakeDelegate(this, &CRichEdit::ChatViewSizeChange);
 	
-	m_pRecvRichEdit->OnEvent += MakeDelegate(this, &CRichEdit::ChatViewEvent);
+	//m_pRecvRichEdit->OnEvent += MakeDelegate(this, &CRichEdit::ChatViewEvent);
 
-	m_pRecvRichEdit->SetText(_T("The quick brown fox jumped over the lazy dog.The quick brown fox jumped over the lazy dog."));
+	//m_pRecvRichEdit->AppendText(_T("."));
+	//m_pRecvRichEdit->SetText(_T("The quick brown fox jumped over the lazy dog.The quick brown fox jumped over the lazy dog."));
+	//
+	//ITextRange* pRange = NULL;
+	//ITextFont* pFont = NULL;
+	//ITextPara* pPara = NULL;
+	//m_pRecvRichEdit->GetDoc()->Range(0,20,&pRange);
+	//HRESULT hRet = pRange->GetFont(&pFont);
+	//hRet = pFont->SetSize((float)15);
+	//pRange->GetPara(&pPara);
+	//hRet = pPara->SetIndents(20,5,0);
+
+	//m_pRecvRichEdit->AppendText(_T("\r\nThe quick brown fox jumped over the lazy dog."));
+	//m_pRecvRichEdit->GetDoc()->Range(91,136,&pRange);
+	//pRange->GetFont(&pFont);
+	//pFont->SetSize((float)16);
+	//pFont->SetForeColor(0x00FF00FF);
+
+	//m_pRecvRichEdit->AppendText(_T("\r\nThe quick brown fox jumped over the lazy dog."));
+	//m_pRecvRichEdit->GetDoc()->Range(137,182,&pRange);
+	//pRange->GetFont(&pFont);
+	//pFont->SetSize((float)16);
+	//pFont->SetForeColor(0x00FF00FF);
+
+	//m_pRecvRichEdit->AppendText(_T("\r\nThe quick brown fox jumped over the lazy dog."));
+	//m_pRecvRichEdit->GetDoc()->Range(183,229,&pRange);
+	//pRange->GetFont(&pFont);
+	//pFont->SetSize((float)16);
+	//pFont->SetForeColor(0x00FF00FF);
+
+	//m_pRecvRichEdit->AppendText(_T("\r\nThe quick brown fox jumped over the lazy dog."));
+	//m_pRecvRichEdit->GetDoc()->Range(229,275,&pRange);
+	//pRange->GetFont(&pFont);
+	//pFont->SetSize((float)16);
+	//pFont->SetForeColor(0x00FF00FF);
+
+	//m_pRecvRichEdit->AppendText(_T("\r\nThe quick brown fox jumped over the lazy dog."));
+	//m_pRecvRichEdit->GetDoc()->Range(229,275,&pRange);
+	//pRange->GetFont(&pFont);
+	//pFont->SetSize((float)16);
+	//pFont->SetForeColor(0x00FF00FF);
+
+	////m_pRecvRichEdit->SetSel(-1,-1);
+
+	//CHARFORMAT cf;
+	//m_pRecvRichEdit->GetDefaultCharFormat(cf);
+	//cf.yHeight = 25*20;
+	//
+	//m_pRecvRichEdit->AppendText(_T("\r\nThe quick brown fox jumped over the lazy dog."));
+	//m_pRecvRichEdit->SetSel(229,275);
+	//m_pRecvRichEdit->SetSelectionCharFormat(cf);
+
+	//m_pRecvRichEdit->SetStartIndent(20, FALSE);
+	//m_pRecvRichEdit->AppendText(_T("\r\nThe quick brown fox jumped over the lazy dog."));
 	
-	ITextRange* pRange = NULL;
-	ITextFont* pFont = NULL;
-	ITextPara* pPara = NULL;
-	m_pRecvRichEdit->GetDoc()->Range(0,20,&pRange);
-	HRESULT hRet = pRange->GetFont(&pFont);
-	hRet = pFont->SetSize((float)15);
-	pRange->GetPara(&pPara);
-	pPara->SetIndents(20,5,0);
+	//m_pRecvRichEdit->EndDown();
+	
 
-	m_pRecvRichEdit->AppendText(_T("\r\nThe quick brown fox jumped over the lazy dog."));
-	m_pRecvRichEdit->GetDoc()->Range(91,136,&pRange);
-	pRange->GetFont(&pFont);
-	pFont->SetSize((float)16);
-	pFont->SetForeColor(0x00FF00FF);
+	//RichEdit_SetSel(m_pRecvRichEdit->GetTextServices(),-1,-1);
+
+	//m_pRecvRichEdit->EndDown();
 	//hRet = pRange->SetFont(pFont);
 	//int n=0;
 	/*ITextDocument* pDocument = NULL;
@@ -260,7 +304,12 @@ LRESULT CRichEdit::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 CControlUI* CRichEdit::CreateControl(LPCTSTR pstrClass)
 {
-	return NULL;
+	CControlUI* pControl = NULL;
+	if (_tcsicmp(pstrClass, _T("RichText")) == 0)
+		pControl = (CControlUI*)new CRichTextUI;
+	else if (_tcsicmp(pstrClass, _T("BubbleLayout")) == 0)
+		pControl = (CControlUI*)new CBubbleLayoutUI;
+	return pControl;
 }
 
 LRESULT CRichEdit::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -279,6 +328,8 @@ LRESULT CRichEdit::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandle
 		COptionUI* pMax = (COptionUI*)m_PaintManager.FindControl(_T("BtnMax"));
 		pMax->Selected(wParam == SIZE_MAXIMIZED);
 	}
+
+	//ResizeImageInRecvRichEdit();
 
 	return WindowImplBase::OnSize(uMsg,wParam,lParam,bHandled);
 }
@@ -481,7 +532,9 @@ void	CRichEdit::OnSelectBtnShock(TNotifyUI& msg)
 	CDuiRect RcRect;
 	GetWindowRect(m_hWnd,&RcRect);
 	int nLeft = 0,nTop = 0,nOffset;
-	AddTipMsgToRecvEdit(_T("您向对方发送了一个窗口抖动"));
+	//AddTipMsgToRecvEdit(_T("您向对方发送了一个窗口抖动"));
+	CBubbleMgr BubbleMgr;
+	BubbleMgr.AddTipMsg(m_pRecvRichEdit, _T("您向对方发送了一个窗口抖动"));
 	for (int i=0;i<10;++i)
 	{
 		nOffset = i%2 == 0 ? 5 : -5;
@@ -495,7 +548,7 @@ void	CRichEdit::OnSelectBtnShock(TNotifyUI& msg)
 
 void	CRichEdit::OnSelectBtnScreenShots(TNotifyUI& msg)
 {
-
+	
 }
 
 void CRichEdit::OnBtnSendOption(TNotifyUI& msg)
@@ -509,21 +562,86 @@ void CRichEdit::OnBtnSendOption(TNotifyUI& msg)
 }
 
 void CRichEdit::OnRichSendMessage()
-{
-	ITextServices* pTextServices = m_pSendRichEdit->GetTextServices();
+{	
+	SIZE szPos = m_pRecvRichEdit->GetScrollPos();
+	SIZE szRange = m_pRecvRichEdit->GetScrollRange();
 
-	CDuiString strSendText;
-	RichEdit_GetText(pTextServices, strSendText);
+	CBubbleLayoutUI* pBubble = NULL;
+	if (m_DialogBuilder.GetMarkup()->IsValid()== false)
+		pBubble = (CBubbleLayoutUI*)m_DialogBuilder.Create(_T("BubbleLayout.xml"), NULL, this, &m_PaintManager);
+	else
+		pBubble = (CBubbleLayoutUI*)m_DialogBuilder.Create(this, &m_PaintManager);
+
+	CBubbleMgr BubbleMgr;
 	
-	pTextServices->Release();
+	BubbleMgr.EnterBubble(m_pRecvRichEdit);
 
-	if (strSendText.GetLength() <= 0)
-		return;
+	pBubble->GetItemAt(1)->SetVisible(false);
+	//DWORD dwStart = m_pRecvRichEdit->GetWindowTextLength();
+	
+	LPCTSTR lpszNickName = _T("【宰相】养马镇-老铁\r\n");
+	BubbleMgr.m_dwNickLen = _tcslen(lpszNickName) - 1;
+	m_pRecvRichEdit->AppendText(lpszNickName);
+	CString strSendMsg = m_pSendRichEdit->GetText();
+	
+	m_pRecvRichEdit->AppendText(strSendMsg);
+	
+	//DWORD dwEnd = m_pRecvRichEdit->GetWindowTextLength();
+// 	CHARRANGE chRange = {dwStart, dwEnd};
+// 	CString strText;
+// 	m_pRecvRichEdit->GetTextRange(&chRange,strText);
 
-	AddMsgToRecvEdit(strSendText);
+	BubbleMgr.LeaveBubble(pBubble);
 
-	m_pSendRichEdit->SetText(_T(""));
-	m_pSendRichEdit->SetFocus();
+	m_pRecvRichEdit->SetSel(BubbleMgr.m_dwStart + BubbleMgr.m_dwNickLen, BubbleMgr.m_dwEnd);
+	//m_pRecvRichEdit->SetSel(dwStart, dwEnd);
+	m_pRecvRichEdit->SetStartIndent(50, 13, PFA_LEFT);
+	CHARFORMAT2 cf;
+	m_pRecvRichEdit->GetDefaultCharFormat(cf);
+	//cf.dwEffects
+	cf.crTextColor = 0xFF696969;
+	//cf2.crBackColor = 0x0;
+	cf.dwMask |= CFM_COLOR;
+	cf.dwEffects |= CFE_AUTOCOLOR;
+	cf.yHeight = 12*20;
+	//if (lpFontName != NULL)									// 设置字体名称
+	{
+		cf.dwMask |= CFM_FACE;
+		_tcscpy_s(cf.szFaceName, _countof(cf.szFaceName), _T("微软雅黑"));
+	}
+	/*cf2.bCharSet*/
+	m_pRecvRichEdit->SetSelectionCharFormat(cf);
+	//m_pRecvRichEdit->SetFont(_T("微软雅黑"), 14, 0xFFFFFFFF, FALSE, FALSE, FALSE, FALSE);
+
+	DWORD dwPara = m_pRecvRichEdit->GetParaSpace();
+
+	m_pRecvRichEdit->SetSel(BubbleMgr.m_dwStart, BubbleMgr.m_dwStart + BubbleMgr.m_dwNickLen - 1);
+	//CString strNickName;
+	//m_pRecvRichEdit->GetTextRange(BubbleMgr.m_dwStart, BubbleMgr.m_dwStart + BubbleMgr.m_dwNickLen- 1, strNickName);
+	m_pRecvRichEdit->SetStartIndent(40, 0, PFA_LEFT);
+	//m_pRecvRichEdit->SetFont(_T("微软雅黑"), 9, 0xFFFF0000, FALSE, FALSE, FALSE, FALSE);
+	CHARFORMAT2 cf2;
+	m_pRecvRichEdit->GetDefaultCharFormat(cf2);
+	//cf.dwEffects
+	cf2.crTextColor = 0xFF808080;
+	//cf2.crBackColor = 0x0;
+	cf2.dwMask |= CFM_EFFECTS;
+	//cf2.dwEffects |= CFE_AUTOCOLOR;
+	cf2.yHeight = 9*20;
+	//if (lpFontName != NULL)									// 设置字体名称
+	{
+		cf2.dwMask |= CFM_FACE;
+		_tcscpy_s(cf2.szFaceName, _countof(cf2.szFaceName), _T("微软雅黑"));
+	}
+	/*cf2.bCharSet*/
+	m_pRecvRichEdit->SetSelectionCharFormat(cf2);
+									/*SetSelectionCharFormat*/
+	m_pRecvRichEdit->Invalidate();
+
+	pBubble->SetParaSpace(dwPara);
+	m_pRecvRichEdit->SetParaSpace(dwPara, 10);
+
+	m_pRecvRichEdit->EndDown();
 }
 
 void CRichEdit::AddMsgToSendEdit(LPCTSTR lpText)
@@ -548,15 +666,42 @@ void CRichEdit::AddTipMsgToRecvEdit(LPCTSTR lpText)
 	m_pRecvRichEdit->EndDown();
 }
 
-void CRichEdit::AddMsgToRecvEdit(LPCTSTR lpText)
+//void CRichEdit::AddMsgToRecvEdit(time_t nTime, LPCTSTR lpszMsgText)
+//{
+//	if (lpszMsgText == NULL || lpszMsgText[0] == NULL)
+//		return;
+//
+//	TCHAR szTime[32];
+//	FormatTime(nTime, _T("%H:%M:%S"), szTime, _countof(szTime));
+//
+//	CString strRecvText;
+//	strRecvText.Format(_T("%s %s\r\n"), _T("我欲飞翔"), szTime);
+//
+//	ITextServices* pTextServices = m_pRecvRichEdit->GetTextServices();
+//
+//	RichEdit_SetSel(pTextServices, -1, -1);
+//	RichEdit_ReplaceSel(pTextServices, strRecvText, _T("微软雅黑"), 10, RGB(0,128,64), FALSE, FALSE, FALSE, FALSE,, 0);
+//
+//	strRecvText.Empty();
+//
+//	AddMsg(m_pRecvRichEdit, lpszMsgText);
+//	RichEdit_ReplaceSel(pTextServices, _T("\r\n"));
+//	RichEdit_SetStartIndent(pTextServices, 0);
+//
+//	//滑动接收消息窗口到底
+//}
+
+//void CRichEdit::AddMsgToRecvEdit()
+
+void CRichEdit::AddMsgToRecvEdit(LPCTSTR lpszMsgText)
 {
-	if (NULL == lpText || NULL == *lpText)
+	if (NULL == lpszMsgText || NULL == *lpszMsgText)
 		return;
 
 	m_pRecvRichEdit->SetAutoURLDetect(true);
 
-	CDuiString strRecvTime;
-	strRecvTime = FormatTime(time(NULL), _T("%H:%M:%S"));
+
+	//FormatTime(time(NULL), _T("%H:%M:%S"));
 
 	BOOL bMine = (BOOL)GetTickCount()%2;
 	CControlUI* pElement = (CControlUI*)CreateListElement(bMine);
@@ -576,8 +721,8 @@ void CRichEdit::AddMsgToRecvEdit(LPCTSTR lpText)
 	RichEdit_SetStartIndent(pTextServices,n*700, FALSE);
 	long lStartChar = 0, lEndChar = 0;
 	RichEdit_GetSel(pTextServices, lStartChar, lEndChar);
-	RichEdit_ReplaceSel(pTextServices, lpText, FALSE);
-	lEndChar = lStartChar + _tcslen(lpText);
+	RichEdit_ReplaceSel(pTextServices, lpszMsgText, FALSE);
+	lEndChar = lStartChar + _tcslen(lpszMsgText);
 	RichEdit_SetSel(pTextServices, lStartChar, lEndChar);
 	
 	CDuiRect rcPos;
@@ -756,4 +901,11 @@ void CRichEdit::SetOleCallback(CRichEditUI* pRichEdit)
 		pRichEdit->SetOleCallback(pRichEditOleCallback2);
 		pRichEditOleCallback2->Release();
 	}
+}
+
+void CRichEdit::ResizeImageInRecvRichEdit()
+{
+	std::vector<IMAGE_INFO*> arrImageInfo;
+	if (arrImageInfo.size() == 0)
+		return;
 }

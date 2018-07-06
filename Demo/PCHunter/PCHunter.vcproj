@@ -400,6 +400,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Wnd\BlockNet.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Wnd\IPTools.cpp"
 					>
 				</File>
@@ -603,6 +607,10 @@
 				</File>
 				<File
 					RelativePath=".\Wnd\ArpList.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Wnd\BlockNet.h"
 					>
 				</File>
 				<File

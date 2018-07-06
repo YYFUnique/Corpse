@@ -482,6 +482,8 @@ namespace DuiLib
 			}
 
 			frame.m_pImage = new TImageInfo;
+			frame.m_pImage->pSrcBits = NULL;
+			frame.m_pImage->pBits = NULL;
 			frame.m_pImage->hBitmap = hBitmap;
 			frame.m_pImage->nX = x;
 			frame.m_pImage->nY = y;

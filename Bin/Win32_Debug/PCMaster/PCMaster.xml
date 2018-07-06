@@ -25,7 +25,7 @@
                     </HorizontalLayout>
                     <VerticalLayout name="VLayoutUserInfo">
                         <HorizontalLayout name="HorizontalLayoutUI1" pos="0,0,127,30" width="127" height="30">
-                            <Text name="LabelUserName" textid="STRING_LABEL_MAN" pos="5,8,44,38" width="39" height="30" maxheight="30" maxwidth="100" textpadding="2,0,2,0" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
+                            <Text name="LabelUserName" textid="STRING_LABEL_MAN" pos="5,8,60,38" height="30" maxheight="30" maxwidth="100" textpadding="2,0,2,0" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
                             <HorizontalLayout name="HorizontalLayoutUI5" pos="0,0,27,30" width="27" height="30">
                                 <Button name="BtnStatus" tooltip="状态" float="true" pos="3,6,23,26" bkimage="file=&apos;imonline.png&apos; dest=&apos;4,4,16,16&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;imonline.png&apos; dest=&apos;4,4,16,16&apos;" hotimage="btn_hover.png" pushedimage="btn_press.png" />
                             </HorizontalLayout>
@@ -48,9 +48,10 @@
 				</HorizontalLayout>
             </VerticalLayout>
 			<TabLayout name="demo">
-				<VerticalLayout name="VLayoutBody" bkimage="file=&apos;main_bottom_bkg.png&apos; source=&apos;0,45,50,111&apos; corner=&apos;20,20,20,20&apos;" inset="3,1,3,6" >
+				<VerticalLayout name="VLayoutBody" bkimage="file=&apos;main_bottom_bkg.png&apos; source=&apos;0,45,50,111&apos; corner=&apos;20,20,20,20&apos;" inset="3,0,3,6" >
 					<!--<ListCtrl name="Tools" childpadding="1,1,1,1" padding="4,5,2,2" itemfont="2" vscrollbar="true" itempushedimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;" itemselectedimage="file=&apos;main_topmask_selected.png&apos; corner=&apos;2,2,2,2&apos;" itemhotimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;"/>-->
-					<ListCtrl name="Tools" childpadding="1,1,1,1" padding="4,4,2,2" itemfont="2" vscrollbar="true" itempushedimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;" itemselectedimage="file=&apos;main_topmask_selected.png&apos; corner=&apos;2,2,2,2&apos;" itemhotimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;"/>
+					<!--<ListCtrl name="Tools" childpadding="1,1,1,1" padding="4,4,2,2" itemfont="2" vscrollbar="true" itempushedimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;" itemselectedimage="file=&apos;main_topmask_selected.png&apos; corner=&apos;2,2,2,2&apos;" itemhotimage="file=&apos;main_topmask_over.png&apos; corner=&apos;2,2,2,2&apos;"/>-->
+					<RichText name="Editor" bkcolor="#FFFFFFFF" caretcolor="#FFFF0000" textpadding="2,1,3,2"/>
 				</VerticalLayout>
 				<VerticalLayout name="TabPage2" bkcolor="#FFFFFF00">
 				</VerticalLayout>

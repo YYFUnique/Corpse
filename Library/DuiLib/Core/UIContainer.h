@@ -85,6 +85,7 @@ public:
 	const CDuiString GetSubControlUserData(LPCTSTR pstrSubControlName);
 	CControlUI* FindSubControl(LPCTSTR pstrSubControlName);
 	CControlUI* FindSubControlByClassName( LPCTSTR pstrSubControlClassName);
+	CControlUI* FindSubControlByClassName(LPCTSTR pstrSubControlClassName, DWORD dwFlag);
 
 	bool Erase(CControlUI* pControl);
 	bool Erase(int iIndex);

@@ -95,10 +95,16 @@ namespace DuiLib
 		// 设置大图标
 		::SendMessage(m_hWnd, WM_SETICON, ICON_BIG, (LPARAM) shFileInfo.hIcon);
 
+		// 释放图标文件句柄
+		DestroyIcon(shFileInfo.hIcon);
+
 		// 获取小图标
 		SHGetFileInfo(szModuleName, NULL, &shFileInfo, sizeof(SHFILEINFO), SHGFI_ICON|SHGFI_SMALLICON);
 		//	设置小图标
 		::SendMessage(m_hWnd, WM_SETICON, ICON_SMALL, (LPARAM) shFileInfo.hIcon);
+
+		// 释放图标文件句柄
+		DestroyIcon(shFileInfo.hIcon);
 	}
 
 	void TBCIAMainWnd::SaveToControlCallbackMap(CDuiString strName, int nCallback)

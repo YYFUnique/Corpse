@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PlayerMain.h"
 #include "Resource.h"
+#include "UILyric.h"
 
 #define		WM_TRAYICON					(WM_USER+0x1000)		//托盘图标鼠标消息
 
@@ -14,7 +15,7 @@ CPlayerMain::~CPlayerMain()
 {
 	if (m_pTrayIcon)
 	{
-		
+		m_pTrayIcon->DeleteTrayIcon();
 		delete m_pTrayIcon;
 		m_pTrayIcon = NULL;
 	}
@@ -24,6 +25,11 @@ CPlayerMain::~CPlayerMain()
 // 
 // DUI_END_MESSAGE_MAP()
 
+void CPlayerMain::OnFinalMessage( HWND hWnd )
+{
+	__super::OnFinalMessage(hWnd);
+	delete this;
+}
 
 LPCTSTR CPlayerMain::GetWindowClassName() const
 {
@@ -44,11 +50,16 @@ void CPlayerMain::Notify(TNotifyUI& msg)
 {
 	if (msg.sType == DUI_MSGTYPE_CLICK)
 		OnClick(msg);
+	else if (msg.sType == DUI_MSGTYPE_TIMER)
+		OnTimer(msg);
 }
 
 CControlUI* CPlayerMain::CreateControl(LPCTSTR pstrClass)
 {
-	return NULL;
+	CControlUI* pControl = NULL;
+	if (_tcsicmp(pstrClass, _T("Lyric")) == 0)
+		pControl = new CLyricUI;
+	return pControl;
 }
 
 LRESULT CPlayerMain::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -72,6 +83,7 @@ LRESULT CPlayerMain::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam
 void CPlayerMain::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
+
 	m_pTrayIcon = new CUITrayIcon;
 	if (m_pTrayIcon)
 	{
@@ -134,6 +146,12 @@ void CPlayerMain::InitWindow()
 		RECT rctTextPadding={10,2,5,2};
 		pListInfo->rcTextPadding=rctTextPadding;
 	}*/
+
+	m_pLyric = new CLyricTool(_T("C:\\尕让邓真 - 青藏高原.lrc"));
+	m_dwStart = GetTickCount();
+	CLyricUI* pLyric = (CLyricUI*)m_PaintManager.FindControl(_T("lrc"));
+	pLyric->SetText(m_pLyric->GetLyric(0));
+	m_PaintManager.SetTimer(pLyric, 0x1000, 100);
 }
 
 void CPlayerMain::AddItemToList(LPCTSTR lpszTitle,LPCTSTR lpszType,LPCTSTR lpszSize,LPCTSTR lpszModifyTime)
@@ -158,6 +176,8 @@ void CPlayerMain::AddItemToList(LPCTSTR lpszTitle,LPCTSTR lpszType,LPCTSTR lpszS
 LRESULT CPlayerMain::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
 	PostQuitMessage(0);
+	// 需要返回bHandle = FALSE , 操作系统才能给窗口发送WM_NCDESTROY消息，从而完全退出软件
+	bHandled = FALSE;
 	return 0;
 }
 
@@ -166,14 +186,33 @@ void CPlayerMain::OnClick(TNotifyUI& msg)
 	CDuiString strCtrlName = msg.pSender->GetName();
 	if (strCtrlName == _T("closebtn"))
 	{
-		if (m_pTrayIcon)
-			m_pTrayIcon->DeleteTrayIcon();
 		Close();
 	}
 	else if(strCtrlName == _T("minbtn"))
 		SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
 // 	else if(strCtrlName == _T("help"))
 // 		SendMessage(WM_SYSCOMMAND, SC_RESTORE, 0); 
+}
+
+void CPlayerMain::OnTimer(TNotifyUI& msg)
+{
+	if (msg.pSender->GetName() == _T("lrc"))
+	{
+		if (msg.wParam == 0x1000) {
+			DWORD dwTime = GetTickCount()-m_dwStart;
+			int nProgress = m_pLyric->GetLyricProgress(dwTime) / 10;
+			CLyricUI* pLyric = (CLyricUI*)msg.pSender;
+			pLyric->UpdateLyric(nProgress);
+			
+			if (nProgress > 10)
+				return;
+
+			if (_tcsicmp(pLyric->GetText(), m_pLyric->GetLyric(dwTime)) != 0)
+			{
+				pLyric->SetText(m_pLyric->GetLyric(dwTime));
+			}
+		}
+	}
 }
 
 LRESULT CPlayerMain::OnTrayIcon(WPARAM wParam, LPARAM lParam)
@@ -214,4 +253,12 @@ LRESULT CPlayerMain::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 	}*/
 
 	return TRUE;
+}
+
+LRESULT CPlayerMain::ResponseDefaultKeyEvent(WPARAM wParam)
+{
+	if (wParam == VK_ESCAPE && m_PaintManager.IsEnableEscKey())
+		Close(IDOK);
+
+	return FALSE;
 }

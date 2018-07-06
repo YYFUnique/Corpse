@@ -6,7 +6,7 @@ namespace DuiLib
 	CTileListCtrlUI::CTileListCtrlUI(CPaintManagerUI& PaintManager)
 		:m_PaintManager(PaintManager)
 	{
-		SetItemSize(CSize(80,85));
+		SetItemSize(CDuiSize(80,85));
 		m_ListInfo.nColumns = 0;
 		m_ListInfo.nFont = -1;
 		m_ListInfo.uTextStyle = DT_VCENTER; // m_uTextStyle(DT_VCENTER | DT_END_ELLIPSIS)
@@ -152,6 +152,6 @@ namespace DuiLib
 	{
 		if( dx == 0 && dy == 0 ) return;
 		SIZE sz = GetScrollPos();
-		SetScrollPos(CSize(sz.cx + dx, sz.cy + dy));
+		SetScrollPos(CDuiSize(sz.cx + dx, sz.cy + dy));
 	}
 }

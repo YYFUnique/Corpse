@@ -201,17 +201,16 @@ BOOL GetTrayWndRect(RECT * lpRect)
 }
 
 // _T("%Y-%m-%d %H:%M:%S")
-const TCHAR * FormatTime(time_t lTime, LPCTSTR lpFmt)
+void FormatTime(time_t lTime, LPCTSTR lpFmt, TCHAR* lpBuf, int nLen)
 {
-	struct tm * lpTimeInfo;
-	static TCHAR cTime[32];
+	if (lpFmt == NULL || lpBuf == NULL || nLen <= 0)
+		return;
 
-	memset(cTime, 0, sizeof(cTime));
+	memset(lpBuf, 0, nLen*sizeof(TCHAR));
 
-	lpTimeInfo = localtime(&lTime);
+	struct tm* lpTimeInfo = localtime(&lTime);
 	if (lpTimeInfo != NULL)
-		_tcsftime(cTime, sizeof(cTime) / sizeof(TCHAR), lpFmt, lpTimeInfo);
-	return cTime;
+		_tcsftime(lpBuf, nLen, lpFmt, lpTimeInfo);
 }
 
 

@@ -17,8 +17,6 @@
 
 namespace DuiLib {
 
-class CTxtWinHost;
-
 class UILIB_API CRichEditUI : public CContainerUI, public IMessageFilterUI
 {
 public:
@@ -94,13 +92,15 @@ public:
     void Paste();
     int GetLineCount() const;
     CDuiString GetLine(int nIndex, int nMaxLength) const;
-    int LineIndex(int nLine = -1) const;
-    int LineLength(int nLine = -1) const;
+	// 获取所在行首字符在文本中的位置
+    int GetLineIndex(int nLine = -1) const;
+	// 获取字符所在行的文本长度
+    int GetLineLength(int nLine = -1) const;
     bool LineScroll(int nLines, int nChars = 0);
 	CDuiPoint GetCharPos(long lChar) const;
-    long LineFromChar(long nIndex) const;
-    CDuiPoint PosFromChar(UINT nChar) const;
-    int CharFromPos(CDuiPoint pt) const;
+    long GetLineFromChar(long nIndex) const;
+    CDuiPoint GetPosFromChar(UINT nChar) const;
+    int GetCharFromPos(CDuiPoint pt) const;
 	void  GetVisibleCharRange(CHARRANGE& chr);
     void EmptyUndoBuffer();
     UINT SetUndoLimit(UINT nLimit);
@@ -169,7 +169,7 @@ public:
 	ITextDocument* GetDoc();
 
 	ITextHost * GetTextHost();
-	ITextServices * GetTextServices();
+	ITextServices * GetTextServices() const;
 	BOOL SetOleCallback(IRichEditOleCallback* pCallback);
 	BOOL CanPaste(UINT nFormat = 0);
 	void PasteSpecial(UINT uClipFormat, DWORD dwAspect = 0, HMETAFILE hMF = 0);

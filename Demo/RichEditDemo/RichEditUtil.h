@@ -2,6 +2,15 @@
 #include <string>
 #include "Utils.h"
 
+typedef struct tagIMAGE_INFO
+{
+	long  nStartPos;
+	long  nEndPos;
+	TCHAR szPath[MAX_PATH];
+}IMAGE_INFO, *PIMAGE_INFO;
+
+typedef std::vector<IMAGE_INFO*> CImageInfo;
+
 DWORD RichEdit_GetDefaultCharFormat(ITextServices * pTextServices, CHARFORMAT& cf);
 
 BOOL RichEdit_SetDefaultCharFormat(ITextServices * pTextServices, CHARFORMAT& cf);
@@ -52,3 +61,5 @@ BOOL RichEdit_InsertFace(ITextServices *pTextServices, ITextHost *pTextHost,
 void InsertTextToEdit(CRichEditUI* edit, LPCTSTR str);
 
 BOOL GetSelectionRect(CRichEditUI* pRichEdit, LONG cpStart, LONG cpEnd, RECT &rcCursor);
+
+void RichEdit_GetImageInfo(CRichEditUI* pRichEdit, CImageInfo& arrImageInfo);

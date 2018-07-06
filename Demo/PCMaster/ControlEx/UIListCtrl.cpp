@@ -57,7 +57,7 @@ namespace DuiLib
 	CListCtrlUI::CListCtrlUI(CPaintManagerUI& PaintManager)
 		:CTileListCtrlUI(PaintManager)
 	{
-		SetItemSize(CSize(70,75));
+		SetItemSize(CDuiSize(70,75));
 
 		m_ListInfo.nColumns = 0;
 		m_ListInfo.nFont = -1;

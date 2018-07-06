@@ -79,6 +79,7 @@
 #include "Core/ImageAttribute.h"
 #include "Core/UIRender.h"
 
+#include "Utils/TxtWinHost.h"
 #include "Utils/WinImplBase.h"
 #include "Utils/UITrayIcon.h"
 #include "Effect/UIAnimation.h"

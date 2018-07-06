@@ -394,6 +394,7 @@ public:
     CControlUI* FindSubControlByPoint(CControlUI* pParent, POINT pt) const;
     CControlUI* FindSubControlByName(CControlUI* pParent, LPCTSTR pstrName) const;
     CControlUI* FindSubControlByClass(CControlUI* pParent, LPCTSTR pstrClass, int iIndex = 0);
+	CControlUI* FindSubControlByClass(CControlUI* pParent, LPCTSTR pstrClass, DWORD dwFlag);
     CStdPtrArray* FindSubControlsByClass(CControlUI* pParent, LPCTSTR pstrClass);
     CStdPtrArray* GetSubControlsByClass();
 

@@ -13,9 +13,9 @@ using namespace DuiLib;
 #ifdef __cplusplus
 EXTERN_C 
 {
-#include "Lua/lua.hpp"
-#include "Lua/lualib.h"
-#include "Lua/lauxlib.h"
+//#include "Lua/lua.hpp"
+//#include "Lua/lualib.h"
+//#include "Lua/lauxlib.h"
 };
 #endif //__cplusplus
 

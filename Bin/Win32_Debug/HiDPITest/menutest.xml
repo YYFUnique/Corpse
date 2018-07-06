@@ -20,7 +20,7 @@
 
     <MenuElement height="120" >
     	<VerticalLayout bkcolor="#FFFFFFFE">
-            <Button name="Menu_btn" height="118" normalimage="error.png" hotimage="check_hover.png" pushedimage="check_pressed.png"/>
+            <Button name="Menu_btn" height="118" padding="1,1,2,1" normalimage="error.png" hotimage="check_hover.png" pushedimage="check_pressed.png"/>
         </VerticalLayout>
     </MenuElement>
 

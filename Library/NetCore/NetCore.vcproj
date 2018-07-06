@@ -196,11 +196,23 @@
 				Name="Sockets"
 				>
 				<File
+					RelativePath=".\Sockets\DatagramSocket.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sockets\DatagramSocketImpl.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Sockets\IPAddress.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\Sockets\IPAddressImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Sockets\MulticastSocket.cpp"
 					>
 				</File>
 				<File
@@ -286,6 +298,14 @@
 				Name="Sockets"
 				>
 				<File
+					RelativePath=".\Sockets\DatagramSocket.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Sockets\DatagramSocketImpl.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Sockets\Define.h"
 					>
 				</File>
@@ -295,6 +315,10 @@
 				</File>
 				<File
 					RelativePath=".\Sockets\IPAddressImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Sockets\MulticastSocket.h"
 					>
 				</File>
 				<File

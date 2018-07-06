@@ -326,7 +326,6 @@ namespace DuiLib
 	#endif
 		SIZE szAvailable = { rcWork.right - rcWork.left, rcWork.bottom - rcWork.top };
 		szAvailable = pRoot->EstimateSize(szAvailable);
-		m_pm.SetInitSize(szAvailable.cx, szAvailable.cy);
 
 		if (m_pm.IsShadow())
 		{

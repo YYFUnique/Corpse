@@ -20,7 +20,7 @@ BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSh
 
 		pHiDPIWnd->Create(NULL, _T("HiDPI Demo"), UI_WNDSTYLE_DIALOG, 0, 800, 600);
 		pHiDPIWnd->CenterWindow();
-		pHiDPIWnd->SetDPI(/*CDPI::GetMainMonitorDPI()*/120);
+		pHiDPIWnd->SetDPI(CDPI::GetMainMonitorDPI()/*120*/);
 		pHiDPIWnd->ShowWindow(true);
 
 		CPaintManagerUI::MessageLoop();

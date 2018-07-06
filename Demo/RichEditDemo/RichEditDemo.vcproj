@@ -246,6 +246,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\BubbleMgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BuddyMsg.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FileDialogEx.cpp"
 				>
 			</File>
@@ -254,11 +262,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LsList.cpp"
+				RelativePath=".\MainFrame.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\MainFrame.cpp"
+				RelativePath=".\MessageLog.cpp"
 				>
 			</File>
 			<File
@@ -278,6 +286,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\UIBubbleLayout.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\UIRichText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\UserData.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Utils.cpp"
 				>
 			</File>
@@ -288,6 +308,14 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\BubbleMgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BuddyMsg.h"
+				>
+			</File>
+			<File
 				RelativePath=".\FileDialogEx.h"
 				>
 			</File>
@@ -296,7 +324,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LsList.h"
+				RelativePath=".\MessageLog.h"
 				>
 			</File>
 			<File
@@ -317,6 +345,18 @@
 			</File>
 			<File
 				RelativePath=".\StdAfx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UIBubbleLayout.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UIRichText.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UserData.h"
 				>
 			</File>
 			<File

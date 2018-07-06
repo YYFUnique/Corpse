@@ -1047,6 +1047,13 @@ namespace DuiLib
 		return pSubControl;
 	}
 
+	CControlUI* CContainerUI::FindSubControlByClassName(LPCTSTR pstrSubControlClassName, DWORD dwFlag)
+	{
+		CControlUI* pSubControl = NULL;
+		pSubControl = static_cast<CControlUI*>(GetManager()->FindSubControlByClass(this, pstrSubControlClassName, dwFlag));
+		return pSubControl;
+	}
+
 	bool CContainerUI::Erase(CControlUI* pControl)
 	{
 		if( pControl == NULL) return false;

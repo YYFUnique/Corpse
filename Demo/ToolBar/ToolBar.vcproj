@@ -263,6 +263,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\define.h"
+				>
+			</File>
+			<File
 				RelativePath=".\resource.h"
 				>
 			</File>
@@ -272,6 +276,10 @@
 			</File>
 			<File
 				RelativePath=".\Toolbar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\type.h"
 				>
 			</File>
 		</Filter>

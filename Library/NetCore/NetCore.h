@@ -23,6 +23,8 @@
 #include "Sockets/SocketImpl.h"
 #include "Sockets/RawSocketImpl.h"
 #include "Sockets/StreamSocketImpl.h"
+#include "Sockets/DatagramSocketImpl.h"
 
 #include "Sockets/Socket.h"
 #include "Sockets/RawSocket.h"
+#include "Sockets/DatagramSocket.h"

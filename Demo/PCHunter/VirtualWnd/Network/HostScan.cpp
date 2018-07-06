@@ -6,6 +6,7 @@
 #include "Wnd/AddUserName.h"
 #include "Wnd/ArpList.h"
 #include "Wnd/WakeOnLan.h"
+#include "Wnd/BlockNet.h"
 #include "Utils/TextTools.h"
 
 #include "DllCore/Utils/ErrorInfo.h"
@@ -104,12 +105,14 @@ void CHostScan::OnHostScanMenu(CControlUI* pControl)
 		CopyDataToClipboard(CF_UNICODETEXT, hWnd, pItem->GetText(5));
 	else if (strName == _T("AddUserName"))
 		OnAddUserName(pItem);
+	else if (strName == _T("StaticMac"))
+		OnBindMac(pItem);
 	else if (strName == _T("RemoteDesk"))
 		OnRemoteDesktop(pItem);
 	else if (strName == _T("Ping"))
 		OnPingTarget(pItem);
-	else if (strName == _T("StaticMac"))
-		OnBindMac(pItem);
+	else if (strName == _T("BlockNet"))
+		OnBlockNet(pItem);
 	else if (strName == _T("HttpRequest"))
 		OnHttpRequest(pItem);
 }
@@ -177,6 +180,12 @@ void CHostScan::OnPingTarget(CListTextElementUI* pItem)
 		MessageBox(hWnd, _T("Æô¶¯PingÃüÁîÊ§°Ü£¡"), _T("ÌáÊ¾"), MB_OK);
 		return;
 	}
+}
+
+void CHostScan::OnBlockNet(CListTextElementUI* pItem)
+{
+	CBlockNet* pBlock = new CBlockNet(m_pPaintManager->GetPaintWindow());
+	pBlock->ShowModal();
 }
 
 void CHostScan::OnBindMac(CListTextElementUI* pItem)

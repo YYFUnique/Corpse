@@ -1570,7 +1570,7 @@ void CPaintManagerUI::Term()
     }
 }
 
-CDPI * CPaintManagerUI::GetDPIObj()
+CDPI* CPaintManagerUI::GetDPIObj()
 {
 	if (m_pDPI == NULL)
 		m_pDPI = new CDPI;
@@ -2630,6 +2630,14 @@ CControlUI* CPaintManagerUI::FindSubControlByClass(CControlUI* pParent, LPCTSTR 
     ASSERT(pParent);
     m_aFoundControls.Resize(iIndex + 1);
     return pParent->FindControl(__FindControlFromClass, (LPVOID)pstrClass, UIFIND_ALL);
+}
+
+CControlUI* CPaintManagerUI::FindSubControlByClass(CControlUI* pParent, LPCTSTR pstrClass, DWORD dwFlag)
+{
+	if( pParent == NULL ) pParent = GetRoot();
+	ASSERT(pParent);
+	m_aFoundControls.Resize(1);
+	return pParent->FindControl(__FindControlFromClass, (LPVOID)pstrClass, dwFlag);
 }
 
 CStdPtrArray* CPaintManagerUI::FindSubControlsByClass(CControlUI* pParent, LPCTSTR pstrClass)

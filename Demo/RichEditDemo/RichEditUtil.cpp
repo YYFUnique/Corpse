@@ -365,7 +365,7 @@ BOOL RichEdit_InsertFace(ITextServices *pTextServices, ITextHost *pTextHost,
 			break;
 
 		pOleObject->SetClientSite(pOleClientSite);
-		HWND hNotifyWnd = GetDuiLibMgr().GetMainWndHandle();
+		HWND hNotifyWnd = NULL;//GetDuiLibMgr().GetMainWndHandle();
 		pImageOle->SetNotifyHwnd(hNotifyWnd);
 		pImageOle->LoadFileFromPath(bstrFileName);
 
@@ -412,7 +412,8 @@ void InsertTextToEdit(CRichEditUI* edit, LPCTSTR str)
 	LPCTSTR kCp = _T("["), kCq = _T("]");
 
 	size_t p1 = 0, p2 = 0, q = 0, len = _tcslen(str);
-	LPCTSTR emo, file, txt;
+	//LPCTSTR emo, file, 
+	CString txt;
 	CString strText(str);
 	while (p1 < len)
 	{
@@ -469,7 +470,7 @@ BOOL GetSelectionRect(CRichEditUI* pRichEdit, LONG cpStart, LONG cpEnd, RECT &rc
 
 	for (int n = cpStart; n<= cpEnd;)
 	{
-		LONG lcpEnd = n+pRichEdit->LineLength(n);
+		LONG lcpEnd = n+pRichEdit->GetLineLength(n);
 
 		if (lcpEnd > cpEnd)
 			lcpEnd = cpEnd;
@@ -530,4 +531,55 @@ BOOL GetSelectionRect(CRichEditUI* pRichEdit, LONG cpStart, LONG cpEnd, RECT &rc
 
 	//ClientToScreen(rcCursor);
 	return TRUE;
+}
+
+void RichEdit_GetImageInfo(CRichEditUI* pRichEdit, CImageInfo& arrImageInfo)
+{
+	REOBJECT ReObject;
+	LONG nFaceId, nPos = 0;
+	
+	ITextServices* pTextService = pRichEdit->GetTextServices();
+	IRichEditOle* pRichEditOle = RichEdit_GetOleInterface(pTextService);
+	if (pRichEditOle == NULL)
+		return;
+
+	CDuiString strTextService;
+	CHARRANGE CharRange = {0, RichEdit_GetWindowTextLength(pTextService)};
+	RichEdit_GetTextRange(pTextService, &CharRange, strTextService);
+
+	CDuiString strTmp;
+	IMAGE_INFO* pImageInfo = NULL;
+	for (int n=0; n<strTextService.GetLength(); ++n)
+	{
+		ReObject.cbStruct = sizeof(ReObject);
+		ReObject.cp = n;
+		HRESULT hRet = pRichEditOle->GetObject(REO_IOB_USE_CP, &ReObject, REO_GETOBJ_POLEOBJ);
+		if (SUCCEEDED(hRet))
+		{
+			if (ReObject.cp > 0 && ReObject.cp > nPos)
+			{
+				strTmp = strTextService.Mid(nPos, ReObject.cp - nPos);
+				Replace(strTmp, _T("/"), _T("//"));
+			}
+			nPos = ReObject.cp + 1;
+
+			if (ReObject.poleobj == NULL)
+				continue;
+
+			if (ReObject.clsid == CLSID_ImageOle)
+			{
+				IImageOle* pImageOle = NULL;
+				hRet = ReObject.poleobj->QueryInterface(__uuidof(IImageOle), (void**)&pImageOle);
+				if (SUCCEEDED(hRet))
+				{
+					pImageOle->GetFaceId(&nFaceId);
+					if (nFaceId != -1)
+					{
+						TCHAR szData[50];
+						_stprintf_s(szData, _countof(szData), _T("/f[\"%03d\"]"), nFaceId);
+					}
+				}
+			}
+		}
+	}
 }

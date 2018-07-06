@@ -50,6 +50,9 @@ typedef struct __POSITION
 }__POSITION,*POSITION;
 #endif
 
+#define MAX max
+#define MIN min
+
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
 

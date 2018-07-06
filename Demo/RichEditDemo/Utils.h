@@ -24,7 +24,7 @@ HGLOBAL GlobalAllocByString(const WCHAR * lpszText, long nLen = -1);
 BOOL EnumSysFont(std::vector<tstring> * arrSysFont);	// 枚举系统字体
 BOOL FlashWindowEx(HWND hWnd, int nCount);				// 闪烁窗口标题栏
 BOOL GetTrayWndRect(RECT * lpRect);						// 获取系统任务栏区域
-const TCHAR * FormatTime(time_t lTime, LPCTSTR lpFmt);
+void FormatTime(time_t lTime, LPCTSTR lpFmt, TCHAR* lpBuf, int nLen);
 
 BOOL IsDigit(const WCHAR * lpStr);
 void Replace(CDuiString& strText, const WCHAR * lpOldStr, const WCHAR * lpNewStr);

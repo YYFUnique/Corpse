@@ -51,7 +51,7 @@
           <Button name="searchbutton" width="28" height="26"  padding="0,8,15,0" normalimage="file='searchbk.png' source='187,0,215,28'" pushedimage="file='searchbtnpushed.png' source='187,0,215,28'" />
         </HorizontalLayout>
 
-        <HorizontalLayout  bordersize="0,1,0,1" bordercolor="#ff10111d" itemsize="145,30" >
+        <!--<HorizontalLayout  bordersize="0,1,0,1" bordercolor="#ff10111d" itemsize="145,30" >-->
 			<!--
 			<TreeView  name="TreeView" width="145" inset="5,2,0,2" vscrollbar="true">
 				<TreeNode  text="所有音乐"   height="28" itemtextcolor="#ff797b7e" itemhottextcolor="#ff797b7e" selitemtextcolor="#ff797b7e" itemattr="font=&quot;0&quot; textpadding=&quot;4,0,0,0&quot;" folderattr="padding=&quot;5,11,0,0&quot; width=&quot;5&quot; height=&quot;5&quot; selectedimage=&quot;player\treeclose.png&quot; normalimage=&quot;player\treeopen.png&quot;" >
@@ -69,7 +69,7 @@
 			</TreeView>
 			-->
 			<!-- 音乐信息列表 -->
-			<List name="playlist" bkcolor="#FF282A2E" bordercolor="#ff323436" bordersize="1,1,1,0" vscrollbar="true" hscrollbar="true" itemalign="left" menu="true">
+			<!--<List name="playlist" bkcolor="#FF282A2E" bordercolor="#ff323436" bordersize="1,1,1,0" vscrollbar="true" hscrollbar="true" itemalign="left" menu="true">
 				<ListHeader height="30" menu="true" bordercolor="#ff323436" bordersize="0,0,1,1" >
 					<ListHeaderItem text="序号" font="0"  width="60" textcolor="#ffffffff" normalimage="file='player\listheadbk.png'"  sepimage="file='player\listheadsep.png'" sepwidth="2"/>
 					<ListHeaderItem text="标题" font="0" width="280" textcolor="#ffffffff" normalimage="listheadbk.png" sepimage="listheadsep.png" sepwidth="2"/>
@@ -77,8 +77,15 @@
 					<ListHeaderItem text="大小" font="0" width="80" textcolor="#ffffffff" normalimage="listheadbk.png" sepimage="listheadsep.png" sepwidth="2"/>
 					<ListHeaderItem text="修改日期" font="0" width="130" textcolor="#ffffffff" normalimage="listheadbk.png" sepimage="listheadsep.png" sepwidth="2"/>
 				</ListHeader>
-			</List>
-		</HorizontalLayout>
+			</List>-->
+			
+		<!--</HorizontalLayout>-->
+		<VerticalLayout height="50">
+			<HorizontalLayout>
+				<Lyric name="lrc" text="GDIPlus绘制歌词 - 作者:严应飞" emsize="12" bordercolor="#FFFF0000" bordersize="1" />
+				<Control />
+			</HorizontalLayout>
+		</VerticalLayout>
 
 		<!-- 控制按钮及播放进度控件 -->
         <HorizontalLayout bkcolor="#ff1c1d1f" bkcolor2="#ff1c1d1f" height="55" borderround="5,5" roundselect="0,0,1,1"  >

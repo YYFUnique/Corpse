@@ -314,6 +314,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Utils\TxtWinHost.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\UIDelegate.cpp"
 					>
 				</File>
@@ -596,6 +600,10 @@
 				</File>
 				<File
 					RelativePath=".\Utils\stb_image.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\TxtWinHost.h"
 					>
 				</File>
 				<File

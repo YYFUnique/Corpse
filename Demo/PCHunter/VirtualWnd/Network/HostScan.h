@@ -92,6 +92,7 @@ protected:
 	void OnPingTarget(CListTextElementUI* pItem);
 	void OnAddUserName(CListTextElementUI* pItem);
 	void OnRemoteDesktop(CListTextElementUI* pItem);
+	void OnBlockNet(CListTextElementUI* pItem);
 
 	static UINT TaskThread(LPVOID lParam);
 	static void OnTaskResult(LPVOID lParam);

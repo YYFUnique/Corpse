@@ -1,5 +1,5 @@
 #pragma once
-
+#include "UIRichText.h"
 class CRichEdit : public WindowImplBase
 {
 public:
@@ -54,15 +54,16 @@ protected:
 
 	CControlUI* CreateListElement(BOOL bMine);
 	void SetOleCallback(CRichEditUI* pRichEdit);
+	void ResizeImageInRecvRichEdit();
 private:
-	CRichEditUI* m_pSendRichEdit;
-	CRichEditUI* m_pRecvRichEdit;
+	CRichTextUI* m_pSendRichEdit;
+	CRichTextUI* m_pRecvRichEdit;
 	CVerticalLayoutUI* m_pChatView;
-	BOOL			  m_Inited;
 	CFontInfo      m_FontInfo;
-	BOOL			  m_bReturnSendMsg;
 
-	
+	BOOL				m_bPressEnterToSendMessage;	 //TRUE按回车键发送消息, FALSE按Ctrl+Enter发送消息
+
+	CDialogBuilder m_DialogBuilder;
 // 	CRichEditOleCallback* m_pRichEditOleCallBackSendEdit;
 // 	CRichEditOleCallback* m_pRichEditOleCallBackRecvEdit;
 };

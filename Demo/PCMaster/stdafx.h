@@ -10,6 +10,9 @@
 #include "DuiLib/UIlib.h"
 using namespace DuiLib;
 
+#include "RichText/IRichTextView.h"
+using namespace RichText;
+
 #ifndef __POSITION
 typedef struct __POSITION
 {
