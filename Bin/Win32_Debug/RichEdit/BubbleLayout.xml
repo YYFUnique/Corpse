@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+	<BubbleLayout mouse="false" >
+		<HorizontalLayout mouse="false" bordercolor="#FFFF0000" bordersize="1">
+			<Picture name="pic" width="28" height="28" padding="2,10,2,0" bkimage="file=&apos;qq.png&apos;" />
+			<VerticalLayout name="txt"  mouse="false" bordercolor="#FFFFFF00" bordersize="1">
+				<Control name="NickName" height="10" mouse="false" />
+				<Label  bkimage="file=&apos;aio_friend_bg_nor.png&apos; corner=&apos;13,17,13,12&apos;" mouse="false" bordercolor="#FF00FF00" bordersize="1"/>
+			</VerticalLayout>
+		</HorizontalLayout>
+		<HorizontalLayout mouse="false">
+			<Control mouse="false"/>
+			<VerticalLayout mouse="false" >
+				<Control height="10" mouse="false"/>
+				<Label bkimage="file=&apos;aio_user_bg_nor.png&apos; corner=&apos;12,16,14,8&apos;" mouse="false" />
+				<Control width="2" mouse="false"/>
+			</VerticalLayout>
+			<Picture width="28" height="28" padding="2,10,2,0" bkimage="file=&apos;qq.png&apos;"  />
+		</HorizontalLayout>
+	</BubbleLayout>
+</Window>
