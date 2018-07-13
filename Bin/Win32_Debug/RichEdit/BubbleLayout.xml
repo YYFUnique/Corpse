@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <Window>
-	<BubbleLayout mouse="false" >
-		<HorizontalLayout mouse="false" bordercolor="#FFFF0000" bordersize="1">
+	<BubbleLayout mouse="false">
+		<HorizontalLayout mouse="false" >
 			<Picture name="pic" width="28" height="28" padding="2,10,2,0" bkimage="file=&apos;qq.png&apos;" />
-			<VerticalLayout name="txt"  mouse="false" bordercolor="#FFFFFF00" bordersize="1">
+			<VerticalLayout name="txt"  mouse="false" >
 				<Control name="NickName" height="10" mouse="false" />
-				<Label  bkimage="file=&apos;aio_friend_bg_nor.png&apos; corner=&apos;13,17,13,12&apos;" mouse="false" bordercolor="#FF00FF00" bordersize="1"/>
+				<!--<Label bkimage="file=&apos;aio_friend_bg_nor.png&apos; corner=&apos;13,17,13,12&apos;" mouse="false"/>-->
+				<!--<Label  bkimage="file=&apos;left.png&apos; corner=&apos;12,15,20,9&apos;" mouse="false"/>-->
+				<!--<Label  bkimage="file=&apos;Bubble/2_left.png&apos; corner=&apos;13,21,21,7&apos;" mouse="false"/>-->
+				<!--<Label  bkimage="file=&apos;Bubble/6_left.png&apos; corner=&apos;18,21,24,4&apos;" mouse="false"/>-->
+				<!--<Label  bkimage="file=&apos;Bubble/8_left.png&apos; corner=&apos;12,11,24,18&apos;" mouse="false"/>-->
+				<!--<Label bkimage="file=&apos;Bubble/10_left.png&apos; corner=&apos;11,9,18,18&apos;" padding="1,1,5,1" mouse="false"/>-->
+				<Label bkimage="file=&apos;Bubble/12_left.png&apos; corner=&apos;11,11,14,16&apos;" mouse="false"/>
 			</VerticalLayout>
 		</HorizontalLayout>
 		<HorizontalLayout mouse="false">

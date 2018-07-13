@@ -1,0 +1,101 @@
+#include "StdAfx.h"
+#include "ADELErrorInfo.h"
+
+CString GetADELErrorInfo(int nErrorCode)
+{
+	switch (nErrorCode)
+	{
+		case 0:
+			return _T("操作成功");
+		case 1:
+			return _T("读写错误/数据错误");
+		case 2:
+			return _T("卡已损坏");
+		case 3:
+			return _T("无卡");
+		case 4:
+			return _T("串口错误");
+		case 5:
+			return _T("卡被更换");
+		case 6:
+			return _T("不是新卡");
+		case 7:
+			return _T("卡是新卡");
+		case 8:
+			return _T("非本系统卡");
+		case 9:
+			return _T("不是客人卡");
+		case 10:
+			return _T("不是会员卡");
+		case 11:
+			return _T("密码错误");
+		case 12:
+			return _T("无开门记录");
+		case 13:
+			return _T("卡型不正确");
+		case 14:
+			return _T("参数错误");
+		case 15:
+			return _T("用户取消操作（按下<ESC>键）");
+		case 16:
+			return _T("等待超时");
+		case 17:
+			return _T("插卡错误");
+		case 18:
+			return _T("卡是空白卡或插卡错误");
+		case 19:
+			return _T("保留（为向前兼容）");
+		case 20:
+			return _T("没有调用Init函数");
+		case 21:
+			return _T("不支持该版本的门锁软件");
+		case 22:
+			return _T("连接（门锁系统数据库错误）");
+		case 23:
+			return _T("门锁系统参数不存在");
+		case 24:
+			return _T("初始化失败");
+		case 25:
+			return _T("没有客人在住/指定客人不存在");
+		case 26:
+			return _T("客房已满");
+		case 27:
+			return _T("没有此卡记录");
+		case 28:
+			return _T("没有调用SetPort函数");
+		case 29:
+			return _T("无效的客房房号");
+		case 30:
+			return _T("错误的时间范围");
+		case 31:
+			return _T("卡号已存在，无法登记（Lock9200）");
+		case 32:
+			return _T("不支持调用");
+		case 33:
+			return _T("无效的授权码，授权码错误或过期");
+		case 60:
+			return _T("软件版本错误");
+		case 81:
+			return _T("通讯错误");
+		case 82:
+			return _T("通讯超时");
+		case 84:
+			return _T("卡上无指纹");
+		case 90:
+			return _T("每间房仅支持一枚指纹");
+		case 91:
+			return _T("每间房仅支持三枚指纹");
+		case 93:
+			return _T("持卡人的指纹还可以开门，请使用注销卡注销");
+		case 94:
+			return _T("请先用E70软件采集指纹");
+		case -1:
+			return _T("加载动态库失败，请确保动态库在当前目录");
+		default:
+		{
+			CString strTipInfo;
+			strTipInfo.Format(_T("未知的错误码[%d]"), nErrorCode);
+			return strTipInfo;
+		}
+	}
+}

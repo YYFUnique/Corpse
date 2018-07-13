@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ImageOleCtrl.h"
+#include "ImageOle.h"
 #include "ImageOleClassFactory.h"
 
 CImageOleClassFactory::CImageOleClassFactory()
@@ -61,27 +61,26 @@ STDMETHODIMP CImageOleClassFactory::CreateInstance ( IUnknown* pUnkOuter,REFIID 
 	if ( NULL != pUnkOuter )
 		return CLASS_E_NOAGGREGATION;
 
-	OutputDebugString(_T("CreateInstance###############################\r\n"));
 	// Check that ppv really points to a void*.
 	if ( IsBadWritePtr ( ppv, sizeof(void*) ))
 		return E_POINTER;
 
 	*ppv = NULL;
 	// Create a new COM object!
-	CImageOleCtrl* pImageOleCtrl = new CImageOleCtrl;
+	CImageOle* pImageOle = new CImageOle;
 
-	if ( NULL == pImageOleCtrl )
+	if ( NULL == pImageOle )
 		return E_OUTOFMEMORY;
 
 	// QI the object for the interface the client is requesting.
 
-	HRESULT hRet = pImageOleCtrl->QueryInterface ( riid, ppv );
+	HRESULT hRet = pImageOle->QueryInterface ( riid, ppv );
 
 	// If the QI failed, delete the COM object since the client isn't able
 	// to use it (the client doesn't have any interface pointers on the object).
 
 	if ( FAILED(hRet) )
-		delete pImageOleCtrl;
+		delete pImageOle;
 
 	return hRet;
 }

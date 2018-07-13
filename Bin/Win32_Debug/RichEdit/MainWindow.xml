@@ -38,12 +38,9 @@
                     </HorizontalLayout>
                     <HorizontalLayout name="HorizontalLayoutUI3" >
                         <!--<RichEdit name="RichRecv" wantreturn="true" return="true" rich="true" vscrollbar="true" readonly="true" />-->
-						<VerticalLayout name="ChatView" visible="false" bkcolor="#FFFFF000" vscrollbar="true">
-							<VerticalLayout height="2"/>
-						</VerticalLayout>
 						<!-- <List name="MsgList" >
 						</List> -->
-						<RichText name="RichRecv" readonly="true" rich="true" vscrollbar="true" autovscroll="true" />
+						<RichText name="RichRecv" readonly="true" rich="true" vscrollbar="true" autovscroll="true"/>
                     </HorizontalLayout>
                     <HorizontalLayout name="FontBar" height="30" bkimage="file=&apos;font_bk.bmp&apos; corner=&apos;0,1,1,0&apos;" inset="4,4,4,4" visible="true" visible="false">
                         <Combo name="FontName" text="宋体" pos="0,0,100,22" width="100" height="22" normalimage="file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;" hotimage="file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;" pushedimage="file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;" dropboxsize="0,150" textpadding="4,1,1,1">

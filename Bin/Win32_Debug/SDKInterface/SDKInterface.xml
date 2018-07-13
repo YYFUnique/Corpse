@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="680,620"  caption="0,0,0,45" mininfo="540,510" roundcorner="5,4" maxbox="false" layered="true">
+    <Font name="微软雅黑" size="12" bold="false" italic="false" default="true" />
+    <Font name="微软雅黑" size="12" bold="true" italic="false" />
+	<Font name="微软雅黑" size="14" bold="true" italic="false" />
+	<Default name="Combo" value="textpadding=&quot;4,1,1,1&quot; normalimage=&quot;file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;&quot; hotimage=&quot;file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;&quot; pushedimage=&quot;file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot;" />
+	<Default name="Edit2" value="normalimage=&quot;file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;&quot; hotimage=&quot;file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;&quot; focusedimage=&quot;file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="Button" value="normalimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;&quot; hotimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;&quot; pushedimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;&quot;" />
+	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="Option" value="normalimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,4,15,19&apos; source=&apos;0,0,15,15&apos;&quot; hotimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,4,15,19&apos; source=&apos;15,0,30,15&apos;&quot; pushedimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,4,15,19&apos; source=&apos;30,0,45,15&apos;&quot; selectedimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,4,15,19&apos; source=&apos;45,0,60,15&apos;&quot; selectedhotimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,4,15,19&apos; source=&apos;60,0,75,15&apos;&quot; selectedpressimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,4,15,19&apos; source=&apos;75,0,90,15&apos;&quot;"/>
+    <HorizontalLayout name="bg" bkimage="file=&apos;bg0.png&apos; corner=&apos;40,86,153,155&apos;">
+        <VerticalLayout name="VerticalLayoutUI1" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;" >
+            <HorizontalLayout name="HorizontalLayoutUI1" pos="0,0,0,45" height="45">
+                <VerticalLayout name="VerticalLayoutUI3" inset="2,6,2,0">
+                    <Label name="txtBuddySign" text="DLL Interface SDK" font="2" pos="0,15,200,35" width="200" height="20" padding="10,0,0,0" />
+                </VerticalLayout>
+                <VerticalLayout name="VerticalLayoutUI4" pos="0,0,68,0">
+                    <Button name="BtnMin" tooltip="最小化" float="true" pos="1,0,29,20" maxheight="20" maxwidth="28" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnMin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMin.png&apos; source=&apos;56,0,84,20&apos;" />
+                    <Button name="BtnClose" tooltip="关闭" float="true" pos="29,0,68,20" maxheight="20" maxwidth="39" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
+                </VerticalLayout>
+            </HorizontalLayout>
+			<VerticalLayout name="VerticalLayoutUI5">
+				<GroupLayout text="动态库初始化设置" bordercolor="#FFCDCDCD" font="1" height="65">
+					<!-- 数据库地址设置 -->
+					<Label text="数据库地址:" float="true" align="right" pos="20,20,90,44" font="0" textcolor="#FF000000"/>
+					<Edit2 name="SQLAddr" watertext="(local)" font="0" float="true" pos="90,20,220,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 串口信息设置 -->
+					<Label text="串口:" float="true" pos="250,20,320,44" align="right" font="0" textcolor="#FF000000"/>
+					<Combo name="ComType" font="0" float="true" pos="325,20,435,44" >
+						<ListLabelElement name="ListLabelElementUI0" text="USB" pos="0,0,0,23" height="23" selected="true"/>
+						<ListLabelElement name="ListLabelElementUI1" text="COM1" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI2" text="COM2" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="COM3" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="COM4" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="COM5" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="COM6" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="COM7" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="COM8" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="COM9" pos="0,0,0,23" height="23" />
+					</Combo>
+					<!-- 初始化按钮 -->
+					<Button name="BtnInit" text="初始化(Init)" float="true" pos="480,17,560,47" font="0" textcolor="#FF000000"/>
+					<!-- 退出按钮 -->
+					<Button name="BtnExit" text="退出(Exit)" float="true" pos="580,17,660,47" font="0" textcolor="#FF000000"/>
+				</GroupLayout>
+				<GroupLayout text="发卡设置" bordercolor="#FFCDCDCD" font="1" height="150">
+					<!-- 房号信息设置设置 -->
+					<Label text="房号:" float="true" align="right" pos="20,20,50,44" font="0" textcolor="#FF000000"/>
+					<Edit2 name="RoomNum" text="0102" font="0" float="true" pos="55,20,150,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 有效时间信息设置设置 -->
+					<Label text="有效时间:" float="true" align="right" pos="180,20,240,44" font="0" textcolor="#FF000000"/>
+					<Edit2 name="ValidTime" text="201807121630201807131200" font="0" float="true" pos="245,20,450,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Option name="BtnCoverCard" text="覆盖" textpadding="16,0,0,0" float="true" pos="455,20,500,44"/>
+					<!-- 卡号信息设置-->
+					<Label text="卡号:" float="true" align="right" pos="20,50,50,74" font="0" textcolor="#FF000000"/>
+					<Edit2 name="CardNum" font="0" float="true" pos="55,50,150,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 客人信息设置 -->
+					<Label text="客人姓名:" float="true" align="right" pos="180,50,240,74" font="0" textcolor="#FF000000"/>
+					<Edit2 name="UserName" watertext="Guest Name" font="0" float="true" pos="245,50,330,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Label text="客人ID:" float="true" align="right" pos="350,50,410,74" font="0" textcolor="#FF000000"/>
+					<Edit2 name="UserID" watertext="Guest Name" font="0" float="true" pos="415,50,560,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					
+					<!-- 通道信息设置-->
+					<Label text="通道:" float="true" align="right" pos="20,80,50,104" font="0" textcolor="#FF000000"/>
+					<Edit2 name="Gate" font="0" float="true" pos="55,80,150,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 早餐信息设置 -->
+					<Label text="早餐数量:" float="true" pos="180,80,240,104" align="right" font="0" textcolor="#FF000000"/>
+					<Combo name="Breakfast" font="0" float="true" pos="245,80,330,104" >
+						<ListLabelElement name="ListLabelElementUI0" text="无早餐" pos="0,0,0,23" height="23" selected="true"/>
+						<ListLabelElement name="ListLabelElementUI1" text="1份早餐" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI2" text="2份早餐" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="3份早餐" pos="0,0,0,23" height="23" />
+					</Combo>
+					<!-- 开门方式信息设置 -->
+					<Label text="开门方式:" float="true" pos="350,80,410,104" align="right" font="0" textcolor="#FF000000"/>
+					<Combo name="OpenWay" font="0" float="true" pos="415,80,560,104" >
+						<ListLabelElement name="ListLabelElementUI0" text="卡开门" pos="0,0,0,23" height="23" selected="true"/>
+						<ListLabelElement name="ListLabelElementUI1" text="卡或指纹开门" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI2" text="指纹开门" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="卡和指纹开门" pos="0,0,0,23" height="23" />
+					</Combo>
+					<!-- 多路电梯信息设置 -->
+					<Option name="BtnMulti" textpadding="16,0,0,0" text="多路电梯:" float="true" pos="170,110,240,134"/>
+					<Edit2 name="Elevator" enabled="false" font="0" float="true" pos="245,110,330,134" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 采集指纹信息设置 -->
+					<Option name="BtnCollecte" textpadding="16,0,0,0" text="采集指纹" float="true" pos="360,110,430,134"/>
+					<!-- 初始化按钮 -->
+					<Button name="BtnNewKey" text="新发卡" float="true" pos="580,17,660,70" font="0" textcolor="#FF000000"/>
+					<!-- 退出按钮 -->
+					<Button name="BtnDupKey" text="复制卡" float="true" pos="580,84,660,137" font="0" textcolor="#FF000000"/>
+				</GroupLayout>
+				<GroupLayout text="卡信息读取" bordercolor="#FFCDCDCD" font="1"  height="150">
+					<!-- 房号信息设置设置 -->
+					<Label text="房号:" float="true" align="right" pos="20,20,50,44" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetRoomNum" enabled="false" font="0" float="true" pos="55,20,150,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 有效时间信息设置设置 -->
+					<Label text="有效时间:" float="true" align="right" pos="180,20,240,44" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetValidTime" enabled="false" font="0" float="true" pos="245,20,450,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					
+					<!-- 卡号信息设置-->
+					<Label text="卡号:" float="true" align="right" pos="20,50,50,74" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetCardNum" enabled="false" font="0" float="true" pos="55,50,150,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 客人信息设置 -->
+					<Label text="客人姓名:" float="true" align="right" pos="180,50,240,74" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetUserName" enabled="false" font="0" float="true" pos="245,50,330,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Label text="客人ID:" float="true" align="right" pos="350,50,410,74" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetUserID" enabled="false" font="0" float="true" pos="415,50,560,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					
+					<!-- 通道信息设置-->
+					<Label text="通道:" float="true" align="right" pos="20,80,50,104" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetGate" enabled="false" font="0" float="true" pos="55,80,150,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 早餐信息设置 -->
+					<Label text="早餐数量:" float="true" pos="180,80,240,104" align="right" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetBreakfast" font="0" enabled="false" float="true" pos="245,80,330,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 开门方式信息设置 -->
+					<Label text="开门方式:" float="true" pos="350,80,410,104" align="right" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetOpenWay" font="0" enabled="false" float="true" pos="415,80,560,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 多路电梯信息设置 -->
+					<Label text="多路电梯:" align="right" float="true" pos="180,110,240,134"/>
+					<Edit2 name="GetMuitl" name="Gate2" enabled="false" font="0" float="true" pos="245,110,330,134" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>			
+					<!-- 退出按钮 -->
+					<Button name="BtnReadCard" text="读卡" float="true" pos="580,47,660,97" font="0" textcolor="#FF000000"/>
+					<!--<Button name="BtnReadCard" text="读卡" float="true" pos="580,47,660,97" font="0" textcolor="#FF000000"/>-->
+				</GroupLayout>
+				<GroupLayout text="卡信息维护" bordercolor="#FFCDCDCD" font="1" height="90">
+					<!-- 房号信息设置设置 -->
+					<Label text="房号:" float="true" align="right" pos="20,20,50,44" font="0" textcolor="#FF000000"/>
+					<Edit2 name="SetRoomNum" font="0" float="true" pos="55,20,150,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 卡号信息设置-->
+					<Label text="卡号:" float="true" align="right" pos="180,20,240,44" font="0" textcolor="#FF000000"/>
+					<Edit2 name="SetCardNum" font="0" float="true" pos="245,20,330,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 注销卡 -->
+					<Button name="BtnEraseCard" text="注销(Exit)" float="true" pos="370,17,460,47" font="0" textcolor="#FF000000"/>
+					<!-- 通道信息设置-->
+					<Label text="操作员:" float="true" align="right" pos="5,50,50,74" font="0" textcolor="#FF000000" />
+					<Edit2 name="SetAdmin" watertext="Admin" font="0" float="true" pos="55,50,150,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 更改操作员按钮 -->
+					<Button name="BtnChangeUser" text="更改操作员" float="true" pos="210,47,330,77" font="0" textcolor="#FF000000"/>
+					<!-- 房卡ID -->
+					<Label text="房卡ID:" float="true" pos="350,50,410,74" align="right" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetCardInfo" font="0" float="true" pos="415,50,560,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 读房卡按钮 -->
+					<Button name="BtnReadCardId" text="读卡ID" float="true" pos="580,47,660,77" font="0" textcolor="#FF000000"/>
+				</GroupLayout>
+				<GroupLayout text="读写卡数据" bordercolor="#FFCDCDCD" font="1" height="123">
+					<!-- 房号信息设置设置 -->
+					<Label text="密码:" float="true" align="right" pos="20,20,50,44" font="0" textcolor="#FF000000"/>
+					<Edit2 name="Password" text="FFFFFFFFFFFF" font="0" float="true" pos="55,20,150,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 卡号信息设置-->
+					<Label text="授权:" float="true" align="right" pos="180,20,240,44" font="0" textcolor="#FF000000"/>
+					<Combo name="AuthType" font="0" float="true" pos="245,20,300,44" >
+						<ListLabelElement name="ListLabelElementUI0" text="A" pos="0,0,0,23" height="23" selected="true"/>
+						<ListLabelElement name="ListLabelElementUI1" text="B" pos="0,0,0,23" height="23" />
+					</Combo>
+					<!-- 扇区信息设置-->
+					<Label text="扇区:" float="true" align="right" pos="320,20,360,44" font="0" textcolor="#FF000000"/>
+					<Combo name="ComboSection" font="0" float="true" pos="365,20,420,44" >
+						<ListLabelElement name="ListLabelElementUI0" text="0" pos="0,0,0,23" height="23" selected="true"/>
+						<ListLabelElement name="ListLabelElementUI1" text="1" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="2" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="3" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="4" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="5" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="6" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="7" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="8" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="9" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="10" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="11" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="12" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="13" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="14" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="15" pos="0,0,0,23" height="23" />
+					</Combo>
+					<!-- 块号信息设置-->
+					<Label text="块号:" float="true" align="right" pos="440,20,480,44" font="0" textcolor="#FF000000"/>
+					<Combo name="ComboBlock" font="0" float="true" pos="485,20,535,44" >
+						<ListLabelElement name="ListLabelElementUI0" text="0" pos="0,0,0,23" height="23" selected="true"/>
+						<ListLabelElement name="ListLabelElementUI1" text="1" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="2" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="3" pos="0,0,0,23" height="23" />
+					</Combo>
+					<!-- 长度信息设置-->
+					<Label text="长度:" float="true" align="right" pos="550,20,590,44" font="0" textcolor="#FF000000"/>
+					<Combo name="ComboLen" font="0" float="true" pos="595,20,650,44" >
+						<ListLabelElement name="ListLabelElementUI0" text="16" pos="0,0,0,23" height="23" selected="true"/>
+						<ListLabelElement name="ListLabelElementUI1" text="32" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="48" pos="0,0,0,23" height="23" />
+					</Combo>
+					<!-- 读数据信息设置-->
+					<Label text="读数据(16进制):" float="true" align="right" pos="20,50,108,74" font="0" textcolor="#FF000000" />
+					<Edit2 name="GetData" font="0" float="true" pos="113,50,550,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 读数据按钮 -->
+					<Button name="BtnReadData" text="读数据" float="true" pos="580,47,660,77" font="0" textcolor="#FF000000"/>
+					<!-- 写数据信息设置-->
+					<Label text="写数据(16进制):" float="true" align="right" pos="20,80,108,104" font="0" textcolor="#FF000000" />
+					<Edit2 name="SetData" font="0" float="true" pos="113,80,550,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 写数据按钮 -->
+					<Button name="BtnWriteData" text="写数据" float="true" pos="580,77,660,107" font="0" textcolor="#FF000000"/>
+				</GroupLayout>
+			</VerticalLayout>
+        </VerticalLayout>
+    </HorizontalLayout>
+</Window>
