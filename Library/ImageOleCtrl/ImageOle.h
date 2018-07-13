@@ -1,52 +1,87 @@
 #pragma once
+#include "IImageOle.h"
+#include "ImageEx.h"
+#include <oleidl.h>
+#include <atlbase.h>
 
-#include <richedit.h>
-#include <richole.h>
-#include <textserv.h>
-
-#define		EN_PASTE											0x0800	// 粘贴消息
-#define		WM_UPDATEPICTUREFRAME				(WM_USER+0x1000)		//RichEdit控件界面刷新
-
-// {C5B3A481-21E3-4cab-8ABD-3C6A85892AD2}
-_declspec(selectany) CLSID CLSID_ImageOle = { 0xc5b3a481, 0x21e3, 0x4cab, { 0x8a, 0xbd, 0x3c, 0x6a, 0x85, 0x89, 0x2a, 0xd2 } };
-
-// {E41FE3BB-7218-423d-952E-96E556AEE30F}
-_declspec(selectany) IID IID_IImageOle = { 0xe41fe3bb, 0x7218, 0x423d, { 0x95, 0x2e, 0x96, 0xe5, 0x56, 0xae, 0xe3, 0x0f } };
-
-// {89FC1386-91E5-415f-AD8F-04415C15F8F5}
-_declspec(selectany) IID IID_IRichEditOleCallback2 = { 0x89fc1386, 0x91e5, 0x415f, { 0xad, 0x8f, 0x04, 0x41, 0x5c, 0x15, 0xf8, 0xf5 } };
-
-typedef enum _tagFILE_FROM_TYPE
+class CImageOle : public IImageOle ,public IOleObject ,public IViewObject2
 {
-	FILE_FROM_SYSTEM = 0,	//文件来源于软件系统
-	FILE_FROM_SELF,				//文件来源于
-}FILE_FROM_TYPE;
+public:
+	CImageOle();
+	~CImageOle(void);
 
-struct NMRICHEDITOLECALLBACK
-{
-	NMHDR hdr;
-	LPCTSTR lpszText;	// 粘贴文本
-};
+public:
+	// IUnknown接口
+	virtual HRESULT WINAPI QueryInterface(REFIID iid, void ** ppvObject);
+	virtual ULONG   WINAPI AddRef(void);
+	virtual ULONG   WINAPI Release(void);
 
-interface __declspec(uuid("E41FE3BB-7218-423d-952E-96E556AEE30F")) 
-IImageOle : public IUnknown
-{
-	virtual HRESULT STDMETHODCALLTYPE SetNotifyHwnd(HWND hWnd) = 0;
-	virtual HRESULT STDMETHODCALLTYPE SetRichEdit(CRichEditUI* pRichEdit) = 0;
-	virtual HRESULT STDMETHODCALLTYPE SetFaceId(LONG nFaceId) = 0;
-	virtual HRESULT STDMETHODCALLTYPE GetFaceId(LONG* nFaceId) = 0;
+	//IImageOle接口
+	virtual HRESULT WINAPI SetNotifyHwnd(HWND hWnd);
+	virtual HRESULT WINAPI SetRichEdit(CRichEditUI* pRichEdit);
+	virtual HRESULT WINAPI SetFaceId(LONG nFaceId);
+	virtual HRESULT WINAPI GetFaceId(LONG *nFaceId);
+	virtual HRESULT WINAPI SetFaceIndex(LONG nFaceIndex);
+	virtual HRESULT WINAPI GetFaceIndex(LONG *nFaceIndex);
+	virtual HRESULT WINAPI GetFileName(BSTR* lpszFileName);
+	virtual HRESULT WINAPI LoadFileFromPath(BSTR bstrFileName);
 
-	virtual HRESULT STDMETHODCALLTYPE SetFaceIndex(LONG nFaceIndex) = 0;
-	virtual HRESULT STDMETHODCALLTYPE GetFaceIndex(LONG* nFaceIndex) = 0;
+	// IOleObject接口
+	virtual HRESULT WINAPI SetClientSite(IOleClientSite *pClientSite);
+	virtual HRESULT WINAPI GetClientSite(IOleClientSite **ppClientSite);
+	virtual HRESULT WINAPI SetHostNames(LPCOLESTR szContainerApp, LPCOLESTR szContainerObj);
+	virtual HRESULT WINAPI Close(DWORD dwSaveOption);
+	virtual HRESULT WINAPI SetMoniker(DWORD dwWhichMoniker, IMoniker *pmk);
+	virtual HRESULT WINAPI GetMoniker(DWORD dwAssign, DWORD dwWhichMoniker, IMoniker **ppmk);
+	virtual HRESULT WINAPI InitFromData(IDataObject *pDataObject, BOOL fCreation, DWORD dwReserved);
+	virtual HRESULT WINAPI GetClipboardData(DWORD dwReserved, IDataObject **ppDataObject);
+	virtual HRESULT WINAPI DoVerb(LONG iVerb, LPMSG lpmsg, IOleClientSite *pActiveSite, LONG lindex, HWND hwndParent, LPCRECT lprcPosRect);
+	virtual HRESULT WINAPI EnumVerbs(IEnumOLEVERB **ppEnumOleVerb);
+	virtual HRESULT WINAPI Update(void);
+	virtual HRESULT WINAPI IsUpToDate(void);
+	virtual HRESULT WINAPI GetUserClassID(CLSID *pClsid);
+	virtual HRESULT WINAPI GetUserType(DWORD dwFormOfType, LPOLESTR *pszUserType);
+	virtual HRESULT WINAPI SetExtent(DWORD dwDrawAspect, SIZEL *psizel);
+	virtual HRESULT WINAPI GetExtent(DWORD dwDrawAspect, SIZEL *psizel);
+	virtual HRESULT WINAPI Advise(IAdviseSink *pAdvSink, DWORD *pdwConnection);
+	virtual HRESULT WINAPI Unadvise(DWORD dwConnection);
+	virtual HRESULT WINAPI EnumAdvise(IEnumSTATDATA **ppenumAdvise);
+	virtual HRESULT WINAPI GetMiscStatus(DWORD dwAspect, DWORD *pdwStatus);
+	virtual HRESULT WINAPI SetColorScheme(LOGPALETTE *pLogpal);
 
-	virtual HRESULT STDMETHODCALLTYPE GetFileName(BSTR* lpszFileName) = 0;
-	virtual HRESULT STDMETHODCALLTYPE LoadFileFromPath(BSTR bstrFileName) = 0;
-};
+	// IViewObject接口
+	virtual HRESULT WINAPI Draw(DWORD dwDrawAspect, LONG lindex, void *pvAspect, DVTARGETDEVICE *ptd,
+		HDC hdcTargetDev, HDC hdcDraw, LPCRECTL lprcBounds, LPCRECTL lprcWBounds,
+		BOOL ( WINAPI *pfnContinue )(ULONG_PTR dwContinue), ULONG_PTR dwContinue);
+	virtual HRESULT WINAPI GetColorSet(DWORD dwDrawAspect, LONG lindex, void *pvAspect, 
+		DVTARGETDEVICE *ptd, HDC hicTargetDev, LOGPALETTE **ppColorSet);
+	virtual HRESULT WINAPI Freeze(DWORD dwDrawAspect, LONG lindex, void *pvAspect, DWORD *pdwFreeze);
+	virtual HRESULT WINAPI Unfreeze(DWORD dwFreeze);
+	virtual HRESULT WINAPI SetAdvise(DWORD aspects, DWORD advf, IAdviseSink *pAdvSink);
+	virtual HRESULT WINAPI GetAdvise(DWORD *pAspects, DWORD *pAdvf, IAdviseSink **ppAdvSink);
 
-interface __declspec(uuid("89FC1386-91E5-415f-AD8F-04415C15F8F5")) 
-IRichEditOleCallback2 : public IRichEditOleCallback
-{
-	STDMETHOD(SetNotifyHwnd)(HWND hWnd) PURE;	// 设置通知窗口句柄
-	STDMETHOD(SetRichEditHwnd)(HWND hWnd) PURE;	// 设置RichEdit窗口句柄
-	STDMETHOD(SetTextServices)(ITextServices *pTextServices) PURE;	// 设置ITextServices接口指针
+	// IViewObject2接口
+	virtual HRESULT WINAPI GetExtent(DWORD dwDrawAspect, LONG lindex, DVTARGETDEVICE *ptd, LPSIZEL lpsizel);
+
+	void OnNextFrame();
+	void OnTimer(UINT_PTR idEvent);
+
+	static VOID CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime);
+
+protected:
+	BOOL GetOleRect(LPRECT prc);
+
+	ULONG m_ulRef;
+	IOleClientSite *m_pOleClientSite;
+	IAdviseSink *m_pAdvSink;
+
+	int		m_iFrame;					//图片包含图像帧数
+	int		m_nTimePass;				//过去的时间
+	int		m_nTimeDelay;			//一个动画帧需要的时间
+	HWND m_NotifyWnd;				//主窗口句柄
+	CRichEditUI* m_pRichEdit;		//富文本框指针
+	LONG  m_nFaceId;					//头像ID
+	LONG  m_nFaceIndex;			//头像索引号
+	CComBSTR	m_strFileName;	//文件路径
+	CImageEx* m_pImageEx;		//ImageEx对象
 };

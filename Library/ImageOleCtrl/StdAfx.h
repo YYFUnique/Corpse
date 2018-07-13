@@ -18,12 +18,18 @@ using namespace DuiLib;
 using namespace Gdiplus;
 #pragma comment(lib,"gdiplus.lib")
 
+#include "IImageOle.h"
+
 extern HINSTANCE g_hinstThisDll;        // Our DLL's HINSTANCE
 extern UINT      g_uDllLockCount;       // The module lock count
 
 #ifdef _DEBUG
 void TRACE (LPCTSTR lpszFormat, ...);
 #else
-inline void TRACE(LPCTSTR x, ...) {}
+//inline void TRACE(LPCTSTR x, ...) {}
 #endif
 
+#ifndef DEFINE_GUIDXXX
+#define DEFINE_GUIDXXX(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \
+			EXTERN_C const GUID CDECL name = { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }
+#endif //DEFINE_GUIDXXX

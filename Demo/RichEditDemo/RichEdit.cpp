@@ -599,10 +599,10 @@ void CRichEdit::OnRichSendMessage()
 	CHARFORMAT2 cf;
 	m_pRecvRichEdit->GetDefaultCharFormat(cf);
 	//cf.dwEffects
-	cf.crTextColor = 0xFF696969;
+	cf.crTextColor = 0xFFFF0101;
 	//cf2.crBackColor = 0x0;
-	cf.dwMask |= CFM_COLOR;
-	cf.dwEffects |= CFE_AUTOCOLOR;
+	//cf.dwMask |= CFM_COLOR;
+	//cf.dwEffects |= CFE_AUTOCOLOR;
 	cf.yHeight = 12*20;
 	//if (lpFontName != NULL)									// …Ë÷√◊÷ÃÂ√˚≥∆
 	{

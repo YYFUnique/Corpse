@@ -12,10 +12,10 @@ namespace DuiLib
 		~CRichTextUI();
 
 	public:
+		LPCTSTR GetClass() const;
 		LPVOID GetInterface(LPCTSTR pstrName);
 	public:
 		void SetPos(RECT rc);
-		//void DoEvent(TEventUI& event);
 		void DoPaint(HDC hDC, const RECT& rcPaint);
 	public:
 		void LineUp();

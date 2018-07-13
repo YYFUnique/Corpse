@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="ImageOleCtrl"
+	Name="ImageOle"
 	ProjectGUID="{F1C65136-CA63-41D7-A97A-0672DE1EF6DC}"
-	RootNamespace="ImageOleCtrl"
+	RootNamespace="ImageOle"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -61,7 +61,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="2"
-				ModuleDefinitionFile="ImageOleCtrl.def"
+				ModuleDefinitionFile="ImageOle.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -136,7 +136,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				ModuleDefinitionFile="ImageOleCtrl.def"
+				ModuleDefinitionFile="ImageOle.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -183,15 +183,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ImageOle.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ImageOle.def"
+				>
+			</File>
+			<File
 				RelativePath=".\ImageOleClassFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ImageOleCtrl.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ImageOleCtrl.def"
 				>
 			</File>
 			<File
@@ -213,6 +213,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\IImageOle.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ImageEx.h"
 				>
 			</File>
@@ -222,10 +226,6 @@
 			</File>
 			<File
 				RelativePath=".\ImageOleClassFactory.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ImageOleCtrl.h"
 				>
 			</File>
 			<File

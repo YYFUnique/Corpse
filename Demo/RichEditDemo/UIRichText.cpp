@@ -13,6 +13,11 @@ namespace DuiLib
 
 	}
 
+	LPCTSTR CRichTextUI::GetClass() const
+	{
+		return _T("RichTextUI");
+	}
+
 	LPVOID CRichTextUI::GetInterface(LPCTSTR pstrName)
 	{
 		if (_tcsicmp(pstrName, DUI_CTR_RICHTEXT) == 0) return static_cast<CRichTextUI*>(this);
@@ -54,24 +59,23 @@ namespace DuiLib
 				LONG lHeight = 0;
 				SIZEL szExtent = { -1, -1 };
 				m_pTwh->GetTextServices()->TxGetNaturalSize(
-					DVASPECT_CONTENT, 
-					GetManager()->GetPaintDC(), 
-					NULL,
-					NULL,
-					TXTNS_FITTOCONTENT,
-					&szExtent,
-					&lWidth,
-					&lHeight);
+																	DVASPECT_CONTENT, 
+																	GetManager()->GetPaintDC(), 
+																	NULL,
+																	NULL,
+																	TXTNS_FITTOCONTENT,
+																	&szExtent,
+																	&lWidth,
+																	&lHeight);
+
 				if( lHeight > rcRich.bottom - rcRich.top ) {
 					m_pVerticalScrollBar->SetVisible(true);
 					m_pVerticalScrollBar->SetScrollPos(0);
 					m_bVScrollBarFixing = true;
 				}
-				else {
-					if( m_bVScrollBarFixing ) {
-						m_pVerticalScrollBar->SetVisible(false);
-						m_bVScrollBarFixing = false;
-					}
+				else 	if( m_bVScrollBarFixing ) {
+					m_pVerticalScrollBar->SetVisible(false);
+					m_bVScrollBarFixing = false;
 				}
 			}
 		}
@@ -192,30 +196,13 @@ namespace DuiLib
 			//////////////////////////////////////////////////////////////////////////
 			pControl->SetPos(rcCtrl);
 
-			/*CDuiString strTipInfo;
-			strTipInfo.Format(_T("IPosY:%d,left:%d,top:%d,right:%d,bottom:%d"),iPosY,rcCtrl.left,rcCtrl.top,rcCtrl.right,rcCtrl.bottom);
-			OutputDebugString(strTipInfo);*/
-
 			iPosY += sz.cy + m_iChildPadding + rcPadding.top + rcPadding.bottom;
 			cyNeeded += sz.cy + rcPadding.top + rcPadding.bottom;
 			szRemaining.cy -= sz.cy + m_iChildPadding + rcPadding.bottom;
 		}
 		cyNeeded += (nEstimateNum - 1) * m_iChildPadding;
 		cxNeeded += (nEstimateNum - 1) * m_iChildPadding;
-
-		//ProcessScrollBar(rc, cxNeeded, cyNeeded+15);
 	}
-
-	/*void CRichTextUI::DoEvent(TEventUI& event)
-	{
-		if( !IsMouseEnabled() && event.Type > UIEVENT__MOUSEBEGIN && event.Type < UIEVENT__MOUSEEND ) {
-			if( m_pParent != NULL ) m_pParent->DoEvent(event);
-			else CControlUI::DoEvent(event);
-			return;
-		}
-		else 
-			CRichEditUI::DoEvent(event);
-	}*/
 
 	void CRichTextUI::DoPaint(HDC hDC, const RECT& rcPaint)
 	{
@@ -273,31 +260,31 @@ namespace DuiLib
 			// Remember wparam is actually the hdc and lparam is the update
 			// rect because this message has been preprocessed by the window.
 			m_pTwh->GetTextServices()->TxDraw(
-				DVASPECT_CONTENT,  		// Draw Aspect
-				/*-1*/0,				// Lindex
-				NULL,					// Info for drawing optimazation
-				NULL,					// target device information
-				hDC,			        // Draw device HDC
-				NULL, 				   	// Target device HDC
-				(RECTL*)&rc,			// Bounding client rectangle
-				NULL, 		            // Clipping rectangle for metafiles
-				(RECT*)&rcPaint,		// Update rectangle
-				NULL, 	   				// Call back function
-				NULL,					// Call back parameter
-				0);				        // What view of the object
+																DVASPECT_CONTENT,  		// Draw Aspect
+																/*-1*/0,				// Lindex
+																NULL,					// Info for drawing optimazation
+																NULL,					// target device information
+																hDC,			        // Draw device HDC
+																NULL, 				   	// Target device HDC
+																(RECTL*)&rc,			// Bounding client rectangle
+																NULL, 		            // Clipping rectangle for metafiles
+																(RECT*)&rcPaint,		// Update rectangle
+																NULL, 	   				// Call back function
+																NULL,					// Call back parameter
+																0);				        // What view of the object
 			if( m_bVScrollBarFixing ) {
 				LONG lWidth = rc.right - rc.left + m_pVerticalScrollBar->GetFixedWidth();
 				LONG lHeight = 0;
 				SIZEL szExtent = { -1, -1 };
 				m_pTwh->GetTextServices()->TxGetNaturalSize(
-					DVASPECT_CONTENT, 
-					GetManager()->GetPaintDC(), 
-					NULL,
-					NULL,
-					TXTNS_FITTOCONTENT,
-					&szExtent,
-					&lWidth,
-					&lHeight);
+												DVASPECT_CONTENT, 
+												GetManager()->GetPaintDC(), 
+												NULL,
+												NULL,
+												TXTNS_FITTOCONTENT,
+												&szExtent,
+												&lWidth,
+												&lHeight);
 				if( lHeight <= rc.bottom - rc.top ) {
 					NeedUpdate();
 				}
@@ -317,14 +304,14 @@ namespace DuiLib
 		}
 
 		CHARRANGE chRange = {0};
-		bool bShow = true;
-		if (GetSel(chRange) != false)
-			bShow = chRange.cpMin == chRange.cpMax ? true : false;
+		GetSel(chRange);
 
-		if (bShow && GetManager()->IsLayered() && m_bShowCaret && m_bFocused)
+		if (chRange.cpMin == chRange.cpMax && GetManager()->IsLayered() && m_bShowCaret && m_bFocused)
 			CRenderEngine::DrawColor(hDC,m_rcPos,m_dwCaretColor);
 
-		PaintBorder(hDC);
+		// 如果控件存在边框，上面步骤有可能覆盖边框，重绘解决
+		if (m_nBorderSize != 0)
+			PaintBorder(hDC);
 	}
 
 	void CRichTextUI::SetScrollPos(SIZE szPos)
@@ -365,6 +352,7 @@ namespace DuiLib
 				rcPos = pControl->GetPos();
 				rcPos.top -= cy;
 				rcPos.bottom -= cy;
+
 				pControl->SetPos(rcPos);
 			}			
 		}
@@ -403,7 +391,6 @@ namespace DuiLib
 
 	void CRichTextUI::EndDown()
 	{
-		//TxSendMessage(WM_VSCROLL, SB_BOTTOM, 0L, 0);
 		CContainerUI::EndDown();
 	}
 
@@ -497,21 +484,6 @@ namespace DuiLib
 
 		SetDefaultCharFormat(cf);
 	}
-
-	//void CRichTextUI::AddBubble(CBubbleInfo* sbi)
-	//{
-	//	CBubbleInfo* pBubbleInfo = new CBubbleInfo;
-	//	pBubbleInfo->m_dwStart = sbi->m_dwStart;
-	//	pBubbleInfo->m_dwEnd = sbi->m_dwEnd;
-	//	pBubbleInfo->m_pBubble = sbi->m_pBubble;
-	//	//pBubbleInfo->m_pBubble = pBubble;
-	//	Add(pBubbleInfo->m_pBubble);
-	//}
-
-	/*void CRichTextUI::RejustBubble(CBubbleInfo& sbi)
-	{
-		CalAsLeft(sbi);
-	}*/
 
 	DWORD CRichTextUI::GetParaSpace() const
 	{
@@ -611,12 +583,14 @@ namespace DuiLib
 	{
 		PARAFORMAT2 pf;
 		pf.cbSize        = sizeof(PARAFORMAT2);
-		pf.dwMask        = /*PFM_OFFSET*/ /*|*/ PFM_STARTINDENT | PFM_RIGHTINDENT | PFM_ALIGNMENT;
+		pf.dwMask        = /*PFM_OFFSET*/ /*|*/ PFM_STARTINDENT | PFM_RIGHTINDENT | PFM_ALIGNMENT/* | PFM_TABSTOPS*/;
 		pf.wAlignment = PFA_LEFT;
 		//pf.dxOffset      = 0;		// 用于控制显示消息内容(相对于首行缩进正便宜)
 		pf.dxStartIndent = 15*nLeftSize;			// 首行缩进
 		pf.dxRightIndent = 15*nRightSize;		// 右缩进
 		
+		//pf.cTabCount	= 4;
+
 		HRESULT lRes = 0;
 		GetTextServices()->TxSendMessage(EM_SETPARAFORMAT, 0, (LPARAM)&pf, &lRes);
 		return (BOOL)lRes;
@@ -700,79 +674,6 @@ namespace DuiLib
 		//return SetSelectionCharFormat(cf);
 		return TRUE;
 	}
-
-	/*void CRichTextUI::EnsureVisible()
-	{
-		CHARRANGE CharRange;
-		GetSel(CharRange);
-
-		RECT rcListInset = m_pList->GetInset();
-
-		rcList.left += rcListInset.left;
-		rcList.top += rcListInset.top;
-		rcList.right -= rcListInset.right;
-		rcList.bottom -= rcListInset.bottom;
-
-		CScrollBarUI* pHorizontalScrollBar = m_pHorizontalScrollBar->GetHorizontalScrollBar();
-		if( pHorizontalScrollBar && pHorizontalScrollBar->IsVisible() ) rcList.bottom -= pHorizontalScrollBar->GetFixedHeight();
-
-		int iPos = m_pList->GetScrollPos().cy;
-		if( rcItem.top >= rcList.top && rcItem.bottom < rcList.bottom ) return;
-		int dx = 0;
-		if( rcItem.top < rcList.top ) dx = rcItem.top - rcList.top;
-		if( rcItem.bottom > rcList.bottom ) dx = rcItem.bottom - rcList.bottom;
-		Scroll(0, dx);
-	}*/
-
-	//void CRichTextUI::CalAsLeft(CBubbleInfo &sbi)
-	//{
-	//	// 计算项目应有的宽和高
-	//	int iHeight = 0;
-	//	int iWidth = 0;
-
-	//	// 计算文字高度
-	//	POINT ps = PosFromChar(sbi.m_dwStart);
-	//	POINT pe = PosFromChar(sbi.m_dwEnd);
-
-	//	iHeight = pe.y - ps.y;
-
-	//	// 计算文字宽度
-	//	LONG ls = LineFromChar(sbi.m_dwStart);
-	//	LONG le = LineFromChar(sbi.m_dwEnd);
-
-	//	if (ls != le) {
-	//		// 如果是多行文本 ,计算第一个字符x坐标
-	//		SetSel(sbi.m_dwStart, sbi.m_dwEnd);
-	//		int iLeft = GetCurTargetX();
-	//		for (int i=ls;i<le;++i)
-	//		{
-	//			int iIndex = LineIndex(i);
-	//			int iLineLen = LineLength(iIndex);
-	//			if (iLineLen == 0)
-	//				continue;
-	//			int iLast = iIndex + iLineLen;
-	//			SetSel(iLast, iLast);
-	//			int iRight = GetCurTargetX();
-	//			if (iRight <= iLeft)
-	//			{
-	//				RECT rc;
-	//				m_pTwh->GetControlRect(&rc);
-	//				int nBar = 0;
-	//				if (m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible())
-	//					nBar = m_pVerticalScrollBar->GetFixedHeight();
-	//				iWidth = rc.right - rc.left - nBar - 32;
-	//				//break;
-	//			} else {
-	//				iWidth = max(iRight - 5, iWidth);
-	//			}
-	//		}
-	//	} else {
-	//		//iWidth = MAX();
-	//	}
-
-	//	SIZE size = {iWidth, iHeight};
-	//	sbi.m_pBubble->SetBubbleSize(size);
-	//}
 
 	LONG CRichTextUI::GetCurTargetX() const
 	{

@@ -58,7 +58,6 @@ namespace DuiLib
 	{
 		if( m_bVisible == bVisible ) return;
 
-		bool v = IsVisible();
 		m_bVisible = bVisible;
 		if( m_bFocused ) m_bFocused = false;
 	}

@@ -65,14 +65,6 @@ SIZE CBubbleLayoutUI::EstimateSize(SIZE szAvailable)
 	if (pRich == NULL)
 		return m_szAvailable;
 
-	CHARRANGE chRange;
-	pRich->GetSel(chRange);
-
-	/*int iFirstLine = pRich->GetFirstVisibleLine();
-	int iFirstCharIndex = pRich->GetLineIndex(iFirstLine);*/
-
-	// 计算项目应有的宽和高
-	int iHeight = 0;
 	int iWidth = 0;
 
 	// 计算文字高度
@@ -80,14 +72,12 @@ SIZE CBubbleLayoutUI::EstimateSize(SIZE szAvailable)
 	// 由于计算的是字符的右下角坐标，故需要多计算一个行
 	POINT ptEnd = pRich->GetPosFromChar(m_dwTextEnd + 1);
 
-	iHeight = ptEnd.y - ptStart.y;
+	// 计算项目应有的宽和高
+	int iHeight = ptEnd.y - ptStart.y;
 
-	// 计算文字宽度
+	// 计算文字宽度，计算文本起始和结束行
 	LONG lTextStart = pRich->GetLineFromChar(m_dwTextStart + m_dwNickNameLen);
 	LONG lTextEnd = pRich->GetLineFromChar(m_dwTextEnd);
-
-	CString strTipInfo;
-	pRich->GetTextRange(m_dwTextStart+m_dwNickNameLen, m_dwTextEnd, strTipInfo);
 
 	CPictureUI* pHead = (CPictureUI*)FindSubControlByClassName(_T("PictureUI"));
 
@@ -98,47 +88,46 @@ SIZE CBubbleLayoutUI::EstimateSize(SIZE szAvailable)
 	if (m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible())
 		nBar = m_pVerticalScrollBar->GetFixedHeight();
 
+	POINT ptLastEnd = pRich->GetPosFromChar(m_dwTextEnd);
 	// 如果是多行文本 ,计算第一个字符x坐标
-	if (lTextStart != lTextEnd) {
-		pRich->SetSel(m_dwTextStart, m_dwTextEnd);
-		int iLeft = pRich->GetCurTargetX();
+	if (lTextStart != lTextEnd) {		
 		for (int iIndex=lTextStart; iIndex<=lTextEnd; ++iIndex)
 		{
 			int iTextIndex = pRich->GetLineIndex(iIndex);					// 获取指定行，首字符在文本中的位置
-			int iLineLen = pRich->GetLineLength(iTextIndex);
+			int iLineLen = pRich->GetLineLength(iTextIndex);			// 或者指定字符位置所在行的文本长度
 			if (iLineLen == 0)
 				continue;
 
-			int iLast = iTextIndex + iLineLen;
-			pRich->SetSel(iLast, iLast);
+			// 防止自动换行时，获取到回车符号的位置
+			int iRightLast = iTextIndex + iLineLen;
+			if (pRich->GetLineFromChar(iRightLast) != iIndex)
+				--iRightLast;
 
-			int iRight = pRich->GetCurTargetX();
-			if (iRight <= iLeft)
-			{
-				iWidth = rc.right - rc.left - nBar - pHead->GetFixedWidth();
-				break;
-			} else {
-				iWidth = MAX(iRight, iWidth);
-			}
+			// 获取当前行最右边字符x坐标位置
+			POINT ptRightLast = pRich->GetPosFromChar(iRightLast);
+
+			if (ptRightLast.x < ptLastEnd.x)
+				iWidth = MAX(ptLastEnd.x, iWidth);	/*rc.right - rc.left - nBar - pHead->GetFixedWidth();*/
+			else 
+				iWidth = MAX(ptRightLast.x, iWidth);
 		}
 	} else {
-		pRich->SetSel(m_dwTextEnd, m_dwTextEnd);
-		iWidth = pRich->GetCurTargetX();
+		iWidth = ptLastEnd.x;
 	}
 
-	pRich->SetSel(chRange);
-
 	CControlUI* pControl = FindSubControlByClassName(_T("ControlUI"));
+	// 段落文字偏移值，暂时硬编码
 	DWORD dwOffset = 10;
-	int iNickHight = 0;
+	
 	if (pControl)
 	{
+		int iNickHight = 0;
+
 		POINT ptStart = pRich->GetPosFromChar(m_dwTextStart);
 		POINT ptEnd = pRich->GetPosFromChar(m_dwTextStart + m_dwNickNameLen);
 
 		iNickHight = ptEnd.y - ptStart.y;
-		DWORD dwParaSpace = m_dwParaSpace;//pRich->GetParaSpace();
-		/*pRich->GetItemIndex()*/
+		DWORD dwParaSpace = m_dwParaSpace;
 		if (dwParaSpace == 0)
 			dwParaSpace = dwOffset;
 		else
@@ -147,7 +136,6 @@ SIZE CBubbleLayoutUI::EstimateSize(SIZE szAvailable)
 		pControl->SetFixedHeight(iNickHight - dwParaSpace);
 		
 		iHeight += 2*dwOffset;
-
 		pRich->SetParaSpace(dwOffset);
 	}
 
@@ -163,7 +151,6 @@ SIZE CBubbleLayoutUI::EstimateSize(SIZE szAvailable)
 	}
 	
 	CVerticalLayoutUI* pBubbleInfo = (CVerticalLayoutUI*)FindSubControlByClassName(_T("VerticalLayoutUI"));
-
 	if (pBubbleInfo)
 	{
 		pBubbleInfo->SetFixedHeight(iHeight + pControl->GetFixedHeight());
@@ -171,7 +158,6 @@ SIZE CBubbleLayoutUI::EstimateSize(SIZE szAvailable)
 		iHeight = pBubbleInfo->GetFixedHeight();
 	}	
 
-	//m_szAvailable.c = {/*pHead->GetFixedWidth()+*/iWidth+5, iHeight};
 	m_szAvailable.cx = iWidth + 5;
 	m_szAvailable.cy = iHeight;
 
