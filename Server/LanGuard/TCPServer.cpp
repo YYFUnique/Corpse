@@ -3,9 +3,9 @@
 #include <signal.h>
 
 CTCPServer::CTCPServer(uv_loop_t* loop /* = uv_default_loop */)
-: m_pNewConcb(NULL)
+: m_pfnConcb(NULL)
 , m_bInit(FALSE)
-, m_bClose(FALSE)
+, m_bAutoClosed(FALSE)
 {
 	m_uvpLoop = loop;
 	//m_uvhMutex = NULL;
@@ -14,7 +14,7 @@ CTCPServer::CTCPServer(uv_loop_t* loop /* = uv_default_loop */)
 CTCPServer::~CTCPServer()
 {
 	Close();
-	uv_loop_close(m_uvpLoop); 
+	//uv_loop_close(m_uvpLoop); 
 }
 
 BOOL CTCPServer::Init()
@@ -54,17 +54,33 @@ void CTCPServer::Close()
 	}
 
 	ClientObjMap.clear();
-	if (m_bInit)
+	if (uv_is_active((uv_handle_t*)&m_uvServer))
 		uv_close((uv_handle_t*)&m_uvServer,AfterServerClose);
 
 	m_bInit = FALSE;
 	uv_mutex_destroy(&m_uvhMutex);
 }
 
+BOOL CTCPServer::IsServerClosed()
+{
+	return m_bServerClosed;
+}
+
 void CTCPServer::CloseServer()
 {
-	m_bClose = TRUE;
-	uv_close((uv_handle_t*)&m_uvServer,AfterServerClose);
+	m_bServerClosed = TRUE;
+	if (uv_is_active((uv_handle_t*)&m_uvServer))
+		uv_close((uv_handle_t*)&m_uvServer,AfterServerClose);
+}
+
+void CTCPServer::SetAutoClose(BOOL bAutoClose)
+{
+	m_bAutoClosed = bAutoClose;
+}
+
+BOOL CTCPServer::IsAutoClose()
+{
+	return m_bAutoClosed;
 }
 
 BOOL CTCPServer::SetNoDelay(BOOL bDelay /*= FALSE*/)
@@ -202,9 +218,9 @@ void CTCPServer::AfterSend(uv_write_t* uvWriteReq, int nStatus)
 	}
 }
 
-void CTCPServer::SetConnectExtra(NewConnect cb)
+void CTCPServer::SetConnectExtra(FN_Connect cb)
 {
-	m_pNewConcb = cb;
+	m_pfnConcb = cb;
 }
 
 void CTCPServer::SetTCPHandlerCB(size_t ClientId, ITCPHandler* pTCPHandler)
@@ -214,9 +230,9 @@ void CTCPServer::SetTCPHandlerCB(size_t ClientId, ITCPHandler* pTCPHandler)
 		itFind->second->m_pHandler = pTCPHandler;
 }
 
-void CTCPServer::onAllocBuffer(uv_handle_t *uvhClient, size_t suggested_size, uv_buf_t *ReadBuf) 
+void CTCPServer::OnAllocBuffer(uv_handle_t *uvhClient, size_t suggested_size, uv_buf_t *ReadBuf) 
 { 
-	//服务器分析空间函数 
+	// 服务器分析空间函数 
 	if (uvhClient->data == NULL)
 		return; 
 	ClientData* pClientData = (ClientData*)uvhClient->data; 
@@ -228,13 +244,12 @@ void CTCPServer::AfterServerRecv(uv_stream_t *uvhClient, ssize_t nRead, const uv
 	if (uvhClient->data == NULL)
 		return; 
 
-	ClientData* pClientData = (ClientData*)uvhClient->data;//服务器的recv带的是clientdata 
-	if (pClientData->m_pTcpServer->m_bClose || nRead < 0)  
+	// 服务器的recv带的是clientdata 
+	ClientData* pClientData = (ClientData*)uvhClient->data;
+	CTCPServer* pTCPSock = (CTCPServer *)pClientData->m_pTcpServer; 
+	if (nRead < 0)  
 	{ 
 		/* 错误 或 EOF结尾 */ 
-		CTCPServer* pTcpSock = (CTCPServer *)pClientData->m_pTcpServer; 
-		//string log_str; 
-		//char tmp[512] = { 0 }; 
 		if (nRead == UV_EOF)  
 		{ 
 			//log_str = "client("+itoa(client->client_id)+") is disconnected,close this client."; 
@@ -252,26 +267,34 @@ void CTCPServer::AfterServerRecv(uv_stream_t *uvhClient, ssize_t nRead, const uv
 			//sprintf(tmp, "客户端(%d)：%s", client->client_id, GetUVError(nread).c_str()); 
 		} 
 		//dxLog_Base::WriteLineStr(log_str); 
-		//连接断开，关闭客户端 
-		pTcpSock->DeleteClient(pClientData->m_ClientId); 
-		if (pTcpSock->ClientObjMap.size() == 0)
-			pTcpSock->Stop();
+		pTCPSock->CloseClient(pClientData->m_ClientId);
 		return; 
 	} 
-	else if (0 == nRead)  
-	{ 
+	else if (0 == nRead)
+	{
 		/* 一切正常，只是没有读取任何数据 */ 
 	} 
 	else if (pClientData->m_pHandler)  
 	{ 
-		pClientData->m_pHandler->RecvRoute(pClientData->m_ClientId, buf->base, nRead); 
+		if (pTCPSock->IsServerClosed() && pTCPSock->IsAutoClose())
+			pTCPSock->CloseClient(pClientData->m_ClientId);
+		else
+			pClientData->m_pHandler->RecvRoute(pClientData->m_ClientId, buf->base, nRead); 
 	} 
 } 
+
+void CTCPServer::CloseClient(size_t nClientId)
+{
+	//连接断开，关闭客户端 
+	DeleteClient(nClientId); 
+	if (ClientObjMap.size() == 0)
+		Stop();
+}
 
 void CTCPServer::AfterClientClose(uv_handle_t* uvhClient)
 {
 	ClientData* pClientData = (ClientData*)uvhClient->data;
-	if (pClientData)
+	if (pClientData != NULL)
 	{
 		if (pClientData->m_pHandler)
 			pClientData->m_pHandler->OnClose();
@@ -314,21 +337,12 @@ void CTCPServer::AcceptConnection(uv_stream_t* uvServer, int nStatus)
 			break;
 		}
 
-		//加入到链接队列中
+		// 加入到链接队列中
 		pTCPSock->ClientObjMap.insert(std::make_pair(ClientId, pClientData));
-		BOOL bRet = TRUE;
-		if (pTCPSock->m_pNewConcb)
-			bRet = pTCPSock->m_pNewConcb(ClientId);
+		if (pTCPSock->m_pfnConcb)
+			pTCPSock->m_pfnConcb(ClientId);
 
-		if (bRet == FALSE)
-		{
-			//uv_close((uv_handle_t*)pClientData->m_uvhClient, NULL);
-			ClientConnMap::iterator itFind = pTCPSock->ClientObjMap.find(ClientId);
-			pTCPSock->ClientObjMap.erase(itFind);
-			break;
-		}
-
-		nRet = uv_read_start((uv_stream_t*)pClientData->m_uvhClient, onAllocBuffer, AfterServerRecv);
+		nRet = uv_read_start((uv_stream_t*)pClientData->m_uvhClient, OnAllocBuffer, AfterServerRecv);
 		if (nRet)
 		{
 			uv_close((uv_handle_t*)pClientData->m_uvhClient, NULL);
@@ -375,7 +389,7 @@ BOOL CTCPServer::DeleteClient(size_t ClientId)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//ClientData
+// ClientData
 ////////////////////////////////////////////////////////////////////////////////
 ClientData::ClientData(size_t ClientId)
 	:m_ClientId(ClientId)
