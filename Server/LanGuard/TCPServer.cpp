@@ -267,6 +267,7 @@ void CTCPServer::AfterServerRecv(uv_stream_t *uvhClient, ssize_t nRead, const uv
 			//sprintf(tmp, "客户端(%d)：%s", client->client_id, GetUVError(nread).c_str()); 
 		} 
 		//dxLog_Base::WriteLineStr(log_str); 
+		//连接断开，关闭客户端 
 		pTCPSock->CloseClient(pClientData->m_ClientId);
 		return; 
 	} 
@@ -287,7 +288,7 @@ void CTCPServer::CloseClient(size_t nClientId)
 {
 	//连接断开，关闭客户端 
 	DeleteClient(nClientId); 
-	if (ClientObjMap.size() == 0)
+	if (ClientObjMap.size() == 0 && IsServerClosed() && IsAutoClose())
 		Stop();
 }
 

@@ -63,6 +63,10 @@ typedef int (WINAPI* FN_DupKey)(char* lpszRoom, char* lpszGate, char* lpszSTime,
 														char* lpszGuestId, int nOverFalg, int nOpenFlag, LONG* lCardNo, int nBreakFast,
 														char* lpszTrack1, char* lpszTrack2, char* lpszLift, BOOL bFingerFlag);
 
+typedef int (WINAPI* FN_AddKey)(char* lpszRoom, char* lpszGate, char* lpszSTime, char* lspzGuestName,
+														char* lpszGuestId, int nOverFalg, int nOpenFlag, LONG* lCardNo, int nBreakFast,
+														char* lpszTrack1, char* lpszTrack2, char* lpszLift, BOOL bFingerFlag);
+
 /************************************************************************/
 /* 读卡
 /*	room [in]：房号，6字节字符串，必须是门锁系统设置的房号。

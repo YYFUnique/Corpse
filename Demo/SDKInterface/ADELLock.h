@@ -41,7 +41,7 @@ public:
 	CADELLock();
 	void Release();
 public:
-	int Init(LPCTSTR lpszSQLAddr, int nPort);
+	int Init(LPCTSTR lpszSQLAddr, LPCTSTR lpszAdmin, int nPort);
 	int EndSession();
 	int ChangeUser(LPCTSTR lpszAdmin);
 	int NewKey(LPCTSTR lpszRoomNum, LPCTSTR lpszGate, LPCTSTR lpszValidTime, LPCTSTR lpszGuestName,
@@ -49,6 +49,10 @@ public:
 						LPCTSTR lpszTrack1, LPCTSTR lpszTrack2, LPCTSTR lpszElevator, BOOL bFinger);
 
 	int DupKey(LPCTSTR lpszRoomNum, LPCTSTR lpszGate, LPCTSTR lpszValidTime, LPCTSTR lpszGuestName,
+						LPCTSTR lpszGuestId, BOOL bCovered, int nOpenWay, LONG* pCardNo, int nBreakfast, 
+						LPCTSTR lpszTrack1, LPCTSTR lpszTrack2, LPCTSTR lpszElevator, BOOL bFinger);
+
+	int AddKey(LPCTSTR lpszRoomNum, LPCTSTR lpszGate, LPCTSTR lpszValidTime, LPCTSTR lpszGuestName,
 						LPCTSTR lpszGuestId, BOOL bCovered, int nOpenWay, LONG* pCardNo, int nBreakfast, 
 						LPCTSTR lpszTrack1, LPCTSTR lpszTrack2, LPCTSTR lpszElevator, BOOL bFinger);
 
@@ -66,6 +70,7 @@ private:
 	FN_ChangeUser	m_pfnChangeUser;				//	更改操作员。
 	FN_NewKey			m_pfnNewKey;					//	发行新客人卡。
 	FN_DupKey			m_pfnDupKey;						//	“复制”客人卡
+	FN_AddKey			m_pfnAddKey;						//	“复制”客人卡
 	FN_ReadCard		m_pfnReadCard;					//	读卡。
 	FN_EraseCard		m_pfnEraseCard;					//	注销卡。
 	FN_ReadId			m_pfnReadId;						// 读取卡片的ID。

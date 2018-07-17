@@ -77,9 +77,11 @@ void CSDKInterface::OnClick(TNotifyUI& msg)
 	else if (strNotifyName == _T("BtnExit"))
 		Close(IDOK);
 	else if (strNotifyName == _T("BtnNewKey"))
-		OnNewKey(msg, TRUE);
+		OnNewKey(msg, 1);
 	else if (strNotifyName == _T("BtnDupKey"))
-		OnNewKey(msg, FALSE);
+		OnNewKey(msg, 2);
+	else if (strNotifyName == _T("BtnAddKey"))
+		OnNewKey(msg, 3);
 	else if (strNotifyName == _T("BtnReadCard"))
 		OnReadCard(msg);
 	else if (strNotifyName == _T("BtnEraseCard"))
@@ -117,7 +119,7 @@ void CSDKInterface::OnInit(TNotifyUI& msg)
 	if (pComType != NULL)
 		nPort = pComType->GetCurSel();
 
-	int nRet = m_pADELLock->Init(strSQLAddr, nPort);
+	int nRet = m_pADELLock->Init(strSQLAddr, _T("test"), nPort);
 	if (nRet != 0)
 	{
 		CDuiString strTipInfo;
@@ -125,9 +127,16 @@ void CSDKInterface::OnInit(TNotifyUI& msg)
 		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
 		return;
 	}
+	else
+	{
+		CDuiString strTipInfo;
+		strTipInfo.Format(_T("Init调用成功，返回值[%d]"), nRet);
+		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
+		return;
+	}
 }
 
-void CSDKInterface::OnNewKey(TNotifyUI& msg, BOOL bNewKey/* = TRUE*/)
+void CSDKInterface::OnNewKey(TNotifyUI& msg, int nNewKey/* = 1*/)
 {
 	CDuiString strRoomNum, strValidTime, strGuestName, strGuestId, strElevator, strGate;
 	LONG lCardNo = 0, nBreakfast = 0, nOpenWay = 0;
@@ -192,13 +201,15 @@ void CSDKInterface::OnNewKey(TNotifyUI& msg, BOOL bNewKey/* = TRUE*/)
 		bGetFinger = pGetFinger->IsSelected();
 
 	int nRet = 0;
-	if (bNewKey)
+	if (nNewKey == 1)
 		nRet = m_pADELLock->NewKey(strRoomNum, strGate, strValidTime, strGuestName, strGuestId, 
 																bCover, nOpenWay, &lCardNo, nBreakfast, NULL, NULL, strElevator, bGetFinger);
-	else
+	else if (nNewKey == 2)
 		nRet = m_pADELLock->DupKey(strRoomNum, strGate, strValidTime, strGuestName, strGuestId, 
 															bCover, nOpenWay, &lCardNo, nBreakfast, NULL, NULL, strElevator, bGetFinger);
-
+	else
+		nRet = m_pADELLock->AddKey(strRoomNum, strGate, strValidTime, strGuestName, strGuestId, 
+															bCover, nOpenWay, &lCardNo, nBreakfast, NULL, NULL, strElevator, bGetFinger);
 	if (nRet != 0)
 	{
 		CDuiString strTipInfo;
@@ -241,9 +252,9 @@ void CSDKInterface::OnReadCard(TNotifyUI& msg)
 	if (pGuestName != NULL)
 		pGuestName->SetText(CardData.strGuestName);
 
-	CEditUI2* pGuestUser = (CEditUI2*)m_PaintManager.FindControl(_T("GetUserId"));
-	if (pGuestUser != NULL)
-		pGuestUser->SetText(CardData.strGuestId);
+	CEditUI2* pGuestId = (CEditUI2*)m_PaintManager.FindControl(_T("GetUserID"));
+	if (pGuestId != NULL)
+		pGuestId->SetText(CardData.strGuestId);
 
 	CEditUI2* pGate = (CEditUI2*)m_PaintManager.FindControl(_T("GetGate"));
 	if (pGate != NULL)
@@ -268,14 +279,39 @@ void CSDKInterface::OnReadCard(TNotifyUI& msg)
 	CEditUI2* pMutilElevator = (CEditUI2*)m_PaintManager.FindControl(_T("GetMuitl"));
 	if (pMutilElevator != NULL)
 		pMutilElevator->SetText(CardData.strElevator);
+
+	// 填写注销用的房号和卡号
+	CEditUI2* pSetRoomNum = (CEditUI2*)m_PaintManager.FindControl(_T("SetRoomNum"));
+	if (pSetRoomNum != NULL)
+		pSetRoomNum->SetText(CardData.strRoom);
+
+	CEditUI2* pSetCardId = (CEditUI2*)m_PaintManager.FindControl(_T("SetCardNum"));
+	if (pSetCardId != NULL)
+	{
+		CDuiString strCardId;
+		strCardId.Format(_T("%d"), CardData.lCardNo);
+		pSetCardId->SetText(strCardId);
+	}
 }
 
 void CSDKInterface::OnEraseCard(TNotifyUI& msg)
 {
+	CDuiString strRoomNum;
 	LONG lCardNo = 0;
+	CEditUI2* pRoomNum = (CEditUI2*)m_PaintManager.FindControl(_T("SetRoomNum"));
+	if (pRoomNum != NULL)
+		strRoomNum = pRoomNum->GetText();
+
 	CEditUI2* pCardNo = (CEditUI2*)m_PaintManager.FindControl(_T("SetCardNum"));
 	if (pCardNo != NULL)
 		lCardNo = _ttoi(pCardNo->GetText());
+
+	if (lCardNo == 0)
+	{
+		MessageBox(m_hWnd, _T("请输入卡号^_^"), _T("提示"), MB_OK|MB_ICONINFORMATION);
+		pCardNo->SetFocus();
+		return;
+	}
 
 	int nfpFinger = 0;
 	int nRet = m_pADELLock->EraseCard(lCardNo, NULL, NULL, &nfpFinger);
@@ -286,6 +322,9 @@ void CSDKInterface::OnEraseCard(TNotifyUI& msg)
 		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
 		//return;
 	}
+
+	pCardNo->SetText(_T(""));
+	
 	if (nfpFinger >0)
 		MessageBox(m_hWnd, _T("持卡人的指纹在退房后，还可以开门。需要使用注销卡注销该房间的指纹。"), _T("提示"), MB_OK|MB_ICONINFORMATION);
 }
@@ -322,7 +361,7 @@ void CSDKInterface::OnReadCardId(TNotifyUI& msg)
 	if (pCardId != NULL)
 	{
 		CDuiString strCardId;
-		strCardId.Format(_T("%d"));
+		strCardId.Format(_T("0x%X"), lCardId);
 		pCardId->SetText(strCardId);
 	}
 }

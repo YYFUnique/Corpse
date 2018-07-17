@@ -117,7 +117,7 @@
 					<Edit2 name="GetOpenWay" font="0" enabled="false" float="true" pos="415,80,560,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					<!-- 多路电梯信息设置 -->
 					<Label text="多路电梯:" align="right" float="true" pos="180,110,240,134"/>
-					<Edit2 name="GetMuitl" name="Gate2" enabled="false" font="0" float="true" pos="245,110,330,134" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>			
+					<Edit2 name="GetMuitl" enabled="false" font="0" float="true" pos="245,110,330,134" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>			
 					<!-- 退出按钮 -->
 					<Button name="BtnReadCard" text="读卡" float="true" pos="580,47,660,97" font="0" textcolor="#FF000000"/>
 					<!--<Button name="BtnReadCard" text="读卡" float="true" pos="580,47,660,97" font="0" textcolor="#FF000000"/>-->

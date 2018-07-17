@@ -3,8 +3,11 @@
 #include "ADELErrorInfo.h"
 
 CADELLock::CADELLock()
+	: m_pfnInit(NULL), m_pfnEndSession(NULL), m_pfnChangeUser(NULL)
+	, m_pfnNewKey(NULL), m_pfnDupKey(NULL), m_pfnReadCard(NULL)
+	, m_pfnEraseCard(NULL), m_pfnReadId(NULL), m_pfnReadCardData(NULL)
+	, m_pfnWriteCardData(NULL), m_pfnAddKey(NULL)
 {
-	Clear();
 	m_hModule = LoadLibrary(_T("MainDll.dll"));
 	if (m_hModule != NULL)
 	{
@@ -13,6 +16,7 @@ CADELLock::CADELLock()
 		m_pfnEndSession		= (FN_EndSession)GetProcAddress(m_hModule, "EndSession");
 		m_pfnChangeUser		= (FN_ChangeUser)GetProcAddress(m_hModule, "ChangeUser");
 		m_pfnDupKey				= (FN_DupKey)GetProcAddress(m_hModule, "DupKey");
+		m_pfnAddKey				= (FN_AddKey)GetProcAddress(m_hModule, "AddKey");
 		m_pfnReadCard			= (FN_ReadCard)GetProcAddress(m_hModule, "ReadCard");
 		m_pfnEraseCard			= (FN_EraseCard)GetProcAddress(m_hModule, "EraseCard");
 		m_pfnReadId				= (FN_ReadId)GetProcAddress(m_hModule, "ReadId");
@@ -24,22 +28,21 @@ CADELLock::CADELLock()
 CADELLock::~CADELLock()
 {
 	if (m_hModule != NULL)
-	{
 		FreeLibrary(m_hModule);
-		m_hModule = NULL;
-	}
-	Clear();
 }
 
-int CADELLock::Init(LPCTSTR lpszSQLAddr, int nPort)
+int CADELLock::Init(LPCTSTR lpszSQLAddr, LPCTSTR lpszAdmin, int nPort)
 {
 	if (m_pfnInit == NULL)
 		return INVALID_PTR_VALUE;
 
 	CStringA strSQLAddr(lpszSQLAddr);
-	char szSQLAddr[MAX_PATH];
+	CStringA strUserName(lpszAdmin);
+	/*char* szSQLAddr = strSQLAddr.();*/
+	char szSQLAddr[MAX_PATH], szUserName[MAX_PATH];
 	strcpy_s(szSQLAddr, _countof(szSQLAddr), strSQLAddr);
-	return m_pfnInit(30, szSQLAddr, "Admin", nPort, 0, 5);
+	strcpy_s(szUserName, _countof(szUserName), strUserName);
+	return m_pfnInit(30, szSQLAddr, szUserName, nPort, 0, 5);
 }
 
 int CADELLock::EndSession()
@@ -103,6 +106,28 @@ int CADELLock::DupKey(LPCTSTR lpszRoomNum, LPCTSTR lpszGate, LPCTSTR lpszValidTi
 	strcpy_s(szElevator, _countof(szElevator), strElevator);
 
 	return m_pfnDupKey(szRoomNum, szGate, szValidTime, szGuestName, szGuestId,
+										bCovered, nOpenWay, pCardNo, nBreakfast, NULL, NULL, szElevator, bFinger);
+}
+
+int CADELLock::AddKey(LPCTSTR lpszRoomNum, LPCTSTR lpszGate, LPCTSTR lpszValidTime, LPCTSTR lpszGuestName,
+									   LPCTSTR lpszGuestId, BOOL bCovered, int nOpenWay, LONG* pCardNo, int nBreakfast, 
+									   LPCTSTR lpszTrack1, LPCTSTR lpszTrack2, LPCTSTR lpszElevator, BOOL bFinger)
+{
+	if (m_pfnDupKey == NULL)
+		return INVALID_PTR_VALUE;
+
+	CStringA strRoomNum(lpszRoomNum), strGate(lpszGate), strValidTime(lpszValidTime);
+	CStringA strGuestName(lpszGuestName), strGuestId(lpszGuestId), strElevator(lpszElevator);
+
+	char szRoomNum[20], szGate[50], szValidTime[30], szGuestName[50], szGuestId[50], szElevator[MAX_PATH];
+	strcpy_s(szRoomNum, _countof(szRoomNum), strRoomNum);
+	strcpy_s(szGate, _countof(szGate), strGate);
+	strcpy_s(szValidTime, _countof(szValidTime), strValidTime);
+	strcpy_s(szGuestName, _countof(szGuestName), strGuestName);
+	strcpy_s(szGuestId, _countof(szGuestId), strGuestId);
+	strcpy_s(szElevator, _countof(szElevator), strElevator);
+
+	return m_pfnAddKey(szRoomNum, szGate, szValidTime, szGuestName, szGuestId,
 										bCovered, nOpenWay, pCardNo, nBreakfast, NULL, NULL, szElevator, bFinger);
 }
 
@@ -183,18 +208,4 @@ int CADELLock::WriteCardData(int nCardType, int nStart, int nLen, LPCTSTR lpszDa
 void CADELLock::Release()
 {
 	delete this;
-}
-
-void CADELLock::Clear()
-{
-	m_pfnInit						= NULL;
-	m_pfnEndSession		= NULL;
-	m_pfnChangeUser		= NULL;
-	m_pfnNewKey				= NULL;
-	m_pfnDupKey				= NULL;
-	m_pfnReadCard			= NULL;
-	m_pfnEraseCard			= NULL;
-	m_pfnReadId				= NULL;
-	m_pfnReadCardData	= NULL;
-	m_pfnWriteCardData	= NULL;
 }

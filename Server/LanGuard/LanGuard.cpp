@@ -6,7 +6,7 @@
 
 CTCPServer g_TCPSrv; 
 
-size_t g_nMax = 1;
+size_t g_nMax = 0;
 
 void OnConnectCB(size_t nClientId)
 { 

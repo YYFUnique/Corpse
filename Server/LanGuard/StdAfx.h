@@ -1,6 +1,6 @@
 #pragma once
 
-#define BUFFERSIZE (1024*1024) 
+#define BUFFERSIZE (1024) 
 
 #include <atlstr.h>
 #define WIN32_LEAN_AND_MEAN	

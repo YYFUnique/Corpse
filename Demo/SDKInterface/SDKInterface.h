@@ -26,7 +26,7 @@ protected:
 	LRESULT OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled);
 protected:
 	void OnInit(TNotifyUI& msg);
-	void OnNewKey(TNotifyUI& msg, BOOL bNewKey = TRUE);
+	void OnNewKey(TNotifyUI& msg, int nNewKey = 1);
 	void OnReadCard(TNotifyUI& msg);
 	void OnEraseCard(TNotifyUI& msg);
 	void OnChangeUser(TNotifyUI& msg);
