@@ -59,6 +59,7 @@ public:
 	int WriteCardData(int nCardType, int nStart, int nLen, LPCTSTR lpszData);
 protected:
 	~CADELLock();
+	void Clear();
 private:
 	HMODULE			m_hModule;
 	FN_INIT				m_pfnInit;							// ≥ı ºªØ°£

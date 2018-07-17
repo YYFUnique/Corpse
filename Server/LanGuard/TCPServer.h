@@ -4,9 +4,10 @@
 #include <map>
 #include <stdio.h>
 #include <cstdlib>
+#include "ITCPHandler.h"
 
-typedef void (* NewConnect)(size_t ClientId);
-typedef void (* ServerRecvcb)(size_t ClientId,const char* Buf, int nBufSize);
+typedef BOOL (* NewConnect)(size_t ClientId);
+//typedef void (* ServerRecvcb)(size_t ClientId,const char* Buf, int nBufSize);
 
 class ClientData;
 typedef std::map<size_t, ClientData*> ClientConnMap;
@@ -28,7 +29,9 @@ public:
 	/************************************************************************/
 	BOOL StartV6(LPCTSTR lpszListenIP, WORD wPort);
 
+	void Stop();
 	void Close();
+	void CloseServer();
 
 	BOOL SetNoDelay(BOOL bDelay = FALSE);
 	BOOL SetKeepAlive(BOOL bAlive, UINT nDelay);
@@ -36,11 +39,12 @@ public:
 	int Send(size_t ClientId, const char* data, size_t dwLen, BOOL bSend = TRUE);
 
 	void SetConnectExtra(NewConnect cb);
-	void SetRecvCB(size_t ClientId, ServerRecvcb cb);
+	void SetTCPHandlerCB(size_t ClientId, ITCPHandler* pTCPHandler);
 
 protected:
-	BOOL DeleteClient(size_t ClientId);
-
+	size_t GetAvailaClientID() const;				// 获取可用的client id  
+	BOOL DeleteClient(size_t ClientId);	// 删除链表中的客户端  
+	
 	static void AfterClientClose(uv_handle_t* uvhClient);
 	static void AfterServerClose(uv_handle_t* uvhClient);
 	static void AfterSend(uv_write_t* uvWriteReq, int nStatus);
@@ -55,6 +59,7 @@ private:
 	BOOL Listen(int nListen = 1024);
 
 private:
+	BOOL			m_bClose;
 	BOOL			m_bInit;
 	uv_tcp_t		m_uvServer;		//服务器链接
 	uv_loop_t*	m_uvpLoop;	//
@@ -75,6 +80,6 @@ public:
 	uv_buf_t		m_uvReadBuf;		//接收数据的buf
 	uv_buf_t		m_uvWriteBuf;		//写数据的buf
 	CTCPServer* m_pTcpServer;	//服务器句柄
-	ServerRecvcb m_pRecvcb;		//接收数据回调给用户的函数
-
+	//ServerRecvcb m_pRecvcb;		//接收数据回调给用户的函数
+	ITCPHandler*	m_pHandler;
 };

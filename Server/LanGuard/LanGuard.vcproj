@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MemLeakDetect.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -199,6 +203,14 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\TCPClient.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TCPHandler.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\TCPServer.cpp"
@@ -219,6 +231,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ITCPHandler.h"
+				>
+			</File>
+			<File
 				RelativePath=".\LanGuardConfig.h"
 				>
 			</File>
@@ -227,7 +243,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MemLeakDetect.h"
+				>
+			</File>
+			<File
 				RelativePath=".\StdAfx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TCPClient.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TCPHandler.h"
 				>
 			</File>
 			<File

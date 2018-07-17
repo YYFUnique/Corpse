@@ -1,43 +1,48 @@
 #include "StdAfx.h"
 #include "TCPServer.h"
 #include "ADELLock.h"
+#include "TCPHandler.h"
+#include "LanGuardConfig.h"
+#include "DuiLib/UIlib.h"
+
+#include "MemLeakDetect.h"
+using namespace DuiLib;
 
 CTCPServer g_TCPSrv; 
 
-void RecvCB(int client_id, const char* buf, int buf_size) 
-{ 
-	//处理接受消息 
-	char* tmp = new char[buf_size*2]; 
-	memcpy(tmp, buf, buf_size*2); 
-	g_TCPSrv.Send(client_id, (const char*)tmp, buf_size*2); 
+int g_nMax = 1;
 
-	char* tmp2 = new char[buf_size]; 
-	memcpy(tmp2, buf, buf_size); 
-	g_TCPSrv.Send(client_id, (const char*)tmp2, buf_size); 
-	delete[] tmp; 
-	tmp = 0; 
-	delete[] tmp2; 
-	tmp2 = 0; 
-	return; 
-} 
-
-void NewConnectCB(int nClientId)
+BOOL NewConnectCB(int nClientId)
 { 
+	if (nClientId > g_nMax)
+	{
+		g_TCPSrv.CloseServer();
+		return FALSE;
+	}
+
+	CTCPHandler* pTCPHandler = new CTCPHandler;
+	pTCPHandler->Init();
 	//设置新连接接收数据回调函数 
-	g_TCPSrv.SetRecvCB(nClientId, (ServerRecvcb)RecvCB); 
-} 
+	g_TCPSrv.SetTCPHandlerCB(nClientId, pTCPHandler); 
+	return TRUE;
+}
 
 int main() 
 { 
-#if _DEBUG
+#if _DEBUG2
 	CADELLock* pADELLock = new CADELLock();
 	//int n= pADELLock->Init();
 	LONG lCardNo;
 	int n=pADELLock->ReadCardId(&lCardNo);
 	pADELLock->Release();
 #else
+
+	CMemLeakDetect MemLeakDetect;
+	CLanGuardConfig LanGuardConfig;
+	LanGuardConfig.Load(_T("LanGuard.ini"));
+
 	g_TCPSrv.SetConnectExtra((NewConnect)NewConnectCB); 
-	g_TCPSrv.Start(_T("0.0.0.0"), 6111); 
+	g_TCPSrv.Start(_T("0.0.0.0"), LanGuardConfig.GetPort()); 
 #endif
 	return 0; 
 }

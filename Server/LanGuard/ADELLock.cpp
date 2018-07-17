@@ -3,11 +3,8 @@
 #include "ADELErrorInfo.h"
 
 CADELLock::CADELLock()
-	: m_pfnInit(NULL), m_pfnEndSession(NULL), m_pfnChangeUser(NULL)
-	, m_pfnNewKey(NULL), m_pfnDupKey(NULL), m_pfnReadCard(NULL)
-	, m_pfnEraseCard(NULL), m_pfnReadId(NULL), m_pfnReadCardData(NULL)
-	, m_pfnWriteCardData(NULL)
 {
+	Clear();
 	m_hModule = LoadLibrary(_T("MainDll.dll"));
 	if (m_hModule != NULL)
 	{
@@ -27,7 +24,11 @@ CADELLock::CADELLock()
 CADELLock::~CADELLock()
 {
 	if (m_hModule != NULL)
+	{
 		FreeLibrary(m_hModule);
+		m_hModule = NULL;
+	}
+	Clear();
 }
 
 int CADELLock::Init(LPCTSTR lpszSQLAddr, int nPort)
@@ -36,7 +37,6 @@ int CADELLock::Init(LPCTSTR lpszSQLAddr, int nPort)
 		return INVALID_PTR_VALUE;
 
 	CStringA strSQLAddr(lpszSQLAddr);
-	/*char* szSQLAddr = strSQLAddr.();*/
 	char szSQLAddr[MAX_PATH];
 	strcpy_s(szSQLAddr, _countof(szSQLAddr), strSQLAddr);
 	return m_pfnInit(30, szSQLAddr, "Admin", nPort, 0, 5);
@@ -183,4 +183,18 @@ int CADELLock::WriteCardData(int nCardType, int nStart, int nLen, LPCTSTR lpszDa
 void CADELLock::Release()
 {
 	delete this;
+}
+
+void CADELLock::Clear()
+{
+	m_pfnInit						= NULL;
+	m_pfnEndSession		= NULL;
+	m_pfnChangeUser		= NULL;
+	m_pfnNewKey				= NULL;
+	m_pfnDupKey				= NULL;
+	m_pfnReadCard			= NULL;
+	m_pfnEraseCard			= NULL;
+	m_pfnReadId				= NULL;
+	m_pfnReadCardData	= NULL;
+	m_pfnWriteCardData	= NULL;
 }
