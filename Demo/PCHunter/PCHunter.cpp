@@ -101,11 +101,6 @@ LPCTSTR CPCHunter::GetWindowClassName() const
 	return _T("PCHunter");
 }
 
-LPCTSTR CPCHunter::GetResourceID() const
-{
-	return _T("");
-}
-
 CDuiString CPCHunter::GetZIPFileName() const
 {
 	return _T("PCHunter.zip");
@@ -118,12 +113,20 @@ CDuiString CPCHunter::GetSkinFile()
 
 CDuiString CPCHunter::GetSkinFolder()
 {
+#ifdef _DEBUG
 	return _T("PCHunter");
+#else
+	return _T("");
+#endif
 }
 
 UILIB_RESOURCETYPE CPCHunter::GetResourceType() const
 {
+#ifdef _DEBUG
 	return UILIB_FILE;
+#else
+	return UILIB_ZIP;
+#endif
 }
 
 void CPCHunter::InitWindow()

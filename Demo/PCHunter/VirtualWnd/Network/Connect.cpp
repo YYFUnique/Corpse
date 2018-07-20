@@ -94,6 +94,7 @@ void CConnect::OnLoadItem(TNotifyUI& msg)
 		pList->Add(pConnectListInfo);
 		pConnectListInfo->SetFixedHeight(27);
 		
+		// 显示协议图标
 		CPictureUI* pProtoType = (CPictureUI*)pConnectListInfo->FindSubControl(_T("ProtoType"));
 		if (pProtoType != NULL)
 		{
@@ -105,6 +106,7 @@ void CConnect::OnLoadItem(TNotifyUI& msg)
 			pProtoType->SetForeImage(strForeImage);
 		}
 
+		// 显示协议类型
 		CLabelUI* pType = (CLabelUI*)pConnectListInfo->FindSubControl(_T("Type"));
 		pType->SetText(ConnectionInfo.dwProtoclType != IPPROTO_TCP ? _T("UDP") : _T("TCP"));
 		pType->SetFont(pListInfo->nFont);
@@ -115,6 +117,7 @@ void CConnect::OnLoadItem(TNotifyUI& msg)
 		pLocalAddr->SetFont(pListInfo->nFont);
 		pLocalAddr->SetForeColor(pListInfo->dwTextColor);
 	
+		// 根据协议类型，显示不同数据类型
 		if (ConnectionInfo.dwProtoclType == IPPROTO_TCP)
 		{
 			CLabelUI* pRemoteAddr = (CLabelUI*)pConnectListInfo->FindSubControl(_T("RemoteAddr"));
@@ -138,12 +141,14 @@ void CConnect::OnLoadItem(TNotifyUI& msg)
 			pTime->SetForeColor(pListInfo->dwTextColor);
 		}
 
+		// 显示进程ID
 		strTipInfo.Format(_T("%d"),ConnectionInfo.nPID);
 		CLabelUI* pPID = (CLabelUI*)pConnectListInfo->FindSubControl(_T("PID"));
 		pPID->SetText(strTipInfo);
 		pPID->SetFont(pListInfo->nFont);
 		pPID->SetForeColor(pListInfo->dwTextColor);		
 
+		// 设置进程或服务名称，并显示文件图标
 		BOOL bFindIcon = FALSE;
 		CPictureUI* pPicIcon = (CPictureUI*)pConnectListInfo->FindSubControl(_T("PicICON"));
 		if (ConnectionInfo.strProcessPath.IsEmpty() == FALSE)
@@ -170,37 +175,11 @@ void CConnect::OnLoadItem(TNotifyUI& msg)
 		pSrvName->SetFont(pListInfo->nFont);
 		pSrvName->SetForeColor(pListInfo->dwTextColor);
 		
+		// 显示文件路径
 		CLabelUI* pSrvPath = (CLabelUI*)pConnectListInfo->FindSubControl(_T("Path"));
 		pSrvPath->SetText(ConnectionInfo.strProcessPath);
 		pSrvPath->SetFont(pListInfo->nFont);
 		pSrvPath->SetForeColor(pListInfo->dwTextColor);
-
-		/*int m=0;
-		pTextElement->SetText(m++,ConnectionInfo.dwProtoclType != IPPROTO_TCP ? _T("UDP") : _T("TCP"));
-		pTextElement->SetText(m++,GetFormatIPAndPort(ConnectionInfo.dwLocalIp,ntohs((WORD)ConnectionInfo.dwLocalPort)));
-		if (ConnectionInfo.dwProtoclType == IPPROTO_TCP)
-		{
-			pTextElement->SetText(m++,GetFormatIPAndPort(ConnectionInfo.dwRemoteIp,ntohs((WORD)ConnectionInfo.dwRemotePort)));
-			pTextElement->SetText(m++,GetConnectionState(ConnectionInfo.dwConnectionState));
-		}
-		else
-		{
-			pTextElement->SetText(m++,_T(""));
-			pTextElement->SetText(m++,_T(""));
-		}
-
-		if (ConnectionInfo.dwProtoclType != IPPROTO_TCP)
-		{
-			CTime tm(ConnectionInfo.nCreateTime/10000000);
-			strTipInfo.Format(_T("%02d:%02d:%02d"),tm.GetHour(),tm.GetMinute(),tm.GetSecond());
-			pTextElement->SetText(m++,strTipInfo);
-		}
-		else
-			pTextElement->SetText(m++,_T(""));
-		strTipInfo.Format(_T("%d"),ConnectionInfo.nPID);
-		pTextElement->SetText(m++,strTipInfo);
-		pTextElement->SetText(m++,ConnectionInfo.strProcessName);
-		pTextElement->SetText(m++,_T(""));*/
 	}
 }
 

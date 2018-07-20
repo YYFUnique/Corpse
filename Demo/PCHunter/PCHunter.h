@@ -11,7 +11,6 @@ public:
 	void OnFinalMessage( HWND hWnd );
 	virtual LPCTSTR    GetWindowClassName() const;
 	virtual UILIB_RESOURCETYPE GetResourceType() const;
-	virtual LPCTSTR GetResourceID() const;
 	virtual CDuiString GetZIPFileName() const;
 	virtual CDuiString GetSkinFile();
 	virtual CDuiString GetSkinFolder();
