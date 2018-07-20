@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+	<FileListItem>
+		<HorizontalLayout>
+			<Picture name="ProtoType" width="16" height="16" padding="3,5,0,0"/>
+			<Label name="Type" text="" textpadding="3,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="LocalAddr" text="" textpadding="5,0,0,0" endellipsis="true"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="RemoteAddr" text="" textpadding="5,0,0,0" endellipsis="true"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="State" text="" textpadding="5,0,0,0" endellipsis="true"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="Time" text="" textpadding="5,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="PID" text="" textpadding="0,0,5,0" align="right"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Picture name="PicICON" width="16" height="16" padding="3,6,0,0" />
+			<Label name="SrvName" text="" textpadding="5,0,0,0" endellipsis="true"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="Path" text="" textpadding="5,0,0,0" endellipsis="true"/>
+		</HorizontalLayout>
+	</FileListItem>
+</Window>

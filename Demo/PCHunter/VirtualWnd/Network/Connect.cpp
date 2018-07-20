@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "Connect.h"
 #include "Utils/TextTools.h"
+#include "DllCore/Authority/Process.h"
 
 #define TABLE_SIZE	2048
 
@@ -22,6 +23,46 @@ DUI_END_MESSAGE_MAP()
 void CConnect::SetPaintManager(CPaintManagerUI *pPaintMgr)
 {
 	m_pPaintManager = pPaintMgr;
+}
+
+void SaveIcon(HICON hIconToSave, LPCTSTR sIconFileName)
+{
+	if(hIconToSave==NULL || sIconFileName==NULL)
+		return;
+	//warning: this code snippet is not bullet proof.
+	//do error check by yourself [masterz]
+	PICTDESC picdesc;
+	picdesc.cbSizeofstruct = sizeof(PICTDESC);
+	picdesc.picType = PICTYPE_ICON ;            
+	picdesc.icon.hicon = hIconToSave;
+	IPicture* pPicture=NULL;
+	OleCreatePictureIndirect(&picdesc, IID_IPicture, TRUE,(VOID**)&pPicture);
+	LPSTREAM pStream;
+	CreateStreamOnHGlobal(NULL,TRUE,&pStream);
+	LONG size;
+	HRESULT hr=pPicture->SaveAsFile(pStream,TRUE,&size);
+
+	TCHAR szPath[MAX_PATH];
+	_tcscpy_s(szPath,sIconFileName);
+// 	CFile iconfile;
+// 	iconfile.Open(szPath, CFile::modeCreate|CFile::modeWrite);
+	HANDLE hFile = CreateFile(szPath, GENERIC_ALL, FILE_SHARE_WRITE|FILE_SHARE_READ, NULL, OPEN_ALWAYS,0,NULL);
+	LARGE_INTEGER li;
+	li.HighPart =0;
+	li.LowPart =0;
+	ULARGE_INTEGER ulnewpos;
+	pStream->Seek( li,STREAM_SEEK_SET,&ulnewpos);
+	ULONG uReadCount = 1;
+	DWORD dwWrite = 0;
+	while(uReadCount>0)
+	{
+		BYTE bData[MAX_PATH];
+		pStream->Read(bData,sizeof(bData),&uReadCount);
+		if(uReadCount>0)
+			WriteFile(hFile,bData,uReadCount,&dwWrite,NULL);
+	}
+	pStream->Release();
+	CloseHandle(hFile);
 }
 
 void CConnect::OnLoadItem(TNotifyUI& msg)
@@ -53,24 +94,35 @@ void CConnect::OnLoadItem(TNotifyUI& msg)
 		pList->Add(pConnectListInfo);
 		pConnectListInfo->SetFixedHeight(27);
 		
-		CLabelUI* pType = (CLabelUI*)m_pPaintManager->FindControl(_T("Type"));
+		CPictureUI* pProtoType = (CPictureUI*)pConnectListInfo->FindSubControl(_T("ProtoType"));
+		if (pProtoType != NULL)
+		{
+			CDuiString strForeImage;
+			if (ConnectionInfo.dwProtoclType == IPPROTO_TCP)
+				strForeImage.Format(_T("file='icon.png' source='16,0,32,16'"));
+			else
+				strForeImage.Format(_T("file='icon.png' source='32,0,48,16'"));
+			pProtoType->SetForeImage(strForeImage);
+		}
+
+		CLabelUI* pType = (CLabelUI*)pConnectListInfo->FindSubControl(_T("Type"));
 		pType->SetText(ConnectionInfo.dwProtoclType != IPPROTO_TCP ? _T("UDP") : _T("TCP"));
 		pType->SetFont(pListInfo->nFont);
 		pType->SetForeColor(pListInfo->dwTextColor);
 
-		CLabelUI* pLocalAddr = (CLabelUI*)m_pPaintManager->FindControl(_T("LocalAddr"));
+		CLabelUI* pLocalAddr = (CLabelUI*)pConnectListInfo->FindSubControl(_T("LocalAddr"));
 		pLocalAddr->SetText(GetFormatIPAndPort(ConnectionInfo.dwLocalIp, ntohs((WORD)ConnectionInfo.dwLocalPort)));
 		pLocalAddr->SetFont(pListInfo->nFont);
 		pLocalAddr->SetForeColor(pListInfo->dwTextColor);
 	
 		if (ConnectionInfo.dwProtoclType == IPPROTO_TCP)
 		{
-			CLabelUI* pRemoteAddr = (CLabelUI*)m_pPaintManager->FindControl(_T("RemoteAddr"));
+			CLabelUI* pRemoteAddr = (CLabelUI*)pConnectListInfo->FindSubControl(_T("RemoteAddr"));
 			pRemoteAddr->SetText(GetFormatIPAndPort(ConnectionInfo.dwRemoteIp,ntohs((WORD)ConnectionInfo.dwRemotePort)));
 			pRemoteAddr->SetFont(pListInfo->nFont);
 			pRemoteAddr->SetForeColor(pListInfo->dwTextColor);
 
-			CLabelUI* pState = (CLabelUI*)m_pPaintManager->FindControl(_T("State"));
+			CLabelUI* pState = (CLabelUI*)pConnectListInfo->FindSubControl(_T("State"));
 			pState->SetText(GetConnectionState(ConnectionInfo.dwConnectionState));
 			pState->SetFont(pListInfo->nFont);
 			pState->SetForeColor(pListInfo->dwTextColor);
@@ -80,23 +132,49 @@ void CConnect::OnLoadItem(TNotifyUI& msg)
 			CTime tm(ConnectionInfo.nCreateTime/10000000);
 			strTipInfo.Format(_T("%02d:%02d:%02d"),tm.GetHour(),tm.GetMinute(),tm.GetSecond());
 
-			CLabelUI* pTime = (CLabelUI*)m_pPaintManager->FindControl(_T("Time"));
+			CLabelUI* pTime = (CLabelUI*)pConnectListInfo->FindSubControl(_T("Time"));
 			pTime->SetText(strTipInfo);
 			pTime->SetFont(pListInfo->nFont);
 			pTime->SetForeColor(pListInfo->dwTextColor);
 		}
 
 		strTipInfo.Format(_T("%d"),ConnectionInfo.nPID);
-		CLabelUI* pPID = (CLabelUI*)m_pPaintManager->FindControl(_T("PID"));
+		CLabelUI* pPID = (CLabelUI*)pConnectListInfo->FindSubControl(_T("PID"));
 		pPID->SetText(strTipInfo);
 		pPID->SetFont(pListInfo->nFont);
-		pPID->SetForeColor(pListInfo->dwTextColor);
+		pPID->SetForeColor(pListInfo->dwTextColor);		
 
-		CLabelUI* pSrvName = (CLabelUI*)m_pPaintManager->FindControl(_T("SrvName"));
+		BOOL bFindIcon = FALSE;
+		CPictureUI* pPicIcon = (CPictureUI*)pConnectListInfo->FindSubControl(_T("PicICON"));
+		if (ConnectionInfo.strProcessPath.IsEmpty() == FALSE)
+		{
+			SHFILEINFO SHFileInfo = {0};
+			SHGetFileInfo(ConnectionInfo.strProcessPath, 0, &SHFileInfo, sizeof(SHFileInfo), SHGFI_ICON|SHGFI_SMALLICON);
+			if (SHFileInfo.hIcon != NULL)
+			{
+				bFindIcon = TRUE;
+				pPicIcon->SetIcon(SHFileInfo.hIcon);
+				DestroyIcon(SHFileInfo.hIcon);
+			}
+		}
+
+		if (bFindIcon == FALSE)
+		{
+			CDuiString strForeImage;
+			strForeImage.Format(_T("file='icon.png' source='176,0,192,16'"));
+			pPicIcon->SetForeImage(strForeImage);
+		}
+
+		CLabelUI* pSrvName = (CLabelUI*)pConnectListInfo->FindSubControl(_T("SrvName"));
 		pSrvName->SetText(ConnectionInfo.strProcessName);
 		pSrvName->SetFont(pListInfo->nFont);
 		pSrvName->SetForeColor(pListInfo->dwTextColor);
 		
+		CLabelUI* pSrvPath = (CLabelUI*)pConnectListInfo->FindSubControl(_T("Path"));
+		pSrvPath->SetText(ConnectionInfo.strProcessPath);
+		pSrvPath->SetFont(pListInfo->nFont);
+		pSrvPath->SetForeColor(pListInfo->dwTextColor);
+
 		/*int m=0;
 		pTextElement->SetText(m++,ConnectionInfo.dwProtoclType != IPPROTO_TCP ? _T("UDP") : _T("TCP"));
 		pTextElement->SetText(m++,GetFormatIPAndPort(ConnectionInfo.dwLocalIp,ntohs((WORD)ConnectionInfo.dwLocalPort)));
@@ -141,14 +219,14 @@ void CConnect::GetTcpConnectionTable(CConnectList& TcpListInfo)
 	}
 	if (dwRet == NO_ERROR)
 	{
-		CDuiString strProcessName,strLocalProcessPath;
+		CString strProcessName, strLocalProcessPath;
 		for (DWORD dwIndex = 0 ; dwIndex < pTcpTable->dwNumEntries ; dwIndex++)
 		{
-			strProcessName = _T("");
 			DWORD dwConnectionState = pTcpTable->table[dwIndex].dwState;
 			DWORD PID = pTcpTable->table[dwIndex].dwOwningPid;
 			//获取模块路径
-			//GetProcessNameAndPathByPID(PID, strProcessName, strLocalProcessPath);
+			GetProcessFullPath(PID, strLocalProcessPath);
+			
 			BYTE pData[TABLE_SIZE];
 			TCPIP_OWNER_MODULE_BASIC_INFO* TcpInfo = (PTCPIP_OWNER_MODULE_BASIC_INFO)pData;
 			DWORD dwSize = sizeof(TCPIP_OWNER_MODULE_BASIC_INFO);
@@ -164,7 +242,8 @@ void CConnect::GetTcpConnectionTable(CConnectList& TcpListInfo)
 
 			if (dwRet == NO_ERROR)
 				strProcessName = TcpInfo->pModuleName;		//进程或服务名
-			//GetProcessName(strLocalProcessPath,strProcessName);
+			
+			//GetProcessName(strLocalProcessPath, strProcessName);
 			if (TcpInfo && bReset)
 			{
 				delete[] TcpInfo;
@@ -190,6 +269,7 @@ void CConnect::GetTcpConnectionTable(CConnectList& TcpListInfo)
 			ConnectInfo.nCreateTime = TcpOwnerModule.liCreateTimestamp.QuadPart;
 			ConnectInfo.nPID = TcpOwnerModule.dwOwningPid;
 			ConnectInfo.strProcessName = strProcessName;
+			ConnectInfo.strProcessPath = strLocalProcessPath;
 
 			TcpListInfo.AddTail(ConnectInfo);
 		}
@@ -215,13 +295,13 @@ void CConnect::GetUdpConnectionTable(CConnectList& UdpListInfo)
 	}
 	if (dwRet == NO_ERROR)
 	{
-		CDuiString strProcessName,strLocalProcessPath;
+		CString strProcessName,strLocalProcessPath;
 		for (DWORD dwIndex = 0 ; dwIndex < pTcpTable->dwNumEntries ; dwIndex++)
 		{
-			strProcessName = _T("");
 			DWORD PID = pTcpTable->table[dwIndex].dwOwningPid;
 			//获取模块路径
 			//GetProcessNameAndPathByPID(PID, strProcessName, strLocalProcessPath);
+			GetProcessFullPath(PID, strLocalProcessPath);
 			BYTE pData[TABLE_SIZE];
 			TCPIP_OWNER_MODULE_BASIC_INFO* TcpInfo = (PTCPIP_OWNER_MODULE_BASIC_INFO)pData;
 			DWORD dwSize = sizeof(TCPIP_OWNER_MODULE_BASIC_INFO);
@@ -256,6 +336,7 @@ void CConnect::GetUdpConnectionTable(CConnectList& UdpListInfo)
 			ConnectInfo.nCreateTime = TcpOwnerModule.liCreateTimestamp.QuadPart;
 			ConnectInfo.nPID = TcpOwnerModule.dwOwningPid;
 			ConnectInfo.strProcessName = strProcessName;
+			ConnectInfo.strProcessPath = strLocalProcessPath;
 
 			UdpListInfo.AddTail(ConnectInfo);
 		}

@@ -216,6 +216,10 @@
 				RelativePath=".\TCPServer.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TerminalData.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -260,6 +264,10 @@
 			</File>
 			<File
 				RelativePath=".\TCPServer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TerminalData.h"
 				>
 			</File>
 		</Filter>

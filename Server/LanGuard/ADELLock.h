@@ -2,6 +2,21 @@
 
 #include "libMain.h"
 
+typedef enum tagADEL_LOCK_CMD
+{
+	ADEL_LOCK_CMD_DEFAULT			=	101,						
+	ADEL_LOCK_CMD_INIT					=	101,
+	ADEL_LOCK_CMD_END					=	102,
+	ADEL_LOCK_CMD_CHANGE			=	103,
+	ADEL_LOCK_CMD_NEW					=	104,
+	ADEL_LOCK_CMD_DUP					=	105,
+	ADEL_LOCK_CMD_READCARD		=	106,
+	ADEL_LOCK_CMD_ERASE				=	107,
+	ADEL_LOCK_CMD_READDATA		=	108,
+	ADEL_LOCK_CMD_WRITEDATA		=	109,
+	ADEL_LOCK_CMD_READID				=	110,
+}ADEL_LOCK_CMD;
+
 typedef enum tagCARD_STATE
 {
 	CARD_STATE_NORMAL		= 1,	// 正常使用
@@ -41,7 +56,7 @@ public:
 	CADELLock();
 	void Release();
 public:
-	int Init(LPCTSTR lpszSQLAddr, LPCTSTR lpszAdmin, int nPort);
+	int Init(int nSoftware, LPCTSTR lpszSQLAddr, LPCTSTR lpszAdmin, int nPort, int nEncoder = 0, int nTMEncoder = 5);
 	int EndSession();
 	int ChangeUser(LPCTSTR lpszAdmin);
 	int NewKey(LPCTSTR lpszRoomNum, LPCTSTR lpszGate, LPCTSTR lpszValidTime, LPCTSTR lpszGuestName,

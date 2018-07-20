@@ -18,6 +18,7 @@
 #include "VirtualWnd/Task/CoreDriver.h"
 #include "VirtualWnd/Task/ViewCert.h"
 
+#include "VirtualWnd/Network/Adapter.h"
 #include "VirtualWnd/Network/Route.h"
 #include "VirtualWnd/Network/HostScan.h"
 #include "VirtualWnd/Network/Snmp.h"

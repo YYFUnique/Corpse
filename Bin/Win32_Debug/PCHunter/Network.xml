@@ -23,10 +23,10 @@
 				</TreeView>
 			</VerticalLayout>
 			<VerticalLayout virtualwnd="connect" name="VLayoutConnect" >
-				<List name="Connect" menu="true" itemfont="0" >
+				<List name="Connect" menu="true" itemfont="0" hscrollbar="false">
 					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
-						<ListHeaderItem text="协议" width="30" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="本地地址" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="协议" width="50" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="本地地址" width="130" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 						<ListHeaderItem text="外部地址" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 						<ListHeaderItem text="状态" width="80" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 						<ListHeaderItem text="创建时间" width="60" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>

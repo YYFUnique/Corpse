@@ -119,7 +119,7 @@ void CSDKInterface::OnInit(TNotifyUI& msg)
 	if (pComType != NULL)
 		nPort = pComType->GetCurSel();
 
-	int nRet = m_pADELLock->Init(strSQLAddr, _T("test"), nPort);
+	int nRet = m_pADELLock->Init(30, strSQLAddr, _T("test"), nPort, 0, 5);
 	if (nRet != 0)
 	{
 		CDuiString strTipInfo;
@@ -436,7 +436,7 @@ void CSDKInterface::OnWriteData(TNotifyUI& msg)
 		strWriteData = pWriteData->GetText();
 
 	CDuiString strWriteCardData;
-	strWriteCardData.Format(_T("%d%s%s"), nAuth, (LPCTSTR)strPassword.Left(7), (LPCTSTR)strWriteData);
+	strWriteCardData.Format(_T("%d%s%s"), nAuth, (LPCTSTR)strPassword.Left(7), (LPCTSTR)strWriteData.Left(nLen));
 
 	int nRet = m_pADELLock->WriteCardData(18, nStart, nLen, strWriteCardData);
 	if (nRet != 0)
@@ -450,6 +450,8 @@ void CSDKInterface::OnWriteData(TNotifyUI& msg)
 
 LRESULT CSDKInterface::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
+	if (m_pADELLock != NULL)
+		m_pADELLock->EndSession();
 	PostQuitMessage(0);
 	// 需要返回bHandle = FALSE , 操作系统才能给窗口发送WM_NCDESTROY消息，从而完全退出软件
 	bHandled = FALSE;

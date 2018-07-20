@@ -327,6 +327,10 @@
 					Name="Network"
 					>
 					<File
+						RelativePath=".\VirtualWnd\Network\Adapter.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\VirtualWnd\Network\Connect.cpp"
 						>
 					</File>
@@ -536,6 +540,10 @@
 				<Filter
 					Name="Network"
 					>
+					<File
+						RelativePath=".\VirtualWnd\Network\Adapter.h"
+						>
+					</File>
 					<File
 						RelativePath=".\VirtualWnd\Network\Connect.h"
 						>

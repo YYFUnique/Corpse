@@ -60,3 +60,7 @@ DLL_API BOOL IsRunAsSystem();
 DLL_API BOOL ModifyObjectSecurityToAccessAll(HANDLE hObject);
 
 DLL_API BOOL GetProcessHandle(DWORD dwPID, HANDLE& hProcess);
+
+DLL_API BOOL GetProcessFullPath(DWORD dwPID, CString& strFullPath);
+
+DLL_API BOOL DosPathToNtPath(LPCTSTR lpszDosPath, CString& strNtPath);

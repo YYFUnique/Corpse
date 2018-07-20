@@ -31,7 +31,7 @@ CADELLock::~CADELLock()
 		FreeLibrary(m_hModule);
 }
 
-int CADELLock::Init(LPCTSTR lpszSQLAddr, LPCTSTR lpszAdmin, int nPort)
+int CADELLock::Init(int nSoftware, LPCTSTR lpszSQLAddr, LPCTSTR lpszAdmin, int nPort, int nEncoder /*= 0*/, int nTMEncoder /*= 5*/)
 {
 	if (m_pfnInit == NULL)
 		return INVALID_PTR_VALUE;
@@ -42,7 +42,7 @@ int CADELLock::Init(LPCTSTR lpszSQLAddr, LPCTSTR lpszAdmin, int nPort)
 	char szSQLAddr[MAX_PATH], szUserName[MAX_PATH];
 	strcpy_s(szSQLAddr, _countof(szSQLAddr), strSQLAddr);
 	strcpy_s(szUserName, _countof(szUserName), strUserName);
-	return m_pfnInit(30, szSQLAddr, szUserName, nPort, 0, 5);
+	return m_pfnInit(nSoftware, szSQLAddr, szUserName, nPort, nEncoder, nTMEncoder);
 }
 
 int CADELLock::EndSession()

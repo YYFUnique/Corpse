@@ -17,6 +17,7 @@ DUI_END_MESSAGE_MAP()
 
 void CNetworkMgr::ClearVirtualWnd(CNotifyPump* pNotifyPump)
 {
+	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_ADAPTER);
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_ROUTE);
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_HOSTSCAN);
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_SNMP);
@@ -27,6 +28,9 @@ void CNetworkMgr::ClearVirtualWnd(CNotifyPump* pNotifyPump)
 void CNetworkMgr::SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPaintManager)
 {
 	m_pPaintManager = pPaintManager;
+
+	m_Adapter.SetPaintManager(pPaintManager);
+	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_ADAPTER, &m_Adapter);
 
 	m_Route.SetPaintMagager(pPaintManager);
 	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_ROUTE, &m_Route);

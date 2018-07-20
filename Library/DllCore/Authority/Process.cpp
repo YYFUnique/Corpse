@@ -2,10 +2,12 @@
 #include "Process.h"
 #include "ProcessInfo.h"
 #include "NtDll.h"
+#include <Psapi.h>
 #include "../Utils/ErrorInfo.h"
 
 #include <Aclapi.h>
 #pragma comment(lib,"Advapi32.lib")
+#pragma comment(lib,"Psapi.lib")
 
 typedef LONG (WINAPI *PROCNTQSIP)(HANDLE,UINT,PVOID,ULONG,PULONG);
 
@@ -252,4 +254,66 @@ BOOL GetProcessHandle(DWORD dwPID, HANDLE& hProcess)
 		return FALSE;
 
 	return TRUE;
+}
+
+BOOL GetProcessFullPath(DWORD dwPID, CString& strFullPath)
+{
+	TCHAR		szImagePath[MAX_PATH];
+	HANDLE	hProcess = NULL;
+
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		strFullPath.Empty();
+		if (GetProcessHandle(dwPID,hProcess) == FALSE)
+			break;
+
+		if (GetProcessImageFileName(hProcess, szImagePath, MAX_PATH) == FALSE)
+			break;
+
+		if (DosPathToNtPath(szImagePath, strFullPath) == FALSE)
+			break;
+
+		bSuccess = TRUE;
+
+	} while (FALSE);
+
+	if (hProcess != NULL)
+		CloseHandle(hProcess);
+
+	return TRUE;
+}
+
+BOOL DosPathToNtPath(LPCTSTR lpszDosPath, CString& strNtPath)
+{
+	TCHAR			szDriveStr[500];
+	TCHAR			szDrive[3];
+	TCHAR			szDevName[100];
+	INT				cchDevName;
+
+	//ASSERT_STR_NOT_NULL(lpszDosPath);
+	//获取本地磁盘字符串
+	if (GetLogicalDriveStrings(sizeof(szDriveStr), szDriveStr))
+	{
+		for (int i = 0; szDriveStr[i]; i += 4)
+		{
+			if (!lstrcmpi(&(szDriveStr[i]), _T("A:\\")) || !lstrcmpi(&(szDriveStr[i]), _T("B:\\")))
+				continue;
+
+			szDrive[0] = szDriveStr[i];
+			szDrive[1] = szDriveStr[i + 1];
+			szDrive[2] = _T('\0');
+			if (!QueryDosDevice(szDrive, szDevName, 100))//查询 Dos 设备名
+				return FALSE;
+
+			cchDevName = lstrlen(szDevName);
+			if (_tcsnicmp(lpszDosPath, szDevName, cchDevName) == 0)//命中
+			{
+				strNtPath.Format(_T("%s%s"),szDrive,lpszDosPath+cchDevName);
+				return TRUE;
+			}
+		}
+	}
+	strNtPath = lpszDosPath;
+	return FALSE;
 }

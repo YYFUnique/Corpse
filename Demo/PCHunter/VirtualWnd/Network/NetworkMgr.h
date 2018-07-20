@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Route.h"
-
 class CNetworkMgr : public CNotifyPump,public IVirtualWndMgr
 {
 public:
@@ -19,6 +17,7 @@ protected:
 	DUI_DECLARE_MESSAGE_MAP()
 	void OnSelectChanged( TNotifyUI &msg );
 private:
+	CAdapter			m_Adapter;
 	CRoute				m_Route;
 	CSnmp				m_Snmp;
 	CWlan				m_Wlan;

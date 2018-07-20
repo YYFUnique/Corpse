@@ -89,22 +89,11 @@ namespace DuiLib
 
 	void CPictureUI::PaintStatusImage(HDC hDC)
 	{
+		if (m_hIcon != NULL) {
+			DrawIconEx(hDC, m_rcItem.left, m_rcItem.top, m_hIcon, GetWidth(), GetHeight(), 0, NULL, DI_NORMAL | DI_COMPAT);
+		}
 		if (!m_sForeImage.IsEmpty()) {
 			if (!DrawImage(hDC, (LPCTSTR)m_sForeImage) ) m_sForeImage.Empty();
 		}
-		if (m_hIcon != NULL)
-		{
-			DrawIconEx(hDC, m_rcItem.left, m_rcItem.top, m_hIcon, GetWidth(), GetHeight(), 0, NULL, DI_NORMAL | DI_COMPAT);
-			/*ICONINFO IconInfo;
-			GetIconInfo(m_hIcon, &IconInfo);
-			CDuiString strTipInfo;
-			strTipInfo.Format(_T("C:\\test\\%d.bmp"),IconInfo.hbmMask);
-			CRenderEngine::SaveBitmapFile(IconInfo.hbmColor,strTipInfo);*/
-			//ICONINFO IconInfo;
-			//GetIconInfo(m_hIcon, &IconInfo);
-			//CRenderEngine::SaveBitmapFile(IconInfo.hbmColor,_T("C:\\test.bmp"));
-			//DrawIconEx(hDC, 0, 0, m_hIcon, 16, 16, 0, NULL, DI_NORMAL | DI_COMPAT);
-		}
-		//DrawImage(hDC,_T("asdf.bmp"));
 	}
 }

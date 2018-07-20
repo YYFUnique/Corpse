@@ -11,6 +11,7 @@
 #define	VIRTUAL_WND_CERT				_T("cert")
 
 #define	VIRTUAL_WND_NETWORK		_T("network")
+#define	VIRTUAL_WND_ADAPTER		_T("adapter")
 #define	VIRTUAL_WND_ROUTE			_T("route")
 #define	VIRTUAL_WND_HOSTSCAN	_T("scan")
 #define	VIRTUAL_WND_SNMP			_T("snmp")
