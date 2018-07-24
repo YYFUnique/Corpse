@@ -98,6 +98,8 @@ void CTCPHandler::RecvRoute(int nClientId, LPCSTR lpszData, int nLen)
 
 	CJsonObject JsonServerData;
 	OnRecvData(TerminalData, JsonServerData);
+	CStringA strTipInfo(JsonServerData.ToString());
+	g_TCPSrv.Send(nClientId, strTipInfo, strTipInfo.GetLength());
 }
 
 void CTCPHandler::OnRecvData(const CTerminalData& TerminalData, CJsonObject& JsonData)
@@ -227,7 +229,7 @@ int CTCPHandler::OnADELLockEraseCard(LPCTSTR lpszEraseData, CJsonObject& JsonDat
 	CJsonObject JsonErase;
 	JsonErase.FromString(lpszEraseData);
 	CString strTrack1, strTrack2;
-	int nCardNo, nfpIndex = 0;
+	int nCardNo = 0, nfpIndex = 0;
 
 	if (JsonErase.IsMember(ADEL_ERASE_CARDNO) != FALSE)
 		JsonErase.GetValue(ADEL_ERASE_CARDNO, &nCardNo);

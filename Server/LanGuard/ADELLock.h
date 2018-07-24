@@ -4,7 +4,7 @@
 
 typedef enum tagADEL_LOCK_CMD
 {
-	ADEL_LOCK_CMD_DEFAULT			=	101,						
+	ADEL_LOCK_CMD_DEFAULT			=	100,						
 	ADEL_LOCK_CMD_INIT					=	101,
 	ADEL_LOCK_CMD_END					=	102,
 	ADEL_LOCK_CMD_CHANGE			=	103,
