@@ -53,6 +53,7 @@ BOOL CWeatherHelper::GetCityWeather(LPCTSTR lpszCityInfo)
 	LPCTSTR lpszSign = _T("94eaf1a9e74eddd9357947078458fa11");
 	CString strCityTemperature;
 	//http://api.k780.com/?app=weather.today&weaid=1&appkey=25122&sign=94eaf1a9e74eddd9357947078458fa11&format=json
+	// 接口更新地址： https://www.nowapi.com/
 	strCityTemperature.Format(_T("http://api.k780.com/?app=weather.today&weaid=%s&appkey=%s&sign=%s&format=json"),
 		lpszCityInfo, lpszAppKey, lpszSign);
 

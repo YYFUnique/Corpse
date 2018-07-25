@@ -26,6 +26,7 @@ public:
 	void SetPaintManager(CPaintManagerUI* pPaintMgr);
 protected:
 	DUI_DECLARE_MESSAGE_MAP()
+	void OnRefresh(TNotifyUI& msg);
 	void OnLoadItem(TNotifyUI& msg);
 protected:
 	void GetTcpConnectionTable(CConnectList& TcpListInfo);

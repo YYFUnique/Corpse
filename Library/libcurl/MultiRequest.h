@@ -31,13 +31,14 @@ public:
 	
 	void Stop();
 	void SetCallback(ILibcurlCallback* pCallback);
-	CurlContext* CrateCurlContext(curl_socket_t CurlSockFd);
+	CurlContext* CreateCurlContext(curl_socket_t CurlSockFd);
 	BOOL doHttpGet(DWORD dwEvent, LPCTSTR lpszURL);
 protected:
+	static void CloseLoop(uv_async_t* handle, int status);
+	static void OnClose(uv_handle_t* handle);
 	static size_t ProcessFunc(LPVOID lpData, size_t size, size_t nm, LPVOID lParam);
 protected:
 	//check_multi_info
-	
 	static void _uvClose(uv_handle_t* handle);
 	static void CheckMultiInfo(CURLM* pCURLM);
 	static void doSocketAction(uv_poll_t* uvPollData, int status, int nEvents);
@@ -55,7 +56,7 @@ private:
 	
 	HANDLE				m_hEvent;			// 互斥事件，调用httpGet后该信号将处于激活状态
 	//信号量
-	HANDLE				m_hSema;			// 信号量变量，用户边界资源接入控制
+	//HANDLE				m_hSema;			// 信号量变量，用户边界资源接入控制
 	
 	BOOL					m_bExist;
 	DWORD				m_dwTimeout;

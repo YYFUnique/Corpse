@@ -10,7 +10,7 @@
 #include "DllCore/Json/JsonObject.h"
 #include "DllCore/Encrypt/Base64.h"
 #include "DllCore/Utils/TextTools.h"
-#include "DllCore/Thread/LsThreadMgr.h"
+/*#include "DllCore/Thread/LsThreadMgr.h"*/
 
 #include <dwmapi.h>
 #include <atltime.h>
@@ -46,8 +46,8 @@ CTTimeHelper::CTTimeHelper()
 	m_pWeatherInfo = NULL;
 	m_pCityInfo = NULL;
 
-	m_pMailHelper = NULL;
-	m_pSendMailThread = NULL;
+	//m_pMailHelper = NULL;
+	//m_pSendMailThread = NULL;
 }
 
 CTTimeHelper::~CTTimeHelper()
@@ -71,16 +71,16 @@ CTTimeHelper::~CTTimeHelper()
 		m_pWeatherInfo = NULL;
 	}
 
-	if (m_pMailHelper != NULL)
+	/*if (m_pMailHelper != NULL)
 	{
 		delete m_pMailHelper;
 		m_pMailHelper = NULL;
-	}
+	}*/
 
 	//	无需单独释放线程对象，由框架自动释放
 	// m_pSendMailThread;
-	CLsThreadMgr& LsThreadMgr = GetLsThreadMgr();
-	LsThreadMgr.DeleteAllThread();
+	//CLsThreadMgr& LsThreadMgr = GetLsThreadMgr();
+	//LsThreadMgr.DeleteAllThread();
 }
 
 void CTTimeHelper::OnFinalMessage( HWND hWnd )
@@ -106,12 +106,20 @@ CDuiString CTTimeHelper::GetZIPFileName() const
 
 CDuiString CTTimeHelper::GetSkinFolder()
 {
+#ifdef _DEBUG
 	return _T("TTimeHelper");
+#else
+	return _T("");
+#endif
 }
 
 UILIB_RESOURCETYPE CTTimeHelper::GetResourceType() const
 {
+#ifdef _DEBUG
 	return UILIB_FILE;
+#else
+	return UILIB_ZIP;
+#endif
 }
 
 void CTTimeHelper::InitWindow()
@@ -180,7 +188,7 @@ void CTTimeHelper::InitWindow()
 			m_pFrame[i++] = pFrame;
 	}
 
-	if (m_pMailHelper == NULL)
+	/*if (m_pMailHelper == NULL)
 	{
 		m_pMailHelper = new CMailHelper;
 
@@ -192,7 +200,7 @@ void CTTimeHelper::InitWindow()
 		m_pSendMailThread->StartThread();
 
 		PraseMailInfo();
-	}
+	}*/
 }
 
 CControlUI* CTTimeHelper::CreateControl(LPCTSTR pstrClass)
@@ -318,26 +326,26 @@ void CTTimeHelper::OnTimer(TNotifyUI& msg)
 	}
 	else if (msg.wParam == WEATHER_API_TIMEOUT_TIMER_ID)
 	{
-		if (m_pMailHelper == NULL)
-			return;
+		//if (m_pMailHelper == NULL)
+		//	return;
 
-		CTime Time = CTime::GetCurrentTime();
+		//CTime Time = CTime::GetCurrentTime();
 
-		if (Time.GetTime() > m_dwOutOfTime)
-		{
-			DWORD dwSend = FALSE;
-			CString strRegPath = GetRegistryPath(_T("TTimeHelper"));
-			LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("bSendMail"), dwSend);
-			//	判断是否发送过邮件，如果已经发送过了，无需重复发送
-			if (dwSend != FALSE)
-				m_PaintManager.KillTimer(msg.pSender,msg.wParam);
+		//if (Time.GetTime() > m_dwOutOfTime)
+		//{
+		//	DWORD dwSend = FALSE;
+		//	CString strRegPath = GetRegistryPath(_T("TTimeHelper"));
+		//	LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("bSendMail"), dwSend);
+		//	//	判断是否发送过邮件，如果已经发送过了，无需重复发送
+		//	if (dwSend != FALSE)
+		//		m_PaintManager.KillTimer(msg.pSender,msg.wParam);
 
-			if (dwSend == FALSE)
-			{
-				if (m_pSendMailThread != NULL)
-					m_pSendMailThread->SetNotificationEvent();
-			}
-		}
+		//	if (dwSend == FALSE)
+		//	{
+		//		if (m_pSendMailThread != NULL)
+		//			m_pSendMailThread->SetNotificationEvent();
+		//	}
+		//}
 	}
 }
 
@@ -369,63 +377,63 @@ void CTTimeHelper::PraseMailInfo()
 
 	if (dwSend != FALSE)
 	{
-		delete m_pMailHelper;
-		m_pMailHelper = NULL;
+		//delete m_pMailHelper;
+		//m_pMailHelper = NULL;
 		return;
 	}
 
-	if (m_pMailHelper != NULL)
-	{
-		CString strMailInfo;
+	//if (m_pMailHelper != NULL)
+	//{
+	//	CString strMailInfo;
 
-		CString strName;
-		LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("ServerName"), strName);
-		m_pMailHelper->SetServerName(strName);
+	//	CString strName;
+	//	LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("ServerName"), strName);
+	//	m_pMailHelper->SetServerName(strName);
 
-		LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("SenderName"), strName);
-		LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("SenderAddr"), strMailInfo);
-		m_pMailHelper->SetSenderInfo(strName, strMailInfo);
+	//	LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("SenderName"), strName);
+	//	LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("SenderAddr"), strMailInfo);
+	//	m_pMailHelper->SetSenderInfo(strName, strMailInfo);
 
-		LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("UserName"), strName);
-		LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("UsePwd"), strMailInfo);
-		m_pMailHelper->MailSenderLogin(strName, strMailInfo);
+	//	LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("UserName"), strName);
+	//	LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("UsePwd"), strMailInfo);
+	//	m_pMailHelper->MailSenderLogin(strName, strMailInfo);
 
-		LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("ReceiverName"), strName);
-		LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("ReceiverAddr"), strMailInfo);
-		m_pMailHelper->SetReceiverInfo(strName, strMailInfo);
+	//	LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("ReceiverName"), strName);
+	//	LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("ReceiverAddr"), strMailInfo);
+	//	m_pMailHelper->SetReceiverInfo(strName, strMailInfo);
 
-		LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("Subject"), strMailInfo);
-		m_pMailHelper->SetSubject(strMailInfo);
+	//	LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("Subject"), strMailInfo);
+	//	m_pMailHelper->SetSubject(strMailInfo);
 
-		MAIL_CONTENT_TYPE MailType = MAIL_CONTENT_TYPE_TEXT;
-		LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("Type"), strMailInfo);
-		if (strMailInfo.CompareNoCase(_T("html")) == 0)
-			MailType = MAIL_CONTENT_TYPE_HTML;
-		else if (strMailInfo.CompareNoCase(_T("stream")) == 0)
-			MailType = MAIL_CONTENT_TYPE_STREAM;
+	//	MAIL_CONTENT_TYPE MailType = MAIL_CONTENT_TYPE_TEXT;
+	//	LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("Type"), strMailInfo);
+	//	if (strMailInfo.CompareNoCase(_T("html")) == 0)
+	//		MailType = MAIL_CONTENT_TYPE_HTML;
+	//	else if (strMailInfo.CompareNoCase(_T("stream")) == 0)
+	//		MailType = MAIL_CONTENT_TYPE_STREAM;
 
-		LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("Content"), strMailInfo);
-		m_pMailHelper->SetMailContent(MailType, strMailInfo);
+	//	LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("Content"), strMailInfo);
+	//	m_pMailHelper->SetMailContent(MailType, strMailInfo);
 
-		DWORD dwYear,dwMonth,dwDay;
-		LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("OutOfTime"), strMailInfo);
-		_stscanf_s(strMailInfo, _T("%d-%d-%d"),&dwYear,&dwMonth,&dwDay);
+	//	DWORD dwYear,dwMonth,dwDay;
+	//	LsRegQueryValue(HKEY_LOCAL_MACHINE, strRegPath, _T("OutOfTime"), strMailInfo);
+	//	_stscanf_s(strMailInfo, _T("%d-%d-%d"),&dwYear,&dwMonth,&dwDay);
 
-		CTime Time(dwYear,dwMonth,dwDay,0,0,0);
-		m_dwOutOfTime = (DWORD)Time.GetTime();
+	//	CTime Time(dwYear,dwMonth,dwDay,0,0,0);
+	//	m_dwOutOfTime = (DWORD)Time.GetTime();
 
-		//	设置定时器
-		CControlUI* pLayout = m_PaintManager.FindControl(_T("VLayoutTotal"));
-		if (pLayout)
-		{
-			m_PaintManager.SetTimer(pLayout, WEATHER_API_TIMEOUT_TIMER_ID, 30*60*1000);
-			//	模拟触发定时器
-			TNotifyUI msg;
-			msg.pSender = pLayout;
-			msg.wParam = WEATHER_API_TIMEOUT_TIMER_ID;
-			OnTimer(msg);
-		}
-	}
+	//	//	设置定时器
+	//	CControlUI* pLayout = m_PaintManager.FindControl(_T("VLayoutTotal"));
+	//	if (pLayout)
+	//	{
+	//		m_PaintManager.SetTimer(pLayout, WEATHER_API_TIMEOUT_TIMER_ID, 30*60*1000);
+	//		//	模拟触发定时器
+	//		TNotifyUI msg;
+	//		msg.pSender = pLayout;
+	//		msg.wParam = WEATHER_API_TIMEOUT_TIMER_ID;
+	//		OnTimer(msg);
+	//	}
+	//}
 }
 
 void CTTimeHelper::SetShowTimer()

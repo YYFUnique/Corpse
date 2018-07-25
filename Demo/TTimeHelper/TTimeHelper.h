@@ -3,8 +3,8 @@
 #include "TxMiniSkin.h"
 #include "WeatherHelper.h"
 #include "CityHelper.h"
-#include "MailHelper.h"
-#include "Thread/SendMailThread.h"
+//#include "MailHelper.h"
+//#include "Thread/SendMailThread.h"
 #include "DllCore/Window/FloatWindow.h"
 
 class CTTimeHelper : public WindowImplBase, public CityInfoReceiver
@@ -54,7 +54,7 @@ class CTTimeHelper : public WindowImplBase, public CityInfoReceiver
 		CCityHelper*		m_pCityInfo;				//保存城市位置及天气信息
 		CWeatherHelper* m_pWeatherInfo;		//用于获取城市位置及天气信息
 		CString					m_strCityLocation;		//当前城市位置
-		CMailHelper*		m_pMailHelper;			//	邮件助手
-		CSendMailThread* m_pSendMailThread;			//	发送邮件线程
+		//CMailHelper*		m_pMailHelper;			//	邮件助手
+		//CSendMailThread* m_pSendMailThread;			//	发送邮件线程
 		DWORD				m_dwOutOfTime;		//	功能过期时间
 };

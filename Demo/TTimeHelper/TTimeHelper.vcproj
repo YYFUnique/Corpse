@@ -257,10 +257,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MailHelper.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\MainFrame.cpp"
 				>
 			</File>
@@ -300,58 +296,6 @@
 				RelativePath=".\WeatherHelper.cpp"
 				>
 			</File>
-			<Filter
-				Name="Mail"
-				>
-				<File
-					RelativePath=".\Mail\Base64Helper.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath=".\Mail\SMailer.cpp"
-					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-							UsePrecompiledHeader="0"
-						/>
-					</FileConfiguration>
-				</File>
-			</Filter>
-			<Filter
-				Name="Thread"
-				>
-				<File
-					RelativePath=".\Thread\SendMailThread.cpp"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="头文件"
@@ -372,10 +316,6 @@
 			</File>
 			<File
 				RelativePath=".\Lunar.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MailHelper.h"
 				>
 			</File>
 			<File
@@ -402,34 +342,6 @@
 				RelativePath=".\WeatherHelper.h"
 				>
 			</File>
-			<Filter
-				Name="Mail"
-				>
-				<File
-					RelativePath=".\Mail\Base64Helper.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Mail\FileHelper.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Mail\SMailer.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Mail\WinSockHelper.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Thread"
-				>
-				<File
-					RelativePath=".\Thread\SendMailThread.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="资源文件"

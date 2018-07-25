@@ -17,6 +17,7 @@ CConnect::~CConnect()
 }
 
 DUI_BEGIN_MESSAGE_MAP(CConnect, CNotifyPump)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_REFRESH, OnRefresh)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_LOADITEM, OnLoadItem)
 DUI_END_MESSAGE_MAP()
 
@@ -63,6 +64,12 @@ void SaveIcon(HICON hIconToSave, LPCTSTR sIconFileName)
 	}
 	pStream->Release();
 	CloseHandle(hFile);
+}
+
+void CConnect::OnRefresh(TNotifyUI& msg)
+{
+	m_bLoad = FALSE;
+	OnLoadItem(msg);
 }
 
 void CConnect::OnLoadItem(TNotifyUI& msg)
@@ -163,7 +170,7 @@ void CConnect::OnLoadItem(TNotifyUI& msg)
 			}
 		}
 
-		if (bFindIcon == FALSE)
+		if (bFindIcon == FALSE && ConnectionInfo.nPID != 0)
 		{
 			CDuiString strForeImage;
 			strForeImage.Format(_T("file='icon.png' source='176,0,192,16'"));
@@ -221,8 +228,8 @@ void CConnect::GetTcpConnectionTable(CConnectList& TcpListInfo)
 
 			if (dwRet == NO_ERROR)
 				strProcessName = TcpInfo->pModuleName;		//进程或服务名
-			
-			//GetProcessName(strLocalProcessPath, strProcessName);
+			else
+				strProcessName.Empty();
 			if (TcpInfo && bReset)
 			{
 				delete[] TcpInfo;
@@ -296,7 +303,8 @@ void CConnect::GetUdpConnectionTable(CConnectList& UdpListInfo)
 
 			if (dwRet == NO_ERROR)
 				strProcessName = TcpInfo->pModuleName;		//进程或服务名
-			//GetProcessName(strLocalProcessPath,strProcessName);
+			else
+				strProcessName.Empty();
 			if (TcpInfo && bReset)
 			{
 				delete[] TcpInfo;
