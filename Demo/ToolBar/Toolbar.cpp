@@ -47,11 +47,15 @@ void CToolbar::Notify(TNotifyUI& msg)
 void CToolbar::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
-	RECT rcWnd = {0};
+	/*RECT rcWnd = {0};
 	GetWindowRect(m_hWnd,&rcWnd);
 	int nWidth = GetSystemMetrics(SM_CXSCREEN);
-	int nLeft = (nWidth - (rcWnd.right - rcWnd.left))/2;
-	SetWindowPos(m_hWnd,HWND_TOPMOST,nLeft,0,0,0,SWP_NOSIZE|SWP_NOSENDCHANGING);
+	int nLeft = (nWidth - (rcWnd.right - rcWnd.left))/2;*/
+	//SetWindowPos(m_hWnd,HWND_TOPMOST,nLeft,0,0,0,SWP_NOSIZE|SWP_NOSENDCHANGING);
+	SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+	UINT nWidth = GetSystemMetrics(SM_CXSCREEN);
+	UINT nHeight = GetSystemMetrics(SM_CYSCREEN);
+	SetWindowPos(m_hWnd,HWND_TOPMOST,0,0,nWidth,nHeight,SWP_NOMOVE);
  /*
  	CMakeSfxFile MakeSfx;
  	if (MakeSfx.OpenTargetFile(_T("E:\\ProjectCode\\Remote V0.0.1\\Corpse\\Bin\\Win32_Debug\\SfxFile.exe")) == FALSE)

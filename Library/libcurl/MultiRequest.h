@@ -55,8 +55,6 @@ private:
 	CURLM*				m_pCURLM;
 	
 	HANDLE				m_hEvent;			// 互斥事件，调用httpGet后该信号将处于激活状态
-	//信号量
-	//HANDLE				m_hSema;			// 信号量变量，用户边界资源接入控制
 	
 	BOOL					m_bExist;
 	DWORD				m_dwTimeout;

@@ -221,47 +221,86 @@ void CServices::OnLoadItem(TNotifyUI& msg)
 	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("Service"));
 	if (pList->GetCount())
 		pList->RemoveAll();
+
 	CSrvInfoList SvrInfoList;
 	if (GetSvrInfo(SvrInfoList) == FALSE)
 		return;
 
 	if (SvrInfoList.GetCount() == 0)
 		return;
+	
+	CDuiString strFormatText;
+	TListInfoUI* pListInfo = pList->GetListInfo();
+	//去掉DrawText函数中&被转义为_,比如&a会显示为'下划线a'
+	pList->SetItemTextStyle(pListInfo->uTextStyle & ~DT_NOPREFIX);
 
 	POSITION pos = SvrInfoList.GetHeadPosition();
-	int i=0;
-	CDuiString strFormatText;
 	while(pos)
 	{
 		const SERVICEINFO& SvrInfo	= SvrInfoList.GetNext(pos);
-		CListTextElementUI* pTextElement = new CListTextElementUI;
-		pList->Add(pTextElement);
 
-		int m=0;
-		pTextElement->SetText(m++, SvrInfo.strSvrName);
-		pTextElement->SetText(m++, SvrInfo.strDisplayName);
+		CFileListItemUI* pFileItem = NULL;
+		if (m_DialogBuilder.GetMarkup()->IsValid() == false)
+			pFileItem = (CFileListItemUI*)m_DialogBuilder.Create(SERVER_LIST_ITEM_INFO, 0, &m_RootBuilder, m_pPaintManager);
+		else
+			pFileItem = (CFileListItemUI*)m_DialogBuilder.Create(&m_RootBuilder, m_pPaintManager);
 
-		strFormatText.Empty();
+		pList->Add(pFileItem);
+		pFileItem->SetUserData(SvrInfo.strSvrName);
+		pFileItem->SetFixedHeight(27);
 
-		FormatPid(SvrInfo.dwPID, strFormatText);
-		pTextElement->SetText(m++, strFormatText);
+		// 名称
+		CLabelUI* pSvrName = (CLabelUI*)pFileItem->FindSubControl(_T("Name"));
+		pSvrName->SetText(SvrInfo.strSvrName);
+		pSvrName->SetFont(pListInfo->nFont);
+		pSvrName->SetForeColor(pListInfo->dwTextColor);
+		// 如果文字过长显示...
+		pSvrName->AppendTextStyle(DT_END_ELLIPSIS);
 
-		FormatRunStatus(SvrInfo.dwRunStatus, strFormatText);
-		pTextElement->SetText(m++, strFormatText);
+		// 显示名称
+		CLabelUI* pDisplay = (CLabelUI*)pFileItem->FindSubControl(_T("Display"));
+		pDisplay->SetText(SvrInfo.strDisplayName);
+		pDisplay->SetFont(pListInfo->nFont);
+		pDisplay->SetForeColor(pListInfo->dwTextColor);
+		// 如果文字过长显示...
+		pDisplay->AppendTextStyle(DT_END_ELLIPSIS);
 
-		FormatStartType(SvrInfo.dwStartType, strFormatText);
-		pTextElement->SetText(m++, strFormatText);
+		// 进程ID
+		CLabelUI* pPid = (CLabelUI*)pFileItem->FindSubControl(_T("PID"));
+		CServices::FormatPid(SvrInfo.dwPID, strFormatText);
+		pPid->SetText(strFormatText);
+		pPid->SetFont(pListInfo->nFont);
+		pPid->SetForeColor(pListInfo->dwTextColor);
 
-		pTextElement->SetText(m++, SvrInfo.strPath);
-		//pTextElement->SetText(m++, SvrInfo.strDescription);
-		
-		//if (SvrInfo.DependList.GetCount() != 0)
-		//	pTextElement->SetUserData(_T("true"));
+		// 状态
+		CLabelUI* pRunType = (CLabelUI*)pFileItem->FindSubControl(_T("RunStatus"));
+		CServices::FormatRunStatus(SvrInfo.dwRunStatus, strFormatText);
+		pRunType->SetText(strFormatText);
+		pRunType->AppendTextStyle(DT_END_ELLIPSIS);
+		pRunType->SetForeColor(pListInfo->dwTextColor);
+		pRunType->SetFont(pListInfo->nFont);
+
+		// 启动类型
+		CLabelUI* pStartType = (CLabelUI*)pFileItem->FindSubControl(_T("StartType"));
+		CServices::FormatStartType(SvrInfo.dwStartType, strFormatText);
+		pStartType->SetText(strFormatText);
+		pStartType->AppendTextStyle(DT_END_ELLIPSIS);
+		pStartType->SetForeColor(pListInfo->dwTextColor);
+		pStartType->SetFont(pListInfo->nFont);
+
+		// 文件路径
+		CLabelUI* pFilePath = (CLabelUI*)pFileItem->FindSubControl(_T("Path"));
+		pFilePath->SetText(SvrInfo.strPath);
+		pFilePath->AppendTextStyle(DT_END_ELLIPSIS);
+		pFilePath->SetForeColor(pListInfo->dwTextColor);
+		pFilePath->SetFont(pListInfo->nFont);
+		// 描述
 	}
 }
 
 void CServices::FormatPid(DWORD Pid, CDuiString& strPid)
 {
+	strPid.Empty();
 	if (Pid != 0)
 		strPid.Format(_T("%u"), Pid);
 }

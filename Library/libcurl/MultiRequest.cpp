@@ -10,7 +10,6 @@ typedef struct tagMultiRequestParam
 
 CMultiRequest::CMultiRequest()
 {
-	/*m_hSema = CreateSemaphore(NULL, 0, 1, NULL);*/
 	m_hEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 
 	m_pLoop = uv_loop_new();
@@ -52,11 +51,11 @@ void CMultiRequest::Stop()
 		m_pLoop = NULL;
 	}	
 
-	/*if (m_hSema != NULL)
+	if (m_pCURLM != NULL)
 	{
-		CloseHandle(m_hSema);
-		m_hSema = NULL;
-	}*/
+		curl_multi_cleanup(m_pCURLM);
+		m_pCURLM = NULL;
+	}
 }
 
 void CMultiRequest::Init()
@@ -100,14 +99,10 @@ BOOL CMultiRequest::doHttpGet(DWORD dwEvent, LPCTSTR lpszURL)
 
 		::curl_easy_setopt(pEasy, CURLOPT_WRITEDATA, pMultiRequestParam);
 		::curl_easy_setopt(pEasy, CURLOPT_PRIVATE, pMultiRequestParam);
-
-		//临时解决和uv_run线程冲突问题
-		//WaitForSingleObject(m_hSema, INFINITE);
+		::curl_easy_setopt(pEasy, CURLOPT_FORBID_REUSE, 1000);
 
 		if (m_pCURLM)
 			curl_multi_add_handle(m_pCURLM, pEasy);
-
-		//ReleaseSemaphore(m_hSema, 1, NULL);
 
 		SetEvent(m_hEvent);
 
@@ -223,6 +218,7 @@ void CMultiRequest::CheckMultiInfo(CURLM* pCURLM)
 								
 				curl_multi_remove_handle(pCURLM, pEasy);
 				curl_easy_cleanup(pEasy);
+
 			break;
 		}
 	}
@@ -290,7 +286,7 @@ void CMultiRequest::OnClose(uv_handle_t* handle)
 {
 	CMultiRequest* pMuitl = (CMultiRequest*)handle->data;
 	uv_stop(pMuitl->m_pLoop);
-	SetEvent(pMuitl->m_hEvent);
+	//SetEvent(pMuitl->m_hEvent);
 }
 
 UINT CMultiRequest::workThread(LPVOID lParam)
@@ -299,7 +295,13 @@ UINT CMultiRequest::workThread(LPVOID lParam)
 
 	do 
 	{
-		WaitForSingleObject(pMulti->m_hEvent, INFINITE);
+		DWORD dwRet = WaitForSingleObject(pMulti->m_hEvent, INFINITE);
+		if (dwRet != 0)
+		{
+			CString strTipInfo;
+			strTipInfo.Format(_T("WaitForSingleObject Return :%d, hEvent:0x%X"), dwRet, pMulti->m_hEvent);
+			OutputDebugString(strTipInfo);
+		}
  		if (pMulti->m_bExist)
  			break;
 		uv_run(pMulti->m_pLoop, UV_RUN_DEFAULT);

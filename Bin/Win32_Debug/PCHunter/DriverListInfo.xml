@@ -2,7 +2,7 @@
 <Window>
 	<FileListItem>
 		<HorizontalLayout>
-			<Picture name="Pic" visible="true" width="16" height="16" padding="3,6,0,0" foreimage="file=&apos;icon.png&apos; source=&apos;192,0,208,16&apos;" />
+			<Picture name="Pic" visible="true" width="16" height="16" padding="3,5,0,0" foreimage="file=&apos;icon.png&apos; source=&apos;192,0,208,16&apos;" />
 			<Label name="Name" text="" textpadding="3,0,0,0"/>
 		</HorizontalLayout>
 		<HorizontalLayout>

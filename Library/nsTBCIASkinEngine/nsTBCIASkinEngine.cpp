@@ -5,8 +5,6 @@
 HWND g_hwndParent;
 extern HINSTANCE g_hInstance;
 extra_parameters* g_pluginParms;
-bool g_bMSGLoopFlag = true;
-static UINT uMsgCreate = 0;
 std::map<HWND, WNDPROC> g_windowInfoMap;
 
 #define NSMETHOD_INIT(parent) {\
@@ -59,17 +57,11 @@ void ShowPage(HWND hwndParent, int string_size, LPTSTR variables, stack_t** stac
 	NSMETHOD_INIT(hwndParent);
 	{
 		g_pMainWnd->ShowWindow(true);
-		/*MSG msg = { 0 };
-		while(::GetMessage(&msg, NULL, 0, 0)) 
+		MSG pMsg = { 0 };
+		while (::GetMessage(&pMsg, NULL, 0, 0))
 		{
-			::TranslateMessage(&msg);
-			::DispatchMessage(&msg);
-		}*/
-		MSG msg = { 0 };
-		while (::GetMessage(&msg, NULL, 0, 0) && g_bMSGLoopFlag)
-		{
-			::TranslateMessage(&msg);
-			::DispatchMessage(&msg);
+			::TranslateMessage(&pMsg);
+			::DispatchMessage(&pMsg);
 		}
 
 		CPaintManagerUI::Term();

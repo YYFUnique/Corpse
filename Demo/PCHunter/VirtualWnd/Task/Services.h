@@ -68,10 +68,13 @@ protected:
 	//	≤Àµ•œ‡”¶
 	BOOL GetSvrInfo(CSrvInfoList& SvrInfoList);
 
-	void FormatPid(DWORD Pid, CDuiString& strPid);
-	void FormatRunStatus(DWORD dwCurrentState, CDuiString& strRunState);
-	void FormatStartType(DWORD dwStartType, CDuiString& strStartType);
 protected:
-	CSrvInfoList	m_ServicesInfo;
-	CPaintManagerUI* m_pPaintManager;
+	static void FormatPid(DWORD Pid, CDuiString& strPid);
+	static void FormatRunStatus(DWORD dwCurrentState, CDuiString& strRunState);
+	static void FormatStartType(DWORD dwStartType, CDuiString& strStartType);
+protected:
+	CControlBuilder		m_RootBuilder;
+	CDialogBuilder		m_DialogBuilder;
+	CSrvInfoList				m_ServicesInfo;
+	CPaintManagerUI*	m_pPaintManager;
 };

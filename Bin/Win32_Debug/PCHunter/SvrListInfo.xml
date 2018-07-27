@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+	<FileListItem>
+		<HorizontalLayout>
+			<Picture name="Pic" visible="true" width="16" height="16" padding="3,5,0,0" foreimage="file=&apos;icon.png&apos; source=&apos;192,0,208,16&apos;" />
+			<Label name="Name" text="" textpadding="3,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="Display" textpadding="5,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="PID" align="right" textpadding="5,0,5,0"/>
+		</HorizontalLayout>
+		<!-- <HorizontalLayout visible="false" bkcolor="#FF00FF00">
+			<Picture name="Pic" visible="false" width="16" height="16" float="true" pos="3,5,0,0" foreimage="file=&apos;Title.png&apos;" />
+			<Label name="Desc" text="" textpadding="5,0,0,0"/>
+		</HorizontalLayout> -->
+		<HorizontalLayout>
+			<Label name="RunStatus" align="center"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="StartType" align="center"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="Path" />
+		</HorizontalLayout>
+	</FileListItem>
+</Window>

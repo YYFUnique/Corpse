@@ -43,6 +43,8 @@ extern ZRESULT FindZipItemW(HZIP hz, const TCHAR *name, bool ic, int *index, ZIP
 extern ZRESULT UnzipItem(HZIP hz, int index, void *dst, unsigned int len, DWORD flags);
 ///////////////////////////////////////////////////////////////////////////////////////
 
+#define GetAValue(argb)      (LOBYTE((argb)>>24))
+
 extern "C"
 {
     extern unsigned char *stbi_load_from_memory(unsigned char const *buffer, int len, int *x, int *y, \
@@ -308,9 +310,9 @@ HBITMAP CreateAlphaTextBitmap(LPCTSTR inText, HFONT inFont, COLORREF inColour,RE
 			RECT rcText = {0, 0, TextArea.right-TextArea.left, TextArea.bottom - TextArea.top};
 			DrawText(hTextDC, inText, TextLength, &rcText, format); 
 			BYTE* DataPtr = (BYTE*)pvBits; 
-			BYTE FillR = GetRValue(inColour); 
+			BYTE FillR = GetBValue(inColour); 
 			BYTE FillG = GetGValue(inColour); 
-			BYTE FillB = GetBValue(inColour); 
+			BYTE FillB = GetRValue(inColour); 
 			BYTE ThisA; 
  			for (int LoopY = 0; LoopY < BMIH.biHeight; LoopY++) { 
  				for (int LoopX = 0; LoopX < BMIH.biWidth; LoopX++) { 
@@ -354,7 +356,7 @@ void DrawTextUnderLayered(HDC inDC, LPCTSTR szText, HFONT hFont, DWORD dwColor, 
 			BLENDFUNCTION bf; 
 			bf.BlendOp = AC_SRC_OVER; 
 			bf.BlendFlags = 0; 
-			bf.SourceConstantAlpha = 0xFF; 
+			bf.SourceConstantAlpha = GetAValue(dwColor); 
 			bf.AlphaFormat = AC_SRC_ALPHA;
 
 			int nLeft = rc.left;
