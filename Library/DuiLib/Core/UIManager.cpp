@@ -1391,6 +1391,8 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 	case WM_IME_COMPOSITION:
 	case WM_IME_STARTCOMPOSITION:
 		{
+			if (m_pFocus == NULL)
+				break;
 			TEventUI event = { 0 };
 			if (uMsg == WM_IME_COMPOSITION)
 				event.Type = UIEVENT_IME_COMPOSITION;
@@ -1403,6 +1405,9 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 			event.dwTimestamp = ::GetTickCount();
 			m_pFocus->Event(event);
 		}
+		break;
+	case WM_KILLFOCUS:
+			SetFocus(NULL);
 		break;
     default:
         break;

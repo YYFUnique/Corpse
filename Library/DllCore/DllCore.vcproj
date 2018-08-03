@@ -491,11 +491,15 @@
 				Name="Security"
 				>
 				<File
+					RelativePath=".\Security\CryptHelper.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Security\RemoteThreadInject.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Security\Sign.cpp"
+					RelativePath=".\Security\SignHelper.cpp"
 					>
 				</File>
 			</Filter>
@@ -757,11 +761,15 @@
 				Name="Security"
 				>
 				<File
+					RelativePath=".\Security\CryptHelper.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Security\RemoteThreadInject.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Security\Sign.h"
+					RelativePath=".\Security\SignHelper.h"
 					>
 				</File>
 			</Filter>

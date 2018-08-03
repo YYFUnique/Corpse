@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="600,350" sizebox="4,4,6,6" caption="0,0,0,115" bktrans="true" shadow="true" shadowimage="shadow.png" shadowcorner="5,3,5,5" roundcorner="5,5" maxbox="false" >
+    <Font name="微软雅黑" size="12" bold="false" italic="false" />
+    <Font name="微软雅黑" size="14" bold="true" italic="false" />
+    <Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="Combo" value="textpadding=&quot;4,1,1,1&quot; normalimage=&quot;file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;&quot; hotimage=&quot;file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;&quot; pushedimage=&quot;file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot;" />
+	<Default name="Edit2" value="normalimage=&quot;file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;&quot; hotimage=&quot;file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;&quot; focusedimage=&quot;file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="Option" value="disabledtextcolor=&quot;#FFA7A6AA&quot; font=&quot;0&quot; align=&quot;center&quot; hotimage=&quot;file=&apos;ToolbarHover.png&apos;corner=apos;10,10,10,10&apos;&quot; pushedimage=&quot;file=&apos;ToolbarSelect.png&apos;corner=apos;10,10,10,10&apos;&quot; selectedimage=&quot;file=&apos;ToolbarSelect.png&apos;corner=apos;10,10,10,10&apos;&quot;" />
+	<Default name="Button" value="normalimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;&quot; hotimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;&quot; pushedimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;&quot;" />
+    <VerticalLayout name="VLayoutTotal" bkimage="file=&apos;bk.png&apos; dest=&apos;0,0,600,300&apos;" borderround="5,5">
+        <VerticalLayout name="WinBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;">
+			<VerticalLayout name="HLayoutTitle" pos="0,0,0,115" >
+				<HorizontalLayout>
+					<HorizontalLayout name="HLayoutName" pos="0,0,150,45">
+						<Label name="WindowName" text="豆豆证书工具v0.2" font="1" float="true" pos="7,6,150,30" textpadding="2,0,2,0" disabledtextcolor="#FFA7A6AA" />
+					</HorizontalLayout>
+					<Control />
+					<HorizontalLayout name="HLayoutSys" pos="0,0,68,20" width="68" height="20">
+						<Button name="BtnMini" tooltip="最小化" float="true" pos="0,0,29,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnMin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMin.png&apos; source=&apos;56,0,84,20&apos;" />
+						<Button name="BtnClose" tooltip="关闭" float="true" pos="29,0,68,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
+					</HorizontalLayout>
+				</HorizontalLayout>
+				<HorizontalLayout height="90" name="TabSwitch" >
+                    <Option name="OptionUI1" text="证书申请" textpadding="0,45,0,0" tooltip="证书申请" userdata="0" float="true" pos="15,10,85,85" group="main_toolbar" selected="true" foreimage="file=&apos;ico_Examine.png&apos; dest=&apos;11,5,59,53&apos;" />
+                    <Option name="OptionUI2" text="证书签名" textpadding="0,45,0,0" tooltip="证书签名" userdata="1" float="true" pos="97,10,167,85" group="main_toolbar" foreimage="file=&apos;ico_dsmain.png&apos; dest=&apos;11,5,59,53&apos;" />
+                    <Option name="OptionUI3" text="自签名证书" textpadding="0,45,0,0" tooltip="自签名证书" userdata="2" float="true" pos="179,10,249,85" group="main_toolbar" foreimage="file=&apos;ico_SysRepair.png&apos; dest=&apos;11,5,59,53&apos;" />
+                    <Option name="OptionUI4" text="电脑清理" textpadding="0,45,0,0" tooltip="电脑清理" userdata="3" float="true" pos="261,10,331,85" group="main_toolbar" foreimage="file=&apos;ico_TraceCleaner.png&apos; dest=&apos;11,5,59,53&apos;" />
+                    <Option name="OptionUI5" text="优化加速" textpadding="0,45,0,0" tooltip="优化加速" userdata="4" float="true" pos="343,10,413,85" group="main_toolbar" foreimage="file=&apos;ico_SpeedupOpt.png&apos; dest=&apos;11,5,59,53&apos;" />
+                    <Option name="OptionUI6" text="变化通知" textpadding="0,45,0,0" tooltip="变化通知" userdata="5" float="true" pos="425,10,495,85" group="main_toolbar" foreimage="file=&apos;ico_expert.png&apos; dest=&apos;11,5,59,53&apos;" />
+                </HorizontalLayout>
+				<Control name="Line" height="1" padding="1,0,1,0" bkcolor="#FFCDCDCD"/>
+			</VerticalLayout>
+			<Control name="Line" height="3" />
+			<VerticalLayout name="Body" inset="1,0,1,1">
+				<TabLayout name="TabWizard" showanimate="false" frame="20" bkcolor="#FFFFFFFF">
+					<VerticalLayout>
+						<GroupLayout height="85">
+							<Label text="私钥加密方式:" align="right" float="true" font="0" pos="10,10,90,35"/>
+							<Combo name="EncryptType" font="0" float="true" pos="95,10,180,35" >
+								<ListLabelElement name="ListLabelElementUI0" text="无" pos="0,0,0,23" height="23" selected="true"/>
+								<ListLabelElement name="ListLabelElementUI1" text="DES" userdata="-des3" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI2" text="AES256" userdata="-aes256" pos="0,0,0,23" height="23" />
+							</Combo>
+							<Label text="私钥密码:" float="true" font="0" pos="200,10,255,35" />
+							<Edit2 name="EncryptPWD" enabled="false" font="0" float="true" pos="260,10,350,35" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Label text="私钥长度:" float="true" font="0" pos="370,10,420,35"/>
+							<Combo name="EncryptLen" font="0" float="true" pos="430,10,500,35" >
+								<ListLabelElement name="ListLabelElementUI1" text="512" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI1" text="1024" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI1" text="2048" pos="0,0,0,23" height="23" selected="true"/>
+							</Combo>
+							<Label text="私钥存放位置:" align="right"  float="true" font="0" pos="10,40,90,65"/>
+							<Edit2 name="PrivateKeyPath" font="0" float="true" pos="95,40,350,65" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Button name="BtnKeyPath" text="浏览..." float="true" pos="360,37,440,68"/>
+							<Button name="BtnCreatePrivateKey" text="生成私钥" float="true" pos="460,37,540,68"/>
+						</GroupLayout>
+						<GroupLayout height="125">
+							<Label text="所在国家:" align="right" float="true" pos="10,10,90,35"/>
+							<Edit2 name="Country" font="0" float="true" pos="95,10,180,35" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Label text="所在省份:" align="right" float="true" pos="200,10,255,35"/>
+							<Edit2 name="Province" font="0" float="true" pos="260,10,350,35" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Label text="所在城市:" align="right" float="true" pos="355,10,420,35"/>
+							<Edit2 name="City" font="0" float="true" pos="430,10,500,35" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Label text="所在公司:" align="right" float="true" pos="10,45,90,70"/>
+							<Edit2 name="Company" font="0" float="true" pos="95,45,180,70" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Label text="所在部门:" align="right" float="true" pos="200,45,255,70"/>
+							<Edit2 name="OrgName" font="0" float="true" pos="260,45,350,70" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Label text="组织名称:" align="right" float="true" pos="355,45,420,70"/>
+							<Edit2 name="CommonName" font="0" float="true" pos="430,45,580,70" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Label text="请求文件位置:" align="right"  float="true" font="0" pos="10,80,90,105"/>
+							<Edit2 name="ReqPath" font="0" float="true" pos="95,80,350,105" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Button name="BtnReqPath" text="浏览..." float="true" pos="360,77,440,108"/>
+							<Button name="BtnCreateReqFile" text="生成证书请求文件" float="true" pos="450,77,580,108"/>
+						</GroupLayout>
+					</VerticalLayout>
+					<VerticalLayout>
+						<GroupLayout>
+							<Label text="证书请求文件:" align="right" font="0" float="true" pos="10,10,90,35"/>
+							<Edit2 name="SignReqPath" font="0" float="true" pos="95,10,350,35" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Button name="BtnSignReqPath" text="浏览..." float="true" pos="360,7,440,38"/>
+							<Label text="证书私钥文件:" align="right" font="0" float="true" pos="10,45,90,70"/>
+							<Edit2 name="SignPrivateKeyPath" font="0" float="true" pos="95,45,350,70" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Button name="BtnSignKeyPath" text="浏览..." float="true" pos="360,42,440,73"/>
+							<Label text="证书保存位置:" align="right" font="0" float="true" pos="10,80,90,105"/>
+							<Edit2 name="SignCertPath" font="0" float="true" pos="95,80,350,105" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Button name="BtnSignCertPath" text="浏览..." float="true" pos="360,77,440,108"/>
+							<Label text="CA证书路径:" align="right" font="0" float="true" pos="10,110,90,135"/>
+							<Edit2 name="SignCACertPath" font="0" float="true" pos="95,110,350,135" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Button name="BtnSignCACertPath" text="浏览..." float="true" pos="360,107,440,138"/>
+							<Label text="CA私钥路径:" align="right" font="0" float="true" pos="10,140,90,165"/>
+							<Edit2 name="SignCAPrivateKeyPath" font="0" float="true" pos="95,140,350,165" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Button name="BtnSignCAPrivateKeyPath" text="浏览..." float="true" pos="360,137,440,168"/>
+							<Button text="证书签名" name="BtnSignCert" float="true" font="0" pos="95,175,300,210"/>
+						</GroupLayout>
+					</VerticalLayout>
+					<VerticalLayout>
+						<GroupLayout>
+							<Label text="证书名称:" align="right" font="0" float="true" pos="10,10,90,35"/>
+							<Edit2 name="SelfCertName" menu="true" font="0" float="true" pos="95,10,220,35" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Label text="密钥长度:" align="right" font="0" float="true" pos="230,10,290,35" />
+							<Combo name="SelfKeyLen" font="0" float="true" pos="295,10,370,35" >
+								<ListLabelElement name="ListLabelElementUI1" text="1024 位" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI1" text="2048 位" pos="0,0,0,23" height="23" selected="true"/>
+								<ListLabelElement name="ListLabelElementUI1" text="4096 位" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI1" text="8192 位" pos="0,0,0,23" height="23" />
+							</Combo>
+							<Label text="证书类型:" align="right" font="0" float="true" pos="375,10,450,35"/>
+							<Combo name="SelfCertType" font="0" float="true" pos="455,10,530,35" >
+								<ListLabelElement name="ListLabelElementUI1" text="加密证书" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI1" text="签名证书" pos="0,0,0,23" height="23" selected="true"/>
+							</Combo>
+							<Label text="密钥容器:" align="right" font="0" float="true" pos="10,45,90,70"/>
+							<Edit2 name="SelfKeyName" font="0" float="true" pos="95,45,220,70" textpadding="4,3,4,3" textcolor="#FF000000"/>
+							<Label text="起始时间:" align="right" font="0" float="true" pos="230,45,290,70" />
+							<Edit2 name="SelfStartTime" text="01/01/2018"font="0" float="true" pos="295,45,370,70"/>
+							<Label text="截止时间:" align="right" font="0" float="true" pos="375,45,450,70"/>
+							<Edit2 name="SelfEndTime" text="01/01/2023"font="0" float="true" pos="455,45,530,70"/>
+							<Label text="密钥算法:" align="right" font="0" float="true" pos="10,80,90,105"/>
+							<Combo name="SelfCertAlg" font="0" float="true" pos="95,80,220,105" >
+								<ListLabelElement name="ListLabelElementUI1" text="sha1RSA" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI1" text="sha256RSA" pos="0,0,0,23" height="23" selected="true"/>
+								<ListLabelElement name="ListLabelElementUI1" text="sha384RSA" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI1" text="sha512RSA" pos="0,0,0,23" height="23" />
+							</Combo>
+							<Label text="截止时间:" align="right" font="0" float="true" pos="375,45,450,70"/>
+							<Edit2 text="2023-01-01"font="0" float="true" pos="455,45,530,70"/>
+							<Label text="存放位置:" align="right" font="0" float="true" pos="230,80,290,105"/>
+							<Combo name="SelfCertSave" font="0" float="true" pos="295,80,390,105" >
+								<ListLabelElement name="ListLabelElementUI1" text="个人存储区" pos="0,0,0,23" height="23" selected="true"/>
+								<ListLabelElement name="ListLabelElementUI1" text="受信任根证书" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI1" text="导出到文件" pos="0,0,0,23" height="23" />
+							</Combo>
+							<Label name="SelfSavePath" text="保存路径:" visible="false" align="right" font="0" float="true" pos="10,115,90,140"/>
+							<Edit2 name="SelfCertSavePath" visible="false" font="0" float="true" pos="95,115,320,140"/>
+							<Button name="BtnSelfCertSavePath" text="浏览..." visible="false" float="true" pos="330,112,400,143"/>
+							<Label name="SelfSaveLocal" text="保存位置:" align="right" font="0" float="true" pos="10,115,90,140"/>
+							<Combo name="SelfCertSaveLocal" font="0" float="true" pos="95,115,220,140" >
+								<ListLabelElement name="ListLabelElementUI1" text="当前用户" pos="0,0,0,23" height="23" selected="true"/>
+								<ListLabelElement name="ListLabelElementUI1" text="本地机器" pos="0,0,0,23" height="23" />
+							</Combo>
+							<Button text="证书自签名" name="BtnSelfSign" float="true" font="0" pos="200,155,400,200"/>
+						</GroupLayout>
+					</VerticalLayout>
+				</TabLayout>
+			</VerticalLayout>
+		</VerticalLayout>
+	</VerticalLayout>
+</Window>

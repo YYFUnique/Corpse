@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="530,175" bktrans="true" shadow="true" shadowimage="shadow.png" shadowcorner="5,3,5,5" roundcorner="5,5" maxbox="false" >
+    <Font name="微软雅黑" size="12" bold="false" italic="false" />
+    <Font name="微软雅黑" size="14" bold="true" italic="false" />
+    <Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="Combo" value="textpadding=&quot;4,1,1,1&quot; normalimage=&quot;file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;&quot; hotimage=&quot;file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;&quot; pushedimage=&quot;file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot;" />
+	<Default name="Edit2" value="normalimage=&quot;file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;&quot; hotimage=&quot;file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;&quot; focusedimage=&quot;file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="Option" value="disabledtextcolor=&quot;#FFA7A6AA&quot; font=&quot;0&quot; align=&quot;center&quot; hotimage=&quot;file=&apos;ToolbarHover.png&apos;corner=apos;10,10,10,10&apos;&quot; pushedimage=&quot;file=&apos;ToolbarSelect.png&apos;corner=apos;10,10,10,10&apos;&quot; selectedimage=&quot;file=&apos;ToolbarSelect.png&apos;corner=apos;10,10,10,10&apos;&quot;" />
+	<Default name="Button" value="normalimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;&quot; hotimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;&quot; pushedimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;&quot;" />
+    <VerticalLayout name="VLayoutTotal" bkimage="file=&apos;bk.png&apos; dest=&apos;0,0,600,300&apos;" borderround="5,5">
+        <VerticalLayout name="WinBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;">
+			<VerticalLayout name="HighClass" float="true" pos="10,10,520,165" >
+				<Label text="通用名称:" align="right" font="0" float="true" pos="0,5,55,30"/>
+				<Edit2 name="CName" font="0" float="true" pos="60,5,185,30" textpadding="4,4,4,4" textcolor="#FF000000"/>
+				<Label text="*" textcolor="#FFFF0000" float="true" pos="186,5,192,30"/>
+				<Label text="所在国家:" align="right" font="0" float="true" pos="195,5,255,30" />
+				<Edit2 name="CountryName" font="0" float="true" pos="260,5,335,30"/>
+				<Label text="所在省份:" align="right" font="0" float="true" pos="355,5,415,30"/>
+				<Edit2 name="ProvinceName" font="0" float="true" pos="420,5,495,30"/>
+				<Label text="组织名称:" align="right" font="0" float="true" pos="0,40,55,65"/>
+				<Edit2 name="OrgName" font="0" float="true" pos="60,40,185,65"/>
+				<Label text="所在城市:" align="right" font="0" float="true" pos="195,40,255,65"/>
+				<Edit2 name="CityName" font="0" float="true" pos="260,40,335,65"/>
+				<Label text="所在部门:" align="right" font="0" float="true" pos="355,40,415,65"/>
+				<Edit2 name="OrgUnitName" font="0" float="true" pos="420,40,495,65"/>
+				<Label text="电子邮件:" align="right" font="0" float="true" pos="0,75,55,100"/>
+				<Edit2 name="Email" font="0" float="true" pos="60,75,185,100"/>
+				<Button text="更新证书名称" name="BtnUpdate" float="true" pos="165,115,365,150" font="0"/>
+			</VerticalLayout>
+		</VerticalLayout>
+	</VerticalLayout>
+</Window>
