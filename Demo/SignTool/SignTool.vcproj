@@ -175,6 +175,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\HighClass.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MainFrame.cpp"
 				>
 			</File>
@@ -202,6 +206,10 @@
 			>
 			<File
 				RelativePath=".\Encrypt.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HighClass.h"
 				>
 			</File>
 			<File
