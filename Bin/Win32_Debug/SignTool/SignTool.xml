@@ -49,10 +49,7 @@
 								<ListLabelElement name="ListLabelElementUI1" text="1024" pos="0,0,0,23" height="23" />
 								<ListLabelElement name="ListLabelElementUI1" text="2048" pos="0,0,0,23" height="23" selected="true"/>
 							</Combo>
-							<Label text="私钥存放位置:" align="right"  float="true" font="0" pos="10,40,90,65"/>
-							<Edit2 name="PrivateKeyPath" font="0" float="true" pos="95,40,350,65" textpadding="4,3,4,3" textcolor="#FF000000"/>
-							<Button name="BtnKeyPath" text="浏览..." float="true" pos="360,37,440,68"/>
-							<Button name="BtnCreatePrivateKey" text="生成私钥" float="true" pos="460,37,540,68"/>
+							
 						</GroupLayout>
 						<GroupLayout height="125">
 							<Label text="所在国家:" align="right" float="true" pos="10,10,90,35"/>

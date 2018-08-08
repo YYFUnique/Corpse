@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<Window size="680,620"  caption="0,0,0,45" mininfo="540,510" roundcorner="5,4" maxbox="false" layered="true">
+<Window size="680,720"  caption="0,0,0,45" mininfo="540,510" roundcorner="5,4" maxbox="false" layered="true">
     <Font name="微软雅黑" size="12" bold="false" italic="false" default="true" />
     <Font name="微软雅黑" size="12" bold="true" italic="false" />
 	<Font name="微软雅黑" size="14" bold="true" italic="false" />
@@ -20,13 +20,20 @@
                 </VerticalLayout>
             </HorizontalLayout>
 			<VerticalLayout name="VerticalLayoutUI5">
-				<GroupLayout text="动态库初始化设置" bordercolor="#FFCDCDCD" font="1" height="65">
+				<GroupLayout text="动态库初始化设置" bordercolor="#FFCDCDCD" font="1" height="90">
 					<!-- 数据库地址设置 -->
-					<Label text="数据库地址:" float="true" align="right" pos="20,20,90,44" font="0" textcolor="#FF000000"/>
-					<Edit2 name="SQLAddr" watertext="(local)" font="0" float="true" pos="90,20,220,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Label text="数据库地址:" float="true" align="right" pos="20,20,85,44" font="0" textcolor="#FF000000"/>
+					<Edit2 name="SQLAddr" text="(local)" font="0" float="true" pos="90,20,150,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 门锁软件-->
+					<Label text="软件系统:" float="true" align="right" pos="175,20,245,44" font="0" textcolor="#FF000000"/>
+					<Combo name="Software" font="0" float="true" pos="250,20,330,44" >
+						<ListLabelElement name="ListLabelElementUI0" text="A30" pos="0,0,0,23" height="23" selected="true"/>
+						<ListLabelElement name="ListLabelElementUI1" text="A50" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI2" text="A90" pos="0,0,0,23" height="23" />
+					</Combo>
 					<!-- 串口信息设置 -->
-					<Label text="串口:" float="true" pos="250,20,320,44" align="right" font="0" textcolor="#FF000000"/>
-					<Combo name="ComType" font="0" float="true" pos="325,20,435,44" >
+					<Label text="串口:" float="true" pos="360,20,410,44" align="right" font="0" textcolor="#FF000000"/>
+					<Combo name="ComType" font="0" float="true" pos="415,20,485,44" >
 						<ListLabelElement name="ListLabelElementUI0" text="USB" pos="0,0,0,23" height="23" selected="true"/>
 						<ListLabelElement name="ListLabelElementUI1" text="COM1" pos="0,0,0,23" height="23" />
 						<ListLabelElement name="ListLabelElementUI2" text="COM2" pos="0,0,0,23" height="23" />
@@ -38,12 +45,35 @@
 						<ListLabelElement name="ListLabelElementUI1" text="COM8" pos="0,0,0,23" height="23" />
 						<ListLabelElement name="ListLabelElementUI1" text="COM9" pos="0,0,0,23" height="23" />
 					</Combo>
+					<Label text="发行机:" float="true" align="right" pos="20,50,85,74" font="0" textcolor="#FF000000"/>
+					<Combo name="EncoderType" font="0" float="true" pos="90,50,150,74" >
+						<ListLabelElement name="ListLabelElementUI0" text="手动" pos="0,0,0,23" height="23" selected="true"/>
+						<ListLabelElement name="ListLabelElementUI1" text="自动" pos="0,0,0,23" height="23" />
+					</Combo>
+					<Label text="TM类型:" float="true" align="right" pos="175,50,245,74" font="0" textcolor="#FF000000"/>
+					<Combo name="TMEncoderType" font="0" float="true" pos="250,50,330,74" >
+						<ListLabelElement name="ListLabelElementUI0" text="DS9097E" pos="0,0,0,23" height="23" selected="true"/>
+						<ListLabelElement name="ListLabelElementUI1" text="DS9097U" pos="0,0,0,23" height="23" />
+					</Combo>
+					<Label text="蜂鸣器:" float="true" align="right" pos="360,50,410,74" font="0" textcolor="#FF000000"/>
+					<Combo name="BeepType" font="0" float="true" pos="415,50,485,74" >
+						<ListLabelElement name="ListLabelElementUI0" text="11" tooltip="绿灯1秒，长叫1声" pos="0,0,0,23" height="23" selected="true"/>
+						<ListLabelElement name="ListLabelElementUI1" text="12" tooltip="红灯1秒，长叫1声" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="15" tooltip="红灯1秒，短叫2声" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="16" tooltip="短叫1声" pos="0,0,0,23" height="23" />
+					</Combo>
 					<!-- 初始化按钮 -->
-					<Button name="BtnInit" text="初始化(Init)" float="true" pos="480,17,560,47" font="0" textcolor="#FF000000"/>
+					<Button name="BtnInit" text="初始化" float="true" pos="510,17,580,45" font="0" textcolor="#FF000000"/>
 					<!-- 退出按钮 -->
-					<Button name="BtnExit" text="退出(Exit)" float="true" pos="580,17,660,47" font="0" textcolor="#FF000000"/>
+					<Button name="BtnExit" text="结束" float="true" pos="590,17,660,45" font="0" textcolor="#FF000000"/>
+					<!-- 设置端口-->
+					<Button name="BtnSetPort" text="SetPort" float="true" pos="555,50,615,77" font="0" textcolor="#FF000000"/>
+					<!-- 弹卡-->
+					<Button name="BtnPopCard" text="弹卡" float="true" pos="620,50,670,77" font="0" textcolor="#FF000000"/>
+					
+					<Button name="BtnBeep" text="Beep" float="true" pos="500,50,550,77" font="0" textcolor="#FF000000"/>
 				</GroupLayout>
-				<GroupLayout text="发卡设置" bordercolor="#FFCDCDCD" font="1" height="150">
+				<GroupLayout text="发卡设置" bordercolor="#FFCDCDCD" font="1" height="125">
 					<!-- 房号信息设置设置 -->
 					<Label text="房号:" float="true" align="right" pos="20,20,50,44" font="0" textcolor="#FF000000"/>
 					<Edit2 name="RoomNum" text="0102" font="0" float="true" pos="55,20,150,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
@@ -61,35 +91,44 @@
 					<Edit2 name="UserID" watertext="Guest Name" font="0" float="true" pos="415,50,560,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					
 					<!-- 通道信息设置-->
-					<Label text="通道:" float="true" align="right" pos="20,80,50,104" font="0" textcolor="#FF000000"/>
-					<Edit2 name="Gate" font="0" float="true" pos="55,80,150,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Label text="通道:" float="true" align="right" pos="350,80,410,104" font="0" textcolor="#FF000000"/>
+					<Edit2 name="Gate" font="0" float="true" pos="415,80,560,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					<!-- 早餐信息设置 -->
-					<Label text="早餐数量:" float="true" pos="180,80,240,104" align="right" font="0" textcolor="#FF000000"/>
+					<!--<Label text="早餐数量:" float="true" pos="180,80,240,104" align="right" font="0" textcolor="#FF000000"/>
 					<Combo name="Breakfast" font="0" float="true" pos="245,80,330,104" >
+						<ListLabelElement name="ListLabelElementUI0" text="无早餐" pos="0,0,0,23" height="23" selected="true"/>
+						<ListLabelElement name="ListLabelElementUI1" text="1份早餐" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI2" text="2份早餐" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI1" text="3份早餐" pos="0,0,0,23" height="23" />
+					</Combo>-->
+					<Label text="早餐:" float="true" pos="20,80,50,104" align="right" font="0" textcolor="#FF000000"/>
+					<Combo name="Breakfast" font="0" float="true" pos="55,80,150,104" >
 						<ListLabelElement name="ListLabelElementUI0" text="无早餐" pos="0,0,0,23" height="23" selected="true"/>
 						<ListLabelElement name="ListLabelElementUI1" text="1份早餐" pos="0,0,0,23" height="23" />
 						<ListLabelElement name="ListLabelElementUI2" text="2份早餐" pos="0,0,0,23" height="23" />
 						<ListLabelElement name="ListLabelElementUI1" text="3份早餐" pos="0,0,0,23" height="23" />
 					</Combo>
 					<!-- 开门方式信息设置 -->
-					<Label text="开门方式:" float="true" pos="350,80,410,104" align="right" font="0" textcolor="#FF000000"/>
-					<Combo name="OpenWay" font="0" float="true" pos="415,80,560,104" >
+					<Label text="开门方式:" visible="false" float="true" pos="350,80,410,104" align="right" font="0" textcolor="#FF000000"/>
+					<Combo name="OpenWay" font="0" visible="false" float="true" pos="415,80,560,104" >
 						<ListLabelElement name="ListLabelElementUI0" text="卡开门" pos="0,0,0,23" height="23" selected="true"/>
 						<ListLabelElement name="ListLabelElementUI1" text="卡或指纹开门" pos="0,0,0,23" height="23" />
 						<ListLabelElement name="ListLabelElementUI2" text="指纹开门" pos="0,0,0,23" height="23" />
 						<ListLabelElement name="ListLabelElementUI1" text="卡和指纹开门" pos="0,0,0,23" height="23" />
 					</Combo>
 					<!-- 多路电梯信息设置 -->
-					<Option name="BtnMulti" textpadding="16,0,0,0" text="多路电梯:" float="true" pos="170,110,240,134"/>
-					<Edit2 name="Elevator" enabled="false" font="0" float="true" pos="245,110,330,134" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!--<Option name="BtnMulti" textpadding="16,0,0,0" text="多路电梯:" float="true" pos="170,110,240,134"/>
+					<Edit2 name="Elevator" enabled="false" font="0" float="true" pos="245,110,330,134" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>-->
+					<Label name="BtnMulti" text="多路电梯:" float="true" align="right" pos="180,80,240,104"/>
+					<Edit2 name="Elevator" font="0" float="true" pos="245,80,330,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					<!-- 采集指纹信息设置 -->
-					<Option name="BtnCollecte" textpadding="16,0,0,0" text="采集指纹" float="true" pos="360,110,430,134"/>
+					<Option name="BtnCollecte" visible="false" textpadding="16,0,0,0" text="采集指纹" float="true" pos="360,110,430,134"/>
 					<!-- 初始化按钮 -->
-					<Button name="BtnNewKey" text="新发卡" float="true" pos="580,17,660,70" font="0" textcolor="#FF000000"/>
+					<Button name="BtnNewKey" text="新发卡" float="true" pos="580,20,660,60" font="0" textcolor="#FF000000"/>
 					<!-- 退出按钮 -->
-					<Button name="BtnDupKey" text="复制卡" float="true" pos="580,84,660,137" font="0" textcolor="#FF000000"/>
+					<Button name="BtnDupKey" text="复制卡" float="true" pos="580,65,660,105" font="0" textcolor="#FF000000"/>
 				</GroupLayout>
-				<GroupLayout text="卡信息读取" bordercolor="#FFCDCDCD" font="1"  height="150">
+				<GroupLayout text="卡信息读取" bordercolor="#FFCDCDCD" font="1"  height="125">
 					<!-- 房号信息设置设置 -->
 					<Label text="房号:" float="true" align="right" pos="20,20,50,44" font="0" textcolor="#FF000000"/>
 					<Edit2 name="GetRoomNum" enabled="false" font="0" float="true" pos="55,20,150,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
@@ -107,19 +146,19 @@
 					<Edit2 name="GetUserID" enabled="false" font="0" float="true" pos="415,50,560,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					
 					<!-- 通道信息设置-->
-					<Label text="通道:" float="true" align="right" pos="20,80,50,104" font="0" textcolor="#FF000000"/>
-					<Edit2 name="GetGate" enabled="false" font="0" float="true" pos="55,80,150,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Label text="通道:" float="true" align="right" pos="350,80,410,104" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetGate" enabled="false" font="0" float="true" pos="415,80,560,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					<!-- 早餐信息设置 -->
-					<Label text="早餐数量:" float="true" pos="180,80,240,104" align="right" font="0" textcolor="#FF000000"/>
-					<Edit2 name="GetBreakfast" font="0" enabled="false" float="true" pos="245,80,330,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Label text="早餐:" float="true" pos="20,80,50,104" align="right" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetBreakfast" font="0" enabled="false" float="true" pos="55,80,150,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					<!-- 开门方式信息设置 -->
-					<Label text="开门方式:" float="true" pos="350,80,410,104" align="right" font="0" textcolor="#FF000000"/>
-					<Edit2 name="GetOpenWay" font="0" enabled="false" float="true" pos="415,80,560,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Label text="开门方式:" visible="false" float="true" pos="350,80,410,104" align="right" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetOpenWay" visible="false" font="0" enabled="false" float="true" pos="415,80,560,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					<!-- 多路电梯信息设置 -->
-					<Label text="多路电梯:" align="right" float="true" pos="180,110,240,134"/>
-					<Edit2 name="GetMuitl" enabled="false" font="0" float="true" pos="245,110,330,134" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>			
+					<Label text="多路电梯:" align="right" float="true" pos="180,80,240,104"/>
+					<Edit2 name="GetMuitl" enabled="false" font="0" float="true" pos="245,80,330,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>			
 					<!-- 退出按钮 -->
-					<Button name="BtnReadCard" text="读卡" float="true" pos="580,47,660,97" font="0" textcolor="#FF000000"/>
+					<Button name="BtnReadCard" text="读卡" float="true" pos="580,40,660,90" font="0" textcolor="#FF000000"/>
 					<!--<Button name="BtnReadCard" text="读卡" float="true" pos="580,47,660,97" font="0" textcolor="#FF000000"/>-->
 				</GroupLayout>
 				<GroupLayout text="卡信息维护" bordercolor="#FFCDCDCD" font="1" height="90">
@@ -131,16 +170,18 @@
 					<Edit2 name="SetCardNum" font="0" float="true" pos="245,20,330,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					<!-- 注销卡 -->
 					<Button name="BtnEraseCard" text="注销(Exit)" float="true" pos="370,17,460,47" font="0" textcolor="#FF000000"/>
+					<Button name="BtnLost" text="遗失" float="true" pos="470,17,560,47" font="0" textcolor="#FF000000"/>
+					<Button name="BtnCheckOut" text="退房" float="true" pos="570,17,660,47" font="0" textcolor="#FF000000"/>
 					<!-- 通道信息设置-->
 					<Label text="操作员:" float="true" align="right" pos="5,50,50,74" font="0" textcolor="#FF000000" />
 					<Edit2 name="SetAdmin" watertext="Admin" font="0" float="true" pos="55,50,150,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					<!-- 更改操作员按钮 -->
 					<Button name="BtnChangeUser" text="更改操作员" float="true" pos="210,47,330,77" font="0" textcolor="#FF000000"/>
 					<!-- 房卡ID -->
-					<Label text="房卡ID:" float="true" pos="350,50,410,74" align="right" font="0" textcolor="#FF000000"/>
-					<Edit2 name="GetCardInfo" font="0" float="true" pos="415,50,560,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Label text="房卡ID:" visible="false" float="true" pos="350,50,410,74" align="right" font="0" textcolor="#FF000000"/>
+					<Edit2 name="GetCardInfo" visible="false" font="0" float="true" pos="415,50,560,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					<!-- 读房卡按钮 -->
-					<Button name="BtnReadCardId" text="读卡ID" float="true" pos="580,47,660,77" font="0" textcolor="#FF000000"/>
+					<Button name="BtnReadCardId2" visible="false" text="读卡ID" float="true" pos="580,47,660,77" font="0" textcolor="#FF000000"/>
 				</GroupLayout>
 				<GroupLayout text="读写卡数据" bordercolor="#FFCDCDCD" font="1" height="123">
 					<!-- 房号信息设置设置 -->
@@ -197,6 +238,32 @@
 					<Edit2 name="SetData" font="0" float="true" pos="113,80,550,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					<!-- 写数据按钮 -->
 					<Button name="BtnWriteData" text="写数据" float="true" pos="580,77,660,107" font="0" textcolor="#FF000000"/>
+				</GroupLayout>
+				<GroupLayout text="磁轨数据" visible="false" bordercolor="#FFCDCDCD" font="1" height="123">
+				</GroupLayout>
+				<GroupLayout text="读取卡信息" bordercolor="#FFCDCDCD" font="1" height="123">
+					<!-- 卡号-->
+					<Label text="卡号:" float="true" align="right" pos="20,20,50,44" font="0" textcolor="#FF000000"/>
+					<Edit2 name="ReadCardNum" font="0" float="true" pos="55,20,150,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 卡型-->
+					<Label text="卡型:" float="true" align="right" pos="180,20,240,44" font="0" textcolor="#FF000000"/>
+					<Edit2 name="ReadCardType" font="0" float="true" pos="245,20,330,44" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 卡状态-->
+					<Label text="卡状态:" float="true" align="right" pos="10,50,50,74" font="0" textcolor="#FF000000"/>
+					<Edit2 name="ReadCardState" font="0" float="true" pos="55,50,150,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 卡型-->
+					<Label text="持卡人:" float="true" align="right" pos="180,50,240,74" font="0" textcolor="#FF000000"/>
+					<Edit2 name="ReadCardUser" font="0" float="true" pos="245,50,330,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 房号/区域-->
+					<Label text="房号/区域:" float="true" align="right" pos="350,50,410,74" font="0" textcolor="#FF000000"/>
+					<Edit2 name="ReadCardRoom" font="0" float="true" pos="415,50,560,74" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<!-- 有效期-->
+					<Label text="有效期:" float="true" align="right" pos="10,80,50,104" font="0" textcolor="#FF000000"/>
+					<Edit2 name="ReadCardTime" font="0" float="true" pos="55,80,330,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Button text="Read Id" font="0" float="true" pos="350,77,410,107" name="BtnReadCardId"/>
+					<Edit2 name="ReadCardId" font="0" float="true" pos="415,80,500,104" bkcolor="#FFFFFFFF" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Button text="GetBufInfo" float="true" pos="350,17,440,44" name="BtnGetBufInfo"/>
+					<Button text="GetCardInfo" float="true" pos="460,17,550,44" name="BtnGetCardInfo"/>
 				</GroupLayout>
 			</VerticalLayout>
         </VerticalLayout>

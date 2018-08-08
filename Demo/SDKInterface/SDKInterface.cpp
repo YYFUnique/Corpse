@@ -76,6 +76,12 @@ void CSDKInterface::OnClick(TNotifyUI& msg)
 		OnInit(msg);
 	else if (strNotifyName == _T("BtnExit"))
 		Close(IDOK);
+	else if (strNotifyName == _T("BtnSetPort"))
+		OnSetPort(msg);
+	else if (strNotifyName == _T("BtnPopCard"))
+		OnBtnPopCard(msg);
+	else if (strNotifyName == _T("BtnBeep"))
+		OnBtnBeep(msg);
 	else if (strNotifyName == _T("BtnNewKey"))
 		OnNewKey(msg, 1);
 	else if (strNotifyName == _T("BtnDupKey"))
@@ -86,6 +92,10 @@ void CSDKInterface::OnClick(TNotifyUI& msg)
 		OnReadCard(msg);
 	else if (strNotifyName == _T("BtnEraseCard"))
 		OnEraseCard(msg);
+	else if (strNotifyName == _T("BtnLost"))
+		OnBtnLost(msg);
+	else if (strNotifyName == _T("BtnCheckOut"))
+		OnBtnCheckOut(msg);
 	else if (strNotifyName == _T("BtnChangeUser"))
 		OnChangeUser(msg);
 	else if (strNotifyName == _T("BtnReadCardId"))
@@ -94,6 +104,10 @@ void CSDKInterface::OnClick(TNotifyUI& msg)
 		OnReadData(msg);
 	else if (strNotifyName == _T("BtnWriteData"))
 		OnWriteData(msg);
+	else if (strNotifyName == _T("BtnGetBufInfo"))
+		OnBtnGetBufInfo(msg);
+	else if (strNotifyName == _T("BtnGetCardInfo"))
+		OnBtnGetCardInfo(msg);
 }
 
 void CSDKInterface::OnSelectedChanged(TNotifyUI& msg)
@@ -119,7 +133,25 @@ void CSDKInterface::OnInit(TNotifyUI& msg)
 	if (pComType != NULL)
 		nPort = pComType->GetCurSel();
 
-	int nRet = m_pADELLock->Init(30, strSQLAddr, _T("test"), nPort, 0, 5);
+	CComboUI* pSoftware = (CComboUI*)m_PaintManager.FindControl(_T("Software"));
+	int nSelect = pSoftware->GetCurSel();
+	int nSoftware = 11;
+	if (nSelect == 1)
+		nSoftware = 14;
+	else if (nSelect == 2)
+		nSoftware = 18;
+
+	CComboUI* pEncoder = (CComboUI*)m_PaintManager.FindControl(_T("EncoderType"));
+	int nEncoderType =pEncoder->GetCurSel();
+
+	CComboUI* pTMEncoder = (CComboUI*)m_PaintManager.FindControl(_T("TMEncoderType"));
+	int nTMEncoder = pEncoder->GetCurSel();
+	int nTMEncoderType = 1;
+	if (nTMEncoder == 1)
+		nTMEncoderType = 5;
+
+	int nRet = m_pADELLock->Init(nSoftware, strSQLAddr, _T("test"), nPort, nEncoderType, nTMEncoderType);
+
 	if (nRet != 0)
 	{
 		CDuiString strTipInfo;
@@ -131,6 +163,66 @@ void CSDKInterface::OnInit(TNotifyUI& msg)
 	{
 		CDuiString strTipInfo;
 		strTipInfo.Format(_T("Init调用成功，返回值[%d]"), nRet);
+		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+}
+
+void CSDKInterface::OnSetPort(TNotifyUI& msg)
+{
+	int nPort = 0;
+	CComboUI* pComType = (CComboUI*)m_PaintManager.FindControl(_T("ComType"));
+	if (pComType != NULL)
+		nPort = pComType->GetCurSel();
+
+	CComboUI* pSoftware = (CComboUI*)m_PaintManager.FindControl(_T("Software"));
+	int nSelect = pSoftware->GetCurSel();
+	int nSoftware = 11;
+	if (nSelect == 1)
+		nSoftware = 14;
+	else if (nSelect == 2)
+		nSoftware = 18;
+
+	CComboUI* pEncoder = (CComboUI*)m_PaintManager.FindControl(_T("EncoderType"));
+	int nEncoderType =pEncoder->GetCurSel();
+
+	CComboUI* pTMEncoder = (CComboUI*)m_PaintManager.FindControl(_T("TMEncoderType"));
+	int nTMEncoder = pEncoder->GetCurSel();
+	int nTMEncoderType = 1;
+	if (nTMEncoder == 1)
+		nTMEncoderType = 5;
+
+	int nRet = m_pADELLock->SetPort(nSoftware, nPort, nEncoderType, nTMEncoderType);
+	if (nRet != 0)
+	{
+		CDuiString strTipInfo;
+		strTipInfo.Format(_T("SetPort调用失败，返回值[%d]:%s"), nRet, GetADELErrorInfo(nRet));
+		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+}
+
+void CSDKInterface::OnBtnPopCard(TNotifyUI& msg)
+{
+	int nRet = m_pADELLock->PopCard();
+	if (nRet != 0)
+	{
+		CDuiString strTipInfo;
+		strTipInfo.Format(_T("PopCard调用失败，返回值[%d]:%s"), nRet, GetADELErrorInfo(nRet));
+		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+}
+
+void CSDKInterface::OnBtnBeep(TNotifyUI& msg)
+{
+	CComboUI* pBeepType = (CComboUI*)m_PaintManager.FindControl(_T("BeepType"));
+	int nBeep = _ttoi(pBeepType->GetText());
+	int nRet = m_pADELLock->Reader_Beep(nBeep);
+	if (nRet != 0)
+	{
+		CDuiString strTipInfo;
+		strTipInfo.Format(_T("Reader_Beep调用失败，返回值[%d]:%s"), nRet, GetADELErrorInfo(nRet));
 		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
 		return;
 	}
@@ -182,34 +274,36 @@ void CSDKInterface::OnNewKey(TNotifyUI& msg, int nNewKey/* = 1*/)
 		nBreakfast = pBreakfast->GetCurSel();
 
 	// 开门方式
-	CComboUI* pOpenWay = (CComboUI*)m_PaintManager.FindControl(_T("OpenWay"));
+	/*CComboUI* pOpenWay = (CComboUI*)m_PaintManager.FindControl(_T("OpenWay"));
 	if (pOpenWay != NULL)
-		nOpenWay = pOpenWay->GetCurSel();
+		nOpenWay = pOpenWay->GetCurSel();*/
 
 	// 是否是多路电梯
-	COptionUI* pMuitl = (COptionUI*)m_PaintManager.FindControl(_T("BtnMulti"));
+	/*COptionUI* pMuitl = (COptionUI*)m_PaintManager.FindControl(_T("BtnMulti"));
 	if (pMuitl != NULL && pMuitl->IsSelected())
 	{
-		CEditUI2* pMuitlElevator = (CEditUI2*)m_PaintManager.FindControl(_T("Elevator"));
-		if (pMuitlElevator != NULL)
-			strElevator = pMuitlElevator->GetText();
-	}
+		
+	}*/
+
+	CEditUI2* pMuitlElevator = (CEditUI2*)m_PaintManager.FindControl(_T("Elevator"));
+	if (pMuitlElevator != NULL)
+		strElevator = pMuitlElevator->GetText();
 
 	// 是否采集指纹
-	COptionUI* pGetFinger = (COptionUI*)m_PaintManager.FindControl(_T("BtnCollecte"));
+	/*COptionUI* pGetFinger = (COptionUI*)m_PaintManager.FindControl(_T("BtnCollecte"));
 	if (pGetFinger != NULL)
-		bGetFinger = pGetFinger->IsSelected();
+		bGetFinger = pGetFinger->IsSelected();*/
 
 	int nRet = 0;
 	if (nNewKey == 1)
-		nRet = m_pADELLock->NewKey(strRoomNum, strGate, strValidTime, strGuestName, strGuestId, 
-																bCover, nOpenWay, &lCardNo, nBreakfast, NULL, NULL, strElevator, bGetFinger);
+		nRet = m_pADELLock->NewKey(strRoomNum, strGate, strValidTime, strGuestName, strGuestId,
+																strElevator, bCover, nBreakfast, &lCardNo, NULL, NULL);
 	else if (nNewKey == 2)
-		nRet = m_pADELLock->DupKey(strRoomNum, strGate, strValidTime, strGuestName, strGuestId, 
-															bCover, nOpenWay, &lCardNo, nBreakfast, NULL, NULL, strElevator, bGetFinger);
-	else
+		nRet = m_pADELLock->DupKey(strRoomNum, strGate, strValidTime, strGuestName, strGuestId,
+																strElevator, bCover, nBreakfast, &lCardNo, NULL, NULL);
+	/*else
 		nRet = m_pADELLock->AddKey(strRoomNum, strGate, strValidTime, strGuestName, strGuestId, 
-															bCover, nOpenWay, &lCardNo, nBreakfast, NULL, NULL, strElevator, bGetFinger);
+															bCover, nOpenWay, &lCardNo, nBreakfast, NULL, NULL, strElevator, bGetFinger);*/
 	if (nRet != 0)
 	{
 		CDuiString strTipInfo;
@@ -268,13 +362,13 @@ void CSDKInterface::OnReadCard(TNotifyUI& msg)
 		pBreakfast->SetText(strBreakfast);
 	}
 
-	CEditUI2* pOpenWay = (CEditUI2*)m_PaintManager.FindControl(_T("GetOpenWay"));
+	/*CEditUI2* pOpenWay = (CEditUI2*)m_PaintManager.FindControl(_T("GetOpenWay"));
 	if (pOpenWay != NULL)
 	{
 		CDuiString strOpenWay;
 		strOpenWay.Format(_T("%d"), CardData.OpenWay);
 		pOpenWay->SetText(strOpenWay);
-	}
+	}*/
 
 	CEditUI2* pMutilElevator = (CEditUI2*)m_PaintManager.FindControl(_T("GetMuitl"));
 	if (pMutilElevator != NULL)
@@ -291,6 +385,35 @@ void CSDKInterface::OnReadCard(TNotifyUI& msg)
 		CDuiString strCardId;
 		strCardId.Format(_T("%d"), CardData.lCardNo);
 		pSetCardId->SetText(strCardId);
+	}
+}
+
+void CSDKInterface::OnBtnLost(TNotifyUI& msg)
+{
+	CDuiString strRoomNum;
+	LONG lCardNo = 0;
+	CEditUI2* pRoomNum = (CEditUI2*)m_PaintManager.FindControl(_T("SetRoomNum"));
+	if (pRoomNum != NULL)
+		strRoomNum = pRoomNum->GetText();
+
+	CEditUI2* pCardNo = (CEditUI2*)m_PaintManager.FindControl(_T("SetCardNum"));
+	if (pCardNo != NULL)
+		lCardNo = _ttoi(pCardNo->GetText());
+
+	if (lCardNo == 0)
+	{
+		MessageBox(m_hWnd, _T("请输入卡号^_^"), _T("提示"), MB_OK|MB_ICONINFORMATION);
+		pCardNo->SetFocus();
+		return;
+	}
+
+	int nRet = m_pADELLock->LostCard(strRoomNum, lCardNo);
+	if (nRet != 0)
+	{
+		CDuiString strTipInfo;
+		strTipInfo.Format(_T("LostCard调用失败，返回值[%d]:%s"), nRet, GetADELErrorInfo(nRet));
+		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
+		//return;
 	}
 }
 
@@ -313,20 +436,45 @@ void CSDKInterface::OnEraseCard(TNotifyUI& msg)
 		return;
 	}
 
-	int nfpFinger = 0;
-	int nRet = m_pADELLock->EraseCard(lCardNo, NULL, NULL, &nfpFinger);
+	int nRet = m_pADELLock->EraseCard(lCardNo, NULL, NULL);
 	if (nRet != 0)
 	{
 		CDuiString strTipInfo;
 		strTipInfo.Format(_T("EraseCard调用失败，返回值[%d]:%s"), nRet, GetADELErrorInfo(nRet));
 		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
-		//return;
+		return;
 	}
 
-	pCardNo->SetText(_T(""));
-	
-	if (nfpFinger >0)
-		MessageBox(m_hWnd, _T("持卡人的指纹在退房后，还可以开门。需要使用注销卡注销该房间的指纹。"), _T("提示"), MB_OK|MB_ICONINFORMATION);
+	/*pCardNo->SetText(_T(""));*/
+}
+
+void CSDKInterface::OnBtnCheckOut(TNotifyUI& msg)
+{
+	CDuiString strRoomNum;
+	LONG lCardNo = 0;
+	CEditUI2* pRoomNum = (CEditUI2*)m_PaintManager.FindControl(_T("SetRoomNum"));
+	if (pRoomNum != NULL)
+		strRoomNum = pRoomNum->GetText();
+
+	CEditUI2* pCardNo = (CEditUI2*)m_PaintManager.FindControl(_T("SetCardNum"));
+	if (pCardNo != NULL)
+		lCardNo = _ttoi(pCardNo->GetText());
+
+	if (lCardNo == 0)
+	{
+		MessageBox(m_hWnd, _T("请输入卡号^_^"), _T("提示"), MB_OK|MB_ICONINFORMATION);
+		pCardNo->SetFocus();
+		return;
+	}
+
+	int nRet = m_pADELLock->CheckOut(strRoomNum, lCardNo);
+	if (nRet != 0)
+	{
+		CDuiString strTipInfo;
+		strTipInfo.Format(_T("CheckOut调用失败，返回值[%d]:%s"), nRet, GetADELErrorInfo(nRet));
+		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
+		//return;
+	}
 }
 
 void CSDKInterface::OnChangeUser(TNotifyUI& msg)
@@ -353,11 +501,11 @@ void CSDKInterface::OnReadCardId(TNotifyUI& msg)
 	if (nRet != 0)
 	{
 		CDuiString strTipInfo;
-		strTipInfo.Format(_T("ReadId调用失败，返回值[%d]:%s"), nRet, GetADELErrorInfo(nRet));
+		strTipInfo.Format(_T("ReadCardId调用失败，返回值[%d]:%s"), nRet, GetADELErrorInfo(nRet));
 		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
 		return;
 	}
-	CEditUI2* pCardId = (CEditUI2*)m_PaintManager.FindControl(_T("GetCardInfo"));
+	CEditUI2* pCardId = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardId"));
 	if (pCardId != NULL)
 	{
 		CDuiString strCardId;
@@ -382,9 +530,9 @@ void CSDKInterface::OnReadData(TNotifyUI& msg)
 	if (pLen != NULL)
 		nLen = _ttoi(pLen->GetText());
 
-	int nStart = nBlock | (nSection < 8);
+	int nStart = MAKEWORD(nSection,nBlock);//nBlock | (nSection < 8);
 	CString strData;
-	int nRet = m_pADELLock->ReadCardData(18, nStart, nLen, strData);
+	int nRet = m_pADELLock->ReadIC(nStart, nLen, strData);
 
 	if (nRet > 0)
 	{
@@ -429,7 +577,7 @@ void CSDKInterface::OnWriteData(TNotifyUI& msg)
 	if (pLen != NULL)
 		nLen = _ttoi(pLen->GetText());
 
-	int nStart = nBlock | (nSection < 8);
+	int nStart = MAKEWORD(nSection, nBlock);//nBlock | (nSection < 8);
 	// 获取写入数据
 	CEditUI2* pWriteData = (CEditUI2*)m_PaintManager.FindControl(_T("SetData"));
 	if (pWriteData != NULL)
@@ -438,7 +586,7 @@ void CSDKInterface::OnWriteData(TNotifyUI& msg)
 	CDuiString strWriteCardData;
 	strWriteCardData.Format(_T("%d%s%s"), nAuth, (LPCTSTR)strPassword.Left(7), (LPCTSTR)strWriteData.Left(nLen));
 
-	int nRet = m_pADELLock->WriteCardData(18, nStart, nLen, strWriteCardData);
+	int nRet = m_pADELLock->WriteIC(nStart, nLen, strWriteCardData);
 	if (nRet != 0)
 	{
 		CDuiString strTipInfo;
@@ -446,6 +594,114 @@ void CSDKInterface::OnWriteData(TNotifyUI& msg)
 		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
 		return;
 	}
+}
+
+void CSDKInterface::OnBtnGetBufInfo(TNotifyUI& msg)
+{
+	BUFF_INFO BuffInfo;
+	int nRet = m_pADELLock->GetBuffInfo(&BuffInfo);
+	if (nRet != 0)
+	{
+		CDuiString strTipInfo;
+		strTipInfo.Format(_T("调用GetBuffInfo失败，返回值[%d]:%s"), nRet, GetADELErrorInfo(nRet));
+		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+
+	CEditUI2* pReadCardNum = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardNum"));
+	if (pReadCardNum != NULL)
+	{
+		CDuiString strTipInfo;
+		strTipInfo.Format(_T("%d"), BuffInfo.lCardNo);
+		pReadCardNum->SetText(strTipInfo);
+	}
+
+	CEditUI2* pReadCardType = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardType"));
+	if (pReadCardType)
+	{
+		CDuiString strTipInfo;
+		strTipInfo.Format(_T("%d"), BuffInfo.CardType);
+		pReadCardType->SetText(strTipInfo);
+		GetCardType((CARD_TYPE)BuffInfo.CardType, strTipInfo);
+		pReadCardType->SetToolTip(strTipInfo);
+	}
+
+	CEditUI2* pReadCardState = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardState"));
+	if (pReadCardState)
+	{
+		CDuiString strTipInfo;
+		strTipInfo.Format(_T("%d"), BuffInfo.CardState);
+		pReadCardState->SetText(strTipInfo);
+		GetCardState((CARD_STATE)BuffInfo.CardState, strTipInfo);
+		pReadCardState->SetToolTip(strTipInfo);
+	}
+
+	CEditUI2* pReadCardUser = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardUser"));
+	if (pReadCardUser)
+		pReadCardUser->SetText(BuffInfo.strGName);
+
+	CEditUI2* pReadCardRoom = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardRoom"));
+	if (pReadCardRoom)
+		pReadCardRoom->SetText(BuffInfo.strRoomNum);
+	
+	CEditUI2* pReadCardTime = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardTime"));
+	if (pReadCardTime)
+		pReadCardTime->SetText(BuffInfo.strValidTime);
+}
+
+void CSDKInterface::OnBtnGetCardInfo(TNotifyUI& msg)
+{
+	BUFF_INFO BuffInfo;
+	CEditUI2* pReadCardNum = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardNum"));
+	if (pReadCardNum->GetText().IsEmpty())
+	{
+		MessageBox(m_hWnd, _T("卡号不能为空，请重新输入"), _T("提示"), MB_OK|MB_ICONINFORMATION);
+		pReadCardNum->SetFocus();
+		return;
+	}
+	
+	BuffInfo.lCardNo = _ttoi(pReadCardNum->GetText());
+
+	CEditUI2* pReadCardType = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardType"));
+	if (pReadCardType->GetText().IsEmpty())
+	{
+		MessageBox(m_hWnd, _T("卡状态不能为空，请重新输入"), _T("提示"), MB_OK|MB_ICONINFORMATION);
+		pReadCardType->SetFocus();
+		return;
+	}
+
+	BuffInfo.CardType = _ttoi(pReadCardType->GetText());
+
+	int nRet = m_pADELLock->GetBuffInfo(&BuffInfo);
+	if (nRet != 0)
+	{
+		CDuiString strTipInfo;
+		strTipInfo.Format(_T("调用GetBuffInfo失败，返回值[%d]:%s"), nRet, GetADELErrorInfo(nRet));
+		MessageBox(m_hWnd, strTipInfo, _T("提示"), MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+
+	CEditUI2* pReadCardState = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardState"));
+	if (pReadCardState)
+	{
+		CDuiString strTipInfo;
+		strTipInfo.Format(_T("%d"), BuffInfo.CardState);
+		pReadCardState->SetText(strTipInfo);
+		GetCardState((CARD_STATE)BuffInfo.CardState, strTipInfo);
+		pReadCardState->SetToolTip(strTipInfo);
+	}
+
+	CEditUI2* pReadCardUser = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardUser"));
+	if (pReadCardUser)
+		pReadCardUser->SetText(BuffInfo.strGName);
+
+	CEditUI2* pReadCardRoom = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardRoom"));
+	if (pReadCardRoom)
+		pReadCardRoom->SetText(BuffInfo.strRoomNum);
+
+	CEditUI2* pReadCardTime = (CEditUI2*)m_PaintManager.FindControl(_T("ReadCardTime"));
+	if (pReadCardTime)
+		pReadCardTime->SetText(BuffInfo.strValidTime);
 }
 
 LRESULT CSDKInterface::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
@@ -456,4 +712,85 @@ LRESULT CSDKInterface::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	// 需要返回bHandle = FALSE , 操作系统才能给窗口发送WM_NCDESTROY消息，从而完全退出软件
 	bHandled = FALSE;
 	return 0;
+}
+
+void CSDKInterface::GetCardType(CARD_TYPE CardType, CDuiString& strTipInfo)
+{
+	LPCTSTR lpszTipInfo = _T("未定义");
+	switch (CardType)
+	{
+		case CARD_TYPE_PRESIDENT:
+				lpszTipInfo = _T("总裁卡");
+			break;
+		case CARD_TYPE_VILLA:
+				lpszTipInfo = _T("别墅卡");
+			break;
+		case CARD_TYPE_MANAGE:
+				lpszTipInfo = _T("管理卡");
+			break;
+		case CARD_TYPE_CONTROL:
+				lpszTipInfo = _T("总控卡");
+			break;
+		case CARD_TYPE_ROOM_TIME:
+				lpszTipInfo = _T("时钟卡");
+			break;
+		case CARD_TYPE_LEADER:
+				lpszTipInfo = _T("邻班卡");
+			break;
+		case CARD_TYPE_FLOOR:
+				lpszTipInfo = _T("楼层卡");
+			break;
+		case CARD_TYPE_CLEAR:
+				lpszTipInfo = _T("清洁卡");
+			break;
+		case CARD_TYPE_CUSTOM:
+				lpszTipInfo = _T("客人卡");
+			break;
+		case CARD_TYPE_FINISH:
+				lpszTipInfo = _T("终止卡");
+			break;
+		case CARD_TYPE_MEETING:
+				lpszTipInfo = _T("会议卡");
+			break;
+		case CARD_TYPE_EMERGENCY:
+				lpszTipInfo = _T("应急卡");
+			break;
+		case CARD_TYPE_CHECK_OUT:
+				lpszTipInfo = _T("退房卡");
+			break;
+		case CARD_TYPE_RESVERED:
+				lpszTipInfo = _T("备用卡");
+			break;
+		default:
+			lpszTipInfo = _T("未定义");
+	}
+
+	strTipInfo = lpszTipInfo;
+}
+
+void CSDKInterface::GetCardState(CARD_STATE CardState, CDuiString& strTipInfo)
+{
+	LPCTSTR lpszTipInfo = _T("未定义");
+	switch (CardState)
+	{
+		case CARD_STATE_NORMAL:
+				lpszTipInfo = _T("正常使用");
+			break;
+		case CARD_STATE_LOGOUT:
+				lpszTipInfo = _T("正常注销");
+			break;
+		case CARD_STATE_LOST:
+				lpszTipInfo = _T("遗失注销");
+			break;
+		case CARD_STATE_BROKEN:
+				lpszTipInfo = _T("损毁注销");
+			break;
+		case CARD_STATE_AUTO:
+				lpszTipInfo = _T("自动注销");
+			break;
+		default:
+			lpszTipInfo = _T("未定义");
+	}
+
+	strTipInfo = lpszTipInfo;
 }
