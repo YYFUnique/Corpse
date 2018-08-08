@@ -29,7 +29,7 @@
 					<Combo name="Software" font="0" float="true" pos="250,20,330,44" >
 						<ListLabelElement name="ListLabelElementUI0" text="A30" pos="0,0,0,23" height="23" selected="true"/>
 						<ListLabelElement name="ListLabelElementUI1" text="A50" pos="0,0,0,23" height="23" />
-						<ListLabelElement name="ListLabelElementUI2" text="A90" pos="0,0,0,23" height="23" />
+						<ListLabelElement name="ListLabelElementUI2" text="A93" pos="0,0,0,23" height="23" />
 					</Combo>
 					<!-- 串口信息设置 -->
 					<Label text="串口:" float="true" pos="360,20,410,44" align="right" font="0" textcolor="#FF000000"/>

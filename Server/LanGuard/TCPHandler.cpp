@@ -30,8 +30,10 @@ extern CTCPServer g_TCPSrv;
 #define ADEL_ERASE_FPINDEX				_T("fpindex")
 
 //
+
 #define ADEL_NEW_ROOM							_T("room")
 #define ADEL_NEW_GATE								_T("gate")
+#define ADEL_NEW_STIME								_T("stime")
 #define ADEL_NEW_GNAME							_T("gname")
 #define ADEL_NEW_GID									_T("gid")
 #define ADEL_NEW_OVERFLAG						_T("overflag")
@@ -192,13 +194,15 @@ int CTCPHandler::OnADELLockNewKey(LPCTSTR lpszNewData)
 	JsonNew.FromString(lpszNewData);
 
 	CString strRoom, strGate, strSTime, strGName, strGID, strLift, strTrack1, strTrack2;
-	int nOverFlag = 0, nOpenWay = 0, nBreakfast = 0, nFingerFlag = 0;
+	int nOverFlag = 0, nBreakfast = 0;
 	LONG lCardNo = 0;
 
 	if (JsonNew.IsMember(ADEL_NEW_ROOM) != FALSE)
 		strRoom = JsonNew.GetValue(ADEL_NEW_ROOM);
 	if (JsonNew.IsMember(ADEL_NEW_GATE) != FALSE)
 		strGate = JsonNew.GetValue(ADEL_NEW_GATE);
+	if (JsonNew.IsMember(ADEL_NEW_STIME) != FALSE)
+		strSTime = JsonNew.GetValue(ADEL_NEW_STIME);
 	if (JsonNew.IsMember(ADEL_NEW_GNAME) != FALSE)
 		strGName = JsonNew.GetValue(ADEL_NEW_GNAME);
 	if (JsonNew.IsMember(ADEL_NEW_GID) != FALSE)
@@ -211,17 +215,13 @@ int CTCPHandler::OnADELLockNewKey(LPCTSTR lpszNewData)
 		strTrack2 = JsonNew.GetValue(ADEL_NEW_TRACK2);
 	if (JsonNew.IsMember(ADEL_NEW_OVERFLAG) != FALSE)
 		JsonNew.GetValue(ADEL_NEW_OVERFLAG, &nOverFlag);
-	if (JsonNew.IsMember(ADEL_NEW_OPENFLAG) != FALSE)
-		JsonNew.GetValue(ADEL_NEW_OPENFLAG, &nOpenWay);
 	if (JsonNew.IsMember(ADEL_NEW_BREAKFAST) != FALSE)
 		JsonNew.GetValue(ADEL_NEW_BREAKFAST, &nBreakfast);
-	if (JsonNew.IsMember(ADEL_NEW_FINGERFLAG) != FALSE)
-		JsonNew.GetValue(ADEL_NEW_FINGERFLAG, &nFingerFlag);
 	if (JsonNew.IsMember(ADEL_NEW_CARDNO) != FALSE)
 		JsonNew.GetValue(ADEL_NEW_CARDNO, (int*)&lCardNo);
 
-	return m_pADELLock->NewKey(strRoom, strGate, strSTime, strGName, strGID, nOverFlag, nOpenWay, 
-									&lCardNo, nBreakfast, strTrack1, strTrack2, strLift, nFingerFlag);
+	return m_pADELLock->NewKey(strRoom, strGate, strSTime, strGName, strGID, strLift,
+														nOverFlag, nBreakfast, &lCardNo, strTrack1, strTrack2);
 }
 
 int CTCPHandler::OnADELLockEraseCard(LPCTSTR lpszEraseData, CJsonObject& JsonData)
@@ -239,20 +239,7 @@ int CTCPHandler::OnADELLockEraseCard(LPCTSTR lpszEraseData, CJsonObject& JsonDat
 	if (JsonErase.IsMember(ADEL_ERASE_TRACK2) != FALSE)
 		strTrack2 = JsonErase.GetValue(ADEL_ERASE_TRACK2);
 
-	if (JsonErase.IsMember(ADEL_ERASE_FPINDEX) != FALSE)
-		JsonErase.GetValue(ADEL_ERASE_FPINDEX, &nfpIndex);
-
-	// 如果nfpIndex = 0表示客户端不关心指纹
-	int fpIndex = 0;
-	int* lfpIndex = &fpIndex;
-	if (nfpIndex == 0)
-		lfpIndex = NULL;
-
-	int nRet = m_pADELLock->EraseCard(nCardNo, strTrack1, strTrack2, lfpIndex);
-	if (nfpIndex != 0)
-		JsonData.SetValue(ADEL_SEND_ERASE_FPINDEX, fpIndex);
-
-	return nRet;
+	return m_pADELLock->EraseCard(nCardNo, strTrack1, strTrack2);
 }
 
 int CTCPHandler::OnADELLockReadCard(CJsonObject& JsonReadCard)
@@ -266,7 +253,7 @@ int CTCPHandler::OnADELLockReadCard(CJsonObject& JsonReadCard)
 	JsonReadCard.SetValue(ADEL_SEND_READ_GNAME, CardData.strGuestName);
 	JsonReadCard.SetValue(ADEL_SEND_READ_GID, CardData.strGuestId);
 	/*JsonReadCard.SetValue(ADEL_SEND_READ_OVERFLAG, CardData.CardState)*/
-	JsonReadCard.SetValue(ADEL_SEND_READ_OPENFLAG, CardData.OpenWay);
+
 	JsonReadCard.SetValue(ADEL_SEND_READ_CARDNO, CardData.lCardNo);
 	JsonReadCard.SetValue(ADEL_SEND_READ_LIFT, CardData.strElevator);
 	JsonReadCard.SetValue(ADEL_SEND_READ_STATE, CardData.CardState);
