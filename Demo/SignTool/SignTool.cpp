@@ -77,7 +77,7 @@ void CSignTool::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
 
-	COptionUI* pTabSwitch = (COptionUI*)m_PaintManager.FindControl(_T("OptionUI3"));
+	COptionUI* pTabSwitch = (COptionUI*)m_PaintManager.FindControl(_T("OptionUI2"));
 	pTabSwitch->Selected(true);
 }
 
@@ -91,16 +91,14 @@ void CSignTool::OnClick(TNotifyUI& msg)
 	}
 	else if (strControlName == _T("BtnMini"))
 		SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
+	else if (strControlName == _T("BtnCreateReqFile"))
+		OnBtnCreateReqFile(msg);
 	else if (strControlName == _T("BtnSave"))
 		OnSave(msg);
 	else if (strControlName == _T("BtnKeyPath"))
 		OnPrivateKeyPath(msg, _T("PrivateKeyPath"));
-	else if (strControlName == _T("BtnCreatePrivateKey"))
-		OnCreatePrivateKey(msg);
 	else if (strControlName == _T("BtnReqPath"))
 		OnReqFilePath(msg, _T("ReqPath"));
-	else if (strControlName == _T("BtnCreateReqFile"))
-		OnCreateReqFile(msg);
 	else if (strControlName == _T("BtnSignKeyPath"))
 		OnPrivateKeyPath(msg, _T("SignPrivateKeyPath"));
 	else if (strControlName == _T("BtnSignReqPath"))
@@ -112,7 +110,7 @@ void CSignTool::OnClick(TNotifyUI& msg)
 	else if (strControlName == _T("BtnSignCAPrivateKeyPath"))
 		OnPrivateKeyPath(msg, _T("SignCAPrivateKeyPath"));
 	else if (strControlName == _T("BtnSignCert"))
-		OnSignCert(msg);
+		OnBtnSignCert(msg);
 	else if (strControlName == _T("BtnSelfCertPath"))
 		OnCertFilePath(msg, _T("SelfCertPath"));
 	else if (strControlName == _T("BtnSelfKeyPath"))
@@ -125,64 +123,100 @@ void CSignTool::OnClick(TNotifyUI& msg)
 		OnUpdateCertName(msg);
 }
 
-void CSignTool::OnCreatePrivateKey(TNotifyUI& msg)
+void CSignTool::OnBtnCreateReqFile(TNotifyUI& msg)
 {
-	CDuiString strCmdParam = _T("genrsa");
-	CEditUI2* pKeyFilePath = (CEditUI2*)m_PaintManager.FindControl(_T("PrivateKeyPath"));
-	CComboUI* pEncryptLen = (CComboUI*)m_PaintManager.FindControl(_T("EncryptLen"));
-	CComboUI* pEncryptType = (CComboUI*)m_PaintManager.FindControl(_T("EncryptType"));
-	CEditUI2* pEncryptPWD = (CEditUI2*)m_PaintManager.FindControl(_T("EncryptPWD"));
-	if (pEncryptType->GetCurSel() != 0)
-		strCmdParam.AppendFormat(_T(" %s -passout pass:%s"), (LPCTSTR)pEncryptType->GetUserData(), (LPCTSTR)pEncryptPWD->GetText());
-	// 使用参数 控制私钥文件存放路径和私钥长度
-	strCmdParam.AppendFormat(_T(" -out %s %s"), (LPCTSTR)pKeyFilePath->GetText(), (LPCTSTR)pEncryptLen->GetText());
+	CEditUI2* pRequestFile = (CEditUI2*)m_PaintManager.FindControl(_T("ReqPath"));
+	CDuiString strRequestFilePath = pRequestFile->GetText();
+	if (strRequestFilePath.IsEmpty())
+	{
+		MessageBox(m_hWnd, _T("请选择请求文件存放位置！"), _T("提示"), MB_OK | MB_ICONINFORMATION);
+		pRequestFile->SetFocus();
+		return;
+	}
 
-	ShellExecute(m_hWnd, _T("open"), m_szOPENSSLPath, strCmdParam, NULL, SW_HIDE);
-}
+	CDuiString strSubjectName;
+	CEditUI2* pCName = (CEditUI2*)m_PaintManager.FindControl(_T("CommonName"));
+	CDuiString strCName = pCName->GetText();
+	if (strCName.IsEmpty())
+	{
+		MessageBox(m_hWnd, _T("请输入证书通用名称！"), _T("提示"), MB_OK | MB_ICONINFORMATION);
+		pCName->SetFocus();
+		return;
+	}
 
-void CSignTool::OnCreateReqFile(TNotifyUI& msg)
-{
-	CDuiString strCmdParam = _T("req -new");
+	if (pCName != NULL)
+		strSubjectName.Format(_T("CN=%s,"), strCName);
 
-	CEditUI2* pPrivateKey = (CEditUI2*)m_PaintManager.FindControl(_T("PrivateKeyPath"));
-	strCmdParam.AppendFormat(_T(" -key \"%s\""), pPrivateKey->GetText());
-
-	CEditUI2* pReqFilePath = (CEditUI2*)m_PaintManager.FindControl(_T("ReqPath"));
-	if (pReqFilePath != NULL)
-		strCmdParam.AppendFormat(_T(" -out \"%s\""), pReqFilePath->GetText());
-	
-	CDuiString strSubject;
-	CEditUI2* pCountry = (CEditUI2*)m_PaintManager.FindControl(_T("Country"));
-	if (pCountry != NULL)
-		strSubject.AppendFormat(_T("/C=%s"), pCountry->GetText());
+	CEditUI2* pCountryName = (CEditUI2*)m_PaintManager.FindControl(_T("Country"));
+	if (pCountryName->GetText().IsEmpty() == FALSE)
+		strSubjectName.Format(_T("C=%s,"), pCountryName->GetText());
 
 	CEditUI2* pProvince = (CEditUI2*)m_PaintManager.FindControl(_T("Province"));
-	if (pProvince != NULL)
-		strSubject.AppendFormat(_T("/ST=%s"), pProvince->GetText());
+	if (pProvince->GetText().IsEmpty() == FALSE)
+		strSubjectName.Format(_T("S=%s,"), pProvince->GetText());
 
 	CEditUI2* pCity = (CEditUI2*)m_PaintManager.FindControl(_T("City"));
-	if (pCity != NULL)
-		strSubject.AppendFormat(_T("/L=%s"), pCity->GetText());
+	if (pCity->GetText().IsEmpty() == FALSE)
+		strSubjectName.Format(_T("L=%s,"), pCity->GetText());
 
 	CEditUI2* pCompany = (CEditUI2*)m_PaintManager.FindControl(_T("Company"));
-	if (pCompany != NULL)
-		strSubject.AppendFormat(_T("/O=%s"),pCompany->GetText());
+	if (pCompany->GetText().IsEmpty() == FALSE)
+		strSubjectName.Format(_T("O=%s,"), pCompany->GetText());
 
 	CEditUI2* pOrgName = (CEditUI2*)m_PaintManager.FindControl(_T("OrgName"));
-	if (pOrgName != NULL)
-		strSubject.AppendFormat(_T("/OU=%s"), pOrgName->GetText());
+	if (pOrgName->GetText().IsEmpty() == FALSE)
+		strSubjectName.Format(_T("OU=%s,"), pOrgName->GetText());
+
+	CEditUI2* pEmail = (CEditUI2*)m_PaintManager.FindControl(_T("Email"));
+
+	strSubjectName.TrimRight(_T(","));
+
+	do 
+	{
+		// 获取密钥长度
+		CComboUI* pEncryptLen = (CComboUI*)m_PaintManager.FindControl(_T("EncryptLen"));
+		int nSelect = pEncryptLen->GetCurSel();
+		DWORD dwKeyBit = (nSelect + 1) * 1024;
+
+		CComboUI* pCertAlg = (CComboUI*)m_PaintManager.FindControl(_T("SignType"));
+		SIGNATURE_ALGORITHM SignType = (SIGNATURE_ALGORITHM)pCertAlg->GetCurSel();
+
+		CERT_REQUEST_INFO CertRequestInfo;
+		CertRequestInfo.dwVersion = CERT_V1;
+
+		CCryptHelper WinCrypt(CERT_TYPE_SIGNATURE);
+		WinCrypt.SetSignatureAlgorithm(SignType);
+		WinCrypt.OpenContainer(NULL, NULL);
+		WinCrypt.GenericKey(dwKeyBit);
+		WinCrypt.SetCertSubjectName(strSubjectName, &CertRequestInfo.Subject);
+
+		BYTE pbData[1024*4];
+		CERT_PUBLIC_KEY_INFO* pPublicKeyInfo = (CERT_PUBLIC_KEY_INFO*)pbData;
+		DWORD dwLen2 = _countof(pbData);
+		WinCrypt.ExportPublicKey(pPublicKeyInfo, &dwLen2);
+
+		CertRequestInfo.SubjectPublicKeyInfo = *pPublicKeyInfo;
+		
+		CertRequestInfo.cAttribute = 0;
+		BYTE bData[1024*2];
+		DWORD dwLen = sizeof(bData);
+
+		if (WinCrypt.CryptSignAndEncodeCertificate(&CertRequestInfo, bData, &dwLen) != FALSE)
+		{
+			HANDLE hFile = CreateFile(strRequestFilePath, GENERIC_ALL, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, 0, NULL);
+			if (hFile != INVALID_HANDLE_VALUE)
+			{
+				CHAR szBase64Data[1024*2];
+				DWORD dwBufferLen = _countof(szBase64Data);
+				DWORD dwWriteLen = 0;
+				CryptBinaryToStringA(bData, dwLen, CRYPT_STRING_BASE64REQUESTHEADER|CRYPT_STRING_NOCR, szBase64Data, &dwBufferLen);
+				WriteFile(hFile, szBase64Data, dwBufferLen, &dwWriteLen, NULL);
+				CloseHandle(hFile);
+			}
+		}
 	
-	CEditUI2* pCommonName = (CEditUI2*)m_PaintManager.FindControl(_T("CommonName"));
-	if (pCommonName != NULL)
-		strSubject.AppendFormat(_T("/CN=%s"), pCommonName->GetText());
-
-	strSubject.AppendFormat(_T("/emailAddress=yy@vivo.com"));
-
-	//LPCTSTR lpszSubject = _T("/C=CN/ST=SC/L=CD/O=Lonsin Ltd/OU=dev/CN=www.lonsin.biz/emailAddress=yy@vivo.com");
-	strCmdParam.AppendFormat(_T(" -subj \"%s\""), strSubject);
-	strCmdParam.AppendFormat(_T(" -config %s"), m_szOpenSSLConfigPath);
-
-	ShellExecute(m_hWnd, _T("open"), m_szOPENSSLPath, strCmdParam, NULL, SW_HIDE);
+		MessageBox(m_hWnd, _T("证书请求文件保存成功！"), _T("提示"), MB_OK|MB_ICONINFORMATION);
+	} while (FALSE);
 }
 
 void CSignTool::OnCertSelfSign(TNotifyUI& msg)
@@ -201,21 +235,11 @@ void CSignTool::OnCertSelfSign(TNotifyUI& msg)
 	CERT_TYPE CertType = (CERT_TYPE)(pCertType->GetCurSel() + 1);
 
 	CEditUI2* pKeyName = (CEditUI2*)m_PaintManager.FindControl(_T("SelfKeyName"));
-	//if (pKeyName != NULL)
-	//	strCmdParam.AppendFormat(_T(" -sk %s"), pKeyName->GetText());
-//
-//	CEditUI2* pStartTime = (CEditUI2*)m_PaintManager.FindControl(_T("SelfStartTime"));
-//	if (pStartTime != NULL)
-//		strCmdParam.AppendFormat(_T(" -b %s"), pStartTime->GetText());
-//
-//	CEditUI2* pEndTime = (CEditUI2*)m_PaintManager.FindControl(_T("SelfEndTime"));
-//	if (pEndTime != NULL)
-//		strCmdParam.AppendFormat(_T(" -e %s"), pEndTime->GetText());
 //
 	CComboUI* pCertAlg = (CComboUI*)m_PaintManager.FindControl(_T("SelfCertAlg"));
 	SIGNATURE_ALGORITHM SignAlg = (SIGNATURE_ALGORITHM)pCertAlg->GetCurSel();
 
-	LPCWSTR lpszStoreName[] = {L"My", L"Root"};
+	LPCWSTR lpszStoreName[] = {L"My", L"ROOT"};
 	CComboUI* pCertSave = (CComboUI*)m_PaintManager.FindControl(_T("SelfCertSave"));
 	int nStoreItem = pCertSave->GetCurSel();
 
@@ -224,7 +248,7 @@ void CSignTool::OnCertSelfSign(TNotifyUI& msg)
 	
 	CCryptHelper WinCrypt(CertType);
 	WinCrypt.SetSignatureAlgorithm(SignAlg);
-	WinCrypt.OpenContainer(NULL, NULL);
+	WinCrypt.OpenContainer(pKeyName->GetText(), NULL);
 	WinCrypt.GenericKey(dwKeyBit);
 
 	CString strSubjectName = pCertName->GetText();
@@ -263,7 +287,7 @@ void CSignTool::OnSelectChanged(TNotifyUI& msg)
 
 void CSignTool::OnItemSelect(TNotifyUI& msg)
 {
-	CDuiString strControlName = msg.pSender->GetName();
+	/*CDuiString strControlName = msg.pSender->GetName();
 	if (strControlName == _T("EncryptType"))
 	{
 		CComboUI* pEncryptType = (CComboUI*)msg.pSender->GetInterface(DUI_CTR_COMBO);
@@ -274,7 +298,7 @@ void CSignTool::OnItemSelect(TNotifyUI& msg)
 		} else {
 			pEncryptPWD->SetEnabled(true);
 		}
-	}
+	}*/
 }
 
 void CSignTool::OnMenu(TNotifyUI& msg)
@@ -385,32 +409,111 @@ void CSignTool::OnCertFilePath(TNotifyUI& msg, LPCTSTR lpszCertName)
 		pSavePath->SetText(szFilePath);
 }
 
-void CSignTool::OnSignCert(TNotifyUI& msg)
+void CSignTool::OnBtnSignCert(TNotifyUI& msg)
 {
-	CDuiString strCmdParam = _T("x509 -req");
+	HCRYPTPROV hCryptProv = NULL;
+	do 
+	{
+		CEditUI2* pSignReqPath = (CEditUI2*)m_PaintManager.FindControl(_T("SignReqPath"));
+		if (pSignReqPath->GetText().IsEmpty())
+		{
+			MessageBox(m_hWnd, _T("请选择证书请求文件后重试！"), _T("提示"), MB_OK|MB_ICONINFORMATION);
+			pSignReqPath->SetFocus();
+			return;
+		}
 
-	CEditUI2* pPrivateKey = (CEditUI2*)m_PaintManager.FindControl(_T("SignPrivateKeyPath"));
-	strCmdParam.AppendFormat(_T(" -signkey \"%s\""), pPrivateKey->GetText());
+		CEditUI2* pSignCertPath = (CEditUI2*)m_PaintManager.FindControl(_T("SignCertPath"));
+		if (pSignCertPath->GetText().IsEmpty())
+		{
+			MessageBox(m_hWnd, _T("请选择证书文件保存后重试！"), _T("提示"), MB_OK|MB_ICONINFORMATION);
+			pSignCertPath->SetFocus();
+			return;
+		}
 
-	CEditUI2* pReqFilePath = (CEditUI2*)m_PaintManager.FindControl(_T("SignReqPath"));
-	if (pReqFilePath != NULL)
-		strCmdParam.AppendFormat(_T(" -in \"%s\""), pReqFilePath->GetText());
+		BYTE bData[1024*4];
+		DWORD dwLen = _countof(bData);
+		BOOL bRet = CCryptHelper::LoadCertRequestFile(pSignReqPath->GetText(), bData, &dwLen);
+		if (bRet == FALSE)
+			break;
 
-	CEditUI2* pCertFilePath = (CEditUI2*)m_PaintManager.FindControl(_T("SignCertPath"));
-	if (pCertFilePath != NULL)
-		strCmdParam.AppendFormat(_T(" -out \"%s\""), pCertFilePath->GetText());
+		CERT_REQUEST_INFO* pRequestInfo = (CERT_REQUEST_INFO*)bData;
 
-	CEditUI2* pCACertFilePath = (CEditUI2*)m_PaintManager.FindControl(_T("SignCACertPath"));
-	if (pCACertFilePath != NULL)
-		strCmdParam.AppendFormat(_T(" -CA \"%s\""), pCACertFilePath->GetText());
+		CERT_INFO CryptSignInfo; 
+		CryptSignInfo.dwVersion = CERT_V3;
+		CryptSignInfo.Subject = pRequestInfo->Subject;
+		CryptSignInfo.SubjectPublicKeyInfo = pRequestInfo->SubjectPublicKeyInfo;
 
-	CEditUI2* pCAPrivateKey = (CEditUI2*)m_PaintManager.FindControl(_T("SignCAPrivateKeyPath"));
-	if (pCAPrivateKey != NULL)
-		strCmdParam.AppendFormat(_T(" -CAkey \"%s\""), pCAPrivateKey->GetText());
+		BYTE SerialNum[] = "\x01\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0F\x0F";
+		CryptSignInfo.SerialNumber.cbData = 16;
+		CryptSignInfo.SerialNumber.pbData = SerialNum;
+		
+		CERT_BASIC_CONSTRAINTS2_INFO BasicConstraintsInfo = {0};
+		BasicConstraintsInfo.fCA = TRUE ;
+		BasicConstraintsInfo.dwPathLenConstraint = 2;
+		BasicConstraintsInfo.fPathLenConstraint = TRUE;
 
-	strCmdParam.AppendFormat(_T(" -CAcreateserial -days 3650"));
+		BYTE bBasicInfo[1024];
+		dwLen = _countof(bBasicInfo);
+		CryptEncodeObjectEx(X509_ASN_ENCODING, X509_BASIC_CONSTRAINTS2, &BasicConstraintsInfo, 0, NULL, bBasicInfo, &dwLen);
 
-	ShellExecute(m_hWnd, _T("open"), m_szOPENSSLPath, strCmdParam, NULL, SW_HIDE);
+		CryptSignInfo.cExtension   = 1;	
+		CERT_EXTENSION CertExtension;
+		CertExtension.pszObjId = szOID_BASIC_CONSTRAINTS2;
+		CertExtension.fCritical = TRUE;
+		CertExtension.Value.cbData = dwLen;
+		CertExtension.Value.pbData = bBasicInfo;
+		CryptSignInfo.rgExtension = &CertExtension;
+
+		CryptSignInfo.IssuerUniqueId.cbData = 0 ;
+		CryptSignInfo.SubjectUniqueId.cbData = 0;
+
+		CryptSignInfo.SignatureAlgorithm.pszObjId = szOID_RSA_SHA256RSA;
+		CryptSignInfo.SignatureAlgorithm.Parameters.cbData = 0;
+
+		SYSTEMTIME SysTime;
+		GetSystemTime(&SysTime);
+		SystemTimeToFileTime( &SysTime , &CryptSignInfo.NotBefore);
+
+		SysTime.wYear += 10;
+		SystemTimeToFileTime( &SysTime , &CryptSignInfo.NotAfter);
+
+		BYTE bIssuerName[100];
+		DWORD dwIssuerLen = _countof(bIssuerName);
+		if (CertStrToName(X509_ASN_ENCODING, _T("CN=SignTool"), CERT_X500_NAME_STR, NULL, bIssuerName, &dwIssuerLen, NULL) == FALSE)
+			break;
+
+		CryptSignInfo.Issuer.cbData = dwIssuerLen;
+		CryptSignInfo.Issuer.pbData = bIssuerName;
+
+		CRYPT_ALGORITHM_IDENTIFIER algId;
+		BYTE paraData[16];
+		paraData[0] = 0x05; paraData[1] = 0x00;
+
+		algId.pszObjId = szOID_RSA_SHA256RSA;
+		algId.Parameters.cbData = 0;
+		algId.Parameters.pbData = paraData;
+
+		BYTE bCertData[1024*2];
+		DWORD dwCertLen = _countof(bCertData);
+
+		CryptAcquireContext(&hCryptProv, _T("SignTool"), NULL, PROV_RSA_FULL, CRYPT_MACHINE_KEYSET);
+		bRet = CryptSignAndEncodeCertificate(hCryptProv, AT_SIGNATURE, X509_ASN_ENCODING,  
+														X509_CERT_TO_BE_SIGNED, (void*)&CryptSignInfo, &algId, NULL, bCertData, &dwCertLen);
+	
+		if (bRet == FALSE)
+			break;
+
+		HANDLE hFile = CreateFile(pSignCertPath->GetText(),GENERIC_ALL,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,CREATE_ALWAYS,0,NULL);
+		if (hFile != INVALID_HANDLE_VALUE)
+		{
+			WriteFile(hFile, bCertData, dwCertLen,&dwLen,NULL);
+			CloseHandle(hFile);
+		}
+
+	} while (FALSE);
+
+	if (hCryptProv != NULL)
+		CryptReleaseContext(hCryptProv,0);
 }
 
 LRESULT CSignTool::OnMenuClick(WPARAM wParam, LPARAM lParam)

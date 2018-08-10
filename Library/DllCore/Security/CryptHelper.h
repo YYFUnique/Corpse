@@ -56,9 +56,18 @@ public:
 	/* 函数参数：lpszSubjectName 使用者信息												   */
 	/************************************************************************/
 	BOOL AddCertificateToStore(CERT_LOCALTION CertLocal, LPCVOID lpData);
-protected:
 
 	BOOL SetCertSubjectName(LPCTSTR lpszSubjectName, CERT_NAME_BLOB* pSubjectIssuerBlob);
+
+	BOOL ExportPublicKey(CERT_PUBLIC_KEY_INFO* pCertPublicKeyInfo, DWORD* pdwLen);
+
+	/************************************************************************/
+	/* 函数名称：CryptSignAndEncodeCertificate                                           */
+	/* 函数参数：使用私钥签名证书请求文件													   */
+	/************************************************************************/
+	BOOL CryptSignAndEncodeCertificate(CERT_REQUEST_INFO* pRequestInfo, BYTE* pEncode, DWORD* pcbEncode);
+
+	static BOOL LoadCertRequestFile(LPCTSTR lpszRequestFile, LPVOID lpData, DWORD* pcbLen);
 protected:
 	CERT_TYPE		m_CertType;
 	HCRYPTKEY		m_hKey;								// 证书存储区句柄
