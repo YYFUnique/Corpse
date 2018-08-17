@@ -5,10 +5,11 @@
 #include "Deamon/Service.h"
 #include "Deamon/Monitor.h"
 
+#include "Rpc/libRpc.h"
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
 {
 	//InstallService("Deamon");
-
 
 	CPaintManagerUI::SetInstance(hInstance);
 	BOOL bSuccess = FALSE;
@@ -16,7 +17,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSho
 	if (FAILED(hRet))
 		return 0;
 
-	IMonitor* pMonitor = NULL;
+	/*IMonitor* pMonitor = NULL;
 	do 
 	{
 		hRet = CoCreateInstance(CLSID_Monitor,NULL,CLSCTX_LOCAL_SERVER,IID_IMonitor,(LPVOID*)&pMonitor);
@@ -29,8 +30,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSho
 	} while (FALSE);
 
 	if (pMonitor != NULL)
-		pMonitor->Release();
+		pMonitor->Release();*/
 	
+	SetMonitorAppInfo(_T("C:\\Aquarius.exe"));
+
 	CSignTool* pSignTool = new CSignTool();
 	if (pSignTool == NULL) 
 		return 0;

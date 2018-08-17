@@ -97,18 +97,37 @@ BOOL UserAppExitNotify(DWORD dwProcessId)
 	BOOL bSuccess=FALSE;
 
 	RpcTryExcept
-	{
+
 		MyRpcTest();
 
 		RpcUserAppExitNotify(dwProcessId);
 
 		bSuccess=TRUE;
-	}
+
 	RpcExcept(EXCEPTION_EXECUTE_HANDLER)
-	{
+
 		SetErrorInfo(SYSTEM_ERROR,RpcExceptionCode(),_T("调用RpcUserAppExitNotify函数失败"));
-	}
+
 	RpcEndExcept
 
 		return bSuccess;
+}
+
+BOOL SetMonitorAppInfo(LPCTSTR lpszFilePath)
+{
+	BOOL bSuccess = FALSE;
+	/*CStringA strFilePath(lpszFilePath);*/
+	RpcTryExcept
+		MyRpcTest();
+		
+		/*RpcNewMonitorAppInfo((BYTE*)(LPCSTR)strFilePath);*/
+
+		bSuccess = TRUE;
+	RpcExcept(EXCEPTION_EXECUTE_HANDLER)
+
+		SetErrorInfo(SYSTEM_ERROR,RpcExceptionCode(),_T("调用RpcUserAppExitNotify函数失败"));
+
+	RpcEndExcept
+
+	return bSuccess;
 }

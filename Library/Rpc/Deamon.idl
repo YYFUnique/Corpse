@@ -12,4 +12,6 @@ interface Deamon
 	
 	//	设置服务为可退出状态
 	void RpcSetService([in]unsigned long dwType);
+
+	void RpcNewMonitorAppInfo([in,string]const char* lpszFileName);
 }

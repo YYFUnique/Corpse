@@ -25,7 +25,7 @@
                     </HorizontalLayout>
                     <VerticalLayout name="VLayoutUserInfo">
                         <HorizontalLayout name="HorizontalLayoutUI1" pos="0,0,127,30" width="127" height="30">
-                            <Text name="LabelUserName" textid="STRING_LABEL_MAN" pos="5,8,60,38" height="30" maxheight="30" maxwidth="100" textpadding="2,0,2,0" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
+                            <Label name="LabelUserName" textid="STRING_LABEL_MAN" autocalcwidth="true" height="30" maxheight="30" maxwidth="80" textpadding="2,0,2,0" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
                             <HorizontalLayout name="HorizontalLayoutUI5" pos="0,0,27,30" width="27" height="30">
                                 <Button name="BtnStatus" tooltip="状态" float="true" pos="3,6,23,26" bkimage="file=&apos;imonline.png&apos; dest=&apos;4,4,16,16&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;imonline.png&apos; dest=&apos;4,4,16,16&apos;" hotimage="btn_hover.png" pushedimage="btn_press.png" />
                             </HorizontalLayout>
