@@ -66,7 +66,7 @@ BOOL CRemoteThreadInject::InjectDll(DWORD dwProcessId, LPCTSTR lpszFilePath, DWO
 		}
 		dwSize = (_tcslen(lpszFilePath)+1) * sizeof(TCHAR);
 		//使用VirtualAllocEx函数在远程进程的内存地址空间分配DLL文件名空间
-		pRemoteAddr = (char *) VirtualAllocEx( hRemoteProcess, NULL, dwSize, MEM_COMMIT, PAGE_READWRITE);
+		pRemoteAddr = (char *) VirtualAllocEx( hRemoteProcess, NULL, dwSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 		if (pRemoteAddr == NULL)
 		{
 			SetErrorInfo(SYSTEM_ERROR, 0, _T("分配远程进程内存空间失败"));
