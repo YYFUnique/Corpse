@@ -4,8 +4,6 @@ namespace DuiLib
 {
 	typedef struct tagCalendarStyle
 	{
-		DWORD dwMainTitleColor;					//日历主标题背景颜色
-		DWORD dwSubTitleColor;						//日历副标题背景颜色
 		DWORD dwWeekendColor;					//周末文字颜色
 		DWORD dwWeekdayColor;					//工作日文字颜色
 		CDuiString strHotImage;							//日期获取焦点背景图片
@@ -18,7 +16,7 @@ namespace DuiLib
 		DWORD dwDaySelectedTextColor;		//日期被选中的文字颜色
 		DWORD dwDayDisabledColor;				//日期被禁用的背景颜色
 		DWORD dwNotMonthDayColor;			//非本月日期背景颜色
-		DWORD dwStatusBkColor;						//底部信息栏背景色
+		//DWORD dwStatusBkColor;						//底部信息栏背景色
 	}TCalendarStyle;
 	
 	typedef struct tag_CalendarInfo
@@ -26,9 +24,9 @@ namespace DuiLib
 		int		nYear;
 		int		nMooth;
 		int		nDay;
-		int		nAsMooth;
-		int		nWeek;
-		int		nWeekLine;
+		int		nAsMooth;									// 是否是本月日期（日历中可能显示上一月或下一月的日期）
+		int		nWeek;										//	是否是工作日
+		int		nWeekLine;									// 以周日为索引0的星期
 	}TCalendarInfo;
 
 	class  CCalendarUI : public CVerticalLayoutUI
@@ -46,7 +44,6 @@ namespace DuiLib
 		void SetDayPanel(COptionUI* pControl,bool bWeekEnd,TCalendarInfo* pCalendarInfo);
 		void SetDayPanel(COptionUI* pControl,bool bWeekEnd,int nYear,int nMooth,int nDay,int nWeek,int nWeekLine,int nAsMooth);
 		void UpdateMainTitle(int nYear,int nMooth);
-		void ChangeDateTime(int nYear,int nMooth,int nDay);
 	public:
 		bool IsLeapYear(int nYear);
 		int  DaysOfMonth(int nMooth,int nYear = -1);
@@ -60,6 +57,8 @@ namespace DuiLib
 	public:
 		void OnLastYear(TNotifyUI* pMsg);
 		void OnMoothSelect(TNotifyUI* pMsg);
+		void OnLastMonth(TNotifyUI* pMsg);
+		void OnNextMonth(TNotifyUI* pMsg);
 		void OnNextYear(TNotifyUI* pMsg);
 		void OnSelectMooth(TNotifyUI* pMsg);
 		void OnSelcetDay(TNotifyUI* pMsg);
@@ -70,8 +69,8 @@ namespace DuiLib
 		void OnKillFocus(TNotifyUI* pMsg);
 		void OnSelectChanged(TNotifyUI* pMsg);
 	public:
-		void SetEnabledMoothSel(bool bEnabled = true);
-		bool GetEnabledMoothSel();
+		void SetEnabledMonthSel(bool bEnabled = true);
+		bool GetEnabledMonthSel();
 		void SetEnabledYearSel(bool bEnabled = true);
 		bool GetEnabledYearSel();
 		void SetMainTitleHeight(int nHeight);
@@ -85,24 +84,23 @@ namespace DuiLib
 	protected:
 		void NormalizeTime(int& nYear,int& nMonth);
 	private:
-		CDuiString					m_sComboTargetName;
 		CButtonUI*					m_pLastYear;					//去年
-		CButtonUI*					m_pMoothSelect;			//月份选择按钮
+		CButtonUI*					m_pLastMonth;				// 上一月
+		CLabelUI*					m_pMonthSelect;			//月份选择按钮
+		CButtonUI*					m_pNextMonth;				//下一月
 		CButtonUI*					m_pNextYear;					//明年
 		CHorizontalLayoutUI*	m_pMainTitleHoriz;			//主标题，显示年份
 		CHorizontalLayoutUI*	m_pSubTitleHoriz;			//副标题，显示星期
 
-		CHorizontalLayoutUI*	m_pMonthPanelHorz;		//月份选择栏
 		CVerticalLayoutUI*		m_pWeekPanelVert;		//日期显示栏
 		CHorizontalLayoutUI*	m_pInfoPanelHorz;			//底部信息栏
-		CButtonUI*					pDateTimeBtn;
 		CButtonUI*					m_pBtnToDay;					//
 
-		int								mYear;
-		int								mMonth;
-		int								mToday;
+		int								m_nYear;								// 日期年份
+		int								m_nMonth;							//	日期月份
+		int								m_nToday;							// 日期号数
 		bool								pEnabledYearSel;
-		bool								pEnabledMoothSel;
+		bool								pEnabledMonthSel;
 
 		SYSTEMTIME				m_LocalTime;
 		TCalendarStyle			m_CalendarStyle;

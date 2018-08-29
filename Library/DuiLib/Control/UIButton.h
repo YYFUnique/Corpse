@@ -37,6 +37,8 @@ namespace DuiLib
 		DWORD GetHotBkColor() const;
 		void SetHotTextColor(DWORD dwColor);
 		DWORD GetHotTextColor() const;
+		void SetPushedBkColor(DWORD dwColor);
+		DWORD GetPushedBkColor() const;
 		void SetPushedTextColor(DWORD dwColor);
 		DWORD GetPushedTextColor() const;
 		void SetFocusedTextColor(DWORD dwColor);
@@ -51,6 +53,7 @@ namespace DuiLib
 		UINT m_uButtonState;
 
 		DWORD m_dwHotBkColor;
+		DWORD m_dwPushedBkColor;
 		DWORD m_dwHotTextColor;
 		DWORD m_dwPushedTextColor;
 		DWORD m_dwFocusedTextColor;
