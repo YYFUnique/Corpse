@@ -20,7 +20,7 @@ public:
 
 protected:
 	void OnClick(TNotifyUI& msg);
-
+	void OnFileLookup(TNotifyUI& msg);
 protected:
 
 	BOOL InjectDll(LPCTSTR lpszFilePath, DWORD dwRemoteProcessId);
