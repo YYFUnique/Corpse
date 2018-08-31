@@ -29,6 +29,11 @@ namespace DuiLib
 		int		nWeekLine;									// 以周日为索引0的星期
 	}TCalendarInfo;
 
+	/************************************************************************/
+	/* <Calendar padding="2,2,2,2" />                                                          */
+	/************************************************************************/
+
+
 	class  CCalendarUI : public CVerticalLayoutUI
 	{
 	public:

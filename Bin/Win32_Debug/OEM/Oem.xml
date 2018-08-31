@@ -9,32 +9,32 @@
 		<VerticalLayout name="VLayout" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos; mask=&apos;0xffffffff&apos; " >
 			<HorizontalLayout name="HLayoutTitle" pos="0,0,0,40" height="40">
 				<HorizontalLayout name="HLayoutWinName" pos="0,0,180,40" width="180" height="40">
-					<Label name="WindowName" text="Windows授权信息工具" font="1" float="true" pos="7,4,180,40" textpadding="2,0,2,0" textcolor="#00FFFFFF" />
+					<Label name="WindowName" text="Windows授权信息工具" font="1" float="true" pos="7,4,180,40" textpadding="2,0,2,0" textcolor="#FFFFFFFF" />
 				</HorizontalLayout>
 				<Control />
 				<HorizontalLayout name="HLayoutSys" pos="0,0,96,40" width="96" height="40">
-					<Button name="BtnSkin" tooltip="换肤" float="true" pos="1,0,29,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" normalimage="file=&apos;BtnSkin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnSkin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnSkin.png&apos; source=&apos;56,0,84,20&apos;" />
+					<Button name="BtnSkin" tooltip="换肤" visible="false" float="true" pos="1,0,29,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" normalimage="file=&apos;BtnSkin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnSkin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnSkin.png&apos; source=&apos;56,0,84,20&apos;" />
 					<Button name="BtnMin" tooltip="最小化" float="true" pos="29,0,57,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" normalimage="file=&apos;BtnMin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMin.png&apos; source=&apos;56,0,84,20&apos;" />
 					<Button name="BtnClose" tooltip="关闭" float="true" pos="57,0,96,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
 				</HorizontalLayout>
 			</HorizontalLayout>
 			<VerticalLayout bkcolor="#FFFFFFFF" padding="1,1,1,1">
 				<GroupLayout name="LabelUI1" text="系统信息" font="1" height="100" >
-					<Label name="LabelManufacturer" pos="10,20,55,48" font="2" text="制造商" />
-					<Edit2 name="Manufacturer" pos="60,20,180,48" font="2" watertext="制造商" />
-					<Label name="LabelModel" pos="190,20,250,48" font="2" text="产品型号" />
-					<Edit2 name="Model" pos="250,20,375,48" font="2" watertext="产品型号" />
-					<Label name="Logo" pos="10,53,55,81" font="2" text="Logo" />
-					<Edit2 name="EditPackPath" float="true" pos="60,53,310,81" textcolor="#FF000000" font="2" disabledtextcolor="#FFA7A6AA"/>
+					<Label name="LabelManufacturer" align="right" pos="10,20,60,48" font="2" text="制造商:" />
+					<Edit2 name="Manufacturer" pos="65,20,180,48" textpadding="4,5,4,3" font="2" watertext="制造商" />
+					<Label name="LabelModel" align="right" pos="190,20,245,48" font="2" text="产品型号:" />
+					<Edit2 name="Model" pos="250,20,375,48"  textpadding="4,5,4,3" font="2" watertext="产品型号" />
+					<Label name="Logo" align="right" pos="10,53,60,81" font="2" text="Logo:" />
+					<Edit2 name="EditPackPath" float="true" readonly="true" pos="65,53,310,81" textpadding="4,5,4,3" textcolor="#FF000000" font="2" disabledtextcolor="#FFA7A6AA"/>
 					<Button name="BtnPackPath" text="浏览..."  float="true" pos="315,53,375,81" textcolor="#FF000000" align="center" />
 				</GroupLayout>
 				<GroupLayout name="LabelUI2" text="技术支持" height="100" font="1">
-					<Label name="LabelSupport" pos="10,20,70,48" font="2" text="服务热线"/>
-					<Edit2 name="SupportPhone" pos="60,21,180,48" font="2" watertext="服务热线电话" />
-					<Label name="LabelModel" pos="190,20,250,48" font="2" text="服务时间" />
-					<Edit2 name="SupportTime" pos="250,20,375,48" font="2" watertext="服务时间" />
-					<Label name="LabelURL" pos="10,53,70,81" text="服务网址" font="2" />
-					<Edit2 name="SupportURL" align="center" float="true" watertext="http://" pos="60,53,375,81" textcolor="#FF000000" font="2" disabledtextcolor="#FFA7A6AA"/>
+					<Label name="LabelSupport" align="right" pos="5,20,60,48" font="2" text="服务热线:"/>
+					<Edit2 name="SupportPhone" pos="65,21,180,48" textpadding="4,5,4,3" font="2" watertext="服务热线电话" />
+					<Label name="LabelModel" align="right" pos="190,20,245,48" font="2" text="服务时间:" />
+					<Edit2 name="SupportTime" pos="250,20,375,48" textpadding="4,5,4,3" font="2" watertext="服务时间" />
+					<Label name="LabelURL" align="right" pos="5,53,60,81" text="服务网址:" font="2" />
+					<Edit2 name="SupportURL" align="center" textpadding="4,5,4,3" float="true" watertext="http://" pos="65,53,375,81" textcolor="#FF000000" font="2" disabledtextcolor="#FFA7A6AA"/>
 				</GroupLayout>
 				<Control />
 				<HorizontalLayout name="HLayout" height="35" >

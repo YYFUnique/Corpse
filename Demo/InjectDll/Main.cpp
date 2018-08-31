@@ -17,7 +17,7 @@ BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSh
 		if (pInjectDll == NULL) 
 			break;
 
-		pInjectDll->Create(NULL, _T("远程注入工具"), UI_WNDSTYLE_FRAME, 0, 0, 0, 800, 600);
+		pInjectDll->Create(NULL, _T("远程注入工具"), UI_WNDSTYLE_DIALOG, 0, 0, 0, 800, 600);
 		pInjectDll->CenterWindow();
 		pInjectDll->ShowWindow(true);
 

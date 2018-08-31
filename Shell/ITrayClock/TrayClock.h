@@ -1,4 +1,3 @@
 #pragma once
 
-#include <tchar.h>
-#include <windows.h>
+void FreeRemoteLibrary(HWND hWnd); 

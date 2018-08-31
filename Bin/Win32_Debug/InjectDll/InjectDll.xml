@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <Window size="400,200" sizebox="4,4,6,6" caption="0,0,0,30" mininfo="400,200" bktrans="true" shadow="true" shadowimage="shadow.png" shadowcorner="5,3,5,5" roundcorner="5,5" maxbox="false" >
-    <Font name="微软雅黑" size="16" bold="false" italic="false" />
-    <Font name="楷体" size="16" bold="false" italic="false" />
     <Font name="微软雅黑" size="12" bold="false" italic="false" />
+    <Font name="楷体" size="16" bold="false" italic="false" />
+    <Font name="微软雅黑" size="14" bold="false" italic="false" />
 	<Default name="Edit2" value="normalimage=&quot;file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;&quot; hotimage=&quot;file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;&quot; focusedimage=&quot;file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;&quot;" />
 	<Default name="Button" value="normalimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;&quot; hotimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;&quot; pushedimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;&quot;" />
     <VerticalLayout name="VLayoutTotal" pos="0,1,0,1" borderround="5,5" bkcolor="#FFFFFFFF">
@@ -24,7 +24,7 @@
 					<Label text="动态库:" font="0" align="right" float="true" pos="5,40,80,67"/>
 					<Edit2 name="DllFile" readonly="true" font="0" float="true" pos="85,40,300,67" textpadding="4,3,4,3" textcolor="#FF000000"/>
 					<Button name="BtnLookup" text="浏览..." font="0" float="true" pos="305,38,380,70"/>
-					<Button name="BtnInject" text="注入" font="0" float="true" pos="85,100,300,140"/>
+					<Button name="BtnInject" text="注入" font="2" float="true" pos="85,100,300,140"/>
                 </HorizontalLayout>
             </VerticalLayout>
         </VerticalLayout>

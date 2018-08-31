@@ -1,6 +1,9 @@
+#include "StdAfx.h"
 #include "TrayClock.h"
-#include <atlstr.h>
-#include <CommCtrl.h>
+#include "Define.h"
+#include "Menu.h"
+#include "MenuHandler.h"
+
 // 保存模块句柄，释放DLL时需要用到
 static HMODULE gLibModule = 0;
 
@@ -11,30 +14,10 @@ static BOOL m_bMouseTracking = 0;
 
 HMENU hPopMenu = NULL;
 static HWND m_hwndTooltip = NULL;
+CMenu* pPopupMenu = NULL;
+CMenuHandler* pMenuHandler = NULL;
+
  TOOLINFO m_ToolTip;
-
-#define WM_TCLOCK_RESVERED1		(WM_USER + 0x64)		// 未知保留中
-#define WM_TCLOCK_LBUTTON		(WM_USER + 0x66)		// 任务栏时钟区域点击鼠标左键
-#define WM_TCLOCK_TOOLTIP			(WM_USER + 0x67)		// 任务栏时钟显示ToolTip
-#define WM_TCLOCK_HIGHLIGHT		(WM_USER + 0x68)		// 任务栏时钟背景高亮
-
-typedef enum tagTCLOCK_HIGHLIGHT_WPARAM
-{
-	TCLOCK_DISABLE	= 1,
-	TCLOCK_ENABLE		= 2,
-	TCLOCK_UNKNOW = 3,
-}TCLOCK_HIGHLIGHT_WPARAM;
-
- typedef enum tagMENU_ITEM
- {
-	//MENU_ITEM_EXIT = 0,
-	IDM_ITEM_TEST1		= 0,
-	IDM_ITEM_TEST2		= 1,
-	IDM_ITEM_SEP			=	2,
-	IDM_ITEM_ENABLE		= 3,
-	IDM_ITEM_DISABLE	=	4,
-	IDM_ITEM_EXIT			=	5,
- }MENU_ITEM;
 
 // 查找时钟窗口句柄
 static HWND FindClockWindow()
@@ -99,15 +82,169 @@ CString GetMsgType(UINT uMsg)
 	return strMsgType;
 }
 
+//void LoadDrawingSetting(HWND hwnd)
+//{
+//	char fontname[80];
+//	int size, langid, codepage;
+//	LONG weight, italic;
+//
+//	/* ------- colors ------------- */
+//
+//	m_fillbackcolor = GetMyRegLong(NULL, "UseBackColor",
+//		g_bVisualStyle? FALSE: TRUE);
+//
+//	m_colback = GetMyRegLong(NULL, "BackColor",
+//		0x80000000 | COLOR_3DFACE);
+//
+//	if((!g_winver&WINXP) && m_fillbackcolor == FALSE)
+//	{
+//		m_fillbackcolor = TRUE;
+//		m_colback = 0x80000000 | COLOR_3DFACE;
+//	}
+//
+//	m_colback2 = m_colback;
+//	if((g_winver&WIN98) || (g_winver&WIN2000))
+//	{
+//		if(GetMyRegLong(NULL, "UseBackColor2", TRUE))
+//			m_colback2 = GetMyRegLong(NULL, "BackColor2", m_colback);
+//		m_grad = GetMyRegLong(NULL, "GradDir", GRADIENT_FILL_RECT_H);
+//	}
+//
+//	m_bFillTray = FALSE;
+//	if(m_fillbackcolor && ((g_winver&WINME) || (g_winver&WIN2000)))
+//		m_bFillTray = GetMyRegLong(NULL, "FillTray", FALSE);
+//
+//	m_colfore = GetMyRegLong(NULL, "ForeColor", 
+//		0x80000000 | COLOR_BTNTEXT);
+//
+//	/* ------- font ------------- */
+//
+//	GetMyRegStr(NULL, "Font", fontname, 80, "");
+//
+//	if(fontname[0] == 0)
+//	{
+//		HFONT hfont;
+//		LOGFONT lf;
+//		hfont = (HFONT)GetStockObject(DEFAULT_GUI_FONT);
+//		if(hfont)
+//		{
+//			GetObject(hfont, sizeof(lf), (LPVOID)&lf);
+//			strcpy(fontname, lf.lfFaceName);
+//		}
+//		else strcpy(fontname, "System");
+//	}
+//
+//	size = GetMyRegLong(NULL, "FontSize", 9);
+//	if(size == 0) size = 9;
+//	weight = GetMyRegLong(NULL, "Bold", 0);
+//	if(weight) weight = FW_BOLD;
+//	else weight = 0;
+//	italic = GetMyRegLong(NULL, "Italic", 0);
+//
+//	if(m_hFont) DeleteObject(m_hFont);
+//
+//	langid = GetMyRegLong(NULL, "Locale", (int)GetUserDefaultLangID());
+//	codepage = GetCodePage(langid);
+//
+//	// font.c
+//	m_hFont = CreateMyFont(fontname, size, weight, italic, codepage);
+//
+//	/* ------- size and position ------------- */
+//
+//	g_bFitClock = FALSE;
+//	if(g_winver&WINXP)
+//		g_bFitClock = GetMyRegLong(NULL, "FitClock", TRUE);
+//
+//	m_ClockWidth = -1;
+//}
+
+void GetClockTextSize(HDC hdc, const TEXTMETRIC* ptm,
+					  const wchar_t* str, int *wout, int *hout)
+{
+	int w, h;
+	int heightFont;
+	const wchar_t *p, *sp, *ep;
+	SIZE sz;
+
+	p = str; w = 0; h = 0;
+
+	heightFont = ptm->tmHeight - ptm->tmInternalLeading;
+	while(*p)
+	{
+		sp = p;
+		while(*p && *p != 0x0d) p++;
+		ep = p;
+		if(*p == 0x0d) p += 2;
+
+		if(GetTextExtentPoint32W(hdc, sp, ep - sp, &sz) == 0)
+			sz.cx = (ep - sp) * ptm->tmAveCharWidth;
+		if(w < sz.cx) w = sz.cx;
+		h += heightFont;
+
+		if(*p) h += 2 + 0;
+	}
+
+	*wout = w; *hout = h;
+}
+
 /*------------------------------------------------
   return size of clock
   high-order word: height, low-order word: width
 --------------------------------------------------*/
-LRESULT OnCalcRect(HWND hwnd)
+LRESULT OnCalcRect(HWND hWnd)
 {
-	int hclock = 40;
-	int wclock = 150;
-	return MAKELONG(wclock,hclock);
+	TEXTMETRIC tm;
+	HDC hDC;
+	//HFONT hOldFont;
+	wchar_t s[MAX_PATH];
+	int wclock, hclock;
+
+	if ((GetWindowLong(hWnd, GWL_STYLE) & WS_VISIBLE) == FALSE)
+		return 0;
+
+	hDC = GetDC(hWnd);
+	//if (m_hFont) hOldFont = SelectObject(hDC, m_hFont);
+	GetTextMetrics(hDC, &tm);
+
+	/*if(g_sdisp2[0]) wcscpy(s, g_sdisp2);
+	else if(g_sdisp1[0]) wcscpy(s, g_sdisp1);
+	else MakeFormat(s, NULL, NULL, BUFSIZE_FORMAT);*/
+
+	_stprintf(s, _T("%s"), _T("2018-08-31 15:17:00"));
+
+	//if(g_scat1[0]) wcscat(s, g_scat1);
+	//if(g_scat2[0]) wcscat(s, g_scat2);
+
+	GetClockTextSize(hDC, &tm, s, &wclock, &hclock);
+
+	wclock += tm.tmAveCharWidth * 2 + 5;
+	hclock += (tm.tmHeight - tm.tmInternalLeading) / 2 + 5;
+	if(hclock < 4) hclock = 4;
+
+	//if(wclock > m_ClockWidth) m_ClockWidth = wclock;
+
+	if(TRUE)
+	{
+		RECT rcTray, rcTaskbar;
+
+		GetWindowRect(GetParent(hWnd), &rcTray);
+		GetClientRect(GetParent(GetParent(hWnd)), &rcTaskbar);
+
+		// horizontal task bar
+		if(rcTaskbar.right - rcTaskbar.left >
+			rcTaskbar.bottom - rcTaskbar.top)
+		{
+			hclock = rcTray.bottom - rcTray.top;
+		}
+		// vertical task bar
+		else
+			wclock = rcTray.right - rcTray.left;
+	}
+
+	//if(m_hFont) SelectObject(hDC, hOldFont);
+	ReleaseDC(hWnd, hDC);
+
+	return (hclock << 16) + wclock;
 }
 
 void RefreshRebar(HWND hwndRebar)
@@ -147,91 +284,120 @@ void RefreshTaskbar(HWND hwndClock)
 	PostMessage(hwndTaskbar, WM_SIZE, SIZE_RESTORED, 0);
 }
 
+void FreeRemoteLibrary(HWND hWnd)
+{
+	RefreshTaskbar(hWnd);
+	RestoreWndProc();
+	CloseHandle(CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)FreeSelf, NULL, 0, NULL));
+}
+
+void DrawClock(HWND hwnd, HDC hdc, const SYSTEMTIME* pt)
+{
+	//RECT rcClock;
+	//TEXTMETRIC tm;
+	//int x, y, wclock, hclock, wtext, htext;
+	//int len;
+	//wchar_t s[MAX_PATH], *p, *sp, *ep;
+	//DWORD dwRop = SRCCOPY;
+
+	//if(!m_hdcClock) CreateClockDC(hwnd);
+
+	//if(!m_hdcClock) return;
+
+	//GetClientRect(hwnd, &rcClock);
+	//wclock = rcClock.right;
+	//hclock = rcClock.bottom;
+
+	//// copy m_hdcClockBack to m_hdcClock
+	//CopyClockBack(hwnd, m_hdcClock, m_hdcClockBack, wclock, hclock);
+
+	//if(GetFocus() == hwnd)
+	//	DrawFocusRect(m_hdcClock, &rcClock);
+
+	//if(g_sdisp2[0]) wcscpy(s, g_sdisp2);
+	//else if(g_sdisp1[0]) wcscpy(s, g_sdisp1);
+	//else MakeFormat(s, pt, NULL, BUFSIZE_FORMAT);  // format.c
+
+	//if(g_scat1[0])
+	//{
+	//	len = wcslen(s);
+	//	if(len > 0 && s[len - 1] != 0x0a && s[len - 1] != ' ')
+	//		wcscat(s, L" ");
+	//	wcscat(s, g_scat1);
+	//}
+	//if(g_scat2[0])
+	//{
+	//	len = wcslen(s);
+	//	if(len > 0 && s[len - 1] != 0x0a && s[len - 1] != ' ')
+	//		wcscat(s, L" ");
+	//	wcscat(s, g_scat2);
+	//}
+
+	//GetTextMetrics(m_hdcClock, &tm);
+
+	//GetClockTextSize(m_hdcClock, &tm, s, &wtext, &htext);
+
+	//y = (hclock - htext)/2 - tm.tmInternalLeading/2 + m_dvpos;
+
+	//if(m_nTextPos == 1)
+	//	x = (tm.tmAveCharWidth * 2) / 3;
+	//else if(m_nTextPos == 2)
+	//	x = wclock - (tm.tmAveCharWidth * 2) / 3;
+	//else
+	//	x = wclock / 2;
+
+	//p = s;
+	//while(*p)
+	//{
+	//	sp = p;
+	//	while(*p && *p != 0x0d) p++;
+	//	ep = p;
+	//	if(*p == 0x0d) p += 2;
+	//	TextOutW(m_hdcClock, x, y, sp, ep - sp);
+
+	//	if(*p) y += tm.tmHeight - tm.tmInternalLeading
+	//		+ 2 + m_dlineheight;
+	//}
+
+	//if(g_nBlink > 0 && (g_nBlink % 2) == 0) dwRop = NOTSRCCOPY;
+
+	//BitBlt(hdc, 0, 0, wclock, hclock, m_hdcClock, 0, 0, dwRop);
+
+	//if(wtext + tm.tmAveCharWidth * 2 + m_dwidth > m_ClockWidth)
+	//{
+	//	m_ClockWidth = wtext + tm.tmAveCharWidth * 2 + m_dwidth;
+	//	PostMessage(GetParent(GetParent(hwnd)), WM_SIZE, SIZE_RESTORED, 0);
+	//	InvalidateRect(GetParent(GetParent(hwnd)), NULL, TRUE);
+	//}
+}
+
+void OnPaint(HWND hwnd, HDC hdc, const SYSTEMTIME* pt)
+{
+	DrawClock(hwnd, hdc, pt);
+}
 
 // 新的窗口处理过程,核心工作都在这里
 LRESULT CALLBACK ClockWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	//if (uMsg == WM_PAINT)
-	//{
-	//	TCHAR szBuff[256];
-
-	//	//获取当前时间
-	//	SYSTEMTIME tmCur;
-	//	GetLocalTime(&tmCur);
-	//	//格式化时间
-	//	_stprintf_s(szBuff, _T("^_^%02d:%02d\n%02dW%d"),  
-	//						tmCur.wHour, tmCur.wMinute, 
-	//						tmCur.wSecond, tmCur.wDayOfWeek);
-
-	//	//显示时间
-	//	PAINTSTRUCT ps;
-	//	HDC hdc = BeginPaint(hWnd, &ps);
-	//	// TODO: Add any drawing code here...
-	//	RECT rt;
-	//	GetClientRect(hWnd, &rt);
-	//	DrawText(hdc, szBuff, (int)_tcslen(szBuff), &rt, DT_LEFT|DT_TOP);
-	//	EndPaint(hWnd, &ps);
-	//	return 0;
-	//}
-
-	
-	
+{	
 	// 为了能收到鼠标左击右击的消息，必须让Windows以为我们"命中"了工作区
-	//if (uMsg == WM_NCHITTEST)
-	//	return HTCLIENT;
-
-	{
-		CString strTipInfo;
-		strTipInfo.Format(_T("uMsg : %s, wParam:%d, lParam:%d.\r\n"),GetMsgType(uMsg),wParam,lParam);
-		//OutputDebugString(strTipInfo);
-		if (uMsg == WM_NOTIFY)
-		{
-			CString strTipInfo;
-			NMHDR* pnmHdr = (NMHDR*)lParam;
-			strTipInfo.Format(_T("code:%d\r\n"),pnmHdr->code);
-			//OutputDebugString(strTipInfo);
-		}
-	}
-
-	//// 处理鼠标左击事件
 	if (uMsg == WM_NCHITTEST)
 		return HTCLIENT;
 
-	// 处理鼠标左击事件
-	//if (uMsg == WM_LBUTTONUP)
-	//{
-	//	OutputDebugString(_T("TClock WM_LBUTTONUP"));
-	//	ShellExecute(0, TEXT("open"), TEXT("http://www.baidu.com/"), NULL, NULL, SW_SHOW);
-	//	return 0;
-	//}
-
-	if (uMsg == WM_LBUTTONUP)
-	{
-		RefreshTaskbar(hWnd);
-		RestoreWndProc();
-		CloseHandle(CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)FreeSelf, NULL, 0, NULL));
-		return 0;
-	}
-
-	/*if (uMsg == WM_NCCALCSIZE)
-	{
-		OutputDebugString(_T("WM_NCCALCSIZE"));
-		return 0;
-	}*/
-
 	if (uMsg == WM_USER+100)
 	{
-		OutputDebugString(_T("WM_USER+100"));
 		RECT rcTClock;
 		GetClientRect(hWnd, &rcTClock);
 		InvalidateRect(GetParent(hWnd), &rcTClock, TRUE);
 		return OnCalcRect(hWnd);
 	}
-	if (uMsg == WM_WININICHANGE || uMsg ==  WM_TIMECHANGE || 
-		uMsg == WM_USER+101 || uMsg == WM_SETFOCUS || uMsg == WM_KILLFOCUS)
+	if (uMsg == WM_PAINT)
 	{
-		OutputDebugString(_T("WM_USER+101"));
-		InvalidateRect(hWnd, NULL, FALSE);
+		PAINTSTRUCT ps;
+		HDC hdc;
+		//if(g_bNoClock) break;
+		hdc = BeginPaint(hWnd, &ps);
+		OnPaint(hWnd, hdc, NULL);
+		EndPaint(hWnd, &ps);
 		return 0;
 	}
 
@@ -244,38 +410,23 @@ LRESULT CALLBACK ClockWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 		UINT uFlag = MF_BYPOSITION|MF_STRING;
 		POINT ptClickPoint;
 		GetCursorPos(&ptClickPoint);
-		hPopMenu = CreatePopupMenu();
-		//InsertMenu(hPopMenu,0xFFFFFFFF,MF_BYPOSITION|MF_STRING,IDM_ABOUT,_T("About"));
-		if ( bDisable == TRUE )
-		{
-			uFlag |= MF_GRAYED;
-		}
-		InsertMenu(hPopMenu,0xFFFFFFFF,uFlag,IDM_ITEM_TEST2,_T("Test 2"));
-		InsertMenu(hPopMenu,0xFFFFFFFF,uFlag,IDM_ITEM_TEST1,_T("Test 1"));
-		InsertMenu(hPopMenu,0xFFFFFFFF,MF_SEPARATOR,IDM_ITEM_SEP,_T("SEP"));
-		if ( bDisable == TRUE )
-		{
-			InsertMenu(hPopMenu,0xFFFFFFFF, 
-				MF_BYPOSITION|MF_STRING,IDM_ITEM_ENABLE,_T("Enable"));
-		}
-		else 
-		{
-			InsertMenu(hPopMenu,0xFFFFFFFF,MF_BYPOSITION|MF_STRING,IDM_ITEM_DISABLE,_T("Disable"));    
-		}
-		InsertMenu(hPopMenu,0xFFFFFFFF,MF_SEPARATOR,IDM_ITEM_SEP,_T("SEP"));    
-		InsertMenu(hPopMenu,0xFFFFFFFF,MF_BYPOSITION|MF_STRING,IDM_ITEM_EXIT,_T("Exit"));     
-		SetForegroundWindow(hWnd);
-		TrackPopupMenu(hPopMenu,TPM_LEFTALIGN|TPM_LEFTBUTTON|TPM_BOTTOMALIGN,
-			ptClickPoint.x, ptClickPoint.y,0,hWnd,NULL);
-		DestroyMenu(hPopMenu); 
+			
+		pPopupMenu->CreatePopupMenu();
+		
+		pPopupMenu->InsertMenu(0xFFFFFFFF, uFlag, IDM_ITEM_TEST1, _T("Test 1"));
+		pPopupMenu->InsertMenu(0xFFFFFFFF, uFlag, IDM_ITEM_TEST2, _T("Test 2"));
+		pPopupMenu->InsertMenu(0xFFFFFFFF, MF_SEPARATOR, IDM_ITEM_SEP, _T("SEP"));    
+		pPopupMenu->InsertMenu(0xFFFFFFFF, MF_BYPOSITION|MF_STRING, IDM_ITEM_EXIT, _T("退出"));
+
+		pPopupMenu->ShowPopupMenu(hWnd, TPM_LEFTALIGN|TPM_LEFTBUTTON|TPM_BOTTOMALIGN, &ptClickPoint);
+
+		pPopupMenu->DestroyMenu();
 		return 0;
 	}
 
-	/*if (uMsg == )*/
-
-	 if (uMsg == WM_MOUSEMOVE)
-	 {
-		 // Start tracking this entire window again...
+	if (uMsg == WM_MOUSEMOVE)
+	{
+	 // Start tracking this entire window again...
 		if( !m_bMouseTracking ) {
 			TRACKMOUSEEVENT tme = { 0 };
 			tme.cbSize = sizeof(TRACKMOUSEEVENT);
@@ -286,60 +437,27 @@ LRESULT CALLBACK ClockWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 			m_bMouseTracking = true;
 		}
 		return 0;
-	 }
+	}
+	if (uMsg == WM_MOUSEHOVER)
+	{
+		PostMessage(hWnd, WM_TCLOCK_HIGHLIGHT, TCLOCK_ENABLE, 0);
+		return 0;
+	}
 
-
-	 if (uMsg == WM_MOUSEHOVER)
-	 {
-		/* ::ZeroMemory(&m_ToolTip, sizeof(TOOLINFO));
-		 m_ToolTip.cbSize = sizeof(TOOLINFO);
-		 m_ToolTip.uFlags = TTF_IDISHWND;
-		 m_ToolTip.hwnd = hWnd;
-		 m_ToolTip.uId = (UINT_PTR) hWnd;
-		 m_ToolTip.hinst = gLibModule;
-		 m_ToolTip.lpszText = const_cast<LPTSTR>( (LPCTSTR) _T("Hello word") );
-		 RECT rcWnd;
-		 GetWindowRect(hWnd, &rcWnd);
-		 
-		 rcWnd.bottom = rcWnd.top;
-		 rcWnd.top = rcWnd.bottom - 100;
-		 m_ToolTip.rect = rcWnd;
-
-		 if( m_hwndTooltip == NULL ) {
-			 m_hwndTooltip = ::CreateWindowEx(0, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, hWnd, NULL, gLibModule, NULL);
-			 ::SendMessage(m_hwndTooltip, TTM_ADDTOOL, 0, (LPARAM) &m_ToolTip);
-		 }
-		 ::SendMessage( m_hwndTooltip,TTM_SETMAXTIPWIDTH,0, 200);
-		 ::SendMessage(m_hwndTooltip, TTM_SETTOOLINFO, 0, (LPARAM) &m_ToolTip);
-		 ::SendMessage(m_hwndTooltip, TTM_TRACKACTIVATE, TRUE, (LPARAM) &m_ToolTip);*/
-
-			PostMessage(hWnd, WM_TCLOCK_HIGHLIGHT, TCLOCK_ENABLE, 0);
-			//PostMessage(hWnd, WM_TCLOCK_REDRAW, TRUE, 0);
-			return 0;
-	 }
-
-	 if (uMsg == WM_GETMINMAXINFO)
-	 {
-		 CString strTipInfo;
-		 strTipInfo.Format(_T("WM_GETMINMAXINFO : %d, wParam:%d, lParam:%d.\r\n"),uMsg,wParam,lParam);
-		 OutputDebugString(strTipInfo);
-		 /*GetWindowRect()*/
-		 return 0;
-	 }
+	if (uMsg == WM_COMMAND)
+	{
+		 LRESULT lRet = pPopupMenu->OnCmd(hWnd, wParam, lParam);
+		 if (lRet == FALSE)
+			 return 0;
+	}
 
 	if (uMsg == WM_MOUSELEAVE)
 	{
-		/*if( m_hwndTooltip != NULL ) ::SendMessage(m_hwndTooltip, TTM_TRACKACTIVATE, FALSE, (LPARAM) &m_ToolTip);
-		if( m_bMouseTracking ) ::SendMessage(hWnd, WM_MOUSEMOVE, 0, (LPARAM) -1);*/
 		m_bMouseTracking = false;
 		PostMessage(hWnd, WM_TCLOCK_HIGHLIGHT, TCLOCK_DISABLE, 0);
 	}
 
-	LRESULT lRet =  WNDPROC(gOldWndProc)(hWnd, uMsg, wParam, lParam);
-	//if (uMsg == WM_GETMINMAXINFO || uMsg == 0x467)
-	
-
-	return lRet;
+	return WNDPROC(gOldWndProc)(hWnd, uMsg, wParam, lParam);	
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
@@ -354,27 +472,16 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 			if (IsWindow(hClock))
 			{
 				gLibModule = hModule;
-				/*RECT rcWnd;
-				GetWindowRect(hClock, &rcWnd);
-				SetWindowPos(hClock,NULL,0,0,1,1,SWP_NOMOVE|SWP_NOZORDER);*/
+
+				pPopupMenu = new CMenu;
+				pMenuHandler = new CMenuHandler;
+				pPopupMenu->SetMenuHandler(pMenuHandler);
+
 				gOldWndProc = GetWindowLongPtr(hClock, GWLP_WNDPROC);
-				if (gOldWndProc != 0)
-				{
+				if (gOldWndProc != NULL)
 					SetWindowLongPtr(hClock, GWLP_WNDPROC, (LONG_PTR)&ClockWndProc);
-				}
+				
 				RefreshTaskbar(hClock);
-				//SetWindowPos(hClock,NULL,0,0,rcWnd.right-rcWnd.left+100,rcWnd.bottom-rcWnd.top,SWP_NOZORDER);
-				//SendMessage(hClock, TB_SETBUTTONWIDTH, 0, MAKELONG(300,450));
-				/*const int nOffset = 100;
-				HWND hWndNotify = FindWindow(_T("TrayNotifyWnd"),NULL);
-				RECT rectNotify;
-				GetWindowRect(hWndNotify, &rectNotify);
-				CString strTipInfo;
-				strTipInfo.Format(_T("left:%d,right:%d,top:%d,bottom:%d"),rectNotify.left,rectNotify.right,rectNotify.top,rectNotify.bottom);
-				OutputDebugString(strTipInfo);
-				SetWindowPos(hWndNotify, NULL, 
-								0,0, rectNotify.right - rectNotify.left+nOffset, rectNotify.bottom - rectNotify.top, 
-								SWP_NOZORDER|SWP_NOMOVE);*/
 			}
 			break;
 		}
@@ -382,7 +489,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 	case DLL_PROCESS_DETACH:
 		{
 			OutputDebugString(_T("DLL_PROCESS_DETACH"));
-			RestoreWndProc();
+			if (pMenuHandler != NULL)
+				delete pMenuHandler;
+
+			if (pPopupMenu != NULL)
+				delete pPopupMenu;
 			break;
 		}
 	}

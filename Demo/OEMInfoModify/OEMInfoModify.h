@@ -1,28 +1,25 @@
 #pragma once
 
-#include "DllCore/Security/RemoteThreadInject.h"
-
-class CInjectDll : public WindowImplBase
+class COEMInfoModify : public WindowImplBase
 {
 public:
-	CInjectDll();
-	~CInjectDll();
+	COEMInfoModify();
+	~COEMInfoModify();
 
 public:
-	virtual void OnFinalMessage(HWND hWnd);
 	virtual LPCTSTR    GetWindowClassName() const;
 	virtual UILIB_RESOURCETYPE GetResourceType() const;
 	virtual CDuiString GetZIPFileName() const;
 	virtual CDuiString GetSkinFile();
 	virtual CDuiString GetSkinFolder();
+	virtual LPCTSTR GetResourceID() const;
+
 	virtual void Notify(TNotifyUI& msg);
 	virtual void InitWindow();
-
+	virtual void OnFinalMessage(HWND hWnd);
 protected:
 	void OnClick(TNotifyUI& msg);
-	void OnFileLookup(TNotifyUI& msg);
-protected:
-	BOOL InjectDll(LPCTSTR lpszFilePath, DWORD dwRemoteProcessId);
-private:
-	CRemoteThreadInject m_RemoteInject;
+	void OnSaveOEMInfo(TNotifyUI& msg);
+	void OnGetLogoFilePath(TNotifyUI& msg);
+	void OnSetDefault(TNotifyUI& msg);
 };
