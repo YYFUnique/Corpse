@@ -916,6 +916,7 @@ Global
 		{439B8E43-1D46-4B66-8DC7-754F75F85E9E}.Release|Win32.ActiveCfg = Release|Win32
 		{439B8E43-1D46-4B66-8DC7-754F75F85E9E}.Release|Win32.Build.0 = Release|Win32
 		{439B8E43-1D46-4B66-8DC7-754F75F85E9E}.Release|x64.ActiveCfg = Release|x64
+		{439B8E43-1D46-4B66-8DC7-754F75F85E9E}.Release|x64.Build.0 = Release|x64
 		{439B8E43-1D46-4B66-8DC7-754F75F85E9E}.Static_Release|Win32.ActiveCfg = Release|Win32
 		{439B8E43-1D46-4B66-8DC7-754F75F85E9E}.Static_Release|Win32.Build.0 = Release|Win32
 		{439B8E43-1D46-4B66-8DC7-754F75F85E9E}.Static_Release|x64.ActiveCfg = Release|Win32

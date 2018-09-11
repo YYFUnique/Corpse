@@ -20,9 +20,9 @@
                 </HorizontalLayout>
                 <HorizontalLayout name="HLayoutCenter">
 					<Label text="进程ID:" font="0" align="right" float="true" pos="5,5,80,32"/>
-					<Edit2 name="ProcessID" font="0" float="true" pos="85,5,200,32" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Edit2 name="ProcessID" font="0" float="true" pos="85,7,200,32" textpadding="4,4,4,3" textcolor="#FF000000"/>
 					<Label text="动态库:" font="0" align="right" float="true" pos="5,40,80,67"/>
-					<Edit2 name="DllFile" readonly="true" font="0" float="true" pos="85,40,300,67" textpadding="4,3,4,3" textcolor="#FF000000"/>
+					<Edit2 name="DllFile" readonly="true" font="0" float="true" pos="85,42,300,67" textpadding="4,4,4,3" textcolor="#FF000000"/>
 					<Button name="BtnLookup" text="浏览..." font="0" float="true" pos="305,38,380,70"/>
 					<Button name="BtnInject" text="注入" font="2" float="true" pos="85,100,300,140"/>
                 </HorizontalLayout>

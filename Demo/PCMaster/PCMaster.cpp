@@ -162,8 +162,8 @@ CControlUI* CPCMaster::CreateControl(LPCTSTR pstrClass)
 		return new CToolBarUI;
 	else if (_tcsicmp(pstrClass, _T("SkinFace")) == 0)
 		return new CSkinFaceUI;
-	else if (_tcsicmp(pstrClass, _T("RichText")) == 0)
-		return (CControlUI*)CreateRichTextView();
+	///else if (_tcsicmp(pstrClass, _T("RichText")) == 0)
+	//	return (CControlUI*)CreateRichTextView();
 	//else if (_tcsicmp(pstrClass, _T("RichText")) == 0)
 	//	return static_cast<CControlUI*>(CoCreateRichText());
 	return NULL;
