@@ -38,11 +38,9 @@ BOOL CPaintManagerUI::IsLayered() const
 	return FALSE;
 }
 
-
-
 BOOL CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lRes)
 {
 	if (m_hWndPaint == NULL) return FALSE;
-
+	
 	return FALSE;
 }

@@ -5,6 +5,7 @@
 #include <tchar.h>
 #include <windows.h>
 
+#include <vssym32.h>
 #include "Define.h"
 #include "UILabel.h"
 #include "IMenuHandler.h"

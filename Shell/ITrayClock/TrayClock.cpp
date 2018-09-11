@@ -2,7 +2,6 @@
 #include "TrayClock.h"
 #include "Define.h"
 #include <uxtheme.h>
-#include <vssym32.h>
 
 #pragma comment(lib,"UxTheme.lib")
 #pragma comment(lib, "Msimg32.lib")
@@ -12,13 +11,15 @@ static BOOL m_bMouseTracking = 0;
 
 CTrayClock::CTrayClock()
 {
-	m_bFocus = FALSE;
-	ClearClockDC();
+	m_ClockStates = TCLOCK_NORMAL;
+	DestoryClock();
 }
 
 CTrayClock::~CTrayClock()
 {
-	
+	DestoryClock();
+	if (m_pThemeHelper != NULL)
+		delete m_pThemeHelper;
 }
 
 void CTrayClock::OnFinalMessage(HWND hWnd)
@@ -29,9 +30,12 @@ void CTrayClock::OnFinalMessage(HWND hWnd)
 
 void CTrayClock::Init(HWND hWnd)
 {
+	// 窗口应用主题服务
 	SetWindowTheme(hWnd, L"TrayNotify", NULL);
 	WinImplBase::Init(hWnd);
 	SetTimer(hWnd, TCLOCK_TIMER_ID_REFRESH, 1000, NULL);
+	m_pThemeHelper = new CThemeHelper;
+	m_pThemeHelper->OpenThemeData(hWnd, VSCLASS_CLOCK);
 }
 
 BOOL SaveBitmapFile(HBITMAP hBitmap,LPCTSTR lpszFileName)
@@ -132,176 +136,131 @@ BOOL SaveBitmapFile(HBITMAP hBitmap,LPCTSTR lpszFileName)
 	return true;
 }
 
-void CTrayClock::ClearClockDC()
+void CTrayClock::DestoryClock()
 {
-	//m_ClockWidth = -1;
-
-	if(m_hdcClock) DeleteDC(m_hdcClock); 
+	if (m_hdcClock) DeleteDC(m_hdcClock); 
 	m_hdcClock = NULL;
-	if(m_hbmpClock) DeleteObject(m_hbmpClock);
+	if (m_hbmpClock) DeleteObject(m_hbmpClock);
 	m_hbmpClock = NULL;
 
-	if(m_hdcClockBack) DeleteDC(m_hdcClockBack); 
+	if (m_hdcClockBack) DeleteDC(m_hdcClockBack); 
 	m_hdcClockBack = NULL;
-	if(m_hbmpClockBack) DeleteObject(m_hbmpClockBack);
+	if (m_hbmpClockBack) DeleteObject(m_hbmpClockBack);
 	m_hbmpClockBack = NULL;
 }
 
 void CTrayClock::CreateClockDC(HWND hWnd)
 {
-	COLORREF col;
-	HDC hdc;
+	HDC hDC = GetDC(NULL);
 
-	ClearClockDC();
-
-	//if(g_bNoClock) return;
-
-	RECT rcClock;
-	GetClientRect(hWnd, &rcClock);
-
-	hdc = GetDC(NULL);
-
-	if (CreateOffScreenDC(hdc, &m_hdcClock, &m_hbmpClock, rcClock.right, rcClock.bottom) == FALSE) // dllutl.c
+	BOOL bSuccess = FALSE;
+	do 
 	{
-		OutputDebugString(_T("CreateOffScreenDC"));
-		ReleaseDC(NULL, hdc);
-		return;
-	}
+		DestoryClock();
 
-	//SelectObject(m_hdcClock, m_hFont);
-	// 输出文字无背景演示
-	SetBkMode(m_hdcClock, TRANSPARENT);
-
-	/*if(m_nTextPos == 1)
-		SetTextAlign(m_hdcClock, TA_LEFT|TA_TOP);
-	else if(m_nTextPos == 2)
-		SetTextAlign(m_hdcClock, TA_RIGHT|TA_TOP);
-	else
-		SetTextAlign(m_hdcClock, TA_CENTER|TA_TOP);*/
-
-	col = 0x00FFFFFF;
-	if(col & 0x80000000) col = GetSysColor(col & 0x00ffffff);
-	SetTextColor(m_hdcClock, col);
-
-	/* ------- background -------- */
-
-	if(m_bFillTray)
-	{
-		hWnd = GetParent(hWnd);
+		RECT rcClock;
 		GetClientRect(hWnd, &rcClock);
-	}
 
-	if (CreateOffScreenDC(hdc, &m_hdcClockBack, &m_hbmpClockBack, rcClock.right, rcClock.bottom) == FALSE) // dllutl.c
-	{
-		ClearClockDC();
-		ReleaseDC(NULL, hdc);
-		return;
-	}
+		RECT rcPos = {0, 0, rcClock.right - rcClock.left, rcClock.bottom - rcClock.top};
 
-	FillClock(hWnd, m_hdcClockBack, &rcClock);
-	//SaveBitmapFile(m_hbmpClockBack, _T("C:\\test2\\ColockBack2.bmp"));
-	ReleaseDC(NULL, hdc);
+		if (CreateDBISectionDC(hDC, &m_hdcClock, &m_hbmpClock, rcPos.right, rcPos.bottom) == FALSE) // dllutl.c
+			break;
+
+		//SelectObject(m_hdcClock, m_hFont);
+		// 输出文字无背景演示
+		SetBkMode(m_hdcClock, TRANSPARENT);
+		/*if(m_nTextPos == 1)
+			SetTextAlign(m_hdcClock, TA_LEFT|TA_TOP);
+		else if(m_nTextPos == 2)
+			SetTextAlign(m_hdcClock, TA_RIGHT|TA_TOP);
+		else
+			SetTextAlign(m_hdcClock, TA_CENTER|TA_TOP);*/
+
+		COLORREF col = 0x00FFFFFF;
+		if(col & 0x80000000) col = GetSysColor(col & 0x00ffffff);
+		SetTextColor(m_hdcClock, col);
+
+		if (CreateDBISectionDC(hDC, &m_hdcClockBack, &m_hbmpClockBack, rcPos.right, rcPos.bottom) == FALSE)
+			break;
+
+		DrawClockParentBG(hWnd, m_hdcClockBack, &rcPos);
+		
+		bSuccess = TRUE;
+	} while (FALSE);	
+
+	if (bSuccess == FALSE)
+		DestoryClock();
+
+	ReleaseDC(NULL, hDC);
 }
 
-BOOL CTrayClock::CreateOffScreenDC(HDC hdc, HDC *phdcMem, HBITMAP *phbmp, int width, int height)
+BOOL CTrayClock::CreateDBISectionDC(HDC hdc, HDC *phdcMem, HBITMAP *phbmp, int nWidth, int nHeight)
 {
-	*phdcMem = CreateCompatibleDC(hdc);
-	if(!*phdcMem) { *phbmp = NULL; return FALSE; }
-
-	BITMAPINFO dib = { 0 };
-	dib.bmiHeader.biSize            = sizeof(BITMAPINFOHEADER);
-	dib.bmiHeader.biWidth           = width;
-	dib.bmiHeader.biHeight          = -height;
-	dib.bmiHeader.biPlanes          = 1;
-	dib.bmiHeader.biBitCount        = 32;
-	dib.bmiHeader.biCompression     = BI_RGB;
-	*phbmp = CreateDIBSection(hdc,&dib, DIB_RGB_COLORS, NULL, NULL, 0);
-	HBITMAP hbmOld =(HBITMAP)SelectObject(*phdcMem, phbmp);
-
-	/**phbmp = CreateCompatibleBitmap(hdc, width, height);
-	if(!*phbmp)
+	BOOL bSuccess = FALSE;
+	do 
 	{
-		DeleteDC(*phdcMem); *phdcMem = NULL;
-		return FALSE;
-	}*/
+		// 初始化DC为空
+		*phbmp = NULL; 
 
-	SelectObject(*phdcMem, *phbmp);
-	return TRUE;
+		*phdcMem = CreateCompatibleDC(hdc);
+		if (*phdcMem == NULL)
+			break;
+
+		BITMAPINFO dib = { 0 };
+		dib.bmiHeader.biSize					= sizeof(BITMAPINFOHEADER);
+		dib.bmiHeader.biWidth				= nWidth;
+		dib.bmiHeader.biHeight				= -nHeight;
+		dib.bmiHeader.biPlanes				= 1;
+		dib.bmiHeader.biBitCount			= 32;
+		dib.bmiHeader.biCompression	= BI_RGB;
+
+		*phbmp = CreateDIBSection(*phdcMem,&dib, DIB_RGB_COLORS, NULL, NULL, 0);
+		if (phbmp == NULL)
+			break;
+			
+		SelectObject(*phdcMem, *phbmp);
+		
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	return bSuccess;
 }
 
-void CTrayClock::CopyClockBack(HWND hwnd, HDC hdcDest, HDC hdcSrc, int w, int h)
+void CTrayClock::DrawClockParentBG(HWND hWnd, HDC hDCPaint, const RECT* prc)
 {
-	int xsrc = 0, ysrc = 0;
-
-	if(m_bFillTray)
+	if (m_pThemeHelper != NULL && m_pThemeHelper->IsThemeActive())
 	{
-		HWND hwndTray;
-		RECT rc;
-		POINT pt;
+		if (m_pThemeHelper->IsThemeBackgroundPartiallyTransparent(CLP_TIME, CLS_NORMAL))
+			m_pThemeHelper->DrawThemeParentBackground(hWnd, hDCPaint, prc);
 
-		hwndTray = GetParent(hwnd);
-		GetWindowRect(hwnd, &rc);
-		pt.x = rc.left; pt.y = rc.top;
-		ScreenToClient(hwndTray, &pt);
-		xsrc = pt.x; ysrc = pt.y;
-	}
-
-	BitBlt(hdcDest, 0, 0, w, h, hdcSrc, xsrc, ysrc, SRCCOPY);
-}
-
-void CTrayClock::CopyParentSurface(HWND hwnd, HDC hdcDest, int xdst, int ydst, int w, int h, int xsrc, int ysrc)
-{
-	HDC hdcTemp, hdcMem;
-	HBITMAP hbmp;
-	RECT rcParent;
-
-	GetWindowRect(GetParent(hwnd), &rcParent);
-
-	hdcTemp = GetDC(NULL);
-
-	if (CreateOffScreenDC(hdcTemp, &hdcMem, &hbmp, rcParent.right - rcParent.left, rcParent.bottom - rcParent.top) == FALSE)
-	{
-		ReleaseDC(NULL, hdcTemp);
-		return;
-	}
-
-	SendMessage(GetParent(hwnd), WM_PRINTCLIENT, (WPARAM)hdcMem, (LPARAM)PRF_CLIENT);
-
-	BitBlt(hdcDest, xdst, ydst, w, h, hdcMem, xsrc, ysrc, SRCCOPY);
-
-	DeleteDC(hdcMem);
-	DeleteObject(hbmp);
-
-	ReleaseDC(NULL, hdcTemp);
-}
-
-void CTrayClock::FillClock(HWND hwnd, HDC hdc, const RECT *prc)
-{
-	HBRUSH hbr;
-	COLORREF col;
-
-	RECT rc, rcTray;
-	GetWindowRect(hwnd, &rc);
-	GetWindowRect(GetParent(hwnd), &rcTray);
-	CopyParentSurface(hwnd, hdc, 0, 0, prc->right, prc->bottom,
-		rc.left - rcTray.left, rc.top - rcTray.top);
-}
-
-void CTrayClock::FillClockBG(HDC hdcPaint)
-{
-	if (IsThemeActive())
-	{
-		RECT rcWnd;
-		GetWindowRect(m_hWnd, &rcWnd);
-		HTHEME hTheme = OpenThemeData(m_hWnd, VSCLASS_CLOCK);
-		if (IsThemeBackgroundPartiallyTransparent(hTheme, CLP_TIME, 2))
-		{
-			DrawThemeParentBackground(m_hWnd, hdcPaint, &rcWnd);
-		}
-
-		DrawThemeBackground(hTheme, hdcPaint, CLP_TIME, 2, &rcWnd, NULL);
+		m_pThemeHelper->DrawThemeBackground(hDCPaint, CLP_TIME, CLS_NORMAL, prc, NULL);
 	}
 }
+
+ void CTrayClock::FillClockBGHover(HWND hWnd, HDC hdcPaint, const RECT* prc)
+ {
+	RECT rcPos = {0,0, prc->right - prc->left, prc->bottom - prc->top};
+
+	if (m_pThemeHelper)
+	{
+		HDC hdcColocHover;
+		HBITMAP hbmColocHover;
+		CreateDBISectionDC(hdcPaint, &hdcColocHover, &hbmColocHover, rcPos.right, rcPos.bottom);
+
+		m_pThemeHelper->DrawThemeBackground(hdcColocHover, CLP_TIME, m_ClockStates, &rcPos,NULL);
+
+		BLENDFUNCTION blendFunction;
+		blendFunction.AlphaFormat = AC_SRC_ALPHA;
+		blendFunction.BlendFlags = 0;
+		blendFunction.BlendOp = AC_SRC_OVER;
+		blendFunction.SourceConstantAlpha = 255;
+
+		AlphaBlend(hdcPaint, 0, 0, rcPos.right, rcPos.bottom, hdcColocHover, 0, 0, rcPos.right, rcPos.bottom, blendFunction);
+
+		DeleteDC(hdcColocHover);
+		DeleteObject(hbmColocHover);
+	}	
+ }
 
 void CTrayClock::DrawClock(HWND hWnd, HDC hdc, const SYSTEMTIME* pt)
 {
@@ -309,8 +268,7 @@ void CTrayClock::DrawClock(HWND hWnd, HDC hdc, const SYSTEMTIME* pt)
 	TEXTMETRIC tm;
 	int x, y, wclock, hclock, wtext, htext;
 	int len;
-	wchar_t s[MAX_PATH],
-		*p, *sp, *ep;
+	wchar_t s[MAX_PATH], *p, *sp, *ep;
 	DWORD dwRop = SRCCOPY;
 
 	if(!m_hdcClock) CreateClockDC(hWnd); 
@@ -319,65 +277,7 @@ void CTrayClock::DrawClock(HWND hWnd, HDC hdc, const SYSTEMTIME* pt)
 	wclock = rcClock.right;
 	hclock = rcClock.bottom;
 
-	// copy m_hdcClockBack to m_hdcClock
-	//CopyClockBack(hWnd, m_hdcClock, m_hdcClockBack, wclock, hclock);
-
-	if (TRUE)
-	{
-		RECT rcWnd;
-		GetWindowRect(m_hWnd, &rcWnd);
-		RECT rcPos = {0,0,rcWnd.right - rcWnd.left, rcWnd.bottom - rcWnd.top};
-		HTHEME hTheme = OpenThemeData(m_hWnd, VSCLASS_CLOCK);
-		if (hTheme == NULL)
-		{
-			OutputDebugString(_T("1111111111111111"));
-		}
-
-		HDC hMem = CreateCompatibleDC(hdc);
-
-		int cx = rcWnd.right-rcWnd.left;
-		int cy = rcWnd.bottom-rcWnd.top;
-
-		BITMAPINFO dib = { 0 };
-		dib.bmiHeader.biSize            = sizeof(BITMAPINFOHEADER);
-		dib.bmiHeader.biWidth           = 200;
-		dib.bmiHeader.biHeight          = -50;
-		dib.bmiHeader.biPlanes          = 1;
-		dib.bmiHeader.biBitCount        = 32;
-		dib.bmiHeader.biCompression     = BI_RGB;
-		HBITMAP hbm = CreateDIBSection(hdc,&dib, DIB_RGB_COLORS, NULL, NULL, 0);
-		HBITMAP hbmOld =(HBITMAP)SelectObject(hMem, hbm);
-
-		//LRESULT lRet = DrawThemeEdge(hTheme, hdc, CLP_TIME, CLS_NORMAL, &rcWnd, EDGE_ETCHED, BF_LEFT|BF_RIGHT, NULL);
-		/*RECT rcClock = {1,1,38,38};*/
-		if (IsThemeBackgroundPartiallyTransparent(hTheme, CLP_TIME, 1))
-		{
-			OutputDebugString(_T("IsThemeBackgroundPartiallyTransparent"));
-			DrawThemeParentBackground(m_hWnd, hMem, &rcPos);
-		}
-		//rcPos是相对于画布句柄位置
-		LRESULT lRet = DrawThemeBackground(hTheme, hMem, CLP_TIME, 1, &rcPos, NULL);
-		SaveBitmapFile(hbm,_T("C:\\test2\\clock2.bmp"));
-		//LRESULT lRet = DrawThemeBackground(hTheme, hdc, CLP_TIME, 2, &rcWnd, NULL);
-		/*if (lRet != S_OK )
-		{
-			CString strTipInfo;
-			strTipInfo.Format(_T("0x%08X"),lRet);
-			OutputDebugString(strTipInfo);
-		}
-		else
-		{
-			OutputDebugString(_T("S_OK"));
-		}*/
-		CloseThemeData(hTheme);
-
-		BLENDFUNCTION blendFunction;
-		blendFunction.AlphaFormat = AC_SRC_ALPHA;
-		blendFunction.BlendFlags = 0;
-		blendFunction.BlendOp = AC_SRC_OVER;
-		blendFunction.SourceConstantAlpha = 255;
-		AlphaBlend(m_hdcClock,0,0,rcPos.right,rcPos.bottom,hMem,0,0,rcPos.right,rcPos.bottom,blendFunction);
-	}
+	FillClockBG(hWnd);
 
 	SYSTEMTIME SysTime;
 	GetLocalTime(&SysTime);
@@ -409,120 +309,20 @@ void CTrayClock::DrawClock(HWND hWnd, HDC hdc, const SYSTEMTIME* pt)
 
 		if(*p) y += tm.tmHeight - tm.tmInternalLeading + 2 + 5;
 	}
-
-	//if(g_nBlink > 0 && (g_nBlink % 2) == 0) dwRop = NOTSRCCOPY;
 	
-	//ClearClockDC();
+	if (m_ClockStates != TCLOCK_NORMAL)
+		FillClockBGHover(hWnd, m_hdcClock, &rcClock);
 
-	
 	BitBlt(hdc, 0, 0, wclock, hclock, m_hdcClock, 0, 0, dwRop);
-	ClearClockDC();
-	if (m_bFocus)
-	{
-		OutputDebugString(_T("focus"));
-		//HBITMAP hPngFile  = LoadImageFromRes(IDB_PNG_FOCUS, gLibModule, _T("PNG"));
-		//HDC hDCMem = CreateCompatibleDC(hdc);
-		////HBITMAP hMemBitmap = CreateCompatibleBitmap(hdc, wclock, hclock);
+}
 
-		////TextOutW(hDCMem, 3,3,_T("PNG"),3);
-		////SaveBitmapFile(hPngFile, _T("C:\\test2\\png.bmp"));
-		//BITMAP bmp;
-		//GetObject(hPngFile, sizeof(BITMAP), &bmp);	//得到一个位图对象
+void CTrayClock::FillClockBG(HWND hWnd)
+{
+	RECT rcWnd;
+	GetWindowRect(hWnd, &rcWnd);
+	RECT rcPos = {0, 0, rcWnd.right - rcWnd.left, rcWnd.bottom - rcWnd.top};
 
-		//SelectObject(hDCMem, hPngFile);
-		//HBITMAP hOldBitmap = (HBITMAP)SelectObject(hDCMem, hPngFile);
-		////BitBlt(hdc, 0, 0, bmp.bmWidth, bmp.bmHeight, hDCMem, 0, 0, SRCCOPY);
-
-		//BLENDFUNCTION blendFunction;
-		//blendFunction.AlphaFormat = 0;
-		//blendFunction.BlendFlags = 0;
-		//blendFunction.BlendOp = AC_SRC_OVER;
-		//blendFunction.SourceConstantAlpha = 255;
-
-		//AlphaBlend(hdc, 0, 0, 2, bmp.bmHeight, hDCMem, 0, 0, 2, bmp.bmHeight, blendFunction);
-
-		//AlphaBlend(hdc, wclock - 2, 0, 2, bmp.bmHeight, hDCMem, bmp.bmWidth - 2, 0, 2, bmp.bmHeight , blendFunction);
-
-		//AlphaBlend(hdc, 10, hclock - 10,wclock - 20,10,hDCMem,2,28,20,10,blendFunction);
-// 		RECT rcWnd;
-// 		GetWindowRect(hWnd, &rcWnd);
-		/*DrawFocusRect(hdc, &rcWnd);*/
-		/*DrawEdge(hdc, &rcWnd, BDR_SUNKENINNER, BF_BOTTOM);*/
-		/*DrawFrameControl*/
-		/*BLENDFUNCTION blendFunction;
-		blendFunction.AlphaFormat = AC_SRC_ALPHA;
-		blendFunction.BlendFlags = 0;
-		blendFunction.BlendOp = AC_SRC_OVER;
-		blendFunction.SourceConstantAlpha = 255;
-		UpdateLayeredWindow(hWnd,screenDC,&ptSrc,&wndSize,memDC,&ptSrc,0,&blendFunction,2);*/
-
-		//HDC hdc2 = GetDC(m_hWnd);
-		/*HDC*/
-		RECT rcWnd;
-		GetWindowRect(m_hWnd, &rcWnd);
-		RECT rcPos = {0,0,rcWnd.right - rcWnd.left, rcWnd.bottom - rcWnd.top};
-		HTHEME hTheme = OpenThemeData(m_hWnd, VSCLASS_CLOCK);
-		if (hTheme == NULL)
-		{
-			OutputDebugString(_T("1111111111111111"));
-		}
-
-		HDC hMem = CreateCompatibleDC(hdc);
-
-		int cx = rcWnd.right-rcWnd.left;
-		int cy = rcWnd.bottom-rcWnd.top;
-
-		BITMAPINFO dib = { 0 };
-		dib.bmiHeader.biSize            = sizeof(BITMAPINFOHEADER);
-		dib.bmiHeader.biWidth           = 200;
-		dib.bmiHeader.biHeight          = -50;
-		dib.bmiHeader.biPlanes          = 1;
-		dib.bmiHeader.biBitCount        = 32;
-		dib.bmiHeader.biCompression     = BI_RGB;
-		HBITMAP hbm = CreateDIBSection(hdc,&dib, DIB_RGB_COLORS, NULL, NULL, 0);
-		HBITMAP hbmOld =(HBITMAP)SelectObject(hMem, hbm);
-		
-		//LRESULT lRet = DrawThemeEdge(hTheme, hdc, CLP_TIME, CLS_NORMAL, &rcWnd, EDGE_ETCHED, BF_LEFT|BF_RIGHT, NULL);
-		/*RECT rcClock = {1,1,38,38};*/
-		if (IsThemeBackgroundPartiallyTransparent(hTheme, CLP_TIME, 2))
-		{
-			OutputDebugString(_T("IsThemeBackgroundPartiallyTransparent"));
-			//DrawThemeParentBackground(m_hWnd, hMem, &rcPos);
-		}
-		//rcPos是相对于画布句柄位置
-		LRESULT lRet = DrawThemeBackground(hTheme, hMem, CLP_TIME, 2, &rcPos, NULL);
-		/*SaveBitmapFile(hbm,_T("C:\\test2\\clock2.bmp"));*/
-		//LRESULT lRet = DrawThemeBackground(hTheme, hdc, CLP_TIME, 2, &rcWnd, NULL);
-		if (lRet != S_OK )
-		{
-			CString strTipInfo;
-			strTipInfo.Format(_T("0x%08X"),lRet);
-			OutputDebugString(strTipInfo);
-		}
-		else
-		{
-			OutputDebugString(_T("S_OK"));
-		}
-		CloseThemeData(hTheme);
- 		
-		BLENDFUNCTION blendFunction;
-		blendFunction.AlphaFormat = AC_SRC_ALPHA;
-		blendFunction.BlendFlags = 0;
-		blendFunction.BlendOp = AC_SRC_OVER;
-		blendFunction.SourceConstantAlpha = 255;
-		AlphaBlend(hdc,0,0,rcPos.right,rcPos.bottom,hMem,0,0,rcPos.right,rcPos.bottom,blendFunction);
-
-		//DeleteObject(hPngFile);
-
-		//SelectObject(hDCMem, hOldBitmap);
-		//DeleteDC(hDCMem);
-	}
-	//if(wtext + tm.tmAveCharWidth * 2 /*+ m_dwidth > m_ClockWidth*/)
-	//{
-	//	 //wtext + tm.tmAveCharWidth * 2 + 5;
-	//	PostMessage(GetParent(GetParent(hWnd)), WM_SIZE, SIZE_RESTORED, 0);
-	//	InvalidateRect(GetParent(GetParent(hWnd)), NULL, TRUE);
-	//}
+	BitBlt(m_hdcClock, 0,0, rcPos.right, rcPos.bottom, m_hdcClockBack, 0, 0, SRCCOPY);
 }
 
 LRESULT CTrayClock::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -539,13 +339,12 @@ LRESULT CTrayClock::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 			break;
 		case WM_THEMECHANGED:
-				ClearClockDC();
+				DestoryClock();
 			break;
 		case WM_PAINT:
 			{
 				PAINTSTRUCT ps;
 				HDC hdc;
-				//if(g_bNoClock) break;
 				hdc = BeginPaint(m_hWnd, &ps);
 				DrawClock(m_hWnd, hdc, NULL);
 				EndPaint(m_hWnd, &ps);
@@ -554,11 +353,7 @@ LRESULT CTrayClock::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		case WM_TCLOCK_HIGHLIGHT:
 			{
-				TCLOCK_HIGHLIGHT_WPARAM TClockwParam = (TCLOCK_HIGHLIGHT_WPARAM)wParam;
-				if (TClockwParam == TCLOCK_DISABLE)
-					m_bFocus = FALSE;
-				else
-					m_bFocus = TRUE;
+				m_ClockStates = (TCLOCK_HIGHLIGHT_WPARAM)wParam;
 				InvalidateRect(m_hWnd,NULL,TRUE);
 			}
 			break;
@@ -581,42 +376,21 @@ LRESULT CTrayClock::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 		case WM_MOUSEHOVER:
 			{
-				//OutputDebugString(_T("WM_MOUSEHOVER"));
-				PostMessage(m_hWnd, WM_TCLOCK_HIGHLIGHT, TCLOCK_ENABLE, 0);
+				PostMessage(m_hWnd, WM_TCLOCK_HIGHLIGHT, TCLOCK_HOT, 0);
 				InvalidateRect(m_hWnd,NULL,TRUE);
-				//::CallWindowProc(m_OldWndProc, m_hWnd, WM_PAINT, wParam, lParam);		
-				//HDC hdc = GetDC(m_hWnd);
-				//RECT rcWnd;
-				//GetWindowRect(m_hWnd, &rcWnd);
-				//HTHEME hTheme = OpenThemeData(m_hWnd, VSCLASS_CLOCK);
-				//if (hTheme == NULL)
-				//{
-				//	OutputDebugString(_T("1111111111111111"));
-				//}
-				//InflateRect(&rcWnd, 1, 1);
-
-				////LRESULT lRet = DrawThemeEdge(hTheme, hdc, CLP_TIME, CLS_NORMAL, &rcWnd, EDGE_ETCHED, BF_LEFT|BF_RIGHT, NULL);
-				//LRESULT lRet = DrawThemeBackground(hTheme, hdc, CLP_TIME, 3, &rcWnd, NULL);
-				////LRESULT lRet = DrawThemeBackground(hTheme, hdc, CLP_TIME, 2, &rcWnd, NULL);
-				//if (lRet != S_OK )
-				//{
-				//	CString strTipInfo;
-				//	strTipInfo.Format(_T("0x%08X"),lRet);
-				//	OutputDebugString(strTipInfo);
-				//}
-				//else
-				//{
-				//	OutputDebugString(_T("S_OK"));
-				//}
-				//CloseThemeData(hTheme);
 			}
 			break;
 		case WM_MOUSELEAVE:
 			{
-				OutputDebugString(_T("WM_MOUSELEAVE"));
 				m_bMouseTracking = false;
-				PostMessage(m_hWnd, WM_TCLOCK_HIGHLIGHT, TCLOCK_DISABLE, 0);
+				PostMessage(m_hWnd, WM_TCLOCK_HIGHLIGHT, TCLOCK_NORMAL, 0);
 			}
+			break;
+		case WM_LBUTTONDOWN:
+				PostMessage(m_hWnd, WM_TCLOCK_HIGHLIGHT, TCLOCK_PRESSED, 0);
+			break;
+		case WM_LBUTTONUP:
+				PostMessage(m_hWnd, WM_TCLOCK_HIGHLIGHT, TCLOCK_HOT, 0);
 			break;
 		case WM_RBUTTONUP:
 				FreeRemoteLibrary(m_hWnd);

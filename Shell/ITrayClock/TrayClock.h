@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ThemeHelper.h"
+
 void FreeRemoteLibrary(HWND hWnd); 
 
 class CTrayClock : public WinImplBase
@@ -16,23 +18,25 @@ public:
 protected:
 	LRESULT OnCalcRect(HWND hWnd);
 
-	void ClearClockDC();
+	void DestoryClock();
 	void CreateClockDC(HWND hWnd);
-	void FillClock(HWND hwnd, HDC hdc, const RECT *prc);
+	void FillClockBG(HWND hWnd);
+	void FillClockBGHover(HWND hWnd, HDC hdcPaint, const RECT* prc);
 	void DrawClock(HWND hWnd, HDC hdc, const SYSTEMTIME* pt);
 	void CopyClockBack(HWND hwnd, HDC hdcDest, HDC hdcSrc, int w, int h);
 	void CopyParentSurface(HWND hwnd, HDC hdcDest, int xdst, int ydst, int w, int h, int xsrc, int ysrc);
-	BOOL CreateOffScreenDC(HDC hdc, HDC *phdcMem, HBITMAP *phbmp, int width, int height);
+	BOOL CreateDBISectionDC(HDC hdc, HDC *phdcMem, HBITMAP *phbmp, int width, int height);
 protected:
-	void FillClockBG(HDC hdcPaint);
+	void DrawClockParentBG(HWND hWnd, HDC hdcPaint, const RECT* prc);
 	HBITMAP LoadImageFromRes(UINT pResourceID, HMODULE hInstance, LPCTSTR pResourceType);
 	void GetClockTextSize(HDC hdc, const TEXTMETRIC* ptm, const wchar_t* str, int *wout, int *hout);
 protected:
-	BOOL				m_bFocus;
-	BOOL				m_bFillTray;
 	HDC					m_hdcClock;
 	HDC					m_hdcClockBack;
-	HBITMAP			m_hbmpClockBack;
+	
 	HBITMAP			m_hbmpClock;
-	ULONG_PTR	m_gdiplusStartupToken; 
+	HBITMAP			m_hbmpClockBack;
+
+	CThemeHelper*		m_pThemeHelper;
+	TCLOCK_HIGHLIGHT_WPARAM		m_ClockStates;
 };
