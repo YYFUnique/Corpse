@@ -368,6 +368,11 @@ namespace NetCore
 		SetRawOption(level, option, &value, sizeof(value));
 	}
 
+	void SocketImpl::SetOption(int level, int option, const IPAddress& Addr)
+	{
+		SetRawOption(level, option, Addr.GetAddr(), Addr.GetLength());
+	}
+
 	void SocketImpl::SetRawOption(int level, int option, const void* value, int nLen)
 	{
 		if (m_sockfd == POCO_INVALID_SOCKET)
@@ -381,6 +386,14 @@ namespace NetCore
 	{
 		poco_socklen_t nLen = sizeof(value);
 		GetRawOption(level, option, &value, nLen);
+	}
+
+	void SocketImpl::GetOption(int level, int option, IPAddress& Addr)
+	{
+		CHAR szData[MAX_ADDRESS_LENGTH];
+		poco_socklen_t nLen = sizeof(szData);
+		GetRawOption(level, option, szData, nLen);
+		Addr = IPAddress(szData, nLen);
 	}
 
 	void SocketImpl::GetRawOption(int level, int option, void* value, int& nLen)

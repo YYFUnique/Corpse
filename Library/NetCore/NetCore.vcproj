@@ -240,6 +240,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Sockets\StreamSocket.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Sockets\StreamSocketImpl.cpp"
 					>
 				</File>
@@ -260,6 +264,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Utils\NetworkInterface.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\RefSocketObject.cpp"
 					>
 				</File>
@@ -276,7 +284,27 @@
 				Name="HTTP"
 				>
 				<File
+					RelativePath=".\HTTP\HTTPMessage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\HTTP\MediaType.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\HTTP\MessageHeader.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="WebSocket"
+				>
+				<File
+					RelativePath=".\WebSocket\WebSocket.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\WebSocket\WebSocketImpl.cpp"
 					>
 				</File>
 			</Filter>
@@ -346,6 +374,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Sockets\StreamSocket.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Sockets\StreamSocketImpl.h"
 					>
 				</File>
@@ -370,6 +402,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Utils\NetworkInterface.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\RefSocketObject.h"
 					>
 				</File>
@@ -386,7 +422,27 @@
 				Name="HTTP"
 				>
 				<File
+					RelativePath=".\HTTP\HTTPMessage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\HTTP\MediaType.h"
+					>
+				</File>
+				<File
 					RelativePath=".\HTTP\MessageHeader.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="WebSocket"
+				>
+				<File
+					RelativePath=".\WebSocket\WebSocket.h"
+					>
+				</File>
+				<File
+					RelativePath=".\WebSocket\WebSocketImpl.h"
 					>
 				</File>
 			</Filter>

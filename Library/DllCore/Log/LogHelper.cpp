@@ -64,12 +64,16 @@ void QLogImpl::WriteLog(LOG_LEVEL LogLevel, LPCTSTR lpszLogInfo)
 
 QLogHelper::QLogHelper(LPCSTR lpszFileName, LONG lFileLine)
 {
+	m_bLogToFile = TRUE;
 	m_strFileName = lpszFileName;
 	m_nFileLine = lFileLine;
 }
 
 QLogHelper::~QLogHelper()
 {
+	if (m_bLogToFile == FALSE)
+		return;
+
 	LPCTSTR lpszLogLevel = _T("INFO");
 	switch (m_LogLevel)
 	{
@@ -110,4 +114,16 @@ void QLogHelper::VLog(LOG_LEVEL LogLevel, LPCTSTR lpszFormat,...)
 	m_LogLevel = LogLevel;
 	m_strLogInfo.FormatV(lpszFormat,paralist);
 	m_strLogInfo.TrimRight(_T("\r\n"));
+}
+
+void QLogHelper::VLog(LPCTSTR lpszFormat,...)
+{
+	m_bLogToFile = FALSE;
+	va_list paralist;
+	va_start(paralist, lpszFormat); 
+
+	CString strLogInfo;
+	strLogInfo.FormatV(lpszFormat, paralist);
+	strLogInfo.TrimRight(_T("\r\n"));
+	OutputDebugString(strLogInfo);
 }

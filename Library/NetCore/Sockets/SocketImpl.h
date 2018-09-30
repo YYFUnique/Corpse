@@ -232,7 +232,7 @@ namespace NetCore
 			/// Sets the socket option specified by level and option
 			/// to the given time value.
 
-			//void setOption(int level, int option, const IPAddress& value);
+			void SetOption(int level, int option, const IPAddress& value);
 			/// Sets the socket option specified by level and option
 			/// to the given time value.
 
@@ -254,7 +254,7 @@ namespace NetCore
 			/// Returns the value of the socket option
 			/// specified by level and option.
 
-			//void getOption(int level, int option, IPAddress& value);
+			void GetOption(int level, int option, IPAddress& value);
 			/// Returns the value of the socket option
 			/// specified by level and option.
 

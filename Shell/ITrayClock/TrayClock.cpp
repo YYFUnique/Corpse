@@ -267,7 +267,6 @@ void CTrayClock::DrawClock(HWND hWnd, HDC hdc, const SYSTEMTIME* pt)
 	RECT rcClock;
 	TEXTMETRIC tm;
 	int x, y, wclock, hclock, wtext, htext;
-	int len;
 	wchar_t s[MAX_PATH], *p, *sp, *ep;
 	DWORD dwRop = SRCCOPY;
 

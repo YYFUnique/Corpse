@@ -17,19 +17,19 @@ namespace NetCore
 		void Swap(MediaType& MimeType);
 
 		void SetType(LPCTSTR lpszMediaType);
-		LPCTSTR GetType() const;
+		CString GetType() const;
 
 		void SetSubType(LPCTSTR lpszSubType);
-		LPCTSTR GetSubType() const;
+		CString GetSubType() const;
 
 		void SetParameter(LPCTSTR lpszName, LPCTSTR lpszValue);
-		LPCTSTR GetParameter() const;
+		CString GetParameter(LPCTSTR lpszName) const;
 
 		BOOL HasParameter(LPCTSTR lpszName) const;
 		void RemoveParameter(LPCTSTR lpszName);
 
 		const NameValueCollection& GetParameters() const;
-		LPCTSTR ToString() const;
+		CString ToString() const;
 
 		BOOL Matches(LPCTSTR lpszType) const;
 		BOOL Matches(const MediaType& MimeType) const;

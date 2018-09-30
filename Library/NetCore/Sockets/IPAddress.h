@@ -14,7 +14,7 @@ namespace NetCore
 		IPAddress();		
 
 		/// Creates an IPAddress by copying another one.
-		IPAddress(const IPAddress& Addr);		
+		IPAddress(const IPAddress& Addr);
 
 		/// Creates a wildcard (zero) IPAddress for the given address family.
 		explicit IPAddress(Family family);
@@ -27,7 +27,7 @@ namespace NetCore
 		/// Creates an IPAddress from the string containing
 		/// an IP address in presentation format (dotted decimal
 		/// for IPv4, hex string for IPv6).
-		IPAddress(LPCTSTR& lpszAddr, Family family);
+		IPAddress(LPCTSTR lpszAddr, Family family);
 		
 		/// Creates an IPAddress from a native internet address.
 		/// A pointer to a in_addr or a in6_addr structure may be 
@@ -241,10 +241,12 @@ namespace NetCore
 		private:
 			IPAddressImpl* GetImpl() const;
 			void NewIPv4();
+			void NewIPv4(unsigned prefix);
 			void NewIPv4(const void* pHostAddr);
 			//void NewIPv4();
 //#ifdef POCO_HAVE_IPv6
 			void NewIPv6();
+			void NewIPv6(unsigned prefix);
 			void NewIPv6(const void* pHostAddr);
 			void NewIPv6(const void* pHostAddr, UINT nScope);
 //#endif

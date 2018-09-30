@@ -250,6 +250,7 @@ namespace DuiLib
 			if (IsEnabled()){
 				m_nSelStart = 0;
 				m_nCaretPos = m_sText.GetLength();
+				m_pManager->SendNotify(this, DUI_MSGTYPE_DBCLICK, event.wParam, event.lParam);
 				Invalidate();
 			}
 			return;

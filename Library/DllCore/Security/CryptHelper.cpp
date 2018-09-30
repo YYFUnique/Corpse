@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "CryptHelper.h"
-#pragma comment(lib,"crypt32.lib")
+#pragma comment(lib,"Crypt32.lib")
 
 CCryptHelper::CCryptHelper(CERT_TYPE CertType)
 	 : m_CertType(CertType)

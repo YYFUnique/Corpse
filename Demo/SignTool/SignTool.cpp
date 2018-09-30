@@ -5,6 +5,7 @@
 #include "DllCore/Utils/ErrorInfo.h"
 #include "DllCore/Security/CryptHelper.h"
 #include <CommDlg.h>
+#pragma comment(lib,"Crypt32.lib")
 
 CSignTool::CSignTool()
 {

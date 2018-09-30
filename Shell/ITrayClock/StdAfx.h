@@ -4,7 +4,7 @@
 #include <CommCtrl.h>
 #include <tchar.h>
 #include <windows.h>
-
+#include <crtdbg.h> 
 #include <vssym32.h>
 #include "Define.h"
 #include "UILabel.h"

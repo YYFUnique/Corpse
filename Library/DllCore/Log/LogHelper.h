@@ -5,8 +5,6 @@
  *  QLOG_ERR(L"I am {0},this is {1} year,you can also call me {2}") <<L"ÌìÍâ·ÉÏÉ" <<2015 <<"Tom Stiven";
  */
 
-#include <atlstr.h>
-
 #ifdef LS_STATIC_LIB_CALL
 #define DLL_API
 #elif defined  DLL_EXPORTS
@@ -15,6 +13,9 @@
 #define DLL_API __declspec(dllimport)
 #endif
 
+#pragma warning (disable : 4251)
+
+#include <atlstr.h>
 #include "../Sync/SyncLock.h"
 
 typedef enum tagLOG_LEVEL
@@ -50,7 +51,9 @@ public:
 
 public:
 	void VLog(LOG_LEVEL LogLevel, LPCTSTR lpszFormat,...);
+	void VLog(LPCTSTR lpszFormat,...);
 private:	
+	BOOL			m_bLogToFile;
 	LONG			m_nFileLine;
 	CString			m_strFileName;
 	CString			m_strLogInfo;
@@ -62,3 +65,9 @@ private:
 #define QLOG_APP(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_APP, fmt, ##__VA_ARGS__)
 #define QLOG_WAR(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_WAR, fmt, ##__VA_ARGS__)
 #define QLOG_ERR(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_ERR, fmt, ##__VA_ARGS__)
+
+#ifdef _DEBUG
+#define LOG(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(fmt, ##__VA_ARGS__)
+#else
+#define LOG(fmt, ...)	((void)0)
+#endif
