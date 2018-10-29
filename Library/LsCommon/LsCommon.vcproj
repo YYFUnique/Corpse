@@ -543,6 +543,22 @@
 				Name="DataBase"
 				>
 			</Filter>
+			<Filter
+				Name="File"
+				>
+				<File
+					RelativePath=".\File\DiskVolumeInfo.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\File\LogicalDiskMgr.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\File\VolumeNameToDosName.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -828,6 +844,22 @@
 			<Filter
 				Name="DataBase"
 				>
+			</Filter>
+			<Filter
+				Name="File"
+				>
+				<File
+					RelativePath=".\File\DiskVolumeInfo.h"
+					>
+				</File>
+				<File
+					RelativePath=".\File\LogicalDiskMgr.h"
+					>
+				</File>
+				<File
+					RelativePath=".\File\VolumeNameToDosName.h"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter

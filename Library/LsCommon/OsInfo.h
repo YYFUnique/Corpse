@@ -1,5 +1,5 @@
 #pragma once
-#include "SystemInfo/GlobalInfo.h"
+/*#include "SystemInfo/GlobalInfo.h"*/
 
 #ifdef LS_STATIC_LIB_CALL
 #define LS_COMMON_API 
@@ -115,7 +115,7 @@ LS_COMMON_API DWORD AfxGetTotalMem();
 //参       数：无
 //返 回  值：CAMERA_INFO枚举类型
 /************************************************************************/
-LS_COMMON_API CAMERA_INFO GetCameraInfo();
+//LS_COMMON_API CAMERA_INFO GetCameraInfo();
 
 /************************************************************************/
 //函数名称：GetCameraDescribeInfo
