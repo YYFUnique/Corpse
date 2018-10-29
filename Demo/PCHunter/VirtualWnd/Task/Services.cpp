@@ -2,12 +2,39 @@
 #include "Services.h"
 #include "DllCore/Utils/ErrorInfo.h"
 #include "DllCore/Log/LogHelper.h"
+#include "DllCore/Utils/Security.h"
+#include "Utils/TextTools.h"
 
 #define SERVICES_NOTIFY_NAME		_T("Windows服务管理工具")
+
+/*#define SERVICES_CONTROL_*/
+#define	SERVICES_MENU_START_SRV		_T("StartSvr")
+#define	SERVICES_MENU_RESTART_SRV	_T("ReStartSvr")
+#define	SERVICES_MENU_STOP_SRV			_T("StopSvr")
+#define	SERVICES_MENU_STOP_PROCESS	_T("StopProcess")
+#define	SERVICES_MENU_AUTO_START		_T("AutoStart")
+#define	SERVICES_MENU_DEMAND			_T("DemandStart")
+#define	SERVICES_MENU_DISABLED			_T("DisabledStart")
+#define	SERVICES_MENU_SVRNAME			_T("ServiceName")
+#define	SERVICES_MENU_DISPLAY				_T("DisplayName")
+#define	SERVICES_MENU_FILE_PATH			_T("FilePath")
+#define	SERVICES_MENU_DELETE				_T("DeleteSvr")
+#define	SERVICES_MENU_RELAYON			_T("RelayOnSvr")
+#define	SERVICES_MENU_LOOKFILE			_T("LookAtFile")
+#define	SERVICES_MENU_LOOKREG			_T("LookAtReg")
+
+#define	SERVICES_CONTROL_NAME			_T("Name")
+#define	SERVICES_CONTROL_DISPLAY		_T("Display")
+#define	SERVICES_CONTROL_PID				_T("PID")
+#define	SERVICES_CONTROL_RUN				_T("RunStatus")
+#define	SERVICES_CONTROL_START			_T("StartType")
+#define	SERVICES_CONTROL_PATH			_T("Path")
 
 CServices::CServices()
 {
 	m_pPaintManager = NULL;
+	m_dwTick = GetTickCount();
+	m_dwSearch = 0;
 }
 
 CServices::~CServices()
@@ -17,6 +44,8 @@ CServices::~CServices()
 
 DUI_BEGIN_MESSAGE_MAP(CServices, CNotifyPump)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_MENU, OnMenu)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_INPUT, OnInput)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_REFRESH, OnRefresh)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_LOADITEM, OnLoadItem)
 DUI_END_MESSAGE_MAP()
 
@@ -36,8 +65,8 @@ void CServices::OnMenu(TNotifyUI& msg)
 		CMenuWnd* pMenu = new CMenuWnd;
 		CDuiPoint pt = msg.ptMouse;
 		ClientToScreen(m_pPaintManager->GetPaintWindow(), &pt);
-		STRINGorID strXmlFile(_T("SvrMenu.xml"));
-		pMenu->Init(NULL,strXmlFile, pt,m_pPaintManager);
+		STRINGorID strXmlFile(SERVER_LIST_MENU);
+		pMenu->Init(NULL, strXmlFile, pt,m_pPaintManager);
 
 		//获取选中行
 		int nItem = pList->GetCurSel();
@@ -62,45 +91,45 @@ void CServices::OnServiceMenu(CControlUI* pControl)
 	if (pAppList->GetCurSel() == -1)
 		return;
 
-	CListTextElementUI* pItem = (CListTextElementUI*)pAppList->GetItemAt(pAppList->GetCurSel());
+	CFileListItemUI* pItem = (CFileListItemUI*)pAppList->GetItemAt(pAppList->GetCurSel());
 	CDuiString strItemName = pControl->GetName();
-	if (strItemName == _T("StartSvr")) {
+	if (strItemName == SERVICES_MENU_START_SRV) {
 		StartSelectedSrv(pItem);
-	} else if (strItemName == _T("ReStartSvr")) {
+	} else if (strItemName == SERVICES_MENU_RESTART_SRV) {
 		ReStartSrv(pItem);
-	} else if (strItemName == _T("StopSvr")) {
+	} else if (strItemName == SERVICES_MENU_STOP_SRV) {
 		StopSelectedSrv(pItem);
-	} else if (strItemName == _T("StopProcess")) {
+	} else if (strItemName == SERVICES_MENU_STOP_PROCESS) {
+		StopProcessSrv(pItem);
+	} else if (strItemName == SERVICES_MENU_AUTO_START) {
+		ModifyStartType(pItem, AUTO_START);
+	} else if (strItemName == SERVICES_MENU_DEMAND) {
+		ModifyStartType(pItem, DEMAND_START);
+	} else if (strItemName == SERVICES_MENU_DISABLED) {
+		ModifyStartType(pItem, DISABLED_START);
+	} else if (strItemName == SERVICES_MENU_SVRNAME) {
+		CopySvrInfo(pItem, COPY_ITEM_INFO_SVR_NAME);
+	} else if (strItemName == SERVICES_MENU_DISPLAY) {
+		CopySvrInfo(pItem, COPY_ITEM_INFO_DISPNAME);
+	} else if (strItemName == SERVICES_MENU_FILE_PATH) {
+		CopySvrInfo(pItem, COPY_ITEM_INFO_SVR_PATH);
+	} else if (strItemName == SERVICES_MENU_DELETE) {
 
-	} else if (strItemName == _T("AutoStart")) {
+	} else if (strItemName == SERVICES_MENU_RELAYON) {
 
-	} else if (strItemName == _T("DemandStart")) {
+	} else if (strItemName == SERVICES_MENU_LOOKFILE) {
 
-	} else if (strItemName == _T("DisabledStart")) {
-
-	} else if (strItemName == _T("DisplayName")) {
-
-	} else if (strItemName == _T("ShowName")) {
-
-	} else if (strItemName == _T("FilePath")) {
-
-	} else if (strItemName == _T("DeleteSvr")) {
-
-	} else if (strItemName == _T("RelayOnSvr")) {
-
-	} else if (strItemName == _T("LookAtFile")) {
-
-	} else if (strItemName == _T("LookAtReg")) {
+	} else if (strItemName == SERVICES_MENU_LOOKREG) {
 
 	}
 }
 
-void CServices::StartSelectedSrv(CListTextElementUI* pElement)
+void CServices::StartSelectedSrv(CFileListItemUI* pElement)
 {
 	if (pElement == NULL)
 		return;
 
-	CString strSrvName = pElement->GetText(0);
+	CString strSrvName = pElement->GetSubControlText(SERVICES_CONTROL_NAME);
 
 	if (StartServiceByName(strSrvName) == FALSE)
 	{
@@ -108,34 +137,60 @@ void CServices::StartSelectedSrv(CListTextElementUI* pElement)
 		QLOG_APP(GetThreadErrorInfoString());
 		MessageBox(m_pPaintManager->GetPaintWindow(), GetThreadErrorInfoString(), SERVICES_NOTIFY_NAME, MB_OK|MB_ICONERROR);
 	}
+	else
+		OnRefreshItem(pElement);
 }
 
-void CServices::ReStartSrv(CListTextElementUI* pElement)
+void CServices::ReStartSrv(CFileListItemUI* pElement)
 {
 	if (pElement == NULL)
 		return;
 
-	CString strSrvName = pElement->GetText(0);
+	CString strSrvName = pElement->GetSubControlText(SERVICES_CONTROL_NAME);
 	if (RestartServiceByName(strSrvName) == FALSE)
 	{
 		SetErrorTitle(_T("重启服务[%s]失败"), strSrvName);
 		QLOG_APP(GetThreadErrorInfoString());
 		MessageBox(m_pPaintManager->GetPaintWindow(), GetThreadErrorInfoString(), SERVICES_NOTIFY_NAME, MB_OK|MB_ICONERROR);
 	}
+	else
+		OnRefreshItem(pElement);
 }
 
-void CServices::StopSelectedSrv(CListTextElementUI* pElement)
+void CServices::StopSelectedSrv(CFileListItemUI* pElement)
 {
 	if (pElement == NULL)
 		return;
 
-	CString strSrvName = pElement->GetText(0);
+	CString strSrvName = pElement->GetSubControlText(SERVICES_CONTROL_NAME);
 	if (StopServiceByName(strSrvName) == FALSE)
 	{
 		SetErrorTitle(_T("停止服务[%s]失败"), strSrvName);
 		QLOG_APP(GetThreadErrorInfoString());
 		MessageBox(m_pPaintManager->GetPaintWindow(), GetThreadErrorInfoString(), SERVICES_NOTIFY_NAME, MB_OK|MB_ICONERROR);
 	}
+	else
+		OnRefreshItem(pElement);
+}
+
+void CServices::StopProcessSrv(CFileListItemUI* pElementItem)
+{
+	if (pElementItem == NULL)
+		return;
+
+	CString strSrvName = pElementItem->GetSubControlText(SERVICES_CONTROL_NAME);
+	if (IsServiceRunning(strSrvName) == FALSE)
+		return;
+
+	UINT uServiceProcess = _ttoi(pElementItem->GetSubControlText(SERVICES_CONTROL_PID));
+	if (TerminateProcessByProcessId(uServiceProcess) == FALSE)
+	{
+		SetErrorTitle(_T("结束服务进程[%s]失败"), strSrvName);
+		QLOG_APP(GetThreadErrorInfoString());
+		MessageBox(m_pPaintManager->GetPaintWindow(), GetThreadErrorInfoString(), SERVICES_NOTIFY_NAME, MB_OK|MB_ICONERROR);
+	}
+	else
+		OnRefreshItem(pElementItem);
 }
 
 BOOL CServices::GetSvrInfo(CSrvInfoList& SvrInfoList)
@@ -250,7 +305,7 @@ void CServices::OnLoadItem(TNotifyUI& msg)
 		pFileItem->SetFixedHeight(27);
 
 		// 名称
-		CLabelUI* pSvrName = (CLabelUI*)pFileItem->FindSubControl(_T("Name"));
+		CLabelUI* pSvrName = (CLabelUI*)pFileItem->FindSubControl(SERVICES_CONTROL_NAME);
 		pSvrName->SetText(SvrInfo.strSvrName);
 		pSvrName->SetFont(pListInfo->nFont);
 		pSvrName->SetForeColor(pListInfo->dwTextColor);
@@ -258,7 +313,7 @@ void CServices::OnLoadItem(TNotifyUI& msg)
 		pSvrName->AppendTextStyle(DT_END_ELLIPSIS);
 
 		// 显示名称
-		CLabelUI* pDisplay = (CLabelUI*)pFileItem->FindSubControl(_T("Display"));
+		CLabelUI* pDisplay = (CLabelUI*)pFileItem->FindSubControl(SERVICES_CONTROL_DISPLAY);
 		pDisplay->SetText(SvrInfo.strDisplayName);
 		pDisplay->SetFont(pListInfo->nFont);
 		pDisplay->SetForeColor(pListInfo->dwTextColor);
@@ -266,14 +321,14 @@ void CServices::OnLoadItem(TNotifyUI& msg)
 		pDisplay->AppendTextStyle(DT_END_ELLIPSIS);
 
 		// 进程ID
-		CLabelUI* pPid = (CLabelUI*)pFileItem->FindSubControl(_T("PID"));
+		CLabelUI* pPid = (CLabelUI*)pFileItem->FindSubControl(SERVICES_CONTROL_PID);
 		CServices::FormatPid(SvrInfo.dwPID, strFormatText);
 		pPid->SetText(strFormatText);
 		pPid->SetFont(pListInfo->nFont);
 		pPid->SetForeColor(pListInfo->dwTextColor);
 
 		// 状态
-		CLabelUI* pRunType = (CLabelUI*)pFileItem->FindSubControl(_T("RunStatus"));
+		CLabelUI* pRunType = (CLabelUI*)pFileItem->FindSubControl(SERVICES_CONTROL_RUN);
 		CServices::FormatRunStatus(SvrInfo.dwRunStatus, strFormatText);
 		pRunType->SetText(strFormatText);
 		pRunType->AppendTextStyle(DT_END_ELLIPSIS);
@@ -281,7 +336,7 @@ void CServices::OnLoadItem(TNotifyUI& msg)
 		pRunType->SetFont(pListInfo->nFont);
 
 		// 启动类型
-		CLabelUI* pStartType = (CLabelUI*)pFileItem->FindSubControl(_T("StartType"));
+		CLabelUI* pStartType = (CLabelUI*)pFileItem->FindSubControl(SERVICES_CONTROL_START);
 		CServices::FormatStartType(SvrInfo.dwStartType, strFormatText);
 		pStartType->SetText(strFormatText);
 		pStartType->AppendTextStyle(DT_END_ELLIPSIS);
@@ -289,7 +344,7 @@ void CServices::OnLoadItem(TNotifyUI& msg)
 		pStartType->SetFont(pListInfo->nFont);
 
 		// 文件路径
-		CLabelUI* pFilePath = (CLabelUI*)pFileItem->FindSubControl(_T("Path"));
+		CLabelUI* pFilePath = (CLabelUI*)pFileItem->FindSubControl(SERVICES_CONTROL_PATH);
 		pFilePath->SetText(SvrInfo.strPath);
 		pFilePath->AppendTextStyle(DT_END_ELLIPSIS);
 		pFilePath->SetForeColor(pListInfo->dwTextColor);
@@ -298,11 +353,181 @@ void CServices::OnLoadItem(TNotifyUI& msg)
 	}
 }
 
+void CServices::OnInput(TNotifyUI& msg)
+{
+	DWORD dwSearchStart = 0;
+	TEventUI* pInputEvent = (TEventUI*)msg.wParam;
+	DWORD dwTick = GetTickCount();
+
+	CString strInputKey(pInputEvent->chKey);
+
+	if (dwTick - m_dwTick < 500)
+	{
+		OutputDebugString(_T("11111111111111"));
+		m_strInput += pInputEvent->chKey;
+		dwSearchStart = m_dwSearch + 1;
+	}
+	else
+	{
+		OutputDebugString(_T("222222222222222"));
+		if (m_strInput.CompareNoCase(strInputKey) == 0)
+			dwSearchStart = m_dwSearch + 1;
+		else
+			m_strInput = strInputKey;
+	}
+	
+	m_dwTick = dwTick;
+	OutputDebugString(m_strInput);
+	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("Service"));
+	BOOL bFind = FALSE;
+	for (int n=dwSearchStart; n<pList->GetCount(); ++n )
+	{
+		CFileListItemUI* pServiceItem = (CFileListItemUI*)pList->GetItemAt(n);
+
+		if (pServiceItem == NULL)
+			continue;
+
+		CDuiString strSvrName = pServiceItem->GetSubControlText(_T("Name"));
+		if (_tcsnicmp(strSvrName, m_strInput, m_strInput.GetLength()) == 0)
+		{
+			pList->EnsureVisible(n);
+			pList->SelectItem(n);
+			m_dwSearch = n;
+			bFind = TRUE;
+			break;
+		}
+	}
+
+	if (bFind == FALSE)
+		m_dwSearch = 0;
+}
+
+void CServices::OnRefresh(TNotifyUI& msg)
+{
+	CSrvInfoList SvrInfoList;
+	if (GetSvrInfo(SvrInfoList) == FALSE)
+		return;
+
+	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("Service"));
+	for (int n=0; n<pList->GetCount(); ++n )
+	{
+		// 获取每一项信息
+		CFileListItemUI* pServiceItem = (CFileListItemUI*)pList->GetItemAt(n);
+
+		if (pServiceItem == NULL)
+			continue;
+
+		CDuiString strServiceName = pServiceItem->GetSubControlText(SERVICES_CONTROL_NAME);
+		UINT nProcessId = _ttoi(pServiceItem->GetSubControlText(SERVICES_CONTROL_PID));
+		UINT uRunStatus = _ttoi(pServiceItem->GetSubControlText(SERVICES_CONTROL_RUN));
+		UINT uStartType = _ttoi(pServiceItem->GetSubControlText(SERVICES_CONTROL_START));
+
+		POSITION pos = SvrInfoList.GetHeadPosition();
+		while(pos)
+		{
+			const SERVICEINFO& ServiceInfo = SvrInfoList.GetNext(pos);
+			if (ServiceInfo.strSvrName.CompareNoCase(strServiceName) != 0)
+				continue;
+			
+			CDuiString strFormatInfo;
+			if (ServiceInfo.dwPID != nProcessId)
+			{
+				CServices::FormatPid(ServiceInfo.dwPID, strFormatInfo);
+				pServiceItem->SetSubControlText(SERVICES_CONTROL_PID, strFormatInfo);
+			}
+
+			if (ServiceInfo.dwRunStatus != uRunStatus)
+			{
+				CServices::FormatRunStatus(ServiceInfo.dwRunStatus, strFormatInfo);
+				pServiceItem->SetSubControlText(SERVICES_CONTROL_RUN, strFormatInfo);
+			}
+
+			if (ServiceInfo.dwStartType != uStartType)
+			{
+				CServices::FormatStartType(ServiceInfo.dwStartType, strFormatInfo);
+				pServiceItem->SetSubControlText(SERVICES_CONTROL_START, strFormatInfo);
+			}
+		}
+	}
+}
+
+void CServices::OnRefreshItem(CFileListItemUI* pServiceItem)
+{
+	CSrvInfoList SvrInfoList;
+	if (GetSvrInfo(SvrInfoList) == FALSE)
+		return;
+
+	CDuiString strServiceName = pServiceItem->GetSubControlText(SERVICES_CONTROL_NAME);
+	UINT nProcessId = _ttoi(pServiceItem->GetSubControlText(SERVICES_CONTROL_PID));
+	UINT uRunStatus = _ttoi(pServiceItem->GetSubControlText(SERVICES_CONTROL_RUN));
+	UINT uStartType = _ttoi(pServiceItem->GetSubControlText(SERVICES_CONTROL_START));
+
+	POSITION pos = SvrInfoList.GetHeadPosition();
+	while(pos)
+	{
+		const SERVICEINFO& ServiceInfo = SvrInfoList.GetNext(pos);
+		if (ServiceInfo.strSvrName.CompareNoCase(strServiceName) != 0)
+			continue;
+
+		CDuiString strFormatInfo;
+		if (ServiceInfo.dwPID != nProcessId)
+		{
+			CServices::FormatPid(ServiceInfo.dwPID, strFormatInfo);
+			pServiceItem->SetSubControlText(SERVICES_CONTROL_PID, strFormatInfo);
+		}
+
+		if (ServiceInfo.dwRunStatus != uRunStatus)
+		{
+			CServices::FormatRunStatus(ServiceInfo.dwRunStatus, strFormatInfo);
+			pServiceItem->SetSubControlText(SERVICES_CONTROL_RUN, strFormatInfo);
+		}
+
+		if (ServiceInfo.dwStartType != uStartType)
+		{
+			CServices::FormatStartType(ServiceInfo.dwStartType, strFormatInfo);
+			pServiceItem->SetSubControlText(SERVICES_CONTROL_START, strFormatInfo);
+		}
+	}
+}
+
+void CServices::ModifyStartType(CFileListItemUI* pServiceItem, SVR_STARTTYPE StartType)
+{
+	if (pServiceItem == NULL)
+		return;
+
+	CDuiString strServiceName = pServiceItem->GetSubControlText(SERVICES_CONTROL_NAME);
+
+	if (SetServiceStartTypeConfig(strServiceName, StartType) == FALSE)
+	{
+		SetErrorTitle(_T("设置服务[%s]启动状态失败"), strServiceName);
+		QLOG_APP(GetThreadErrorInfoString());
+		MessageBox(m_pPaintManager->GetPaintWindow(), GetThreadErrorInfoString(), SERVICES_NOTIFY_NAME, MB_OK|MB_ICONERROR);
+	}
+	else
+		OnRefreshItem(pServiceItem);
+}
+
 void CServices::FormatPid(DWORD Pid, CDuiString& strPid)
 {
 	strPid.Empty();
 	if (Pid != 0)
 		strPid.Format(_T("%u"), Pid);
+}
+
+void CServices::CopySvrInfo(CFileListItemUI* pSvrItem, COPY_ITEM_INFO CopySvrInfo)
+{
+	if (pSvrItem == NULL)
+		return;
+
+	//获取应用程序句柄
+	HWND hWnd = m_pPaintManager->GetPaintWindow();
+
+	if (CopySvrInfo == COPY_ITEM_INFO_SVR_NAME)
+		CopyDataToClipboard(CF_UNICODETEXT, hWnd, pSvrItem->GetSubControlText(SERVICES_CONTROL_NAME));
+	else if (CopySvrInfo == COPY_ITEM_INFO_DISPNAME)
+		CopyDataToClipboard(CF_UNICODETEXT, hWnd, pSvrItem->GetSubControlText(SERVICES_CONTROL_DISPLAY));
+	else if (CopySvrInfo == COPY_ITEM_INFO_SVR_PATH)
+		CopyDataToClipboard(CF_UNICODETEXT, hWnd, pSvrItem->GetSubControlText(SERVICES_CONTROL_PATH));
 }
 
 void CServices::FormatRunStatus(DWORD dwCurrentState, CDuiString& strRunState)
@@ -357,4 +582,32 @@ void CServices::FormatStartType(DWORD dwStartType, CDuiString& strStartType)
 	}
 
 	strStartType = szStartType;
+}
+
+BOOL CServices::TerminateProcessByProcessId(DWORD dwProcessId)
+{
+	HANDLE hProcess = NULL;
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		EnablePrivilege(SE_DEBUG_NAME);
+		hProcess = OpenProcess(PROCESS_TERMINATE, TRUE, dwProcessId);
+		if (hProcess == NULL)
+			break;
+
+		if (TerminateProcess(hProcess, 0) == FALSE)
+		{
+			SetErrorInfo(SYSTEM_ERROR,0,_T("终止进程%d失败"),dwProcessId);
+			break;
+		}
+
+		Sleep(1*100);
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	if (hProcess != NULL)
+		CloseHandle(hProcess);
+
+	return bSuccess;
 }

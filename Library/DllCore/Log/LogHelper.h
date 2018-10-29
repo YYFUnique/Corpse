@@ -71,3 +71,5 @@ private:
 #else
 #define LOG(fmt, ...)	((void)0)
 #endif
+
+#define LOG_PRINT(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(fmt, ##__VA_ARGS__)

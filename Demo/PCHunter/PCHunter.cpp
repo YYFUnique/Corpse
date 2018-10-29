@@ -374,6 +374,8 @@ LRESULT CPCHunter::OnMenuClick(WPARAM wParam, LPARAM lParam)
 	CDuiString strMenuName = pControl->GetManager()->GetRoot()->GetName();
 	if (strMenuName == _T("AppMenu"))
 		m_TaskMgr.OnAppMenu(pControl);
+	else if (strMenuName == _T("SvrMenu"))
+		m_TaskMgr.OnServiceMenu(pControl);
 	else if (strMenuName == _T("ScanResultMenu"))
 		m_NetworkMgr.OnHostScanMenu(pControl);
 	else if (strMenuName == _T("RangeMenu"))

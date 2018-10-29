@@ -6,6 +6,7 @@
 #include <DllCore/Utils/Registry.h>
 #include <DllCore/Utils/ServiceControl.h>
 #include <DllCore/Log/LogHelper.h>
+#include <DllCore/Utils/Security.h>
 
 #ifdef _WIN64
 #pragma comment(lib,"fltlib(x64).lib")
@@ -274,6 +275,9 @@ BOOL CFileSystemFilter::InstallMiniFilter()
 HRESULT CFileSystemFilter::UnloadFilterNotMandatory(LPCTSTR lpszFilterName)
 {
 	CStringW strFilterName(lpszFilterName);
+
+	// 设置加载/卸载文件过滤驱动特权
+	EnablePrivilege(SE_LOAD_DRIVER_NAME);
 
 	return FilterUnload(strFilterName);
 }

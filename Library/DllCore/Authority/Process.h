@@ -64,3 +64,11 @@ DLL_API BOOL GetProcessHandle(DWORD dwPID, HANDLE& hProcess);
 DLL_API BOOL GetProcessFullPath(DWORD dwPID, CString& strFullPath);
 
 DLL_API BOOL DosPathToNtPath(LPCTSTR lpszDosPath, CString& strNtPath);
+
+DLL_API BOOL TerminateProcessByProcessId(DWORD dwProcessId);
+
+DLL_API BOOL GetProcessCurrentDirctory(DWORD dwPid,CString& strProcessCurrentDirctory);
+
+DLL_API BOOL GetParentProcessID(DWORD dwPid,DWORD& dwParentProcessID);
+
+DLL_API BOOL GetPriorityClass(DWORD dwPid,CString& strPricrityDescribe);

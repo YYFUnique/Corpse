@@ -34,6 +34,8 @@
 //////////////////////// 应用层服务模块 ///////////////////////////////
 #define	SERVER_LIST_ITEM_INFO		_T("SvrListInfo.xml")
 
+#define	SERVER_LIST_MENU				_T("SvrMenu.xml")
+
 //////////////////////// 内核驱动服务模块 ///////////////////////////////
 #define	DRIVER_LIST_ITEM_INFO		_T("DriverListInfo.xml")
 

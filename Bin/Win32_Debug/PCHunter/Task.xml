@@ -55,8 +55,8 @@
 					</ListHeader>
 				</List>
 			</VerticalLayout>
-			<VerticalLayout name="VLayoutService" virtualwnd="services" linesize="12"  >
-				<List name="Service" menu="true" itemfont="0" multiselect="true" itemendellipsis="true" multiexpanding="true" scrollstepsize="200">
+			<VerticalLayout name="VLayoutService" virtualwnd="services" linesize="5">
+				<List name="Service" menu="true" itemfont="0" multiselect="true" itemendellipsis="true" multiexpanding="true" scrollstepsize="120">
 					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">			
 						<ListHeaderItem text="名称" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 						<ListHeaderItem text="显示名称" width="150" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
@@ -70,7 +70,7 @@
 				<Control height="3"/>
 			</VerticalLayout>
 			<VerticalLayout name="VLayoutDriver" virtualwnd="driver">
-				<List name="Driver" menu="true" itemfont="0" multiexpanding="true" scrollstepsize="200">
+				<List name="Driver" menu="true" itemfont="0" multiexpanding="true" scrollstepsize="120">
 					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">		
 						<!-- ListHeader 设置好 scaleheader="true"  scale="15%"  -->
 						<ListHeaderItem text="名称" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>

@@ -317,3 +317,174 @@ BOOL DosPathToNtPath(LPCTSTR lpszDosPath, CString& strNtPath)
 	strNtPath = lpszDosPath;
 	return FALSE;
 }
+
+BOOL TerminateProcessByProcessId(DWORD dwProcessId)
+{
+	HANDLE hProcess = INVALID_HANDLE_VALUE;
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		if (GetProcessHandle(dwProcessId,hProcess) == FALSE)
+		{
+			SetErrorInfo(SYSTEM_ERROR,0,_T("打开进程%d失败"),dwProcessId);
+			break;
+		}
+
+		if (TerminateProcess(hProcess,0) == FALSE)
+		{
+			SetErrorInfo(SYSTEM_ERROR,0,_T("终止进程%d失败"),dwProcessId);
+			break;
+		}
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	if (hProcess != INVALID_HANDLE_VALUE)
+		CloseHandle(hProcess);
+
+	return bSuccess;
+}
+
+BOOL GetProcessCurrentDirctory(DWORD dwPid,CString& strProcessCurrentDirctory)
+{
+	PROCNTQSIP NtQueryInformationProcess;
+	LONG                      status;
+	HANDLE                    hProcess;
+	PROCESS_BASIC_INFORMATION pbi;
+	PEB                       Peb;
+	PROCESS_PARAMETERS        ProcParam;
+	DWORD                     dwDummy;
+	DWORD                     dwSize;
+	LPVOID                    lpAddress;
+	BOOL                      bRet = FALSE;
+
+	TCHAR szCurrentDirctory[MAX_PATH] = {0};
+	GetProcessHandle(dwPid,hProcess);
+	if (hProcess == NULL)
+		return FALSE;
+
+	do 
+	{
+		NtQueryInformationProcess = (PROCNTQSIP)GetProcAddress(
+			GetModuleHandle(_T("ntdll")),
+			"NtQueryInformationProcess"
+			);
+
+		status = NtQueryInformationProcess( hProcess,
+			ProcessBasicInformation,(PVOID)&pbi,
+			sizeof(PROCESS_BASIC_INFORMATION),
+			NULL);
+
+		if (status)
+			break;
+
+		if (ReadProcessMemory( hProcess,
+			pbi.PebBaseAddress,&Peb,
+			sizeof(PEB),&dwDummy) == FALSE)
+			break;
+
+		if (ReadProcessMemory( hProcess,
+			Peb.ProcessParameters,&ProcParam,
+			sizeof(PROCESS_PARAMETERS),&dwDummy) == FALSE)
+			break;
+
+		lpAddress = ProcParam.CurrentDirectory.Buffer;
+		dwSize = ProcParam.CurrentDirectory.Length;
+
+		if (_countof(szCurrentDirctory)<dwSize)
+			break;
+
+		if (ReadProcessMemory( hProcess,lpAddress,szCurrentDirctory,dwSize,&dwDummy)== FALSE)
+			break;
+
+		strProcessCurrentDirctory = szCurrentDirctory;
+		bRet = TRUE;
+	} while (FALSE);
+
+	if (hProcess)
+		CloseHandle (hProcess);
+	return bRet;
+}
+
+BOOL GetParentProcessID(DWORD dwPid,DWORD& dwParentProcessID)
+{
+	PROCNTQSIP NtQueryInformationProcess;
+	LONG                      status;
+	HANDLE                    hProcess;
+	PROCESS_BASIC_INFORMATION pbi;
+	BOOL                      bRet = FALSE;
+
+	if (dwPid == 0)
+	{
+		SetErrorInfo(CUSTOM_ERROR , 0 , _T("没有找到该进程的父进程！"));
+		return FALSE;
+	}
+
+	GetProcessHandle(dwPid,hProcess);
+	if (hProcess == NULL)
+		return FALSE;
+
+	do 
+	{
+		NtQueryInformationProcess = (PROCNTQSIP)GetProcAddress(
+			GetModuleHandle(_T("ntdll")),
+			"NtQueryInformationProcess"
+			);
+
+		status = NtQueryInformationProcess( hProcess,
+			ProcessBasicInformation,(PVOID)&pbi,
+			sizeof(PROCESS_BASIC_INFORMATION),
+			NULL);
+
+		if (status)
+			break;
+
+		dwParentProcessID = pbi.InheritedFromUniqueProcessId;
+		bRet = TRUE;
+	} while (FALSE);
+
+	if (hProcess)
+		CloseHandle (hProcess);
+
+	return bRet;
+}
+
+BOOL GetPriorityClass(DWORD dwPid,CString& strPricrityDescribe)
+{
+	strPricrityDescribe.Empty();
+	HANDLE hProcess;
+	GetProcessHandle(dwPid,hProcess);
+	if (hProcess == NULL)
+		return FALSE;
+
+	DWORD dwPriorityClass = GetPriorityClass(hProcess);
+	if (dwPriorityClass == 0)
+		return FALSE;
+
+	switch(dwPriorityClass)
+	{
+	case REALTIME_PRIORITY_CLASS:
+		strPricrityDescribe = _T("实时");
+		break;
+	case HIGH_PRIORITY_CLASS:
+		strPricrityDescribe = _T("高");
+		break;
+	case ABOVE_NORMAL_PRIORITY_CLASS:
+		strPricrityDescribe = _T("高于标准");
+		break;
+	case NORMAL_PRIORITY_CLASS:
+		strPricrityDescribe = _T("普通");
+		break;
+	case BELOW_NORMAL_PRIORITY_CLASS:
+		strPricrityDescribe = _T("低于标准");
+		break;		
+	case IDLE_PRIORITY_CLASS:
+		strPricrityDescribe = _T("低");
+		break;
+	default:
+		strPricrityDescribe = _T("未知");
+	}
+
+	CloseHandle(hProcess);
+	return strPricrityDescribe.IsEmpty() == FALSE;
+}
