@@ -40,10 +40,10 @@ public:
 protected:
 	DUI_DECLARE_MESSAGE_MAP()
 	void OnClick(TNotifyUI& msg);
+	void OnTimer(TNotifyUI& msg);
 	void OnTabSelect(TNotifyUI& msg);
 	void OnValueChanged(TNotifyUI& msg);
 	void OnSelectChanged(TNotifyUI& msg);
-	
 protected:
 	//主机扫描相关菜单
 	void OnRemoteDesktop(CListTextElementUI* pItem);
@@ -54,6 +54,7 @@ protected:
 	int m_nHeadTrans;
 	CDuiString m_strBkImage;
 	UINT _m;
+	DWORD		m_dwSelectOption;
 	CControlUI* m_pLastPage;
 	CControlUI* m_pCurrentPage;
 

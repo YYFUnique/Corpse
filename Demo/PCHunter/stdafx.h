@@ -19,6 +19,8 @@ using namespace DuiLib;
 
 #define	DUI_MSGTYPE_REFRESH		_T("refresh")
 #define	DUI_MSGTYPE_LOADITEM	_T("loaditem")
+// 主界面管理的时间器
+#define	DUI_MSGTYPE_TIMEREX		_T("timerex")
 
 #include <winsock2.h>
 #include <iphlpapi.h>

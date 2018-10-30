@@ -1,7 +1,7 @@
 #pragma once
-#include "FsFltIoctl.h"
 #include "Utils/ControlBuilder.h"
 #include "DuiLib/Core/UIDlgBuilder.h"
+#include <DrvControl/FsFltIoctl.h>
 
 class CHideFile : public CNotifyPump
 {
@@ -19,9 +19,11 @@ protected:
 protected:
 	void AddItem();
 	void LoadItem();
+	void DeleteItem();
+	void StopFilter();
 	void CreateAndShowListItem(CListUI* pList, DWORD dwIndex, USER_FILE_PATH_RULE* pUserFilePathRule);
 protected:
-	static CString GetHideFileMode(HIDE_FILE_MODE HideFileMode);
+	static CString GetHideFileMode(MATCH_MODE MatchMode);
 private:
 	BOOL						m_bLoad;
 	CFileSystemFilter*	m_pFsFltDrv;

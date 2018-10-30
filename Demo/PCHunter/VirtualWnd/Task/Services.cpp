@@ -356,20 +356,18 @@ void CServices::OnLoadItem(TNotifyUI& msg)
 void CServices::OnInput(TNotifyUI& msg)
 {
 	DWORD dwSearchStart = 0;
-	TEventUI* pInputEvent = (TEventUI*)msg.wParam;
+	TEventUI* pInputEvent = (TEventUI*)msg.lParam;
 	DWORD dwTick = GetTickCount();
 
 	CString strInputKey(pInputEvent->chKey);
 
 	if (dwTick - m_dwTick < 500)
 	{
-		OutputDebugString(_T("11111111111111"));
 		m_strInput += pInputEvent->chKey;
 		dwSearchStart = m_dwSearch + 1;
 	}
 	else
 	{
-		OutputDebugString(_T("222222222222222"));
 		if (m_strInput.CompareNoCase(strInputKey) == 0)
 			dwSearchStart = m_dwSearch + 1;
 		else
@@ -377,7 +375,6 @@ void CServices::OnInput(TNotifyUI& msg)
 	}
 	
 	m_dwTick = dwTick;
-	OutputDebugString(m_strInput);
 	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("Service"));
 	BOOL bFind = FALSE;
 	for (int n=dwSearchStart; n<pList->GetCount(); ++n )
@@ -387,7 +384,7 @@ void CServices::OnInput(TNotifyUI& msg)
 		if (pServiceItem == NULL)
 			continue;
 
-		CDuiString strSvrName = pServiceItem->GetSubControlText(_T("Name"));
+		CDuiString strSvrName = pServiceItem->GetSubControlText(SERVICES_CONTROL_NAME);
 		if (_tcsnicmp(strSvrName, m_strInput, m_strInput.GetLength()) == 0)
 		{
 			pList->EnsureVisible(n);

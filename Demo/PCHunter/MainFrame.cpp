@@ -2,6 +2,7 @@
 #include "PCHunter.h"
 #include <NetCon.h>
 #include "DllCore/File/MiniDump.h"
+#include "DllCore/Log/LogHelper.h"
 
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
 {	 
