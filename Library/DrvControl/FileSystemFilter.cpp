@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "FileSystemFilter.h"
+#include "FsFltIoctl.h"
 #include <fltUser.h>
 #include <DllCore/Utils/OsInfo.h>
 #include <DllCore/Utils/ErrorInfo.h>
@@ -62,7 +63,14 @@ BOOL CFileSystemFilter::StopDrvService()
 	do 
 	{
 		if (StopServiceByName(FS_FILTER_NAME) == FALSE)
-			break;
+		{
+			// 设置加载/卸载文件过滤驱动特权
+			EnablePrivilege(SE_LOAD_DRIVER_NAME);
+
+			CStringW strFilterName(FS_FILTER_NAME);
+			if (FilterUnload(strFilterName) != S_OK)
+				break;
+		}
 		// 设置文件过滤驱动手动启动
 		if (SetServiceStartTypeConfig(FS_FILTER_NAME, SERVICE_DEMAND_START) == FALSE)
 			break;
@@ -75,7 +83,7 @@ BOOL CFileSystemFilter::StopDrvService()
 
 BOOL CFileSystemFilter::DelDrvService()
 {
-	StopServiceByName(FS_FILTER_NAME);
+	StopDrvService();
 	return DelServiceByName(FS_FILTER_NAME);
 }
 
@@ -176,7 +184,6 @@ BOOL CFileSystemFilter::CreateFsFilterSvc()
 			break;
 		}
 
-		LOG_PRINT(_T("bRet = TRUE;"));
 		bRet = TRUE;
 	} while (0);
 
@@ -272,12 +279,62 @@ BOOL CFileSystemFilter::InstallMiniFilter()
 	return bSuccess;
 }
 
-HRESULT CFileSystemFilter::UnloadFilterNotMandatory(LPCTSTR lpszFilterName)
+//获取是否允许运行USB存储设备上的程序及脚本
+BOOL CFileSystemFilter::GetEnableUsbDiskExecute()
 {
-	CStringW strFilterName(lpszFilterName);
+	FS_FLT_COMMAND FsFltCommand = FS_FLT_GET_ENABLE_USB_DISK_EXECUTE;
+	BOOL bEnable = TRUE;
 
-	// 设置加载/卸载文件过滤驱动特权
-	EnablePrivilege(SE_LOAD_DRIVER_NAME);
+	if (DeviceIoControl(&FsFltCommand , sizeof(FS_FLT_COMMAND) , &bEnable , sizeof(BOOL)) == FALSE)
+		return FALSE;
 
-	return FilterUnload(strFilterName);
+	return bEnable;
+}
+
+//设置是否允许运行USB存储设备上的程序及脚本
+BOOL CFileSystemFilter::SetEnableUsbDiskExecute(BOOL bEnable)
+{
+	SET_FUNCTION_ENABLE SetFunctionEnable;
+	SetFunctionEnable.FltCommand = FS_FLT_SET_ENABLE_USB_DISK_EXECUTE;
+	SetFunctionEnable.bEnable = bEnable;
+
+	if (DeviceIoControl(&SetFunctionEnable , sizeof(SET_FUNCTION_ENABLE)) == FALSE)
+		return FALSE;
+
+	return TRUE;
+}
+
+BOOL CFileSystemFilter::GetCanStopFsDrv()
+{
+	FS_FLT_COMMAND FsFltCommand = FS_FLT_GET_CAN_STOP_DRV;
+	BOOL bCanStop = TRUE;
+
+	if (DeviceIoControl(&FsFltCommand , sizeof(FS_FLT_COMMAND) , &bCanStop , sizeof(BOOL)) == FALSE)
+		return FALSE;
+
+	return bCanStop;
+}
+
+BOOL CFileSystemFilter::SetFsFltFilterCanStop(BOOL bCanStop /*= TRUE*/)
+{
+	SET_FUNCTION_ENABLE SetFunctionSwitch;
+	SetFunctionSwitch.FltCommand = FS_FLT_SET_CAN_STOP_DRV;
+	SetFunctionSwitch.bEnable = bCanStop;
+
+	return DeviceIoControl(&SetFunctionSwitch , sizeof(SET_FUNCTION_ENABLE) , NULL , 0);
+}
+
+DWORD CFileSystemFilter::GetFsFltVersion()
+{
+	FS_FLT_COMMAND LsFsFltCommand = FS_FLT_GET_DRV_VERSION;
+	DWORD dwFsFltVersion = 1;
+
+	// 只有新版本文件过滤驱动才存在 LS_FS_FLT_GET_VERSION 命令字，故老版本默认为1
+	DeviceIoControl(&LsFsFltCommand, sizeof(FS_FLT_COMMAND), &dwFsFltVersion, sizeof(DWORD));
+	return dwFsFltVersion;
+}
+
+BOOL CFileSystemFilter::FsFltVersionCorrectly()
+{
+	return GetFsFltVersion() == (FS_FLT_DRV_VERSION);
 }

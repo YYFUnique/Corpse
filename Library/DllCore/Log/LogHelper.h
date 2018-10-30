@@ -50,14 +50,17 @@ public:
 	~QLogHelper();
 
 public:
-	void VLog(LOG_LEVEL LogLevel, LPCTSTR lpszFormat,...);
 	void VLog(LPCTSTR lpszFormat,...);
+	void VLog(LOG_LEVEL LogLevel, LPCTSTR lpszFormat,...);
+	void VLogDbg(LPCTSTR lpszFormat, ...);
+	static void SetDbgMode(BOOL bEnable = TRUE);
 private:	
 	BOOL			m_bLogToFile;
 	LONG			m_nFileLine;
 	CString			m_strFileName;
 	CString			m_strLogInfo;
 	LOG_LEVEL	m_LogLevel;
+	static BOOL m_bDbg;
 };
 
 #define QLOG_INFO(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_INFO, fmt, ##__VA_ARGS__)
@@ -73,3 +76,4 @@ private:
 #endif
 
 #define LOG_PRINT(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(fmt, ##__VA_ARGS__)
+#define LOG_PRINT_DBG(fmt, ...) QLogHelper(__FILE__, __LINE__).VLogDbg(fmt, ##__VA_ARGS__)

@@ -4,6 +4,8 @@
 #include "../Sync/SyncLock.h"
 #include <atltime.h>
 
+BOOL QLogHelper::m_bDbg = FALSE;
+
 QLogImpl* QLogImpl::GetInstance()
 {
 	//不是多线程安全类型
@@ -118,6 +120,26 @@ void QLogHelper::VLog(LOG_LEVEL LogLevel, LPCTSTR lpszFormat,...)
 
 void QLogHelper::VLog(LPCTSTR lpszFormat,...)
 {
+	m_bLogToFile = FALSE;
+	va_list paralist;
+	va_start(paralist, lpszFormat); 
+
+	CString strLogInfo;
+	strLogInfo.FormatV(lpszFormat, paralist);
+	strLogInfo.TrimRight(_T("\r\n"));
+	OutputDebugString(strLogInfo);
+}
+
+void QLogHelper::SetDbgMode(BOOL bEnable /*= TRUE*/)
+{
+	m_bDbg = bEnable;
+}
+
+void QLogHelper::VLogDbg(LPCTSTR lpszFormat, ...)
+{
+	if (m_bDbg == FALSE)
+		return;
+
 	m_bLogToFile = FALSE;
 	va_list paralist;
 	va_start(paralist, lpszFormat); 

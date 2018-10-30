@@ -42,7 +42,7 @@ void CDrvObject::CloseDrv()
 }
 
 //Í¨ÓÃDeviceIoControlº¯Êý
-BOOL CDrvObject::DeviceIoControl(DWORD dwIoControlCode , LPVOID lpInBuffer , DWORD nInBufferSize , LPVOID lpOutBuffer, DWORD nOutBufferSize, LPDWORD lpBytesReturned)
+BOOL CDrvObject::DeviceIoControl(DWORD dwIoControlCode , LPVOID lpInBuffer , DWORD nInBufferSize, LPVOID lpOutBuffer/* = NULL*/, DWORD nOutBufferSize/* = 0*/ , LPDWORD lpBytesReturned/* = NULL*/)
 {
 	DWORD dwBytesReturned = 0;
 	if (lpBytesReturned == NULL)
