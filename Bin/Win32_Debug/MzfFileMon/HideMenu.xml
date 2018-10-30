@@ -4,10 +4,11 @@
   <Font name="微软雅黑" size="12" bold="true"/>
   <Default name="Menu" value="inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='menu_bk.png' corner='30,8,8,8'&quot; mask=&quot;#FFFFFFFF&quot; hole=&quot;false&quot;" />
   <Menu name="HideMenu">
-  	<MenuElement text="添加" name="Add" />
-	<MenuElement text="删除" name="Delete" />
-	<MenuElement text="刷新" name="Refresh" />
+  	<MenuElement text="添加" name="Add"/>
+	<MenuElement text="删除" name="Delete"/>
+	<MenuElement text="刷新" name="Refresh"/>
 	<MenuElement linetype="true" />
-	<MenuElement text="详细信息" name="Info" />
+	<MenuElement text="停止过滤驱动" name="Stop"/>
+	<MenuElement text="详细信息" name="Info"/>
   </Menu>
 </Window>
