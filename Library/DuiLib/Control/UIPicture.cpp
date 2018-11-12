@@ -75,6 +75,9 @@ namespace DuiLib
  		ICONINFO IconInfo;
  		GetIconInfo(hIcon, &IconInfo);
 
+		if (m_hIcon != NULL)
+			DestroyIcon(m_hIcon);
+
 		m_hIcon = CreateIconIndirect(&IconInfo);
 		Invalidate();
 	}

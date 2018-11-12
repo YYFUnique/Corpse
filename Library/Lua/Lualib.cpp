@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  dwReason, LPVOID /*lpReserved*/)
 {
 	switch( dwReason ) {

@@ -1,20 +1,19 @@
 #pragma once
 
-#ifdef LS_STATIC_LIB_CALL
-#define LIB_LUA_API 
-#elif defined  LUA_EXPORTS
-#define LIB_LUA_API __declspec(dllexport)
-#else
-#define LIB_LUA_API __declspec(dllimport)
-#endif
-
-class Lualib
+class LUALIB_API CLua
 {
 public:
-	Lualib();
-	~Lualib();
+	CLua();
+	~CLua();
 
 public:
+	void Init();
+	void Close();
+	BOOL LoadFile(LPCTSTR lpszFileName);
+	BOOL DoFn(LPCTSTR lpszFunName, const CParamGroup& ParamIn, CParamGroup& ParamOut);
+public:
+	static BOOL PushLuaData(lua_State*, CParamData* pParam);
+	static BOOL PopLuaData(lua_State* pState, CParamData* pParam, int nIndex);
 protected:
 	lua_State* m_pLua;
 };

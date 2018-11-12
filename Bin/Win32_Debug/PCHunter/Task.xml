@@ -45,12 +45,15 @@
 				<Control height="3"/>
 			</VerticalLayout>
 			<VerticalLayout name="VLayoutProcess" virtualwnd="process">
-				<List name="Process" >
+				<List name="Process" menu="true" itemfont="0" itemendellipsis="true" scrollstepsize="80">
 					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">				
-						<ListHeaderItem text="进程名" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="PID" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="用户名" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
-						<ListHeaderItem text="CPU" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="进程名" width="150" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="PID" width="50" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="用户名" width="135" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="内存使用" width="85" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="CPU使用" width="60" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="线程使用" width="60" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="句柄使用" width="60" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 						<ListHeaderItem text="描述" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 					</ListHeader>
 				</List>

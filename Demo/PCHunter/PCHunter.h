@@ -4,7 +4,7 @@ class CPCHunter : public WindowImplBase
 {
 public:
 	CPCHunter();
-	~CPCHunter();
+	virtual	~CPCHunter();
 
 //override
 public:
@@ -51,18 +51,18 @@ protected:
 	void OnHostScanMenu(CControlUI* pControl);
 	void OnRangeMenu(CControlUI* pControl);
 protected:
-	int m_nHeadTrans;
-	CDuiString m_strBkImage;
+	int					m_nHeadTrans;
+	CDuiString		m_strBkImage;
 	UINT _m;
-	DWORD		m_dwSelectOption;
-	CControlUI* m_pLastPage;
-	CControlUI* m_pCurrentPage;
+	DWORD			m_dwSelectOption;
+	CControlUI*		m_pLastPage;
+	CControlUI*		m_pCurrentPage;
 
 	CTaskMgr		m_TaskMgr;
 	CNetworkMgr	m_NetworkMgr;
 	CHardMgr		m_HardMgr;
 	CSystemMgr	m_SystemMgr;
-	CUITrayIcon m_Tray;
+	CUITrayIcon		m_Tray;
 	//CMessageTip* m_pMsgTip;
 	//CUIDropTarget* m_pDropTarget;
 	//IMAGE3D::PARAM3DTRANSFORM _3dParam;

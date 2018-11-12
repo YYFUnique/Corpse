@@ -52,3 +52,7 @@ DLL_API BOOL QXUnicodeToUtf8(LPCWSTR lpwText, LPSTR lpUTF8, DWORD& dwSize);
 DLL_API BOOL URLEncode(LPCTSTR lpszSrcURL, CString& strEncodeURL);
 
 DLL_API BOOL URLDecode(LPCSTR lpszEncodeURL, CString& strDecodeURL);
+
+DLL_API BOOL StrFormatNumber(ULONGLONG ullNumber, LPTSTR lpszOutput, UINT cchBuf);
+
+DLL_API BOOL StrFromTimeIntervalEx(LPTSTR pszOut, UINT cchMax, DWORD dwTimeMS, int digits);

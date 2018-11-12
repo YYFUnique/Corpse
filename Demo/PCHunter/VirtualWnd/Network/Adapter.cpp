@@ -3,6 +3,7 @@
 #include <WinIoCtl.h>
 #include <ntddndis.h>
 #include "../../Utils/AdapterInfo.h"
+#include "DllCore/Utils/TextTools.h"
 
 CAdapter::CAdapter()
 {
@@ -118,7 +119,7 @@ void CAdapter::OnLoadItem(TNotifyUI& msg)
 		if (dwAdapterChangeTime)
 		{
 			TCHAR szTime[MAX_PATH];
-			StrFromTimeInterval(szTime,_countof(szTime),dwAdapterChangeTime*1000,6);
+			StrFromTimeIntervalEx(szTime,_countof(szTime),dwAdapterChangeTime*1000,6);
 			InsertNodeLabel(pSubNode1,szTime);
 		}
 

@@ -130,3 +130,7 @@ DLL_CORE_API BOOL GetOsVersion(DWORD& dwMajorVersion, DWORD& dwMinorVersion);
 /* 返  回 值：返回操作系统所在驱动器符号名称，如"C:\"                          	   */
 /************************************************************************/
 DLL_CORE_API CString GetOsInLogicalDrive();
+
+DLL_CORE_API CString GetSystemDirectory(LPCTSTR lpszFileName);
+
+DLL_CORE_API CString GetWindowsDirectory();

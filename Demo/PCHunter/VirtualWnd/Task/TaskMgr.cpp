@@ -18,6 +18,7 @@ DUI_END_MESSAGE_MAP()
 void CTaskMgr::ClearVirtualWnd(CNotifyPump* pNotifyPump)
 {
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_APP);
+	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_PROCESS);
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_SERVICE);
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_USERINFO);
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_DRIVER);
@@ -30,6 +31,9 @@ void CTaskMgr::SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPaintMa
 
 	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_APP, &m_App);
 	m_App.SetPaintMagager(pPaintManager);
+
+	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_PROCESS, &m_Process);
+	m_Process.SetPaintMagager(pPaintManager);
 
 	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_SERVICE, &m_Service);
 	m_Service.SetPaintManager(pPaintManager);

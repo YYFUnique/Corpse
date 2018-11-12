@@ -150,8 +150,19 @@
 //#endif
 
 /* more often than not the libs go together with the core */
-#define LUALIB_API	
+#ifndef LUALIB_API
+#ifdef LS_STATIC_LIB_CALL
+#define LUALIB_API 
+#elif defined  LUA_EXPORTS
+#define LUALIB_API __declspec(dllexport)
+#else
+#define LUALIB_API __declspec(dllimport)
+#endif
+#endif //LUALIB_API
+
+#ifndef LUAMOD_API
 #define LUAMOD_API	
+#endif //LUAMOD_API
 
 
 /*

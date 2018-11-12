@@ -17,7 +17,7 @@ protected:
 	void OnSelectChanged( TNotifyUI &msg );
 private:
 	CApplication			m_App;
-	//CProcess					m_Process;
+	CProcess					m_Process;
 	CServices					m_Service;
 	CUserInfo				m_UserInfo;
 	CCoreDriver				m_CoreDriver;

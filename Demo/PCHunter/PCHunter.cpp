@@ -358,8 +358,8 @@ LRESULT CPCHunter::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 		STRINGorID strXmlFile(_T("MenuStatus.xml"));
 		pMenu->Init(NULL,strXmlFile, pt,&m_PaintManager);
 	}
-	else if (uMsgId == WM_MOUSEMOVE)
-		m_Tray.OnMouseMove(); 
+	/*else if (uMsgId == WM_MOUSEMOVE)
+		m_Tray.OnMouseMove(); */
 	else if (uMsgId == WM_MOUSEHOVER)
 	{
 		/*if (m_pMsgTip == NULL)

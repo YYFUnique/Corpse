@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "TextTools.h"
 #include "StdPtr.h"
+#include <strsafe.h>
+#include <atltime.h>
 
 #define GB2312_CODE_PAGE 936
 
@@ -252,4 +254,79 @@ BOOL URLDecode(LPCSTR lpszEncodeURL, CString& strDecodeURL)
 	lpwText = NULL;
 
 	return TRUE;
+}
+
+BOOL StrFormatNumber(ULONGLONG ullNumber, LPTSTR pszBuf, UINT cchBuf)
+{
+	TCHAR szNumberString[64];
+	_stprintf_s(szNumberString, _countof(szNumberString), _T("%I64u"), ullNumber);
+
+	int nStrlenLength = (int)_tcslen(szNumberString);
+
+	int nPre = nStrlenLength, nCount = 0;
+	UINT nOffset = 0;
+	while(nPre>3)
+	{
+		++nCount;
+		nPre -= 3;
+	}
+
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		if (nPre)
+		{
+			StringCbCopyN(pszBuf, cchBuf*sizeof(TCHAR), szNumberString, nPre*sizeof(TCHAR));
+			nOffset += nPre;
+			if (nCount)
+			{
+				pszBuf[nPre] = _T(',');
+				++nPre;
+			}
+			pszBuf += nPre;
+		}
+
+		while(nCount)
+		{
+			if (nOffset > cchBuf)
+				break;
+
+			StringCbCopyN(pszBuf, (cchBuf-nOffset)*sizeof(TCHAR), szNumberString + nOffset, 3*sizeof(TCHAR));
+
+			nOffset += 3;
+			pszBuf += 3;
+			--nCount;
+
+			if (nCount)
+			{
+				*pszBuf = _T(',');
+				++pszBuf;
+			}
+		}
+		*pszBuf = _T('\0');
+
+		bSuccess = TRUE;
+	} while (FALSE);	
+
+	return bSuccess;
+}
+
+BOOL StrFromTimeIntervalEx(LPTSTR pszOut, UINT cchMax, DWORD dwTimeMS, int digits)
+{
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		DWORD dwHours, dwMinutes;
+		dwTimeMS = (dwTimeMS + 500) / 1000;
+		dwHours = dwTimeMS / 3600;
+		dwTimeMS -= dwHours * 3600;
+		dwMinutes = dwTimeMS / 60;
+		dwTimeMS -= dwMinutes * 60;
+		HRESULT hRet = StringCbPrintf(pszOut, cchMax*sizeof(TCHAR), _T("%02d:%02d:%02d"), dwHours, dwMinutes, dwTimeMS);
+		if (hRet == S_OK)
+			bSuccess = TRUE;
+
+	} while (FALSE);
+
+	return bSuccess;
 }

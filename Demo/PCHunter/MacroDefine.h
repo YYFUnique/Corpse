@@ -5,6 +5,7 @@
 //////////////////////// 虚拟窗口定义 ///////////////////////////////
 #define	VIRTUAL_WND_TASK				_T("task")
 #define	VIRTUAL_WND_APP				_T("app")
+#define	VIRTUAL_WND_PROCESS		_T("process")
 #define	VIRTUAL_WND_SERVICE			_T("services")
 #define	VIRTUAL_WND_USERINFO		_T("user")
 #define	VIRTUAL_WND_DRIVER			_T("driver")
@@ -30,7 +31,7 @@
 //////////////////////// 应用程序窗口模块 ///////////////////////////////
 #define	APPLICATION_MENU				_T("AppMenu.xml")
 #define	APP_LIST_ITEM_INFO				_T("AppListInfo.xml")
-
+#define	PROCESS_LIST_ITEM_INFO		_T("ProcessListInfo.xml")
 //////////////////////// 应用层服务模块 ///////////////////////////////
 #define	SERVER_LIST_ITEM_INFO		_T("SvrListInfo.xml")
 

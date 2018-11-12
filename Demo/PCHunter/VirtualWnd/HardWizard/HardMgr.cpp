@@ -29,8 +29,8 @@ void CHardMgr::SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPaintMa
 	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_DEVICE, &m_DeviceNotify);
 	m_DeviceNotify.SetPaintMagager(pPaintManager);
 
-	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_CLIPBORD, &m_ClipBordMonitor);
-	m_ClipBordMonitor.SetPaintMagager(pPaintManager);
+	/*pNotifyPump->AddVirtualWnd(VIRTUAL_WND_CLIPBORD, &m_ClipBordMonitor);
+	m_ClipBordMonitor.SetPaintMagager(pPaintManager);*/
 }
 
 void CHardMgr::OnSelectChanged(TNotifyUI &msg)
@@ -62,12 +62,12 @@ BOOL CHardMgr::DeviceChanged(WPARAM wParam, LPARAM lParam)
 
 void CHardMgr::OnChangeCbChain(WPARAM wParam, LPARAM lParam)
 {
-	m_ClipBordMonitor.OnChangeCbChain((HWND)wParam, (HWND)lParam);
+	//m_ClipBordMonitor.OnChangeCbChain((HWND)wParam, (HWND)lParam);
 }
 
 void CHardMgr::OnDrawClipboard()
 {
-	m_ClipBordMonitor.OnDrawClipboard();
+	//m_ClipBordMonitor.OnDrawClipboard();
 }
 
 void CHardMgr::GetDeviceChangeEventTypeText(UINT nEventType,LPTSTR lpszEventTypeText)
