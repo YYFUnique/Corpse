@@ -15,3 +15,5 @@ void UninitRpcModule();
 RPC_API BOOL MyRpcTest();
 
 RPC_API BOOL UserAppExitNotify(DWORD dwProcessId);
+
+RPC_API BOOL SetMonitorAppInfo(LPCTSTR lpszFilePath);

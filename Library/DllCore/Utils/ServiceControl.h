@@ -1,6 +1,7 @@
 #pragma once
 #include "StdPtr.h"
 #include <Winsvc.h>
+#include "DuiList.h"
 
 #ifdef LS_STATIC_LIB_CALL
 #define DLL_API 

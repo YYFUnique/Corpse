@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "CryptHelper.h"
-#pragma comment(lib,"crypt32.lib")
+#pragma comment(lib,"Crypt32.lib")
 
 CCryptHelper::CCryptHelper(CERT_TYPE CertType)
 	 : m_CertType(CertType)
@@ -114,6 +114,26 @@ BOOL CCryptHelper::SetCertSubjectName(LPCTSTR lpszSubjectName, CERT_NAME_BLOB* p
 	return bSuccess;
 }
 
+BOOL CCryptHelper::ExportPublicKey(CERT_PUBLIC_KEY_INFO* pCertPublicKeyInfo, DWORD* pdwLen)
+{
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		if (m_hCryptProv == NULL)
+			break;
+
+		if (m_hKey == NULL)
+			break;
+
+		if (CryptExportPublicKeyInfo(m_hCryptProv, AT_SIGNATURE, X509_ASN_ENCODING, pCertPublicKeyInfo, pdwLen) == FALSE)
+			break;
+		
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	return bSuccess;
+}
+
 BOOL CCryptHelper::CreateSelfSignedCertificate(LPCTSTR lpszSubjectName, SYSTEMTIME* pStartTime, SYSTEMTIME* pEndTime)
 {
 	BOOL bSuccess = FALSE;
@@ -175,6 +195,64 @@ BOOL CCryptHelper::CreateSelfSignedCertificate(LPCTSTR lpszSubjectName, SYSTEMTI
 	return bSuccess;
 }
 
+BOOL CCryptHelper::CryptSignAndEncodeCertificate(CERT_REQUEST_INFO* pRequestInfo, BYTE* pEncode, DWORD* pcbEncode)
+{
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		if (m_hCryptProv == NULL)
+			break;
+		if (m_hKey == NULL)
+			break;
+
+		CRYPT_ALGORITHM_IDENTIFIER CryptAlg;
+		ZeroMemory(&CryptAlg, sizeof(CRYPT_ALGORITHM_IDENTIFIER));
+		CryptAlg.pszObjId = (LPSTR)(LPCSTR)m_strSignatureAlgorithm;
+
+		bSuccess = ::CryptSignAndEncodeCertificate(m_hCryptProv, m_CertType, X509_ASN_ENCODING,  
+																				X509_CERT_REQUEST_TO_BE_SIGNED, (void*)pRequestInfo, 
+																				&CryptAlg, NULL, pEncode, pcbEncode);
+	
+	} while (FALSE);
+
+	return bSuccess;
+}
+
+BOOL CCryptHelper::LoadCertRequestFile(LPCTSTR lpszRequestFile, LPVOID lpData, DWORD* pcbLen)
+{
+	BOOL bSuccess = FALSE;
+	HANDLE hFile = INVALID_HANDLE_VALUE;
+	do 
+	{
+		hFile = CreateFile(lpszRequestFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+		if (hFile == INVALID_HANDLE_VALUE)
+			break;
+
+		DWORD dwSizeHigh, dwSizeLow;
+		dwSizeLow = GetFileSize(hFile, &dwSizeHigh);
+
+		BYTE Base64Data[1024*2] = {0};
+		DWORD dwLen = 0;
+		ReadFile(hFile, Base64Data, dwSizeLow ,&dwLen, NULL);
+	
+		BYTE bBinaryData[1024*2];
+		DWORD dwInfo = _countof(bBinaryData);
+		if (CryptStringToBinaryA((LPCSTR)Base64Data, dwLen, CRYPT_STRING_BASE64REQUESTHEADER, bBinaryData, &dwInfo, NULL, NULL) == FALSE)
+			break;
+
+		if (CryptDecodeObjectEx(X509_ASN_ENCODING, X509_CERT_REQUEST_TO_BE_SIGNED, 
+															bBinaryData, dwInfo, 0,NULL, lpData, pcbLen) == FALSE)
+			break;
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	if (hFile != INVALID_HANDLE_VALUE)
+		CloseHandle(hFile);
+
+	return bSuccess;
+}
+
 BOOL CCryptHelper::AddCertificateToStore(CERT_LOCALTION CertLocal, LPCVOID lpData)
 {
 	BOOL bSuccess = FALSE;
@@ -189,10 +267,10 @@ BOOL CCryptHelper::AddCertificateToStore(CERT_LOCALTION CertLocal, LPCVOID lpDat
 
 		DWORD dwFlag = CERT_SYSTEM_STORE_CURRENT_USER;
 		if (CertLocal == CERT_LOCALTION_LOCAL_MACHINE)
-			dwFlag = CERT_LOCALTION_LOCAL_MACHINE;
+			dwFlag = CERT_SYSTEM_STORE_LOCAL_MACHINE;
 
 		// 注意：如果存在Key证书，向系统存储区写入证书可能失败
-		hStore = CertOpenStore(CERT_STORE_PROV_SYSTEM_REGISTRY, 0, 0, dwFlag, lpData);
+		hStore = CertOpenStore(CERT_STORE_PROV_SYSTEM, 0, 0, dwFlag, lpData);
 		if (hStore == NULL)
 			break;
 

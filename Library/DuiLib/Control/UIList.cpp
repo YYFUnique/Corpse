@@ -334,12 +334,17 @@ void CListUI::DoEvent(TEventUI& event)
 		case VK_RETURN:
 			if( m_iCurSel != -1 ) GetItemAt(m_iCurSel)->Activate();
 			return;
-		case 0x41:	//'A'
+		default:
 			{
-				if (m_bMultiSel && event.wKeyState & MK_CONTROL)
+				// 如果开启多选模式，并且符合多选条件，启用多选功能
+				if (event.chKey == 'A' && event.wKeyState & MK_CONTROL && m_bMultiSel)
+				{
 					SelectAllItems();
+					return;
+				}
+
+				m_pManager->SendNotify(this, DUI_MSGTYPE_KEYDOWN, NULL, (LPARAM)&event);
 			}
-			return;
 		 }
        return;
 	}

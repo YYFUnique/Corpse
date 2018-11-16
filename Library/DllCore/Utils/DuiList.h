@@ -5,27 +5,37 @@
 class CNodeData
 {
 protected:
+	CNodeData(DWORD dwLen){
+		pData = new BYTE[dwLen];
+	}
+	virtual ~CNodeData(){
+		if (pData != NULL)
+			delete[] pData;
+	}
+protected:
+	BYTE* pData;
 	CNodeData* pNext;
 public:
-	void* GetNodeData() { return this+1; }
+	void* GetNodeData() { return pData; }
 	static CNodeData* PASCAL Create(CNodeData*& pHead, UINT_PTR nMax, UINT_PTR cbElement){
 		if (nMax == 0 || cbElement == 0)
 			return NULL;
 
-		CNodeData* pNode = (CNodeData*) new BYTE[sizeof(CNodeData) + nMax * cbElement];
+		CNodeData* pNode = (CNodeData*) new CNodeData(nMax * cbElement);
 
 		pNode->pNext = pHead;
 		pHead = pNode; 
 		return pNode;
 	}
 
-	void FreeDataChain(){
+	// 利用虚函数的动态绑定技术，将原本在exe模块执行的代码
+	// 通过虚函数自动调制到内存分配模块空间
+	virtual void FreeDataChain(){
 		CNodeData* pNode = this;
 		while (pNode != NULL)
 		{
-			BYTE* pBytes = (BYTE*) pNode;
 			CNodeData* pNext = pNode->pNext;
-			delete[] pBytes;
+			delete pNode;
 			pNode = pNext;
 		}
 	}
@@ -191,8 +201,13 @@ void CDuiList<TYPE, ARG_TYPE>::RemoveAll()
 
 	m_nCount = 0;
 	m_pNodeHead = m_pNodeTail = m_pNodeFree = NULL;
-	m_pBlocks->FreeDataChain();
-	m_pBlocks = NULL;
+	if (m_pBlocks != NULL)
+	{
+		// 利用虚函数的动态绑定技术，将原本在exe模块执行的代码
+		// 通过虚函数自动调制到内存分配模块空间
+		m_pBlocks->FreeDataChain();
+		m_pBlocks = NULL;
+	}
 }
 
 template<class TYPE, class ARG_TYPE>

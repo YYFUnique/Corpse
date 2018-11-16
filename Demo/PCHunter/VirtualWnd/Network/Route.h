@@ -10,8 +10,8 @@ public:
 	~CRoute();
 
 public:
+	void NotifyTask(PCNTCHDR pNTCHDR);
 	void SetPaintMagager(CPaintManagerUI* pPaintMgr);
-
 	void OnRouteInfo(CControlUI* pControl);
 protected:
 	DUI_DECLARE_MESSAGE_MAP()

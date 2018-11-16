@@ -138,7 +138,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;UILIB_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
 				WarningLevel="3"

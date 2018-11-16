@@ -16,14 +16,13 @@ typedef enum tagETHERNET_TYPE
 
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
 {
-
-// 	int sum = 0;
-// 	Lua= lua_open();
-// 	luaopen_base(L);
-// 	luaL_openlibs(L);
-// 	luaL_loadfile(L, "add.lua");
-// 	lua_pcall(L, 0, LUA_MULTRET, 0);
-// 	/*sum = luaAdd(10, 15);*/
+ 	//int sum = 0;
+ 	//lua_State* L= luaL_newstate();
+ 	//luaopen_base(L);
+ 	//luaL_openlibs(L);
+ 	//luaL_loadfile(L, "add.lua");
+ 	//lua_pcall(L, 0, LUA_MULTRET, 0);
+ 	/*sum = luaAdd(10, 15);*/
 // 
 // 	return TRUE;
 

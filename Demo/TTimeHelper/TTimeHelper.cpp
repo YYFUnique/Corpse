@@ -128,7 +128,8 @@ void CTTimeHelper::InitWindow()
 
 	//////////////////////////////////////////////////////////////////////////
 	// 嵌入桌面，成为桌面的一个子窗口，不受Win + D影响
-	// 桌面进程挂掉后，窗口不能继续显示
+	// 桌面进程挂掉后，窗口不能继续显示，但是进程可以捕捉任务栏窗口创建消息
+	// 从而继续设置父窗口
 	/*HWND hProgram = FindWindow(_T("Progman"), _T("Program Manager"));
 	SetParent(m_hWnd, hProgram);
 	BringWindowToTop(m_hWnd);*/

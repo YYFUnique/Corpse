@@ -11,49 +11,64 @@ namespace DuiLib
 	#define		DAY_GROUP_NAME				_T("DayGroupName")
 	#define		MONTH_GROUP_NAME			_T("MoothGroupName")
 
+	#define		TOOLTIP_LAST_YEAR				_T("上一年")
+	#define		TOOLTIP_LAST_MONTH			_T("上一月")
+	#define		TOOLTIP_NEXT_MONTH		_T("下一月")
+	#define		TOOLTIP_NEXT_YEAR				_T("下一年")
+
 	CCalendarUI::CCalendarUI()
-		: pDateTimeBtn(NULL)
-		, m_pBtnToDay(NULL)
+		: m_pBtnToDay(NULL)
 		, pEnabledYearSel(true)
-		, pEnabledMoothSel(true)
+		, pEnabledMonthSel(true)
 		, m_pInfoPanelHorz(NULL)
 		, m_pWeekPanelVert(NULL)
 		, m_pMainTitleHoriz(NULL)
-		, m_pMonthPanelHorz(NULL)
 	{  
 		GetLocalTime(&m_LocalTime);
 		SetDateTime(m_LocalTime.wYear,m_LocalTime.wMonth,m_LocalTime.wDay);
-		
+		SetBkColor(0xFFF6F6F7);
 		ZeroMemory(&m_CalendarStyle,sizeof(m_CalendarStyle));
-		m_CalendarStyle.dwMainTitleColor = 0xFF8DE316;
-		m_CalendarStyle.dwSubTitleColor = 0xFFFFFFFF;
-		m_CalendarStyle.dwDayHotColor = 0xFF3721F1;
+		m_CalendarStyle.dwDayHotColor = 0xFF2D97DF;
 		m_CalendarStyle.dwDayHotTextColor = 0xFFFFFFFF;
-		m_CalendarStyle.dwDaySelectedColor = 0xFF3721F1;
+		m_CalendarStyle.dwDaySelectedColor = 0xFF1D73AB;
 		m_CalendarStyle.dwDaySelectedTextColor = 0xFFFFFFFF;
 		m_CalendarStyle.dwWeekdayColor = 0xFF000000;
-		m_CalendarStyle.dwWeekendColor = 0xFF0000FF;
-		m_CalendarStyle.dwNotMonthDayColor = 0xFFDEDEDE;
-		m_CalendarStyle.dwStatusBkColor = 0xFFF3ED8E;
+		m_CalendarStyle.dwWeekendColor = 0xFFFF0000;
+		m_CalendarStyle.dwNotMonthDayColor = 0xFFA6A5A9;
 	
 		//初始化日历主标题容器与元素
 		m_pMainTitleHoriz		= new CHorizontalLayoutUI();
 		m_pLastYear			= new CButtonUI();
-		m_pMoothSelect	= new CButtonUI();
+		m_pLastMonth		=	new CButtonUI();
+		m_pMonthSelect		= new CLabelUI();
+		m_pNextMonth		=	new CButtonUI();
 		m_pNextYear			= new CButtonUI();
 
-		m_pLastYear->SetFixedWidth(60);
-		m_pNextYear->SetFixedWidth(60);
-		m_pMainTitleHoriz->SetFixedHeight(22);
-		m_pMoothSelect->SetFixedWidth(80);
+		m_pLastYear->SetFixedWidth(30);
+		m_pLastYear->SetToolTip(TOOLTIP_LAST_YEAR);
+		m_pLastMonth->SetFixedWidth(30);
+		m_pLastMonth->SetToolTip(TOOLTIP_LAST_MONTH);
+		m_pNextMonth->SetFixedWidth(30);
+		m_pNextMonth->SetToolTip(TOOLTIP_NEXT_MONTH);
+		m_pNextYear->SetFixedWidth(30);
+		m_pNextYear->SetToolTip(TOOLTIP_NEXT_YEAR);
+		
+		m_pMainTitleHoriz->SetFixedHeight(27);
+		m_pMonthSelect->SetAutoCalcWidth(true);
 
  		m_pLastYear->OnNotify	+= MakeDelegate(this,&CCalendarUI::Notify);
- 		m_pMoothSelect->OnNotify	+= MakeDelegate(this,&CCalendarUI::Notify);
+		m_pLastMonth->OnNotify += MakeDelegate(this,&CCalendarUI::Notify);
+ 		//m_pMoothSelect->OnNotify	+= MakeDelegate(this,&CCalendarUI::Notify);
+		m_pNextMonth->OnNotify += MakeDelegate(this, &CCalendarUI::Notify);
  		m_pNextYear->OnNotify	+= MakeDelegate(this,&CCalendarUI::Notify);
 
 		m_pMainTitleHoriz->Add(m_pLastYear);
 		m_pMainTitleHoriz->Add(new CControlUI());
-		m_pMainTitleHoriz->Add(m_pMoothSelect);
+		m_pMainTitleHoriz->Add(m_pLastMonth);
+		m_pMainTitleHoriz->Add(new CControlUI());
+		m_pMainTitleHoriz->Add(m_pMonthSelect);
+		m_pMainTitleHoriz->Add(new CControlUI());
+		m_pMainTitleHoriz->Add(m_pNextMonth);
 		m_pMainTitleHoriz->Add(new CControlUI());
 		m_pMainTitleHoriz->Add(m_pNextYear);
 
@@ -61,49 +76,20 @@ namespace DuiLib
 		m_pSubTitleHoriz	= new CHorizontalLayoutUI();
 		m_pSubTitleHoriz->SetFixedHeight(22);
 	
-		for(int nWeekIndex = 0;nWeekIndex < 7;nWeekIndex++)
+		for(int nWeekIndex = 0; nWeekIndex < 7; nWeekIndex++)
 		{
 			CButtonUI* pWeek	= new CButtonUI();
 			pWeek->SetMouseEnabled(false);
-			SetWeekPanel(pWeek,nWeekIndex);
+			SetWeekPanel(pWeek, nWeekIndex);
 			m_pSubTitleHoriz->Add(pWeek);
-		}
-
-		//初始化月份选择容器与元素
-		CVerticalLayoutUI* pMonthSubPanelA = new CVerticalLayoutUI();
-		CVerticalLayoutUI* pMonthSubPanelB = new CVerticalLayoutUI();
-		m_pMonthPanelHorz	= new CHorizontalLayoutUI();
-		m_pMonthPanelHorz->SetFloat(true);
-		m_pMonthPanelHorz->SetName(MONTH_LIST);
-
-		m_pMonthPanelHorz->Add(pMonthSubPanelA);
-		m_pMonthPanelHorz->Add(pMonthSubPanelB);
-		m_pMonthPanelHorz->SetFixedHeight(120);
-		m_pMonthPanelHorz->SetMaxWidth(80);
-
-		TCHAR szMonthDay[5];
-		for(int nMonth = 1;nMonth < 13;nMonth++)
-		{
-			COptionUI* pMonth = new COptionUI();
-			pMonth->SetGroup(MONTH_GROUP_NAME);
-
-			_stprintf(szMonthDay,_T("%d"),nMonth);
-			pMonth->SetText(szMonthDay);
-			pMonth->SetTag(nMonth);
-			pMonth->OnNotify+= MakeDelegate(this,&CCalendarUI::Notify);
-
-			if (nMonth % 2)
-				pMonthSubPanelA->Add(pMonth);
-			else
-				pMonthSubPanelB->Add(pMonth);
 		}
 
 		//初始化日期容器与元素
 		m_pWeekPanelVert	= new CVerticalLayoutUI();
-		for(int nWeekLine = 1;nWeekLine < 7;nWeekLine++)
+		for(int nWeekLine = 1; nWeekLine < 7; nWeekLine++)
 		{
 			CHorizontalLayoutUI* pWeekLine = new CHorizontalLayoutUI();
-			for(int nDay = 1;nDay < 8;nDay++)
+			for(int nDay = 1; nDay < 8; nDay++)
 			{
 				CHorizontalLayoutUI* pDayParent = new CHorizontalLayoutUI();
 
@@ -121,22 +107,22 @@ namespace DuiLib
 
 		//初始化信息栏容器与元素
 		m_pInfoPanelHorz	= new CHorizontalLayoutUI();
-		CControlUI* pInfoPanel = CreateStatusPanel();
-		m_pInfoPanelHorz->Add(pInfoPanel);
-		m_pInfoPanelHorz->SetFixedHeight(22);
-		m_pInfoPanelHorz->SetBkColor(m_CalendarStyle.dwStatusBkColor);
+		m_pBtnToDay = new CButtonUI();
+		m_pBtnToDay->OnNotify += MakeDelegate(this, &CCalendarUI::Notify);
+		m_pBtnToDay->SetFixedWidth(135);
+		m_pInfoPanelHorz->Add(m_pBtnToDay);
+		m_pBtnToDay->SetFloatAlign(DT_CENTER|DT_VCENTER);
+		m_pInfoPanelHorz->SetFixedHeight(25);
 
 		Add(m_pMainTitleHoriz);
 		Add(m_pSubTitleHoriz);
 		Add(m_pWeekPanelVert);
-		Add(m_pMonthPanelHorz);
 		Add(m_pInfoPanelHorz);
 
 		//初始化默认样式
 		SetCalendarStyle(m_CalendarStyle);
 		//初始化日历数据
 		ShowCalendar(m_LocalTime.wYear,m_LocalTime.wMonth);
-		ChangeDateTime(m_LocalTime.wYear,m_LocalTime.wMonth,m_LocalTime.wDay);
 	}
 
 	CCalendarUI::~CCalendarUI(void)
@@ -157,29 +143,18 @@ namespace DuiLib
 
 	void CCalendarUI::SetCalendarStyle(TCalendarStyle& CalendarStyle)
 	{
-		m_pMainTitleHoriz->SetBkColor(CalendarStyle.dwMainTitleColor);
 		m_pLastYear->SetHotBkColor(CalendarStyle.dwDayHotColor);
 		m_pLastYear->SetHotTextColor(CalendarStyle.dwDaySelectedTextColor);
-		m_pMoothSelect->SetHotBkColor(CalendarStyle.dwDayHotColor);
-		m_pMoothSelect->SetHotTextColor(CalendarStyle.dwDaySelectedTextColor);
+		m_pLastYear->SetPushedBkColor(CalendarStyle.dwDayHotColor);
+		m_pLastMonth->SetHotBkColor(CalendarStyle.dwDayHotColor);
+		m_pLastMonth->SetHotTextColor(CalendarStyle.dwDaySelectedTextColor);
+		m_pLastMonth->SetPushedBkColor(CalendarStyle.dwDayHotColor);
+		m_pNextMonth->SetHotBkColor(CalendarStyle.dwDayHotColor);
+		m_pNextMonth->SetHotTextColor(CalendarStyle.dwDaySelectedTextColor);
+		m_pNextMonth->SetPushedBkColor(CalendarStyle.dwDayHotColor);
 		m_pNextYear->SetHotBkColor(CalendarStyle.dwDayHotColor);
 		m_pNextYear->SetHotTextColor(CalendarStyle.dwDaySelectedTextColor);
-
-		m_pSubTitleHoriz->SetBkColor(CalendarStyle.dwSubTitleColor);
-		m_pMonthPanelHorz->SetBkColor(CalendarStyle.dwMainTitleColor);
-
-		for (int n=0;n<m_pMonthPanelHorz->GetCount();++n)
-		{
-			CVerticalLayoutUI* pMonthPanel = (CVerticalLayoutUI*)m_pMonthPanelHorz->GetItemAt(n);
-			for (int m=0;m<pMonthPanel->GetCount();++m)
-			{
-				COptionUI* pMonth = (COptionUI*)pMonthPanel->GetItemAt(m);
-				pMonth->SetHotBkColor(CalendarStyle.dwDayHotColor);			
-				pMonth->SetHotTextColor(CalendarStyle.dwDayHotTextColor);
-				pMonth->SetSelectedTextColor(CalendarStyle.dwDaySelectedTextColor);
-				pMonth->SetSelectedBkColor(CalendarStyle.dwDaySelectedColor);
-			}
-		}
+		m_pNextYear->SetPushedBkColor(CalendarStyle.dwDayHotColor);
 
 		for(int nWeekIndex = 0;nWeekIndex < 6;nWeekIndex++)
 		{
@@ -210,7 +185,9 @@ namespace DuiLib
 		}
 
 		m_pBtnToDay->SetHotBkColor(CalendarStyle.dwDayHotColor);
-		m_pBtnToDay->SetHotTextColor(CalendarStyle.dwDayHotTextColor);
+		m_pBtnToDay->SetPushedBkColor(CalendarStyle.dwDayHotColor);
+		m_pBtnToDay->SetPushedTextColor(CalendarStyle.dwDaySelectedTextColor);
+		m_pBtnToDay->SetHotTextColor(CalendarStyle.dwDaySelectedTextColor);
 	}
 
 	bool CCalendarUI::IsLeapYear( int nYear )
@@ -245,26 +222,26 @@ namespace DuiLib
 	{
 		if (nMonth > 12)
 		{
-			nMonth = 1;
-			++nYear;
+			m_LocalTime.wMonth = nMonth = 1;
+			m_LocalTime.wYear = ++nYear;
 		}
 
 		if (nMonth < 1) 
 		{
-			nMonth = 12;
-			--nYear;
+			m_LocalTime.wMonth = nMonth = 12;
+			m_LocalTime.wYear =--nYear;
 		}
 	}
 
-	void CCalendarUI::ShowCalendar(int nYear,int nMonth)
+	void CCalendarUI::ShowCalendar(int nYear, int nMonth)
 	{
-		NormalizeTime(nYear,nMonth);
-		UpdateMainTitle(nYear,nMonth);
+		NormalizeTime(nYear, nMonth);
+		UpdateMainTitle(nYear, nMonth);
 
 		int nLastMaxDay		= nMonth == 1 ?DaysOfMonth(12,nYear-1):DaysOfMonth(nMonth-1,nYear);
 		int nLastDay				= 0;
-		int nAsMooth			= 0;
-		int nDays					= DaysOfMonth(nMonth,nYear);
+		int nAsMooth			= 0;													// 
+		int nDays					= DaysOfMonth(nMonth,nYear);	// 本月有多少天数
 		int nWeek				= 0;
 		int nCalDay				= 0;
 
@@ -277,12 +254,15 @@ namespace DuiLib
 		CTime Time(SystemTime);
 		nWeek = Time.GetDayOfWeek() - 1;
 
-		nAsMooth	= nWeek == 0?0:nMonth-1;
-		nLastDay		= nWeek == 0?0:nLastMaxDay-nWeek;
-		for(int nWeekIndex = 0;nWeekIndex < 6;nWeekIndex++)
+		nAsMooth	= nWeek == 0 ? 0 : nMonth-1;						// 计算上一月需要显示天数
+		nLastDay		= nWeek == 0 ? 0 : nLastMaxDay-nWeek;		// 计算上一月最后一天的号数
+
+		COptionUI* pShowDay = NULL;	//显示选中的日期
+		for(int nWeekIndex = 0; nWeekIndex < 6; nWeekIndex++)
 		{
 			CHorizontalLayoutUI* pWeekLine = static_cast<CHorizontalLayoutUI*>(m_pWeekPanelVert->GetItemAt(nWeekIndex));
-			for(int nDayIndex = 0;nDayIndex < 7;nDayIndex++)
+			// 计算一周内的序号
+			for(int nDayIndex = 0;nDayIndex < 7; nDayIndex++)
 			{
 				CVerticalLayoutUI* pDayParent = static_cast<CVerticalLayoutUI*>(pWeekLine->GetItemAt(nDayIndex));
 				if (pDayParent == NULL)
@@ -295,7 +275,7 @@ namespace DuiLib
 				if (!(nWeek && nDayIndex < nWeek && nCalDay <= nDays))
 				{
 					nCalDay++;
-					nAsMooth = nCalDay <= nDays?nMonth:nMonth+1;
+					nAsMooth = nCalDay <= nDays ? nMonth : nMonth + 1;
 				}
 
 				if ((nLastDay <= nLastMaxDay && nAsMooth != nMonth) || nCalDay >= nDays){
@@ -310,14 +290,14 @@ namespace DuiLib
 				
 				pTCalendarInfo->nYear			= nYear;
 				pTCalendarInfo->nMooth		= nMonth;
-				pTCalendarInfo->nDay			= ((nWeek && nDayIndex < nWeek) || nCalDay > nDays)?nLastDay:nCalDay;
+				pTCalendarInfo->nDay			= ((nWeek && nDayIndex < nWeek) || nCalDay > nDays) ? nLastDay : nCalDay;
 				pTCalendarInfo->nWeekLine	= nWeekIndex;
 				pTCalendarInfo->nWeek		= nWeek;
 				pTCalendarInfo->nAsMooth	= nMonth;
 
-				if(nCalDay < 1)
+				if (nCalDay < 1)
 					pTCalendarInfo->nAsMooth= nMonth -1;
-				else if(nCalDay > nDays)
+				else if (nCalDay > nDays)
 					pTCalendarInfo->nAsMooth= nMonth +1;
 				
 				bool bWeekend = false;
@@ -325,11 +305,18 @@ namespace DuiLib
 					bWeekend = true;
 
 				COptionUI* pDay = static_cast<COptionUI*>(pDayParent->GetItemAt(0));
-				SetDayPanel(pDay,bWeekend,pTCalendarInfo);
-				pDay->Selected(nCalDay == mToday);
+				SetDayPanel(pDay, bWeekend, pTCalendarInfo);
+
+				if (nDays <= m_nToday && nDays == nCalDay)
+					pShowDay = pDay;
+				else if (nDays > m_nToday && m_nToday == nCalDay)
+					pShowDay = pDay;
 			}
 			nWeek = 0;
 		}
+
+		if (pShowDay != NULL)
+			pShowDay->Selected(true);
 	}
 
 	bool CCalendarUI::Notify(LPVOID lParam)
@@ -347,35 +334,35 @@ namespace DuiLib
 
 	void CCalendarUI::OnClick(TNotifyUI* pMsg)
 	{
-		if (pMsg->pSender == m_pMoothSelect)
+		if (pMsg->pSender == m_pMonthSelect)
 			OnMoothSelect(pMsg);
 		else if (pMsg->pSender == m_pBtnToDay)
 			OnToday(pMsg);
 		else if (pMsg->pSender == m_pLastYear)
 			OnLastYear(pMsg);
+		else if (pMsg->pSender == m_pLastMonth)
+			OnLastMonth(pMsg);
+		else if (pMsg->pSender == m_pNextMonth)
+			OnNextMonth(pMsg);
 		else if (pMsg->pSender == m_pNextYear)
 			OnNextYear(pMsg);
 	}
 
 	void CCalendarUI::OnKillFocus(TNotifyUI* pMsg)
 	{
-		if (pMsg->pSender == m_pMoothSelect)
-		{
-			RECT rcPos = m_pMonthPanelHorz->GetPos();
-			if (PtInRect(&rcPos,pMsg->ptMouse) == false)
-				m_pMonthPanelHorz->SetVisible(false);
-		}
+		
 	}
 
 	void CCalendarUI::OnSelectChanged(TNotifyUI* pMsg)
 	{
 		COptionUI* pDay = (COptionUI*)pMsg->pSender->GetInterface(DUI_CTR_OPTION);
-		if (pDay && _tcscmp(pDay->GetGroup(),DAY_GROUP_NAME) == 0)
-			OnSelcetDay(pMsg);
-		else if (pDay && _tcscmp(pDay->GetGroup(),MONTH_GROUP_NAME) == 0)
+		
+		if (pDay && _tcscmp(pDay->GetGroup(), DAY_GROUP_NAME) == 0)
 		{
-			OnSelectMooth(pMsg);
-			m_pMonthPanelHorz->SetVisible(false);
+			// 由于选择月份或者年份时，可能导致日期选择变动，需要判断是否是手动选择日期
+			RECT rcPos = pDay->GetPos();
+			if (PtInRect(&rcPos, pMsg->ptMouse))
+				OnSelcetDay(pMsg);
 		}
 	}
 
@@ -384,6 +371,20 @@ namespace DuiLib
 	{
 		if(GetEnabledYearSel())
 			ShowCalendar(--m_LocalTime.wYear,m_LocalTime.wMonth);
+	}
+
+	//上一月
+	void CCalendarUI::OnLastMonth(TNotifyUI* pMsg)
+	{
+		if(GetEnabledYearSel())
+			ShowCalendar(m_LocalTime.wYear, --m_LocalTime.wMonth);
+	}
+
+	// 下一月
+	void CCalendarUI::OnNextMonth(TNotifyUI* pMsg)
+	{
+		if(GetEnabledYearSel())
+			ShowCalendar(m_LocalTime.wYear, ++m_LocalTime.wMonth);
 	}
 
 	//下一年
@@ -396,30 +397,23 @@ namespace DuiLib
 	//在弹出的月份列表中选择月份
 	void CCalendarUI::OnSelectMooth(TNotifyUI* pMsg)
 	{
-		if(GetEnabledMoothSel())
+		if(GetEnabledMonthSel())
 			ShowCalendar(m_LocalTime.wYear,pMsg->pSender->GetTag());
 	}
 
 	//点击月份选择按钮，弹出月份选择列表
 	void CCalendarUI::OnMoothSelect(TNotifyUI* pMsg)
 	{
-		if(GetEnabledMoothSel() == false)
+		if (GetEnabledMonthSel() == false)
 			return;
-
-		m_pMonthPanelHorz->SetVisible(true);
-		RECT rc		= m_pMoothSelect->GetPos();
-		rc.top			= rc.bottom;
-		rc.bottom	= rc.top + 130;
-		m_pMonthPanelHorz->SetPos(rc);
-		m_pMonthPanelHorz->SetFloat(true);
 	}
 
 	//点击今天按钮
 	void CCalendarUI::OnToday(TNotifyUI* pMsg)
 	{
 		GetLocalTime(&m_LocalTime);
-		SetDateTime(m_LocalTime.wYear,m_LocalTime.wMonth,m_LocalTime.wDay);
-		ShowCalendar(m_LocalTime.wYear,m_LocalTime.wMonth);
+		SetDateTime(m_LocalTime.wYear, m_LocalTime.wMonth, m_LocalTime.wDay);
+		ShowCalendar(m_LocalTime.wYear, m_LocalTime.wMonth);
 	}
 
 	void CCalendarUI::OnSelcetDay(TNotifyUI* pMsg)
@@ -428,15 +422,13 @@ namespace DuiLib
 
 		SetDateTime(pTCalendarInfo);
 
-		if(GetEnabledMoothSel() && pTCalendarInfo && pTCalendarInfo->nMooth != pTCalendarInfo->nAsMooth)
-			ShowCalendar(pTCalendarInfo->nYear,pTCalendarInfo->nAsMooth);
-		else
-			ChangeDateTime(pTCalendarInfo->nYear,pTCalendarInfo->nMooth,pTCalendarInfo->nDay);
+		if (GetEnabledMonthSel() && pTCalendarInfo && pTCalendarInfo->nMooth != pTCalendarInfo->nAsMooth)
+			ShowCalendar(pTCalendarInfo->nYear, pTCalendarInfo->nAsMooth);
 	}
 
 	void CCalendarUI::SetWeekPanel(CControlUI* pWeek,int nIndex)
 	{
-		static LPCTSTR lpszWeekName[] = {_T("星期天"),_T("星期一"),_T("星期二"),_T("星期三"),_T("星期四"),_T("星期五"),_T("星期六")};
+		static LPCTSTR lpszWeekName[] = {_T("日"), _T("一"), _T("二"), _T("三"), _T("四"), _T("五"), _T("六")};
 		pWeek->SetText(lpszWeekName[nIndex]);
 		if (nIndex ==0 || nIndex == 6)
 		{
@@ -462,7 +454,7 @@ namespace DuiLib
 			pDay->SetTextColor(m_CalendarStyle.dwWeekdayColor);
 
 		if(nMooth != nAsMooth)
-			pDay->SetMouseEnabled(GetEnabledMoothSel());
+			pDay->SetMouseEnabled(GetEnabledMonthSel());
 		else 
 			pDay->SetMouseEnabled(true);
 		
@@ -481,28 +473,35 @@ namespace DuiLib
 		return pEnabledYearSel;
 	}
 
-	void CCalendarUI::SetEnabledMoothSel(bool bEnabled /*= true*/)
+	void CCalendarUI::SetEnabledMonthSel(bool bEnabled /*= true*/)
 	{
-		pEnabledMoothSel = bEnabled;
+		pEnabledMonthSel = bEnabled;
 	}
 
-	bool CCalendarUI::GetEnabledMoothSel()
+	bool CCalendarUI::GetEnabledMonthSel()
 	{
-		return pEnabledMoothSel;
+		return pEnabledMonthSel;
 	}
 
-	void CCalendarUI::UpdateMainTitle( int _Year,int _Mooth)
+	void CCalendarUI::UpdateMainTitle( int _Year, int _Mooth)
 	{
-		TCHAR szDateTime[20];
+		TCHAR szDateTime[50];
+		_stprintf(szDateTime,_T("%4d-%02d"), _Year, _Mooth);
+		m_pMonthSelect->SetText(szDateTime);
 
-		_stprintf(szDateTime,_T("%4d-%02d"),_Year,_Mooth);
-		m_pMoothSelect->SetText(szDateTime);
-		
-		_stprintf(szDateTime,_T("%4d"),_Year-1);
-		m_pLastYear->SetText(szDateTime);
-
-		_stprintf(szDateTime,_T("%4d"),_Year+1);
-		m_pNextYear->SetText(szDateTime);
+		static BOOL bInit = FALSE;
+		if (bInit == FALSE)
+		{
+			m_pLastYear->SetText(_T("<<"));
+			m_pLastMonth->SetText(_T("<"));
+			m_pNextMonth->SetText(_T(">"));
+			m_pNextYear->SetText(_T(">>"));
+			SYSTEMTIME SysTime;
+			GetLocalTime(&SysTime);
+			_stprintf_s(szDateTime, _countof(szDateTime), _T("今日：%d年%d月%d日"), 
+								SysTime.wYear, SysTime.wMonth, SysTime.wDay);
+			m_pBtnToDay->SetText(szDateTime);
+		}
 	}
 
 	void CCalendarUI::SetAttribute( LPCTSTR pstrName, LPCTSTR pstrValue )
@@ -519,13 +518,8 @@ namespace DuiLib
 	CControlUI* CCalendarUI::CreateStatusPanel()
 	{
 		CHorizontalLayoutUI* pControl	= new CHorizontalLayoutUI();
-		pDateTimeBtn						= new CButtonUI();
 		m_pBtnToDay						= new CButtonUI();
-
-		pDateTimeBtn->SetMouseEnabled(false);
-		pDateTimeBtn->SetFixedWidth(100);
 		
-		pControl->Add(pDateTimeBtn);
 		pControl->Add(new CControlUI());
 		pControl->Add(m_pBtnToDay);
 		
@@ -535,15 +529,6 @@ namespace DuiLib
 		m_pBtnToDay->SetFixedWidth(60);
 		
 		return pControl;
-	}
-
-	void CCalendarUI::ChangeDateTime( int nYear,int nMooth,int nDay )
-	{
-		TCHAR szTimeDate[20];
-		_stprintf(szTimeDate,_T("%4d-%02d-%02d"),nYear,nMooth,nDay);
-
-		if(pDateTimeBtn)
-			pDateTimeBtn->SetText(szTimeDate);
 	}
 
 	void CCalendarUI::SetMainTitleHeight(int nHeight)
@@ -628,21 +613,21 @@ namespace DuiLib
 
 	void CCalendarUI::SetDateTime(TCalendarInfo* pTCalendarInfo)
 	{
-		if(pTCalendarInfo)
-			SetDateTime(pTCalendarInfo->nYear,pTCalendarInfo->nMooth,pTCalendarInfo->nDay);
+		if (pTCalendarInfo)
+			SetDateTime(pTCalendarInfo->nYear, pTCalendarInfo->nMooth, pTCalendarInfo->nDay);
 	}
 
-	void CCalendarUI::SetDateTime( int nYear,int nMooth,int nDay )
+	void CCalendarUI::SetDateTime(int nYear,int nMooth,int nDay)
 	{ 
-		mYear		=	nYear;
-		mMonth  =	nMooth;
-		mToday	=	nDay; 
+		m_nYear		=	nYear;
+		m_nMonth  =	nMooth;
+		m_nToday	=	nDay; 
 	}
 
 	CDuiString CCalendarUI::GetDateTime()
 	{
 		TCHAR szTimeDate[20];
-		_stprintf(szTimeDate,_T("%4d-%02d-%02d"),mYear,mMonth,mToday);
+		_stprintf(szTimeDate,_T("%4d-%02d-%02d"), m_nYear, m_nMonth, m_nToday);
 
 		return szTimeDate;
 	}

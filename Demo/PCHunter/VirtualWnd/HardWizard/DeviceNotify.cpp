@@ -18,6 +18,7 @@ CDeviceNotify::~CDeviceNotify()
 }
 
 DUI_BEGIN_MESSAGE_MAP(CDeviceNotify, CNotifyPump)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_KEYDOWN, OnKeyDown)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_LOADITEM, OnLoadItem)
 DUI_END_MESSAGE_MAP()
 
@@ -38,6 +39,17 @@ void CDeviceNotify::OnLoadItem(TNotifyUI& msg)
 
 	// 注册为所有变更事件都接收
 	m_hDevNotify = RegisterDeviceNotification(m_pPaintManager->GetPaintWindow(),&NotificationFilter,DEVICE_NOTIFY_WINDOW_HANDLE|DEVICE_NOTIFY_ALL_INTERFACE_CLASSES);
+}
+
+void CDeviceNotify::OnKeyDown(TNotifyUI& msg)
+{
+	TEventUI* pKeyDownEvent = (TEventUI*)msg.lParam;
+	if (pKeyDownEvent->chKey == _T('X') && pKeyDownEvent->wKeyState & MK_CONTROL)
+	{
+		CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("Hard"));
+		if (pList != NULL)
+			pList->RemoveAll();
+	}
 }
 
 BOOL CDeviceNotify::OnDeviceChanged(WPARAM wParam, LPARAM lParam)

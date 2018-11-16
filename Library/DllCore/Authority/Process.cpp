@@ -3,7 +3,9 @@
 #include "ProcessInfo.h"
 #include "NtDll.h"
 #include <Psapi.h>
-#include "../Utils/ErrorInfo.h"
+#include "DllCore/Utils/ErrorInfo.h"
+#include "DllCore/Utils/OsInfo.h"
+#include "DllCore/Utils/FileTools.h"
 
 #include <Aclapi.h>
 #pragma comment(lib,"Advapi32.lib")
@@ -19,7 +21,8 @@ BOOL GetProcessUserName(DWORD dwProcessId, CString& strProcessName)
 	PTOKEN_USER pTokenUser=NULL; 
 	do 
 	{
-		if (GetProcessHandle(dwProcessId, hProcess) == FALSE)
+		hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, dwProcessId);
+		if (hProcess == NULL)
 		{
 			SetErrorInfo(SYSTEM_ERROR,0,_T("打开进程%d句柄失败"),dwProcessId);
 			break;
@@ -92,21 +95,22 @@ BOOL GetProcessCommandLine(DWORD dwPid,CString& strCmdLine)
 	LPVOID                    lpAddress;
 	BOOL                      bRet = FALSE;
 
-	GetProcessHandle(dwPid,hProcess);
-	if (hProcess == NULL)
-		return FALSE;
-
 	do 
 	{
-		NtQueryInformationProcess = (PROCNTQSIP)GetProcAddress(
-			GetModuleHandle(_T("ntdll")),
-			"NtQueryInformationProcess"
-			);
+		hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, dwPid);
+		if (hProcess == NULL)
+		{
+			SetErrorInfo(SYSTEM_ERROR,0,_T("打开进程%d句柄失败"),dwPid);
+			break;
+		}
 
-		status = NtQueryInformationProcess(hProcess,
-																	ProcessBasicInformation,(PVOID)&pbi,
-																	sizeof(PROCESS_BASIC_INFORMATION),
-																	NULL);
+		NtQueryInformationProcess = (PROCNTQSIP)GetProcAddress(
+																GetModuleHandle(_T("ntdll")),
+																"NtQueryInformationProcess"
+																);
+
+		status = NtQueryInformationProcess(hProcess, ProcessBasicInformation, (PVOID)&pbi,
+																	sizeof(PROCESS_BASIC_INFORMATION), NULL);
 
 		if (status)
 			break;
@@ -240,21 +244,21 @@ BOOL ModifyObjectSecurityToAccessAll(HANDLE hObject)
 	return TRUE;
 }
 
-BOOL GetProcessHandle(DWORD dwPID, HANDLE& hProcess)
-{
-	hProcess = OpenProcess(PROCESS_ALL_ACCESS,FALSE,dwPID);
-
-	if (NULL == hProcess)
-		hProcess = OpenProcess( PROCESS_VM_READ|PROCESS_QUERY_INFORMATION,TRUE, dwPID);
-
-	if(NULL == hProcess)
-		hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION,FALSE, dwPID);
-
-	if(hProcess == NULL)
-		return FALSE;
-
-	return TRUE;
-}
+//BOOL GetProcessHandle(DWORD dwPID, HANDLE& hProcess)
+//{
+//	hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwPID);
+//
+//	if (NULL == hProcess)
+//		hProcess = OpenProcess( PROCESS_VM_READ|PROCESS_QUERY_INFORMATION,TRUE, dwPID);
+//
+//	if(NULL == hProcess)
+//		hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION,FALSE, dwPID);
+//
+//	if(hProcess == NULL)
+//		return FALSE;
+//
+//	return TRUE;
+//}
 
 BOOL GetProcessFullPath(DWORD dwPID, CString& strFullPath)
 {
@@ -265,8 +269,13 @@ BOOL GetProcessFullPath(DWORD dwPID, CString& strFullPath)
 	do 
 	{
 		strFullPath.Empty();
-		if (GetProcessHandle(dwPID,hProcess) == FALSE)
-			break;
+		hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, dwPID);
+		if (hProcess == NULL)
+		{
+			hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, dwPID);
+			if (hProcess == NULL)
+				break;
+		}
 
 		if (GetProcessImageFileName(hProcess, szImagePath, MAX_PATH) == FALSE)
 			break;
@@ -316,4 +325,245 @@ BOOL DosPathToNtPath(LPCTSTR lpszDosPath, CString& strNtPath)
 	}
 	strNtPath = lpszDosPath;
 	return FALSE;
+}
+
+BOOL TerminateProcessByProcessId(DWORD dwProcessId)
+{
+	HANDLE hProcess = INVALID_HANDLE_VALUE;
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		hProcess = OpenProcess(PROCESS_TERMINATE , FALSE, dwProcessId);
+		if (hProcess == NULL)
+			break;
+
+		if (TerminateProcess(hProcess,0) == FALSE)
+		{
+			SetErrorInfo(SYSTEM_ERROR,0,_T("终止进程%d失败"),dwProcessId);
+			break;
+		}
+
+		bSuccess = TRUE;
+	} while (FALSE);
+
+	if (hProcess != INVALID_HANDLE_VALUE)
+		CloseHandle(hProcess);
+
+	return bSuccess;
+}
+
+BOOL GetProcessCurrentDirctory(DWORD dwPid,CString& strProcessCurrentDirctory)
+{
+	PROCNTQSIP NtQueryInformationProcess;
+	LONG                      status;
+	HANDLE                    hProcess;
+	PROCESS_BASIC_INFORMATION pbi;
+	PEB                       Peb;
+	PROCESS_PARAMETERS        ProcParam;
+	DWORD                     dwDummy;
+	DWORD                     dwSize;
+	LPVOID                    lpAddress;
+	BOOL                      bRet = FALSE;
+
+	TCHAR szCurrentDirctory[MAX_PATH] = {0};
+
+	do 
+	{
+		hProcess = OpenProcess(PROCESS_QUERY_INFORMATION , FALSE, dwPid);
+		if (hProcess == NULL)
+			break;
+
+		NtQueryInformationProcess = (PROCNTQSIP)GetProcAddress(
+																					GetModuleHandle(_T("ntdll")),
+																					"NtQueryInformationProcess"
+																					);
+
+		status = NtQueryInformationProcess( hProcess, ProcessBasicInformation,(PVOID)&pbi,
+																	sizeof(PROCESS_BASIC_INFORMATION), NULL);
+
+		if (status)
+			break;
+
+		if (ReadProcessMemory( hProcess,
+			pbi.PebBaseAddress,&Peb,
+			sizeof(PEB),&dwDummy) == FALSE)
+			break;
+
+		if (ReadProcessMemory( hProcess,
+			Peb.ProcessParameters,&ProcParam,
+			sizeof(PROCESS_PARAMETERS),&dwDummy) == FALSE)
+			break;
+
+		lpAddress = ProcParam.CurrentDirectory.Buffer;
+		dwSize = ProcParam.CurrentDirectory.Length;
+
+		if (_countof(szCurrentDirctory)<dwSize)
+			break;
+
+		if (ReadProcessMemory( hProcess,lpAddress,szCurrentDirctory,dwSize,&dwDummy)== FALSE)
+			break;
+
+		strProcessCurrentDirctory = szCurrentDirctory;
+		bRet = TRUE;
+	} while (FALSE);
+
+	if (hProcess)
+		CloseHandle (hProcess);
+	return bRet;
+}
+
+BOOL GetParentProcessID(DWORD dwPid,DWORD& dwParentProcessID)
+{
+	PROCNTQSIP NtQueryInformationProcess;
+	LONG                      status;
+	HANDLE                    hProcess;
+	PROCESS_BASIC_INFORMATION pbi;
+	BOOL                      bRet = FALSE;
+
+	if (dwPid == 0)
+	{
+		SetErrorInfo(CUSTOM_ERROR , 0 , _T("没有找到该进程的父进程！"));
+		return FALSE;
+	}
+
+	do 
+	{
+		hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, dwPid);
+		if (hProcess == NULL)
+			break;
+
+		NtQueryInformationProcess = (PROCNTQSIP)GetProcAddress(
+																						GetModuleHandle(_T("ntdll")),
+																						"NtQueryInformationProcess"
+																						);
+
+		status = NtQueryInformationProcess( hProcess, ProcessBasicInformation,(PVOID)&pbi,
+																		sizeof(PROCESS_BASIC_INFORMATION), NULL);
+
+		if (status)
+			break;
+
+		dwParentProcessID = pbi.InheritedFromUniqueProcessId;
+		bRet = TRUE;
+	} while (FALSE);
+
+	if (hProcess)
+		CloseHandle (hProcess);
+
+	return bRet;
+}
+
+BOOL GetPriorityClass(DWORD dwPid,CString& strPricrityDescribe)
+{
+	strPricrityDescribe.Empty();
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, dwPid);
+	if (hProcess == NULL)
+		return FALSE;
+
+	DWORD dwPriorityClass = GetPriorityClass(hProcess);
+	if (dwPriorityClass == 0)
+		return FALSE;
+
+	switch(dwPriorityClass)
+	{
+	case REALTIME_PRIORITY_CLASS:
+		strPricrityDescribe = _T("实时");
+		break;
+	case HIGH_PRIORITY_CLASS:
+		strPricrityDescribe = _T("高");
+		break;
+	case ABOVE_NORMAL_PRIORITY_CLASS:
+		strPricrityDescribe = _T("高于标准");
+		break;
+	case NORMAL_PRIORITY_CLASS:
+		strPricrityDescribe = _T("普通");
+		break;
+	case BELOW_NORMAL_PRIORITY_CLASS:
+		strPricrityDescribe = _T("低于标准");
+		break;		
+	case IDLE_PRIORITY_CLASS:
+		strPricrityDescribe = _T("低");
+		break;
+	default:
+		strPricrityDescribe = _T("未知");
+	}
+
+	CloseHandle(hProcess);
+	return strPricrityDescribe.IsEmpty() == FALSE;
+}
+
+BOOL EnumProcessInfo(CProcessItemInfoList& ProcessItemInfoList)
+{
+	ProcessItemInfoList.RemoveAll();
+	BOOL bSuccess = FALSE;
+	LPBYTE lpBuffData = NULL;
+	do 
+	{
+		DWORD dwSize = 0;
+		NTSTATUS Ntstaus = NtQuerySystemInformation(SystemProcessInformation, lpBuffData, 0, &dwSize);
+		if (Ntstaus == STATUS_INFO_LENGTH_MISMATCH )
+		{
+			lpBuffData = new BYTE[dwSize+1];
+			if (lpBuffData == NULL)
+			{
+				SetErrorInfo(SYSTEM_ERROR,0,_T("分配内存失败"));
+				break;
+			}
+
+			Ntstaus = NtQuerySystemInformation(SystemProcessInformation,lpBuffData, dwSize+1, &dwSize);
+			if (NT_SUCCESS(Ntstaus) == FALSE)
+			{
+				SetErrorInfo(SYSTEM_ERROR,0,_T("获取系统进程信息失败"));
+				break;
+			}
+		}
+
+		if (NT_SUCCESS(Ntstaus))
+		{
+			PLS_SYSTEM_PROCESSES_INFO pLsSystemProcessInfo = (PLS_SYSTEM_PROCESSES_INFO)lpBuffData;
+			while(pLsSystemProcessInfo != NULL)
+			{
+				PROCESS_ITEM_INFO ProcessItemInfo;
+				ProcessItemInfo.strProcessName = CString(pLsSystemProcessInfo->ProcessName.Buffer,pLsSystemProcessInfo->ProcessName.Length);
+				ProcessItemInfo.dwProcessId = pLsSystemProcessInfo->ProcessId;
+				GetProcessFullPath(pLsSystemProcessInfo->ProcessId,ProcessItemInfo.strProcessPath);
+				if (ProcessItemInfo.dwProcessId == 0)
+				{
+					ProcessItemInfo.strProcessName = _T("System Idle Process");
+					ProcessItemInfo.strUserName = _T("SYSTEM");
+				}
+				else if (ProcessItemInfo.dwProcessId == 4)
+				{
+					ProcessItemInfo.strProcessPath = GetSystemDirectory(_T("ntkrnlpa.exe"));
+					ProcessItemInfo.strUserName = _T("SYSTEM");
+				}
+
+				ProcessItemInfo.dwThread = pLsSystemProcessInfo->ThreadCount;
+				ProcessItemInfo.dwHandle = pLsSystemProcessInfo->HandleCount;
+				ProcessItemInfo.dwMemUse = pLsSystemProcessInfo->dwWorkingSetSize;
+
+				ProcessItemInfo.ullProcessUseTime = pLsSystemProcessInfo->KernelTime + pLsSystemProcessInfo->UserTime;
+
+				GetProcessUserName(pLsSystemProcessInfo->ProcessId, ProcessItemInfo.strUserName);
+				ProcessItemInfo.dwConsole = pLsSystemProcessInfo->dwSessionId;
+
+				ProcessItemInfoList.AddTail(ProcessItemInfo);
+
+				if (pLsSystemProcessInfo->NextEntryDelta == NULL)
+					pLsSystemProcessInfo = NULL;
+				else
+					pLsSystemProcessInfo =(PLS_SYSTEM_PROCESSES_INFO)((DWORD)pLsSystemProcessInfo + pLsSystemProcessInfo->NextEntryDelta);
+			}
+		}
+
+		bSuccess = TRUE;
+	} while (FALSE);	
+
+	if (lpBuffData != NULL)
+	{
+		delete[] lpBuffData;
+		lpBuffData = NULL;
+	}
+
+	return bSuccess;
 }

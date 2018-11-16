@@ -2,9 +2,11 @@
 
 //////////////////////// 主界面资源定义 /////////////////////////////
 #define	MAIN_APP_NOTIFY_TITLE		_T("系统信息查看工具")
+#define	APPLICATION_NOTIFY_TITLE	_T("任务管理模块")
 //////////////////////// 虚拟窗口定义 ///////////////////////////////
 #define	VIRTUAL_WND_TASK				_T("task")
 #define	VIRTUAL_WND_APP				_T("app")
+#define	VIRTUAL_WND_PROCESS		_T("process")
 #define	VIRTUAL_WND_SERVICE			_T("services")
 #define	VIRTUAL_WND_USERINFO		_T("user")
 #define	VIRTUAL_WND_DRIVER			_T("driver")
@@ -28,12 +30,14 @@
 #define	VIRTUAL_WND_TRAYICON		_T("trayinfo")
 
 //////////////////////// 应用程序窗口模块 ///////////////////////////////
-#define	APPLICATION_MENU				_T("AppMenu.xml")
-#define	APP_LIST_ITEM_INFO				_T("AppListInfo.xml")
-
+#define	APPLICATION_MENU				_T("AppMenu.xml")				// 应用程序模块右键菜单
+#define	APP_LIST_ITEM_INFO				_T("AppListInfo.xml")			//	应用程序模块列表定义
+//////////////////////// 进程模块 ///////////////////////////////
+#define	PROCESS_MENU						_T("ProcessMenu.xml")		// 进程模块右键菜单
+#define	PROCESS_LIST_ITEM_INFO		_T("ProcessListInfo.xml")	// 进程模块列表定义
 //////////////////////// 应用层服务模块 ///////////////////////////////
-#define	SERVER_LIST_ITEM_INFO		_T("SvrListInfo.xml")
-
+#define	SERVER_LIST_MENU				_T("SvrMenu.xml")				//	应用层服务模块右键菜单
+#define	SERVER_LIST_ITEM_INFO		_T("SvrListInfo.xml")			// 应用层服务模块列表定义
 //////////////////////// 内核驱动服务模块 ///////////////////////////////
 #define	DRIVER_LIST_ITEM_INFO		_T("DriverListInfo.xml")
 

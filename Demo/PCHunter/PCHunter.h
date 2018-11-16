@@ -4,7 +4,7 @@ class CPCHunter : public WindowImplBase
 {
 public:
 	CPCHunter();
-	~CPCHunter();
+	virtual	~CPCHunter();
 
 //override
 public:
@@ -37,13 +37,14 @@ public:
 	LRESULT OnF5Down(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnTrayIcon(WPARAM wParam, LPARAM lParam);
 	LRESULT OnMenuClick(WPARAM wParam, LPARAM lParam);
+	LRESULT OnTabChange(WPARAM wParam, LPARAM lParam);
 protected:
 	DUI_DECLARE_MESSAGE_MAP()
 	void OnClick(TNotifyUI& msg);
+	void OnTimer(TNotifyUI& msg);
 	void OnTabSelect(TNotifyUI& msg);
 	void OnValueChanged(TNotifyUI& msg);
 	void OnSelectChanged(TNotifyUI& msg);
-	
 protected:
 	//主机扫描相关菜单
 	void OnRemoteDesktop(CListTextElementUI* pItem);
@@ -51,17 +52,18 @@ protected:
 	void OnHostScanMenu(CControlUI* pControl);
 	void OnRangeMenu(CControlUI* pControl);
 protected:
-	int m_nHeadTrans;
-	CDuiString m_strBkImage;
+	int					m_nHeadTrans;
+	CDuiString		m_strBkImage;
 	UINT _m;
-	CControlUI* m_pLastPage;
-	CControlUI* m_pCurrentPage;
+	DWORD			m_dwSelectOption;
+	CControlUI*		m_pLastPage;
+	CControlUI*		m_pCurrentPage;
 
 	CTaskMgr		m_TaskMgr;
 	CNetworkMgr	m_NetworkMgr;
 	CHardMgr		m_HardMgr;
 	CSystemMgr	m_SystemMgr;
-	CUITrayIcon m_Tray;
+	CUITrayIcon		m_Tray;
 	//CMessageTip* m_pMsgTip;
 	//CUIDropTarget* m_pDropTarget;
 	//IMAGE3D::PARAM3DTRANSFORM _3dParam;

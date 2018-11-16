@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "Application.h"
-
+#include "DllCore/Log/LogHelper.h"
+#include "DllCore/Json/JsonObject.h"
 #include <Psapi.h>
 #include <Winuser.h>
 #pragma comment(lib,"Psapi.lib")
@@ -20,6 +21,7 @@ CApplication::~CApplication()
 DUI_BEGIN_MESSAGE_MAP(CApplication, CNotifyPump)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_MENU, OnMenu)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_REFRESH, OnRefresh)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_TIMEREX, OnTimerEx)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_LOADITEM, OnLoadItem)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMACTIVATE, OnItemActive)
 DUI_END_MESSAGE_MAP()
@@ -45,16 +47,148 @@ void CApplication::OnMenu(TNotifyUI& msg)
 	}
 }
 
+void CApplication::OnTimerEx(TNotifyUI& msg)
+{
+	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("App"));
+	if (pList == NULL)
+		return;
+
+	CRunAppInfoList RunApps;
+	if (GetRunAppsInfo(RunApps) == FALSE)
+		return;
+
+	// 判断是否存在窗口创建
+	POSITION pos = RunApps.GetHeadPosition();
+	while(pos)
+	{
+		const RUNNING_APP_INFO& RunAppInfo = RunApps.GetNext(pos);
+
+		BOOL bFindWnd = FALSE;
+		for (int n=0; n<pList->GetCount(); ++n)
+		{
+			CFileListItemUI* pAppInfo = (CFileListItemUI*)pList->GetItemAt(n);
+
+			CString strTitle = pAppInfo->GetSubControlText(_T("Title"));
+			CString strClassName = pAppInfo->GetSubControlText(_T("ClassName"));
+			CString strRunInfo = pAppInfo->GetSubControlText(_T("RunInfo"));
+
+			if ((HWND)pAppInfo->GetTag() != RunAppInfo.hMainWnd)
+				continue;
+
+			bFindWnd = TRUE;
+			if (strTitle.CompareNoCase(RunAppInfo.strTitle) != 0)
+				pAppInfo->SetSubControlText(_T("Title"), RunAppInfo.strTitle);
+			if (strClassName.CompareNoCase(RunAppInfo.strClassName) != 0)
+				pAppInfo->SetSubControlText(_T("ClassName"), RunAppInfo.strClassName);
+			if (strRunInfo.CompareNoCase(_T("正在运行")) != 0)
+				pAppInfo->SetSubControlText(_T("RunInfo"), RunAppInfo.bRunning ? _T("无响应") : _T("正在运行"));
+
+			break;
+		}
+
+		if (bFindWnd == FALSE)
+		{
+			TListInfoUI* pListInfo = pList->GetListInfo();
+			// 添加新创建的窗口
+			if (RunAppInfo.hMainWnd != m_pPaintManager->GetPaintWindow())
+				CreateNewAppItem(pList, pListInfo, RunAppInfo);
+		}
+	}
+
+	// 判断是否存在窗口销毁
+	for (int n=0; n<pList->GetCount(); ++n)
+	{
+		CFileListItemUI* pAppInfo = (CFileListItemUI*)pList->GetItemAt(n);
+
+		CString strTitle = pAppInfo->GetSubControlText(_T("Title"));
+		CString strClassName = pAppInfo->GetSubControlText(_T("ClassName"));
+		CString strRunInfo = pAppInfo->GetSubControlText(_T("RunInfo"));
+
+		BOOL bFindWnd = FALSE;
+		POSITION pos = RunApps.GetHeadPosition();
+		while(pos)
+		{
+			const RUNNING_APP_INFO& RunAppInfo = RunApps.GetNext(pos);
+
+			if ((HWND)pAppInfo->GetTag() != RunAppInfo.hMainWnd)
+				continue;
+
+			bFindWnd = TRUE;
+			break;
+		}
+		if (bFindWnd == FALSE)
+			pList->RemoveAt(n);
+	}
+}
+
 void CApplication::OnRefresh(TNotifyUI& msg)
 {
 	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("App"));
 	if (pList == NULL)
 		return;
 
+	CRunAppInfoList RunApps;
+	if (GetRunAppsInfo(RunApps) == FALSE)
+		return;
+
 	if (pList->GetCount())
 		pList->RemoveAll();
 
-	EnumDesktopWindows(NULL, (WNDENUMPROC)EnumWindowsProc, (LPARAM)this);
+	TListInfoUI* pListInfo = pList->GetListInfo();
+	//去掉DrawText函数中&被转义为_,比如&a会显示为'下划线a'
+	pList->SetItemTextStyle(pListInfo->uTextStyle & ~DT_NOPREFIX);
+
+	POSITION pos = RunApps.GetHeadPosition();
+	while(pos)
+	{
+		const RUNNING_APP_INFO& RunAppInfo = RunApps.GetNext(pos);
+		if (RunAppInfo.hMainWnd != m_pPaintManager->GetPaintWindow())
+			CreateNewAppItem(pList, pListInfo, RunAppInfo);
+	}
+}
+
+void CApplication::CreateNewAppItem(CListUI* pList, const TListInfoUI* pListInfo, const RUNNING_APP_INFO& RunAppInfo)
+{
+	CFileListItemUI* pFileItem = NULL;
+	if (m_DialogBuilder.GetMarkup()->IsValid() == false)
+		pFileItem = (CFileListItemUI*)m_DialogBuilder.Create(APP_LIST_ITEM_INFO, 0, &m_RootBuilder, m_pPaintManager);
+	else
+		pFileItem = (CFileListItemUI*)m_DialogBuilder.Create(&m_RootBuilder, m_pPaintManager);
+
+	HWND hWnd = RunAppInfo.hMainWnd;
+	pList->Add(pFileItem);
+	pFileItem->SetTag((UINT_PTR)hWnd);
+	pFileItem->SetFixedHeight(27);
+
+	HICON	hIcon = (HICON)SendMessage(hWnd, WM_GETICON, ICON_SMALL, NULL);
+	if (hIcon == NULL)
+		hIcon = (HICON)SendMessage(hWnd, WM_GETICON, ICON_SMALL2, NULL);
+	if (hIcon == NULL)
+		hIcon = (HICON)GetClassLongPtr(hWnd, GCLP_HICONSM);
+	if (hIcon != NULL)
+	{
+		CPictureUI* pPicIcon = (CPictureUI*)pFileItem->FindSubControl(_T("Pic"));
+		pPicIcon->SetVisible(true);
+		pPicIcon->SetIcon(hIcon);
+	}
+
+	CLabelUI* pLabelTitle = (CLabelUI*)pFileItem->FindSubControl(_T("Title"));
+	pLabelTitle->SetText(RunAppInfo.strTitle);
+	pLabelTitle->SetFont(pListInfo->nFont);
+	pLabelTitle->SetForeColor(pListInfo->dwTextColor);
+	pLabelTitle->AppendTextStyle(DT_END_ELLIPSIS);
+
+	CLabelUI* pClassName = (CLabelUI*)pFileItem->FindSubControl(_T("ClassName"));
+	pClassName->SetText(RunAppInfo.strClassName);
+	pClassName->SetFont(pListInfo->nFont);
+	pClassName->SetForeColor(pListInfo->dwTextColor);
+	pClassName->AppendTextStyle(DT_END_ELLIPSIS);
+
+	CLabelUI* pRunInfo = (CLabelUI*)pFileItem->FindSubControl(_T("RunInfo"));
+	pRunInfo->SetText(RunAppInfo.bRunning ? _T("无响应") : _T("正在运行"));
+	pRunInfo->SetFont(pListInfo->nFont);
+	pRunInfo->SetForeColor(pListInfo->dwTextColor);
+	pRunInfo->AppendTextStyle(DT_END_ELLIPSIS);
 }
 
 void CApplication::OnLoadItem(TNotifyUI& msg)
@@ -63,14 +197,7 @@ void CApplication::OnLoadItem(TNotifyUI& msg)
 		return;
 	m_bLoad = TRUE;
 
-	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("App"));
-	if (pList == NULL)
-		return;
-
-	if (pList->GetCount())
-		pList->RemoveAll();
-
-	EnumDesktopWindows(NULL, (WNDENUMPROC)EnumWindowsProc, (LPARAM)this);
+	OnRefresh(msg);
 }
 
 void CApplication::OnItemActive(TNotifyUI& msg)
@@ -133,22 +260,64 @@ void CApplication::OnAppMenu(CControlUI* pControl)
 			}
 		}
 	}
+	else if (strItemName == _T("SwitchProcess"))
+	{
+		DWORD dwPid = 0;
+		GetWindowThreadProcessId(hWnd, &dwPid);
+
+		CJsonObject JsonObject;
+		JsonObject.SetValue(_T("pid"), (UINT)dwPid);
+
+		NTCHDR NotifyHDR;
+		NotifyHDR.nWizardId = WIZARD_ID_TASK;
+		NotifyHDR.strTabTo    = VIRTUAL_WND_PROCESS;
+		NotifyHDR.strTabFrom = VIRTUAL_WND_APP;
+		NotifyHDR.strData			= JsonObject.ToString();
+
+		SendMessage(m_pPaintManager->GetPaintWindow(), WM_NOTIFY_TAB_CHANGE, NULL, (LPARAM)&NotifyHDR);
+	}
 	else if (strItemName == _T("ProcessInfo"))
 	{
-		MessageBox(NULL,_T("开发中，请继续留意^_^。"), MAIN_APP_NOTIFY_TITLE, MB_OK | MB_ICONINFORMATION);
+		MessageBox(m_pPaintManager->GetPaintWindow(),_T("开发中，请继续留意^_^。"), MAIN_APP_NOTIFY_TITLE, MB_OK | MB_ICONINFORMATION);
 	}
 }
 
-BOOL CApplication::EnumWindowsProc(HWND hWnd,LPARAM lParam)
+BOOL CApplication::EnumWindowsProc(HWND hWnd, LPARAM lParam)
 {
 	if (hWnd == NULL)
 		return TRUE;
 
-	CApplication* pApp = (CApplication*)lParam;
-	if (pApp != NULL)
-		pApp->GetAppInfoByHwnd(hWnd);
+	if (::IsWindow(hWnd) && ::IsWindowVisible(hWnd) && 
+		((GetWindowLong(hWnd, GWL_EXSTYLE) & WS_EX_TOOLWINDOW) !=WS_EX_TOOLWINDOW) &&
+		(GetWindowLong(hWnd, GWL_HWNDPARENT) == 0))
+	{
+		CRunAppInfoList* pRunApps = (CRunAppInfoList*)lParam;
+
+		RUNNING_APP_INFO RunAppInfo;
+		RunAppInfo.hMainWnd = hWnd;
+
+		// 获取窗口标题
+		TCHAR szTitle[MAX_PATH*2];
+		GetWindowText(hWnd, szTitle, _countof(szTitle));
+		RunAppInfo.strTitle = szTitle;
+
+		// 获取窗口类名称
+		TCHAR szClassName[MAX_PATH];
+		::GetClassName(hWnd, szClassName, _countof(szClassName));
+		RunAppInfo.strClassName = szClassName;
+
+		// 获取窗口是否无响应
+		RunAppInfo.bRunning = IsHungAppWindow(hWnd);
+
+		pRunApps->AddTail(RunAppInfo);
+	}
 
 	return TRUE;
+}
+
+BOOL CApplication::GetRunAppsInfo(CRunAppInfoList& RunApps)
+{
+	return EnumDesktopWindows(NULL, (WNDENUMPROC)EnumWindowsProc, (LPARAM)&RunApps);
 }
 
 void CApplication::GetProcessPathByHwnd(HWND hWnd,CDuiString& strProcesspath)
@@ -207,75 +376,4 @@ bool CApplication::DosPathToNtPath(LPCTSTR lpszDosPath, CDuiString& strNtPath)
 	}
 	strNtPath = lpszDosPath;
 	return FALSE;
-}
-
-void CApplication::GetAppInfoByHwnd(HWND hWnd)
-{
-	if (::IsWindow(hWnd) && ::IsWindowVisible(hWnd) && hWnd != m_pPaintManager->GetPaintWindow() && 
-		((GetWindowLong(hWnd, GWL_EXSTYLE)&WS_EX_TOOLWINDOW) !=WS_EX_TOOLWINDOW) &&
-		(GetWindowLong(hWnd, GWL_HWNDPARENT)==0))
-	{
-		FillAppInfoIntoList(hWnd);
-	}
-}
-
-void CApplication::FillAppInfoIntoList(HWND hWnd)
-{
-	TCHAR szWindowTitle[MAX_PATH*2];
-	GetWindowText(hWnd, szWindowTitle, _countof(szWindowTitle));
-
-	TCHAR szClassName[MAX_PATH];
-	::GetClassName(hWnd, szClassName, _countof(szClassName));
-
-	LPCTSTR lpszAppInfo = _T("正在运行");
-	if (IsHungAppWindow(hWnd))
-		lpszAppInfo = _T("未响应");
-
-	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("App"));
-	if (pList != NULL)
-	{
-		TListInfoUI* pListInfo = pList->GetListInfo();
-		//去掉DrawText函数中&被转义为_,比如&a会显示为'下划线a'
-		pList->SetItemTextStyle(pListInfo->uTextStyle & ~DT_NOPREFIX);
-
-		CFileListItemUI* pFileItem = NULL;
-		if (m_DialogBuilder.GetMarkup()->IsValid() == false)
-			pFileItem = (CFileListItemUI*)m_DialogBuilder.Create(APP_LIST_ITEM_INFO, 0, &m_RootBuilder, m_pPaintManager);
-		else
-			pFileItem = (CFileListItemUI*)m_DialogBuilder.Create(&m_RootBuilder, m_pPaintManager);
-
-		pList->Add(pFileItem);
-		pFileItem->SetTag((UINT_PTR)hWnd);
-		pFileItem->SetFixedHeight(27);
-
-		HICON	hIcon = (HICON)SendMessage(hWnd, WM_GETICON, ICON_SMALL, NULL);
-		if (hIcon == NULL)
-			hIcon = (HICON)SendMessage(hWnd, WM_GETICON, ICON_SMALL2, NULL);
-		if (hIcon == NULL)
-			hIcon = (HICON)GetClassLongPtr(hWnd, GCLP_HICONSM);
-		if (hIcon != NULL)
-		{
-			CPictureUI* pPicIcon = (CPictureUI*)pFileItem->FindSubControl(_T("Pic"));
-			pPicIcon->SetVisible(true);
-			pPicIcon->SetIcon(hIcon);
-		}
-
-		CLabelUI* pLabelTitle = (CLabelUI*)pFileItem->FindSubControl(_T("Title"));
-		pLabelTitle->SetText(szWindowTitle);
-		pLabelTitle->SetFont(pListInfo->nFont);
-		pLabelTitle->SetForeColor(pListInfo->dwTextColor);
-		pLabelTitle->AppendTextStyle(DT_END_ELLIPSIS);
-
-		CLabelUI* pClassName = (CLabelUI*)pFileItem->FindSubControl(_T("ClassName"));
-		pClassName->SetText(szClassName);
-		pClassName->SetFont(pListInfo->nFont);
-		pClassName->SetForeColor(pListInfo->dwTextColor);
-		pClassName->AppendTextStyle(DT_END_ELLIPSIS);
-
-		CLabelUI* pRunInfo = (CLabelUI*)pFileItem->FindSubControl(_T("RunInfo"));
-		pRunInfo->SetText(lpszAppInfo);
-		pRunInfo->SetFont(pListInfo->nFont);
-		pRunInfo->SetForeColor(pListInfo->dwTextColor);
-		pRunInfo->AppendTextStyle(DT_END_ELLIPSIS);
-	}
 }

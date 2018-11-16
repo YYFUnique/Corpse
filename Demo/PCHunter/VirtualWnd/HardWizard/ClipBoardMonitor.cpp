@@ -14,7 +14,8 @@ CClipBoardMonitor::CClipBoardMonitor()
 CClipBoardMonitor::~CClipBoardMonitor()
 {
 	m_pPaintManager = NULL;
-	ChangeClipboardChain(m_pPaintManager->GetPaintWindow(), m_hNextClipboard);
+	if (m_hNextClipboard != NULL)
+		ChangeClipboardChain(m_pPaintManager->GetPaintWindow(), m_hNextClipboard);
 }
 
 DUI_BEGIN_MESSAGE_MAP(CClipBoardMonitor, CNotifyPump)

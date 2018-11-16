@@ -1739,7 +1739,7 @@ bool CPaintManagerUI::SetTimer(CControlUI* pControl, UINT nTimerID, UINT uElapse
         }
     }
 
-    m_uTimerID = (++m_uTimerID) % 0xFF;
+    m_uTimerID = (++m_uTimerID) % 0xF0; //0xf1-0xfeÃÿ ‚”√Õæ
     if( !::SetTimer(m_hWndPaint, m_uTimerID, uElapse, NULL) ) return FALSE;
     TIMERINFO* pTimer = new TIMERINFO;
     if( pTimer == NULL ) return FALSE;

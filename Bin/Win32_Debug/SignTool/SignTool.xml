@@ -34,22 +34,27 @@
 			<VerticalLayout name="Body" inset="1,0,1,1">
 				<TabLayout name="TabWizard" showanimate="false" frame="20" bkcolor="#FFFFFFFF">
 					<VerticalLayout>
-						<GroupLayout height="85">
-							<Label text="私钥加密方式:" align="right" float="true" font="0" pos="10,10,90,35"/>
+						<GroupLayout height="55" visible="true">
+							<Label text="加密算法:" align="right" float="true" font="0" pos="10,10,90,35"/>
 							<Combo name="EncryptType" font="0" float="true" pos="95,10,180,35" >
-								<ListLabelElement name="ListLabelElementUI0" text="无" pos="0,0,0,23" height="23" selected="true"/>
-								<ListLabelElement name="ListLabelElementUI1" text="DES" userdata="-des3" pos="0,0,0,23" height="23" />
-								<ListLabelElement name="ListLabelElementUI2" text="AES256" userdata="-aes256" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI0" text="RSA" pos="0,0,0,23" height="23" selected="true"/>
+								<ListLabelElement name="ListLabelElementUI1" text="ECC" pos="0,0,0,23" height="23" />
 							</Combo>
-							<Label text="私钥密码:" float="true" font="0" pos="200,10,255,35" />
-							<Edit2 name="EncryptPWD" enabled="false" font="0" float="true" pos="260,10,350,35" textpadding="4,3,4,3" textcolor="#FF000000"/>
-							<Label text="私钥长度:" float="true" font="0" pos="370,10,420,35"/>
+							<Label text="签名算法:" float="true" font="0" pos="200,10,255,35" />
+							<Combo name="SignType" font="0" float="true" pos="260,10,350,35" >
+								<ListLabelElement name="ListLabelElementUI0" text="SHA1" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI1" text="SHA256" pos="0,0,0,23" height="23" selected="true" />
+								<ListLabelElement name="ListLabelElementUI1" text="SHA384" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI1" text="SHA512" pos="0,0,0,23" height="23" />
+							</Combo>
+							<Label text="密钥长度:" float="true" font="0" pos="370,10,420,35"/>
 							<Combo name="EncryptLen" font="0" float="true" pos="430,10,500,35" >
-								<ListLabelElement name="ListLabelElementUI1" text="512" pos="0,0,0,23" height="23" />
-								<ListLabelElement name="ListLabelElementUI1" text="1024" pos="0,0,0,23" height="23" />
-								<ListLabelElement name="ListLabelElementUI1" text="2048" pos="0,0,0,23" height="23" selected="true"/>
+								<ListLabelElement name="ListLabelElementUI1" text="1024" pos="0,0,0,23" height="23" selected="true"/>
+								<ListLabelElement name="ListLabelElementUI1" text="2048" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI1" text="4096" pos="0,0,0,23" height="23" />
+								<ListLabelElement name="ListLabelElementUI1" text="8192" pos="0,0,0,23" height="23" />
 							</Combo>
-							
+							<Option text="导出私钥" name="BtnExportKey" float="true" font="0" pos="510,10,580,35" align="left" textpadding="16,0,0,0" normalimage="file=&apos;CheckBox.png&apos; dest=&apos;0,5,15,20&apos; source=&apos;0,0,15,15&apos;" hotimage="file=&apos;CheckBox.png&apos; dest=&apos;0,5,15,20&apos; source=&apos;15,0,30,15&apos;" pushedimage="file=&apos;CheckBox.png&apos; dest=&apos;0,5,15,20&apos; source=&apos;30,0,45,15&apos;" selectedimage="file=&apos;CheckBox.png&apos; dest=&apos;0,5,15,20&apos; source=&apos;45,0,60,15&apos;" selectedhotimage="file=&apos;CheckBox.png&apos; dest=&apos;0,5,15,20&apos; source=&apos;60,0,75,15&apos;" selectedpressimage="file=&apos;CheckBox.png&apos; dest=&apos;0,5,15,20&apos; source=&apos;75,0,90,15&apos;"/>
 						</GroupLayout>
 						<GroupLayout height="125">
 							<Label text="所在国家:" align="right" float="true" pos="10,10,90,35"/>
@@ -67,11 +72,11 @@
 							<Label text="请求文件位置:" align="right"  float="true" font="0" pos="10,80,90,105"/>
 							<Edit2 name="ReqPath" font="0" float="true" pos="95,80,350,105" textpadding="4,3,4,3" textcolor="#FF000000"/>
 							<Button name="BtnReqPath" text="浏览..." float="true" pos="360,77,440,108"/>
-							<Button name="BtnCreateReqFile" text="生成证书请求文件" float="true" pos="450,77,580,108"/>
 						</GroupLayout>
+						<Button name="BtnCreateReqFile" text="生成证书请求文件" float="true" pos="220,180,370,218"/>
 					</VerticalLayout>
 					<VerticalLayout>
-						<GroupLayout>
+						<GroupLayout height="180">
 							<Label text="证书请求文件:" align="right" font="0" float="true" pos="10,10,90,35"/>
 							<Edit2 name="SignReqPath" font="0" float="true" pos="95,10,350,35" textpadding="4,3,4,3" textcolor="#FF000000"/>
 							<Button name="BtnSignReqPath" text="浏览..." float="true" pos="360,7,440,38"/>
@@ -87,8 +92,8 @@
 							<Label text="CA私钥路径:" align="right" font="0" float="true" pos="10,140,90,165"/>
 							<Edit2 name="SignCAPrivateKeyPath" font="0" float="true" pos="95,140,350,165" textpadding="4,3,4,3" textcolor="#FF000000"/>
 							<Button name="BtnSignCAPrivateKeyPath" text="浏览..." float="true" pos="360,137,440,168"/>
-							<Button text="证书签名" name="BtnSignCert" float="true" font="0" pos="95,175,300,210"/>
 						</GroupLayout>
+						<Button text="证书签名" name="BtnSignCert" float="true" font="0" pos="220,180,370,218"/>
 					</VerticalLayout>
 					<VerticalLayout>
 						<GroupLayout>

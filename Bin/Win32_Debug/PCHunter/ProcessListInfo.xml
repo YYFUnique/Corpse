@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+	<FileListItem>
+		<HorizontalLayout>
+			<Picture name="Pic" visible="false" width="16" height="16" padding="3,6,0,0"/>
+			<Label name="ProcessName" text="" textpadding="3,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="Pid" text="" textpadding="0,0,5,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="UserName" text="" align="right" textpadding="0,0,5,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="MemInfo" text="" align="right" textpadding="0,0,5,0"/>
+		</HorizontalLayout>		
+		<HorizontalLayout>
+			<Label name="CpuInfo" text="" align="right" textpadding="0,0,5,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="TheadInfo" text="" align="right" textpadding="0,0,5,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="HandleInfo" text="" align="right" textpadding="0,0,5,0"/>
+		</HorizontalLayout>		
+		<HorizontalLayout>
+			<Label name="Desc" text="" align="left" textpadding="5,0,5,0"/>
+		</HorizontalLayout>
+	</FileListItem>
+</Window>

@@ -13,6 +13,7 @@ public:
 protected:
 	DUI_DECLARE_MESSAGE_MAP()
 	void OnLoadItem(TNotifyUI& msg);
+	void OnKeyDown(TNotifyUI& msg);
 private:
 	HANDLE				m_hDevNotify;
 	CPaintManagerUI* m_pPaintManager;

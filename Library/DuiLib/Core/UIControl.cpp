@@ -342,7 +342,7 @@ void CControlUI::SetPos(RECT rc)
         m_bSetPos = false;
     }
     
-    /*if( m_bFloat ) {
+    if( m_bFloat ) {
         CControlUI* pParent = GetParent();
         if( pParent != NULL ) {
             RECT rcParentPos = pParent->GetPos();
@@ -353,7 +353,7 @@ void CControlUI::SetPos(RECT rc)
             m_cxyFixed.cx = m_rcItem.right - m_rcItem.left;
             m_cxyFixed.cy = m_rcItem.bottom - m_rcItem.top;
         }
-    }*/
+    }
 
     m_bUpdateNeeded = false;
     InvalidateRc.Join(m_rcItem);

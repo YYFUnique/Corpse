@@ -13,6 +13,7 @@
 #include "Utils/SnmpMgr.h"
 
 #include "VirtualWnd/Task/Application.h"
+#include "VirtualWnd/Task/Process.h"
 #include "VirtualWnd/Task/Services.h"
 #include "VirtualWnd/Task/UserInfo.h"
 #include "VirtualWnd/Task/CoreDriver.h"

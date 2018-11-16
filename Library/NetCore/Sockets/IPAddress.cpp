@@ -57,7 +57,7 @@ namespace NetCore
 #endif
 	}
 
-	IPAddress::IPAddress(LPCTSTR& lpszAddr, Family family)
+	IPAddress::IPAddress(LPCTSTR lpszAddr, Family family)
 	{
 		if (family == IPv4)
 		{
@@ -71,6 +71,22 @@ namespace NetCore
 			NewIPv6(Addr6.GetAddr());
 #endif
 		}
+	}
+
+	IPAddress::IPAddress(unsigned prefix, Family family)
+	{
+		if (family == IPv4)
+		{
+			if (prefix <= 32)
+				NewIPv4(prefix);
+		}
+#ifdef POCO_HAVE_IPv6
+		else if (family == IPv6)
+		{
+			if (prefix <= 128)
+				NewIPv6(prefix);
+		}
+#endif
 	}
 
 	IPAddress::IPAddress(const void* pAddr, poco_socklen_t nLen)
@@ -436,6 +452,11 @@ namespace NetCore
 		m_pImpl = new IPv4AddressImpl();
 	}
 
+	void IPAddress::NewIPv4(unsigned prefix)
+	{
+		m_pImpl = new IPv4AddressImpl(prefix);
+	}
+
 	void IPAddress::NewIPv4(const void* pHostAddr)
 	{
 		m_pImpl = new IPv4AddressImpl(pHostAddr);
@@ -445,6 +466,13 @@ namespace NetCore
 	{
 #ifdef POCO_HAVE_IPv6
 		m_pImpl = new IPv6AddressImpl();
+#endif
+	}
+
+	void IPAddress::NewIPv6(unsigned prefix)
+	{
+#ifdef POCO_HAVE_IPv6
+		m_pImpl = new IPv6AddressImpl(prefix);
 #endif
 	}
 

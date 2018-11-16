@@ -70,18 +70,18 @@ typedef struct
 } PROCESS_PARAMETERS, *PPROCESS_PARAMETERS;
 
 
-typedef struct
+typedef struct tagPEB
 {
 	ULONG               AllocationSize;
 	ULONG               Unknown1;
-	HINSTANCE           ProcessHinstance;
-	PVOID               ListDlls;
+	HINSTANCE        ProcessHinstance;
+	PVOID					ListDlls;
 	PPROCESS_PARAMETERS ProcessParameters;
 	ULONG               Unknown2;
 	HANDLE              Heap;
 } PEB, *PPEB;
 
-typedef struct
+typedef struct tagPROCESS_BASIC_INFORMATION
 {
 	DWORD ExitStatus;
 	PPEB  PebBaseAddress;
@@ -89,7 +89,94 @@ typedef struct
 	DWORD BasePriority;
 	ULONG UniqueProcessId;
 	ULONG InheritedFromUniqueProcessId;
-}   PROCESS_BASIC_INFORMATION;
+}PROCESS_BASIC_INFORMATION;
+
+typedef struct tagSYSTEM_PROCESSOR_TIMES
+{
+	LARGE_INTEGER IdleTime;               //空闲时间
+	LARGE_INTEGER KernelTime;             //内核模式时间
+	LARGE_INTEGER UserTime;               //用户模式时间
+	LARGE_INTEGER DpcTime;                //延迟过程调用时间
+	LARGE_INTEGER InterruptTime;          //中断时间
+	ULONG         InterruptCount;         //中断次数
+}SYSTEM_PROCESSOR_TIMES,*PSYSTEM_PROCESSOR_TIMES;
+
+typedef struct tagSYSTEM_PERFORMANCE_INFORMATION
+{
+	LARGE_INTEGER  IdleTime;                    //CPU空闲时间
+	LARGE_INTEGER  ReadTransferCount;           //I/O读操作数目
+	LARGE_INTEGER  WriteTransferCount;          //I/O写操作数目
+	LARGE_INTEGER  OtherTransferCount;          //I/O其他操作数目
+	ULONG          ReadOperationCount;          //I/O读数据数目
+	ULONG          WriteOperationCount;         //I/O写数据数目
+	ULONG          OtherOperationCount;         //I/O其他操作数据数目
+	ULONG          AvailablePages;              //可获得的页数目
+	ULONG          TotalCommittedPages;         //总共提交页数目
+	ULONG          TotalCommitLimit;            //已提交页数目
+	ULONG          PeakCommitment;              //页提交峰值
+	ULONG          PageFaults;                  //页故障数目
+	ULONG          WriteCopyFaults;             //Copy-On-Write故障数目
+	ULONG          TransitionFaults;            //软页故障数目
+	ULONG          Reserved1;
+	ULONG          DemandZeroFaults;            //需求0故障数
+	ULONG          PagesRead;                   //读页数目
+	ULONG          PageReadIos;                 //读页I/O操作数
+	ULONG          Reserved2[2];
+	ULONG          PagefilePagesWritten;        //已写页文件页数
+	ULONG          PagefilePageWriteIos;        //已写页文件操作数
+	ULONG          MappedFilePagesWritten;      //已写映射文件页数
+	ULONG          MappedFileWriteIos;          //已写映射文件操作数
+	ULONG          PagedPoolUsage;              //分页池使用
+	ULONG          NonPagedPoolUsage;           //非分页池使用
+	ULONG          PagedPoolAllocs;             //分页池分配情况
+	ULONG          PagedPoolFrees;              //分页池释放情况
+	ULONG          NonPagedPoolAllocs;          //非分页池分配情况
+	ULONG          NonPagedPoolFress;           //非分页池释放情况
+	ULONG          TotalFreeSystemPtes;         //系统页表项释放总数
+	ULONG          SystemCodePage;              //操作系统代码页数
+	ULONG          TotalSystemDriverPages;      //可分页驱动程序页数
+	ULONG          TotalSystemCodePages;        //操作系统代码页总数
+	ULONG          SmallNonPagedLookasideListAllocateHits; //
+	ULONG          SmallPagedLookasideListAllocateHits;
+	ULONG          Reserved3;                   
+	ULONG          MmSystemCachePage;          //系统缓存页数
+	ULONG          PagedPoolPage;              //分页池页数
+	ULONG          SystemDriverPage;           //可分页驱动页数
+	ULONG          FastReadNoWait;             //异步快速读数目
+	ULONG          FastReadWait;               //同步快速读数目
+	ULONG          FastReadResourceMiss;       //快速读资源冲突数
+	ULONG          FastReadNotPossible;        //快速读失败数
+	ULONG          FastMdlReadNoWait;          //异步MDL快速读数目
+	ULONG          FastMdlReadWait;            //同步MDL快速读数目
+	ULONG          FastMdlReadResourceMiss;    //MDL读资源冲突数
+	ULONG          FastMdlReadNotPossible;     //MDL读失败数
+	ULONG          MapDataNoWait;              //异步映射数据次数
+	ULONG          MapDataWait;                //同步映射数据次数
+	ULONG          MapDataNoWaitMiss;          //异步映射数据冲突次数
+	ULONG          MapDataWaitMiss;            //同步映射数据冲突次数
+	ULONG          PinMappedDataCount;         //牵制映射数据数目
+	ULONG          PinReadNoWait;              //牵制异步读数目
+	ULONG          PinReadWait;                //牵制同步读数目
+	ULONG          PinReadNoWaitMiss;          //牵制异步读冲突数目
+	ULONG          PinReadWaitMiss;            //牵制同步读冲突数目
+	ULONG          CopyReadNoWait;             //异步拷贝读次数
+	ULONG          CopyReadWait;               //同步拷贝读次数
+	ULONG          CopyReadNoWaitMiss;         //异步拷贝读故障次数
+	ULONG          CopyReadWaitMiss;           //同步拷贝读故障次数
+	ULONG          MdlReadNoWait;              //异步MDL读次数
+	ULONG          MdlReadWait;                //同步MDL读次数
+	ULONG          MdlReadNoWaitMiss;          //异步MDL读故障次数
+	ULONG          MdlReadWaitMiss;            //同步MDL读故障次数
+	ULONG          ReadAheadIos;               //向前读操作数目
+	ULONG          LazyWriteIos;               //LAZY写操作数目
+	ULONG          LazyWritePages;             //LAZY写页文件数目
+	ULONG          DataFlushes;                //缓存刷新次数
+	ULONG          DataPages;                  //缓存刷新页数
+	ULONG          ContextSwitches;            //环境切换数目
+	ULONG          FirstLevelTbFills;          //第一层缓冲区填充次数
+	ULONG          SecondLevelTbFills;         //第二层缓冲区填充次数
+	ULONG          SystemCall;                 //系统调用次数
+}SYSTEM_PERFORMANCE_INFORMATION,*PSYSTEM_PERFORMANCE_INFORMATION;
 
 //查询进程所用函数的参数结构
 typedef struct _LS_SYSTEM_PROCESSE_INFO
@@ -113,7 +200,7 @@ typedef struct _LS_SYSTEM_PROCESSE_INFO
 	SIZE_T			tVirtualSize;
 	DWORD			dwPageFaultCount;
 	DWORD			dwPeakWorkingSetSize; 
-	DWORD			dwWorkingSetSize; 
+	DWORD			dwWorkingSetSize;						// 工作设置(内存)
 	SIZE_T			tQuotaPeakPagedPoolUsage;
 	SIZE_T			tQuotaPagedPoolUsage;
 	SIZE_T			tQuotaPeakNonPagedPoolUsage;
@@ -128,6 +215,28 @@ typedef struct _LS_SYSTEM_PROCESSE_INFO
 	LARGE_INTEGER	qWriteTransferCount;
 	LARGE_INTEGER	qOtherTransferCount;
 }LS_SYSTEM_PROCESSES_INFO,*PLS_SYSTEM_PROCESSES_INFO;
+
+typedef struct tagSYSTEM_PAGEFILE_INFORMATION
+{
+	ULONG NetxEntryOffset;                //下一个结构的偏移量
+	ULONG CurrentSize;                    //当前页文件大小
+	ULONG TotalUsed;                      //当前使用的页文件数
+	ULONG PeakUsed;                       //当前使用的页文件峰值数
+	UNICODE_STRING FileName;              //页文件的文件名称
+}SYSTEM_PAGEFILE_INFORMATION,*PSYSTEM_PAGEFILE_INFORMATION;
+
+
+typedef struct tagSYSTEM_CACHE_INFORMATION
+{
+	ULONG SystemCacheWsSize;              //高速缓存大小
+	ULONG SystemCacheWsPeakSize;          //高速缓存峰值大小
+	ULONG SystemCacheWsFaults;            //高速缓存页故障数目
+	ULONG SystemCacheWsMinimum;           //高速缓存最小页大小
+	ULONG SystemCacheWsMaximum;           //高速缓存最大页大小
+	ULONG TransitionSharedPages;          //共享页数目
+	ULONG TransitionSharedPagesPeak;      //共享页峰值数目
+	ULONG Reserved[2];
+}SYSTEM_CACHE_INFORMATION,*PSYSTEM_CACHE_INFORMATION;
 
 typedef enum _SYSTEM_INFORMATION_CLASS {
     SystemBasicInformation = 0,

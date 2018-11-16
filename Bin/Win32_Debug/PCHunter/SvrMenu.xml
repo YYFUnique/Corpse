@@ -3,7 +3,7 @@
   <Font name="微软雅黑" size="12" bold="false" default="true" />
   <Font name="微软雅黑" size="12" bold="true"/>
   <Default name="Menu" value="inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='menu_bk.png' corner='30,8,8,8'&quot; mask=&quot;#FFFFFFFF&quot; hole=&quot;false&quot;" />
-  <Menu name="ScanResultMenu">
+  <Menu name="SvrMenu">
   	<MenuElement text="启动服务" name="StartSvr"/>
 	<MenuElement text="重启服务" name="ReStartSvr"/>
 	<MenuElement text="停止服务" name="StopSvr"/>
@@ -24,8 +24,8 @@
 			<Label />
 			<Label width="20" bkimage="file='tree_expand.png' source='0,0,16,16' dest='0,3,16,19'"/>
 		</HorizontalLayout>
-		<MenuElement name="DisplayName" text="服务名称" />
-		<MenuElement name="ShowName" text="显示名称" />
+		<MenuElement name="ServiceName" text="服务名称" />
+		<MenuElement name="DisplayName" text="显示名称" />
 		<MenuElement name="FilePath" text="文件路径" />
 	</MenuElement>
 	<MenuElement text="删除服务" name="DeleteSvr" />
@@ -36,6 +36,7 @@
 			<Label width="20" bkimage="file='tree_expand.png' source='0,0,16,16' dest='0,3,16,19'"/>
 		</HorizontalLayout>
 	</MenuElement>
+	<MenuElement text="转到进程" name="SwitchProcess" />
 	<MenuElement text="查看文件" name="LookAtFile" />
 	<MenuElement text="查看注册表" name="LookAtReg" />
   </Menu>

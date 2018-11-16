@@ -19,16 +19,14 @@ public:
 protected:
 	void OnSave(TNotifyUI& msg);
 	void OnClick(TNotifyUI& msg);
-	void OnSignCert(TNotifyUI& msg);		// 签发证书
-	void OnCertSelfSign(TNotifyUI& msg);	// 签发证书（自签名证书）
+	void OnBtnSignCert(TNotifyUI& msg);		// 签发证书
+	void OnCertSelfSign(TNotifyUI& msg);		// 签发证书（自签名证书）
 
 	void OnPrivateKeyPath(TNotifyUI& msg, LPCTSTR lpszPrivateKeyName);
 	void OnReqFilePath(TNotifyUI& msg, LPCTSTR lpszReqName);
 	void OnCertFilePath(TNotifyUI& msg, LPCTSTR lpszCertName);
 
-	void OnCreatePrivateKey(TNotifyUI& msg);
-	void OnCreateReqFile(TNotifyUI& msg);
-
+	void OnBtnCreateReqFile(TNotifyUI& msg);
 	void OnUpdateCertName(TNotifyUI& msg);
 
 	void OnItemSelect(TNotifyUI& msg);

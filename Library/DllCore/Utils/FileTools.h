@@ -10,6 +10,11 @@
 #define DLL_API __declspec(dllimport)
 #endif
 
+#define			FILE_VERSION_FileVersion			_T("FileVersion")
+#define			FILE_VERSION_FileDescription  _T("FileDescription")
+#define			FILE_VERSION_CompanyName _T("CompanyName")
+#define			FILE_VERSION_ProductName		_T("ProductName")
+
 /************************************************************************/
 /* 函  数  名：SHDeleteDirectory                                                               */
 /* 函数功能：删除目录，包括子目录															   */
@@ -33,6 +38,8 @@ DLL_API BOOL CheckFileIsX64(LPCTSTR lpszFilePath);
 /* 返  回 值：如果文件存在，则返回文件版本号，如果不存在，返回v1.0      */
 /************************************************************************/
 DLL_API DWORD GetFileVersion(LPCTSTR lpszFilePath);
+
+DLL_API BOOL GetFileVersionEx(LPCTSTR lpszFilePath, LPCTSTR lpszFileVersion, CString& strFileVersionInfo);
 
 /************************************************************************/
 /* 函  数  名：GetVersionText                                                                    */

@@ -5,9 +5,11 @@
 #include <atlstr.h>
 #include "DllCore/Utils/ErrorInfo.h"
 #include "DllCore/Authority/Process.h"
+#include "DllCore/Log/LogHelper.h"
 
 #define		TIMER_PCHUNTER_ID			0x1000
 #define		WM_TRAYICON					WM_USER+0x1000
+
 
 CPCHunter::CPCHunter()
 	:m_nHeadTrans(0)
@@ -15,6 +17,7 @@ CPCHunter::CPCHunter()
 	,_m(0)
 	,m_pLastPage(NULL)
 	,m_pCurrentPage(NULL)
+	,m_dwSelectOption(0)
 {
 	// 转移主程序代码量压力
 	AddVirtualWnd(VIRTUAL_WND_TASK,&m_TaskMgr);
@@ -50,6 +53,7 @@ CPCHunter::~CPCHunter()
 
 DUI_BEGIN_MESSAGE_MAP(CPCHunter, CNotifyPump)  
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK, OnClick)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_TIMER, OnTimer)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_SELECTCHANGED, OnSelectChanged)
 DUI_END_MESSAGE_MAP()  
 
@@ -76,10 +80,13 @@ LRESULT CPCHunter::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 	switch(uMsg)
 	{
 		case WM_TRAYICON:
-				bRes = OnTrayIcon(wParam,lParam);
+				bRes = OnTrayIcon(wParam, lParam);
 			break;
 		case WM_MENUCLICK:
-				bRes = OnMenuClick(wParam,lParam);
+				bRes = OnMenuClick(wParam, lParam);
+			break;
+		case WM_NOTIFY_TAB_CHANGE:
+				bRes = OnTabChange(wParam, lParam);
 			break;
 		default:
 			bHandled = FALSE;
@@ -136,6 +143,9 @@ void CPCHunter::InitWindow()
 	CHorizontalLayoutUI* pControl = (CHorizontalLayoutUI*)m_PaintManager.FindControl(_T("TabSwitch"));
 	if (pControl)
 		m_PaintManager.SendNotify(pControl->GetItemAt(0), DUI_MSGTYPE_SELECTCHANGED);
+
+	CControlUI* pVLayout = m_PaintManager.FindControl(_T("VLayout"));
+	m_PaintManager.SetTimer(pVLayout, TIMER_PCHUNTER_ID, 1000*1);
 }
 
 CControlUI* CPCHunter::CreateControl(LPCTSTR pstrClass)
@@ -216,6 +226,19 @@ void CPCHunter::OnClick(TNotifyUI& msg)
 	}
 }
 
+void CPCHunter::OnTimer(TNotifyUI& msg)
+{
+	if (msg.wParam == TIMER_PCHUNTER_ID) {
+		CTabLayoutUI* pTabLayout = (CTabLayoutUI*)m_PaintManager.FindControl(_T("TabWizard"));
+		if (pTabLayout == NULL)
+			return;
+
+		CControlUI* pMsgNotify = GetViewObject(pTabLayout, m_dwSelectOption);
+		if (pMsgNotify)
+			m_PaintManager.SendNotify(pMsgNotify, DUI_MSGTYPE_TIMEREX);
+	}
+}
+
 void CPCHunter::OnTabSelect(TNotifyUI& msg)
 {
 	
@@ -229,10 +252,10 @@ void CPCHunter::OnSelectChanged(TNotifyUI& msg)
 		if (pTabLayout == NULL)
 			return;
 
-		UINT nIndex = _ttoi(msg.pSender->GetUserData());
-		pTabLayout->SelectItem(nIndex);
+		m_dwSelectOption = _ttoi(msg.pSender->GetUserData());
+		pTabLayout->SelectItem(m_dwSelectOption);
 
-		CControlUI* pMsgNotify = GetViewObject(pTabLayout,nIndex);
+		CControlUI* pMsgNotify = GetViewObject(pTabLayout, m_dwSelectOption);
 		if (pMsgNotify)
 			m_PaintManager.SendNotify(pMsgNotify, DUI_MSGTYPE_LOADITEM);
 	}
@@ -282,11 +305,14 @@ void CPCHunter::SetListTrans(int nValue)
 
 CControlUI* CPCHunter::GetViewObject(CTabLayoutUI* pTabLayout,int nIndex)
 {
+	// 获取第一层TabLayoutUI 控件中的节点
 	CVerticalLayoutUI* pSubObject = (CVerticalLayoutUI*)pTabLayout->GetItemAt(nIndex);
+	// 获取第二层的TabLayoutUI
 	CTabLayoutUI* pSubTab = (CTabLayoutUI*)pSubObject->FindSubControlByClassName(_T("TabLayoutUI"));
 	if (pSubTab == NULL )
 		return NULL;
 
+	// 返回当前界面展示的页面
 	int nSelectId = pSubTab->GetCurSel();
 	return pSubTab->GetItemAt(nSelectId);
 }
@@ -335,8 +361,8 @@ LRESULT CPCHunter::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 		STRINGorID strXmlFile(_T("MenuStatus.xml"));
 		pMenu->Init(NULL,strXmlFile, pt,&m_PaintManager);
 	}
-	else if (uMsgId == WM_MOUSEMOVE)
-		m_Tray.OnMouseMove(); 
+	/*else if (uMsgId == WM_MOUSEMOVE)
+		m_Tray.OnMouseMove(); */
 	else if (uMsgId == WM_MOUSEHOVER)
 	{
 		/*if (m_pMsgTip == NULL)
@@ -374,6 +400,10 @@ LRESULT CPCHunter::OnMenuClick(WPARAM wParam, LPARAM lParam)
 	CDuiString strMenuName = pControl->GetManager()->GetRoot()->GetName();
 	if (strMenuName == _T("AppMenu"))
 		m_TaskMgr.OnAppMenu(pControl);
+	else if (strMenuName == _T("ProcessMenu"))
+		m_TaskMgr.OnProcessMenu(pControl);
+	else if (strMenuName == _T("SvrMenu"))
+		m_TaskMgr.OnServiceMenu(pControl);
 	else if (strMenuName == _T("ScanResultMenu"))
 		m_NetworkMgr.OnHostScanMenu(pControl);
 	else if (strMenuName == _T("RangeMenu"))
@@ -382,5 +412,27 @@ LRESULT CPCHunter::OnMenuClick(WPARAM wParam, LPARAM lParam)
 		m_NetworkMgr.OnRouteInfo(pControl);
 	else if (strMenuName == _T("TrayMenu"))
 		m_SystemMgr.OnTrayMenu(pControl);
+	return TRUE;
+}
+
+LRESULT CPCHunter::OnTabChange(WPARAM wParam, LPARAM lParam)
+{
+	NTCHDR* pNTCHDR = (NTCHDR*)lParam;
+
+	CHorizontalLayoutUI* pTabSwitch = (CHorizontalLayoutUI*)m_PaintManager.FindControl(_T("TabSwitch"));
+	if (pTabSwitch == NULL)
+		return FALSE;
+
+	COptionUI* pWizardId = (COptionUI*)pTabSwitch->GetItemAt(pNTCHDR->nWizardId);
+	if (pWizardId == NULL)
+		return FALSE;
+
+	pWizardId->Selected(TRUE);
+
+	if (pNTCHDR->nWizardId == WIZARD_ID_TASK)
+		m_TaskMgr.NotifyTask(pNTCHDR);
+	else if (pNTCHDR->nWizardId == WIZARD_ID_NET)
+		m_NetworkMgr.NotifyTask(pNTCHDR);
+
 	return TRUE;
 }

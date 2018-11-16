@@ -21,11 +21,11 @@
                 </HorizontalLayout>
                 <HorizontalLayout name="HLayoutCenter" pos="0,0,0,90" height="90">
                     <HorizontalLayout name="HLayoutFace" pos="0,0,90,90" width="90" height="90">
-                        <Button name="BtnFace" tooltip="修改头像" float="true" pos="4,4,86,86" bkimage="picture_.png" textcolor="#FFFF0000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;UserFace.bmp&apos; dest=&apos;1,1,81,81&apos;" />
+                        <Button name="BtnFace" tooltip="修改头像" float="true" pos="4,4,86,86"  textcolor="#FFFF0000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;UserFace.bmp&apos; dest=&apos;12,12,70,70&apos;" bkimage="file=&apos;bmp7016.bmp&apos; dest=&apos;1,1,81,81&apos;" />
                     </HorizontalLayout>
                     <VerticalLayout name="VLayoutUserInfo">
                         <HorizontalLayout name="HorizontalLayoutUI1" pos="0,0,127,30" width="127" height="30">
-                            <Text name="LabelUserName" textid="STRING_LABEL_MAN" pos="5,8,60,38" height="30" maxheight="30" maxwidth="100" textpadding="2,0,2,0" textcolor="#00FFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
+                            <Label name="LabelUserName" textid="STRING_LABEL_MAN" autocalcwidth="true" height="30" maxheight="30" maxwidth="80" textpadding="2,0,2,0" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" font="0" />
                             <HorizontalLayout name="HorizontalLayoutUI5" pos="0,0,27,30" width="27" height="30">
                                 <Button name="BtnStatus" tooltip="状态" float="true" pos="3,6,23,26" bkimage="file=&apos;imonline.png&apos; dest=&apos;4,4,16,16&apos;" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;imonline.png&apos; dest=&apos;4,4,16,16&apos;" hotimage="btn_hover.png" pushedimage="btn_press.png" />
                             </HorizontalLayout>

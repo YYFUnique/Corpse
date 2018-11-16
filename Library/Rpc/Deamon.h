@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Thu Mar 29 11:45:53 2018
+/* at Tue Aug 14 15:30:17 2018
  */
 /* Compiler settings for Deamon.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -59,6 +59,9 @@ void RpcUserAppExitNotify(
 
 void RpcSetService( 
     /* [in] */ unsigned long dwType);
+
+void RpcNewMonitorAppInfo( 
+    /* [string][in] */ const unsigned char *lpszFileName);
 
 
 extern handle_t DEAMON_Binding;

@@ -25,12 +25,16 @@ namespace NetCore
 		ZeroMemory(&m_Addr, sizeof(IN_ADDR));
 	}
 
+	IPv4AddressImpl::IPv4AddressImpl(unsigned prefix)
+	{
+		UINT nAddr = (prefix == 32) ? 0xffffffff : ~(0xffffffff >> prefix);
+		m_Addr.s_addr = htonl(nAddr);
+	}
+
 	IPv4AddressImpl::IPv4AddressImpl(const void* pAddr)
 	{
 		memcpy(&m_Addr, pAddr, sizeof(IN_ADDR));
 	}
-
-	//IPv4AddressImpl::IPv4AddressImpl()
 
 	IPv4AddressImpl::IPv4AddressImpl(const IPv4AddressImpl& Addr)
 	{
@@ -238,6 +242,24 @@ namespace NetCore
 		: m_nScope(0)
 	{
 		ZeroMemory(&m_Addr, sizeof(IN6_ADDR));
+	}
+
+	IPv6AddressImpl::IPv6AddressImpl(unsigned prefix)
+		: m_nScope(0)
+	{
+		unsigned i = 0;
+		for (; prefix >= 16; ++i, prefix -= 16) 
+		{
+			m_Addr.s6_addr16[i] = 0xffff;
+		}
+		if (prefix > 0)
+		{
+			m_Addr.s6_addr16[i++] = htonl(~(0xffff >> prefix));
+		}
+		while (i < 8)
+		{
+			m_Addr.s6_addr16[i++] = 0;
+		}
 	}
 
 	IPv6AddressImpl::IPv6AddressImpl(const void* pAddr)

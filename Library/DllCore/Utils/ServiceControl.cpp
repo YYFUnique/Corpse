@@ -668,12 +668,12 @@ BOOL GetServiceConfig(LPCTSTR lpszServiceName,LS_SERVICE_CONFIG& ServiceConfig)
 		}
 
 		DWORD dwBytesNeeded,dwBufSize;
-		if (QueryServiceConfig(hService,NULL,0,&dwBytesNeeded) == FALSE)
+		if (QueryServiceConfig(hService, NULL, 0, &dwBytesNeeded) == FALSE)
 		{
 			if (ERROR_INSUFFICIENT_BUFFER == GetLastError())
 			{
 				dwBufSize = dwBytesNeeded;
-				lpQueryServiceConfig = (LPQUERY_SERVICE_CONFIG)LocalAlloc(LMEM_FIXED,dwBufSize);
+				lpQueryServiceConfig = (LPQUERY_SERVICE_CONFIG)LocalAlloc(LMEM_FIXED, dwBufSize);
 				if (lpQueryServiceConfig == NULL)
 				{
 					SetErrorInfo(SYSTEM_ERROR,0,_T("获取服务配置信息时动态申请内存失败"),NULL);
@@ -682,14 +682,14 @@ BOOL GetServiceConfig(LPCTSTR lpszServiceName,LS_SERVICE_CONFIG& ServiceConfig)
 			}
 			else
 			{
-				SetErrorInfo(SYSTEM_ERROR,0,_T("获取服务配置信息时查询服务(%s)信息失败"),lpszServiceName);
+				SetErrorInfo(SYSTEM_ERROR,0,_T("获取服务配置信息时查询服务(%s)信息失败"), lpszServiceName);
 				break;
 			}
 		}
 
 		if (QueryServiceConfig(hService,lpQueryServiceConfig,dwBufSize,&dwBytesNeeded) == FALSE) 
 		{
-			SetErrorInfo(SYSTEM_ERROR,0,_T("获取服务配置信息时查询服务(%s)信息失败"),lpszServiceName);
+			SetErrorInfo(SYSTEM_ERROR,0,_T("获取服务配置信息时查询服务(%s)信息失败"), lpszServiceName);
 			break;
 		}
 

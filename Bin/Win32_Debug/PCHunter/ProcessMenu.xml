@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window roundcorner="5,5">
+  <Font name="微软雅黑" size="12" bold="false" default="true" />
+  <Font name="微软雅黑" size="12" bold="true"/>
+  <Default name="Menu" value="inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='menu_bk.png' corner='30,8,8,8'&quot; mask=&quot;#FFFFFFFF&quot; hole=&quot;false&quot;" />
+  <Menu name="ProcessMenu">
+  	<MenuElement text="刷新进程列表" name="Refresh" />
+	<MenuElement text="转到服务" name="SwitchSrv" />
+	<MenuElement text="查看" name="Advanced" visible="false"/>
+	<MenuElement linetype="true" />
+	<MenuElement text="结束进程" name="Terminate" />
+	<MenuElement text="结束进程树" name="TerminateTree" />
+	<MenuElement text="强制结束进程" name="Cascade" visible="false" />
+    <MenuElement text="结束进程后删除文件" name="Horizontal" visible="false" />
+	<MenuElement linetype="true" />
+	<MenuElement text="复制进程名" name="CopyName"/>
+	<MenuElement text="复制进程路径" name="CopyPath" />
+	<MenuElement linetype="true" />
+	<MenuElement text="暂停进程运行" name="Pause" />
+	<MenuElement text="恢复进程运行" name="Resume" />
+	<MenuElement linetype="true" />
+	<MenuElement text="浏览文件" name="LookAt" />
+	<MenuElement text="查看文件属性" name="ProcessInfo" />
+	<MenuElement text="窗口置顶" name="Topmost" />
+	<!--<MenuElement linetype="true" />
+	<MenuElement text="在线搜索进程" name="ProcessInfo" />
+	<MenuElement linetype="true" />
+	<MenuElement text="导出进程列表" name="ProcessInfo" />-->
+  </Menu>
+</Window>

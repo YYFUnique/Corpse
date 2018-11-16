@@ -10,3 +10,8 @@ IVirtualWndMgr::~IVirtualWndMgr()
 {
 
 }
+
+void IVirtualWndMgr::NotifyTask(PCNTCHDR pNTCHDR)
+{
+
+}

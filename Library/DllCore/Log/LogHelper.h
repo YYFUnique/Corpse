@@ -5,8 +5,6 @@
  *  QLOG_ERR(L"I am {0},this is {1} year,you can also call me {2}") <<L"ÌìÍâ·ÉÏÉ" <<2015 <<"Tom Stiven";
  */
 
-#include <atlstr.h>
-
 #ifdef LS_STATIC_LIB_CALL
 #define DLL_API
 #elif defined  DLL_EXPORTS
@@ -15,6 +13,9 @@
 #define DLL_API __declspec(dllimport)
 #endif
 
+#pragma warning (disable : 4251)
+
+#include <atlstr.h>
 #include "../Sync/SyncLock.h"
 
 typedef enum tagLOG_LEVEL
@@ -49,12 +50,17 @@ public:
 	~QLogHelper();
 
 public:
+	void VLog(LPCTSTR lpszFormat,...);
 	void VLog(LOG_LEVEL LogLevel, LPCTSTR lpszFormat,...);
+	void VLogDbg(LPCTSTR lpszFormat, ...);
+	static void SetDbgMode(BOOL bEnable = TRUE);
 private:	
+	BOOL			m_bLogToFile;
 	LONG			m_nFileLine;
 	CString			m_strFileName;
 	CString			m_strLogInfo;
 	LOG_LEVEL	m_LogLevel;
+	static BOOL m_bDbg;
 };
 
 #define QLOG_INFO(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_INFO, fmt, ##__VA_ARGS__)
@@ -62,3 +68,12 @@ private:
 #define QLOG_APP(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_APP, fmt, ##__VA_ARGS__)
 #define QLOG_WAR(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_WAR, fmt, ##__VA_ARGS__)
 #define QLOG_ERR(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_ERR, fmt, ##__VA_ARGS__)
+
+#ifdef _DEBUG
+#define LOG(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(fmt, ##__VA_ARGS__)
+#else
+#define LOG(fmt, ...)	((void)0)
+#endif
+
+#define LOG_PRINT(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(fmt, ##__VA_ARGS__)
+#define LOG_PRINT_DBG(fmt, ...) QLogHelper(__FILE__, __LINE__).VLogDbg(fmt, ##__VA_ARGS__)

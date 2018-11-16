@@ -7,6 +7,12 @@
 #pragma comment(lib,"shlwapi.lib")
 #pragma comment(lib, "version.lib")
 
+typedef struct _LANGANDCODEPAGE
+{
+	WORD wLanguage;
+	WORD wCodePage;
+}LANGANDCODEPAGE,*PLANGANDCODEPAGE;
+
 BOOL SHDeleteDirectory(LPCTSTR lpszPathName)
 {
 	SHFILEOPSTRUCT    shFileOp = {0};
@@ -160,6 +166,47 @@ DWORD GetFileVersion(LPCTSTR lpszFilePath)
 	}
 
 	return dwVersion;
+}
+
+BOOL GetFileVersionEx(LPCTSTR lpszFilePath, LPCTSTR lpszFileField, CString& strFileVersionInfo)
+{
+	DWORD dwVersionSize = GetFileVersionInfoSize(lpszFilePath,NULL);
+	if (dwVersionSize ==0)
+		return FALSE;
+
+	LPVOID lpData = new BYTE[dwVersionSize];
+
+	GetFileVersionInfo(lpszFilePath,0,dwVersionSize,lpData);
+
+	BYTE* pVerValue = NULL;
+	UINT nSize = 0;
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		PLANGANDCODEPAGE pLangandCodePage = NULL;
+		if (VerQueryValue(lpData,_T("\\VarFileInfo\\Translation"),(LPVOID*)&pLangandCodePage,&nSize) == FALSE)
+		{
+			SetErrorInfo(SYSTEM_ERROR,0,_T("获取文件%s版本信息时获取语言和代码页失败"),PathFindFileName(lpszFilePath));
+			break;
+		}
+
+		CString strSubBlock;
+		strSubBlock.Format(_T("\\StringFileInfo\\%04x%04x\\%s"),
+											pLangandCodePage->wLanguage, pLangandCodePage->wCodePage, lpszFileField);
+
+		if (VerQueryValue(lpData, strSubBlock, (LPVOID*)&pVerValue, &nSize) != FALSE)
+		{
+			strFileVersionInfo = CString((LPCTSTR)pVerValue, nSize*sizeof(TCHAR));
+			bSuccess = TRUE;
+			break;
+		}
+		//获取具体文件信息
+
+	} while (FALSE);
+
+	if (lpData)
+		delete[] lpData;
+	return bSuccess;
 }
 
 CString GetModuleFileVersion()

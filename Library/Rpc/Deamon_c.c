@@ -4,7 +4,7 @@
 
 
  /* File created by MIDL compiler version 7.00.0500 */
-/* at Thu Mar 29 11:45:53 2018
+/* at Tue Aug 14 15:30:17 2018
  */
 /* Compiler settings for Deamon.idl:
     Oicf, W1, Zp8, env=Win32 (32b run)
@@ -35,8 +35,8 @@
 
 #include "Deamon.h"
 
-#define TYPE_FORMAT_STRING_SIZE   3                                 
-#define PROC_FORMAT_STRING_SIZE   91                                
+#define TYPE_FORMAT_STRING_SIZE   7                                 
+#define PROC_FORMAT_STRING_SIZE   121                               
 #define EXPR_FORMAT_STRING_SIZE   1                                 
 #define TRANSMIT_AS_TABLE_SIZE    0            
 #define WIRE_MARSHAL_TABLE_SIZE   0            
@@ -134,6 +134,18 @@ void RpcSetService(
 }
 
 
+void RpcNewMonitorAppInfo( 
+    /* [string][in] */ const unsigned char *lpszFileName)
+{
+
+    NdrClientCall2(
+                  ( PMIDL_STUB_DESC  )&Deamon_StubDesc,
+                  (PFORMAT_STRING) &Deamon__MIDL_ProcFormatString.Format[90],
+                  ( unsigned char * )&lpszFileName);
+    
+}
+
+
 #if !defined(__RPC_WIN32__)
 #error  Invalid build platform for this stub.
 #endif
@@ -223,6 +235,29 @@ static const Deamon_MIDL_PROC_FORMAT_STRING Deamon__MIDL_ProcFormatString =
 /* 88 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
+	/* Procedure RpcNewMonitorAppInfo */
+
+/* 90 */	0x32,		/* FC_BIND_PRIMITIVE */
+			0x48,		/* Old Flags:  */
+/* 92 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 96 */	NdrFcShort( 0x3 ),	/* 3 */
+/* 98 */	NdrFcShort( 0x4 ),	/* x86 Stack size/offset = 4 */
+/* 100 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 102 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 104 */	0x42,		/* Oi2 Flags:  clt must size, has ext, */
+			0x1,		/* 1 */
+/* 106 */	0x8,		/* 8 */
+			0x1,		/* Ext Flags:  new corr desc, */
+/* 108 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 110 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 112 */	NdrFcShort( 0x0 ),	/* 0 */
+
+	/* Parameter lpszFileName */
+
+/* 114 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
+/* 116 */	NdrFcShort( 0x0 ),	/* x86 Stack size/offset = 0 */
+/* 118 */	NdrFcShort( 0x4 ),	/* Type Offset=4 */
+
 			0x0
         }
     };
@@ -232,6 +267,11 @@ static const Deamon_MIDL_TYPE_FORMAT_STRING Deamon__MIDL_TypeFormatString =
         0,
         {
 			NdrFcShort( 0x0 ),	/* 0 */
+/*  2 */	
+			0x11, 0x8,	/* FC_RP [simple_pointer] */
+/*  4 */	
+			0x22,		/* FC_C_CSTRING */
+			0x5c,		/* FC_PAD */
 
 			0x0
         }
@@ -241,7 +281,8 @@ static const unsigned short Deamon_FormatStringOffsetTable[] =
     {
     0,
     30,
-    60
+    60,
+    90
     };
 
 

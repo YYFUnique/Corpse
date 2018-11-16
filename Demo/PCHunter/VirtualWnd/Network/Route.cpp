@@ -150,3 +150,8 @@ BOOL CRoute::GetIpAddress(CMibIpAddressList& MibIpAddress)
 
 	return bSuccess;
 }
+
+void CRoute::NotifyTask(PCNTCHDR pNTCHDR)
+{
+
+}

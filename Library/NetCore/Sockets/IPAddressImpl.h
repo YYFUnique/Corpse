@@ -45,6 +45,7 @@ namespace NetCore
 	{
 	public:
 		IPv4AddressImpl();
+		IPv4AddressImpl(unsigned prefix);
 		IPv4AddressImpl(const void* pAddr);
 		//IPv4AddressImpl()
 		IPv4AddressImpl(const IPv4AddressImpl& Addr);
@@ -92,6 +93,7 @@ namespace NetCore
 	{
 	public:
 		IPv6AddressImpl();
+		IPv6AddressImpl(unsigned prefix);
 		IPv6AddressImpl(const void* pAddr);
 		IPv6AddressImpl(const IPv6AddressImpl* pAddr);
 		IPv6AddressImpl(const IPv6AddressImpl& Addr);
@@ -131,7 +133,7 @@ namespace NetCore
 	public:
 		static IPv6AddressImpl Parse(LPCTSTR lpszAddr);
 	private:
-		IN6_ADDR m_Addr;
+		IN6_ADDR	m_Addr;
 		UINT			m_nScope;
 	};
 #endif

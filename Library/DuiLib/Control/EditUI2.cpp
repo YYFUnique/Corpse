@@ -250,6 +250,7 @@ namespace DuiLib
 			if (IsEnabled()){
 				m_nSelStart = 0;
 				m_nCaretPos = m_sText.GetLength();
+				m_pManager->SendNotify(this, DUI_MSGTYPE_DBCLICK, event.wParam, event.lParam);
 				Invalidate();
 			}
 			return;
@@ -868,17 +869,14 @@ namespace DuiLib
 	{
 		static DWORD dwOffset = 0;
 
-		if (m_nCaretPos == 0 ||sText.IsEmpty())
+		if (m_nCaretPos == 0 || sText.IsEmpty())
 		{
-			/*CDuiString strText = _T("EditUI");
-			CalcTextRect(hDC,strText,m_rcCaret,0,1);
-			m_rcCaret.right = m_rcCaret.left + m_nCaretWidth;*/
 			RECT rcText=m_rcItem;
 			rcText.left += m_rcTextPadding.left;
 			rcText.top += m_rcTextPadding.top;
 			rcText.right -= m_rcTextPadding.right;
 			rcText.bottom -= m_rcTextPadding.bottom;
-			CRenderEngine::DrawText(hDC,m_pManager,rcText,sText,0,m_iFont,m_uTextStyle|DT_CALCRECT);
+			CRenderEngine::DrawText(hDC, m_pManager, rcText, sText, 0, m_iFont, m_uTextStyle|DT_CALCRECT);
 			m_rcCaret.left = rcText.left;
 			m_rcCaret.right = m_rcCaret.left + m_nCaretWidth;
 			m_rcCaret.top = rcText.top;

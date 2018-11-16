@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "RcpDeamon.h"
 #include "Rpc/Deamon.h"
+#include "../AppMonitor.h"
 
 #ifdef UNICODE
 #define RPC_TSTR RPC_WSTR
@@ -77,4 +78,20 @@ void RpcSetService(
 				   /* [in] */ unsigned long dwType)
 {
 
+}
+
+void RpcNewMonitorAppInfo( 
+					/* [string][in] */ const unsigned char *lpszFileName)
+{
+	CAppMonitor* pMonitor = CAppMonitor::GetInstance();
+	if (pMonitor == NULL)
+		return;
+
+	APPMONITOR_INFO AppMonitor;
+	AppMonitor.strFilePath = lpszFileName;
+	if (PathFileExists(AppMonitor.strFilePath) == FALSE)
+		return;
+
+	AppMonitor.strProcessName = PathFindFileName(AppMonitor.strFilePath);
+	pMonitor->AddMonitorAppInfo(AppMonitor);
 }

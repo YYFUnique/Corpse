@@ -177,6 +177,16 @@ namespace DuiLib
 		return m_dwHotTextColor;
 	}
 
+	void CButtonUI::SetPushedBkColor(DWORD dwColor)
+	{
+		m_dwPushedBkColor = dwColor;
+	}
+
+	DWORD CButtonUI::GetPushedBkColor() const
+	{
+		return m_dwPushedBkColor;
+	}
+
 	void CButtonUI::SetPushedTextColor(DWORD dwColor)
 	{
 		m_dwPushedTextColor = dwColor;
@@ -350,6 +360,13 @@ namespace DuiLib
 			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
 			SetHotTextColor(clrColor);
 		}
+		else if( _tcscmp(pstrName, _T("pushedbkcolor")) == 0 )
+		{
+			if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
+			LPTSTR pstr = NULL;
+			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
+			SetPushedBkColor(clrColor);
+		}
 		else if( _tcscmp(pstrName, _T("pushedtextcolor")) == 0 )
 		{
 			if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
@@ -431,6 +448,10 @@ namespace DuiLib
 					return;
 				}
 				else goto Label_ForeImage;
+			}
+			else if(m_dwPushedBkColor != 0) {
+				CRenderEngine::DrawColor(hDC, m_rcPaint, GetAdjustColor(m_dwPushedBkColor));
+				return;
 			}
 		}
 		else if( (m_uButtonState & UISTATE_HOT) != 0 ) {

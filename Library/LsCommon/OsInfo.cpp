@@ -157,27 +157,27 @@ DWORD AfxGetTotalMem()
 	return dwTotalMem;
 }
 
-CAMERA_INFO GetCameraInfo()
-{
-	return NoCamera;
-}
+//CAMERA_INFO GetCameraInfo()
+//{
+//	return NoCamera;
+//}
 
-CString GetCameraDescribeInfo(int CameraInfo)
-{
-	CString strCameraInfo;
-	switch(CameraInfo)
-	{
-		case InstallCamera:
-			strCameraInfo = _T("有");
-			break;
-		case NoCameraDriver:
-			strCameraInfo = _T("未安装驱动");
-			break;
-		default:
-			strCameraInfo = _T("无");
-	}
-	return strCameraInfo;
-}
+//CString GetCameraDescribeInfo(int CameraInfo)
+//{
+//	CString strCameraInfo;
+//	switch(CameraInfo)
+//	{
+//		case InstallCamera:
+//			strCameraInfo = _T("有");
+//			break;
+//		case NoCameraDriver:
+//			strCameraInfo = _T("未安装驱动");
+//			break;
+//		default:
+//			strCameraInfo = _T("无");
+//	}
+//	return strCameraInfo;
+//}
 
 DWORD GetServerPack()
 {
