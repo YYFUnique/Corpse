@@ -9,11 +9,14 @@ public:
 	~CProcess();
 
 public:
+	void NotifyTask(PCNTCHDR pNTCHDR);
 	void SetPaintMagager(CPaintManagerUI *pPaintMgr);
+	void OnProcessMenu(CControlUI* pControl);
 protected:
 	void CreateProcessItem(CListUI* pList, const TListInfoUI* pListInfo, const PROCESS_ITEM_INFO& ProcessInfo);
 protected:
 	DUI_DECLARE_MESSAGE_MAP()
+	void OnMenu(TNotifyUI& msg);
 	void OnRefresh(TNotifyUI& msg);
 	void OnTimerEx(TNotifyUI& msg);
 	void OnLoadItem(TNotifyUI& msg);

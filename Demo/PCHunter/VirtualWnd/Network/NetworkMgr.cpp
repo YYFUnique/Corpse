@@ -76,3 +76,35 @@ void CNetworkMgr::OnRouteInfo(CControlUI* pControl)
 {
 	m_Route.OnRouteInfo(pControl);
 }
+
+void CNetworkMgr::NotifyTask(PCNTCHDR pNTCHDR)
+{
+	CVerticalLayoutUI* pVLayoutTask = (CVerticalLayoutUI*)m_pPaintManager->FindControl(_T("VLayoutNet"));
+	if (pVLayoutTask == NULL)
+		return;
+
+	COptionUI* pTabWizard = (COptionUI*)pVLayoutTask->GetItemAt(GetTabViewIndex(pNTCHDR->strTabTo));
+	if (pTabWizard == NULL)
+		return;
+	pTabWizard->Selected(TRUE);
+
+	if (pNTCHDR->strTabTo.CompareNoCase(VIRTUAL_WND_ADAPTER) == 0)
+	{
+	}
+	else if (pNTCHDR->strTabTo.CompareNoCase(VIRTUAL_WND_ROUTE) == 0)
+	{
+		m_Route.NotifyTask(pNTCHDR);
+	}
+}
+
+int CNetworkMgr::GetTabViewIndex(LPCTSTR lpszTabName) const
+{
+	LPCTSTR lpszVirtualName[] = {VIRTUAL_WND_ADAPTER, VIRTUAL_WND_CONNECT, VIRTUAL_WND_ROUTE};
+	for (int n=0; n<_countof(lpszVirtualName); ++n)
+	{
+		if (_tcsicmp(lpszVirtualName[n], lpszTabName) == 0)
+			return n;
+	}
+
+	return 0;
+}

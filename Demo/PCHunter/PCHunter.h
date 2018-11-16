@@ -37,6 +37,7 @@ public:
 	LRESULT OnF5Down(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnTrayIcon(WPARAM wParam, LPARAM lParam);
 	LRESULT OnMenuClick(WPARAM wParam, LPARAM lParam);
+	LRESULT OnTabChange(WPARAM wParam, LPARAM lParam);
 protected:
 	DUI_DECLARE_MESSAGE_MAP()
 	void OnClick(TNotifyUI& msg);

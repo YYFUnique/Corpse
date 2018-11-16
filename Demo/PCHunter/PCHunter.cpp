@@ -80,10 +80,13 @@ LRESULT CPCHunter::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 	switch(uMsg)
 	{
 		case WM_TRAYICON:
-				bRes = OnTrayIcon(wParam,lParam);
+				bRes = OnTrayIcon(wParam, lParam);
 			break;
 		case WM_MENUCLICK:
-				bRes = OnMenuClick(wParam,lParam);
+				bRes = OnMenuClick(wParam, lParam);
+			break;
+		case WM_NOTIFY_TAB_CHANGE:
+				bRes = OnTabChange(wParam, lParam);
 			break;
 		default:
 			bHandled = FALSE;
@@ -397,6 +400,8 @@ LRESULT CPCHunter::OnMenuClick(WPARAM wParam, LPARAM lParam)
 	CDuiString strMenuName = pControl->GetManager()->GetRoot()->GetName();
 	if (strMenuName == _T("AppMenu"))
 		m_TaskMgr.OnAppMenu(pControl);
+	else if (strMenuName == _T("ProcessMenu"))
+		m_TaskMgr.OnProcessMenu(pControl);
 	else if (strMenuName == _T("SvrMenu"))
 		m_TaskMgr.OnServiceMenu(pControl);
 	else if (strMenuName == _T("ScanResultMenu"))
@@ -407,5 +412,27 @@ LRESULT CPCHunter::OnMenuClick(WPARAM wParam, LPARAM lParam)
 		m_NetworkMgr.OnRouteInfo(pControl);
 	else if (strMenuName == _T("TrayMenu"))
 		m_SystemMgr.OnTrayMenu(pControl);
+	return TRUE;
+}
+
+LRESULT CPCHunter::OnTabChange(WPARAM wParam, LPARAM lParam)
+{
+	NTCHDR* pNTCHDR = (NTCHDR*)lParam;
+
+	CHorizontalLayoutUI* pTabSwitch = (CHorizontalLayoutUI*)m_PaintManager.FindControl(_T("TabSwitch"));
+	if (pTabSwitch == NULL)
+		return FALSE;
+
+	COptionUI* pWizardId = (COptionUI*)pTabSwitch->GetItemAt(pNTCHDR->nWizardId);
+	if (pWizardId == NULL)
+		return FALSE;
+
+	pWizardId->Selected(TRUE);
+
+	if (pNTCHDR->nWizardId == WIZARD_ID_TASK)
+		m_TaskMgr.NotifyTask(pNTCHDR);
+	else if (pNTCHDR->nWizardId == WIZARD_ID_NET)
+		m_NetworkMgr.NotifyTask(pNTCHDR);
+
 	return TRUE;
 }

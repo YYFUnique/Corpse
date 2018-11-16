@@ -36,6 +36,7 @@
 			<Label width="20" bkimage="file='tree_expand.png' source='0,0,16,16' dest='0,3,16,19'"/>
 		</HorizontalLayout>
 	</MenuElement>
+	<MenuElement text="转到进程" name="SwitchProcess" />
 	<MenuElement text="查看文件" name="LookAtFile" />
 	<MenuElement text="查看注册表" name="LookAtReg" />
   </Menu>

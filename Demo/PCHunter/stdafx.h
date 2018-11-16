@@ -14,7 +14,11 @@ using namespace DuiLib;
 
 #include "DllCore/Utils/DuiList.h"
 
+#define	WM_MESSAGE_BASE					(WM_USER + 0x2000)
+#define   WM_NOTIFY_TAB_CHANGE		(WM_MESSAGE_BASE + 0x1)			// 页面自定义跳转到其他页面
+
 #include "MacroDefine.h"
+#include "UserDefine.h"
 #include "WndLib.h"
 
 #define	DUI_MSGTYPE_REFRESH		_T("refresh")

@@ -343,7 +343,7 @@ void CListUI::DoEvent(TEventUI& event)
 					return;
 				}
 
-				m_pManager->SendNotify(this, DUI_MSGTYPE_INPUT, NULL, (LPARAM)&event);
+				m_pManager->SendNotify(this, DUI_MSGTYPE_KEYDOWN, NULL, (LPARAM)&event);
 			}
 		 }
        return;

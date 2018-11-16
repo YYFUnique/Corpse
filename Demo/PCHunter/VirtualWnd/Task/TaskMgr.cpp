@@ -67,7 +67,48 @@ void CTaskMgr::OnAppMenu(CControlUI* pControl)
 	m_App.OnAppMenu(pControl);
 }
 
+void	CTaskMgr::OnProcessMenu(CControlUI* pControl)
+{	
+	m_Process.OnProcessMenu(pControl);
+}
+
 void CTaskMgr::OnServiceMenu(CControlUI* pControl)
 {
 	m_Service.OnServiceMenu(pControl);
+}
+
+void CTaskMgr::NotifyTask(PCNTCHDR pNTCHDR)
+{
+	CVerticalLayoutUI* pVLayoutTask = (CVerticalLayoutUI*)m_pPaintManager->FindControl(_T("VLayoutTask"));
+	if (pVLayoutTask == NULL)
+		return;
+
+	COptionUI* pTabWizard = (COptionUI*)pVLayoutTask->GetItemAt(GetTabViewIndex(pNTCHDR->strTabTo));
+	if (pTabWizard == NULL)
+		return;
+	pTabWizard->Selected(TRUE);
+
+	if (pNTCHDR->strTabTo.CompareNoCase(VIRTUAL_WND_APP) == 0)
+	{
+	}
+	else if (pNTCHDR->strTabTo.CompareNoCase(VIRTUAL_WND_PROCESS) == 0)
+	{
+		m_Process.NotifyTask(pNTCHDR);
+	}
+	else if (pNTCHDR->strTabTo.CompareNoCase(VIRTUAL_WND_SERVICE) == 0)
+	{
+		m_Service.NotifyTask(pNTCHDR);
+	}
+}
+
+int CTaskMgr::GetTabViewIndex(LPCTSTR lpszTabName) const
+{
+	LPCTSTR lpszVirtualName[] = {VIRTUAL_WND_APP, VIRTUAL_WND_PROCESS, VIRTUAL_WND_SERVICE};
+	for (int n=0; n<_countof(lpszVirtualName); ++n)
+	{
+		if (_tcsicmp(lpszVirtualName[n], lpszTabName) == 0)
+			return n;
+	}
+
+	return 0;
 }

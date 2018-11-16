@@ -7,12 +7,15 @@ public:
 	~CNetworkMgr();
 
 public:
+	void NotifyTask(PCNTCHDR pNTCHDR);
 	void ClearVirtualWnd(CNotifyPump* pNotifyPump);
 	void SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPaintManager);
 public:
 	void OnHostScanMenu(CControlUI* pControl);
 	void OnRangeMenu(CControlUI* pControl);
 	void OnRouteInfo(CControlUI* pControl);
+protected:
+	int GetTabViewIndex(LPCTSTR lpszTabName) const;
 protected:
 	DUI_DECLARE_MESSAGE_MAP()
 	void OnSelectChanged( TNotifyUI &msg );

@@ -60,15 +60,15 @@ public:
 	CServices();
 	~CServices();
 public:
+	void NotifyTask(PCNTCHDR pNTCHDR);
 	void SetPaintManager(CPaintManagerUI* pPaintMgr);
-
 	void OnServiceMenu(CControlUI* pControl);
 protected:
 	DUI_DECLARE_MESSAGE_MAP()
 	void OnLoadItem(TNotifyUI& msg);
 	void OnMenu(TNotifyUI& msg);
 	// 主要重新加载服务项的启动状态，运行状态，进程ID等，如果需要其他信息，请使用全部刷新
-	void OnInput(TNotifyUI& msg);
+	void OnKeyDown(TNotifyUI& msg);
 	void OnRefresh(TNotifyUI& msg);
 protected:
 	//	菜单相应

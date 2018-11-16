@@ -4,6 +4,7 @@
 #include "DllCore/Log/LogHelper.h"
 #include "DllCore/Utils/Security.h"
 #include "Utils/TextTools.h"
+#include "DllCore/Json/JsonObject.h"
 
 #define SERVICES_NOTIFY_NAME		_T("Windows服务管理工具")
 
@@ -20,6 +21,7 @@
 #define	SERVICES_MENU_FILE_PATH			_T("FilePath")
 #define	SERVICES_MENU_DELETE				_T("DeleteSvr")
 #define	SERVICES_MENU_RELAYON			_T("RelayOnSvr")
+#define	SERVICES_MENU_PROCESS			_T("SwitchProcess")
 #define	SERVICES_MENU_LOOKFILE			_T("LookAtFile")
 #define	SERVICES_MENU_LOOKREG			_T("LookAtReg")
 
@@ -44,7 +46,7 @@ CServices::~CServices()
 
 DUI_BEGIN_MESSAGE_MAP(CServices, CNotifyPump)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_MENU, OnMenu)
-	DUI_ON_MSGTYPE(DUI_MSGTYPE_INPUT, OnInput)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_KEYDOWN, OnKeyDown)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_REFRESH, OnRefresh)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_LOADITEM, OnLoadItem)
 DUI_END_MESSAGE_MAP()
@@ -117,6 +119,27 @@ void CServices::OnServiceMenu(CControlUI* pControl)
 
 	} else if (strItemName == SERVICES_MENU_RELAYON) {
 
+	} else if (strItemName == SERVICES_MENU_PROCESS) {
+
+		UINT nSelect = pAppList->GetCurSel();
+		CFileListItemUI* pListItem = (CFileListItemUI*)pAppList->GetItemAt(nSelect);
+
+		CDuiString strPid = pListItem->GetSubControlText(_T("PID"));
+
+		if (strPid.IsEmpty())
+			return;
+
+		DWORD dwPid = _ttoi(strPid);
+		CJsonObject JsonObject;
+		JsonObject.SetValue(_T("pid"), (UINT)dwPid);
+
+		NTCHDR NotifyHDR;
+		NotifyHDR.nWizardId = WIZARD_ID_TASK;
+		NotifyHDR.strTabFrom = VIRTUAL_WND_SERVICE;
+		NotifyHDR.strTabTo = VIRTUAL_WND_PROCESS;
+		NotifyHDR.strData = JsonObject.ToString();
+
+		SendMessage(m_pPaintManager->GetPaintWindow(), WM_NOTIFY_TAB_CHANGE, NULL, (LPARAM)&NotifyHDR);
 	} else if (strItemName == SERVICES_MENU_LOOKFILE) {
 
 	} else if (strItemName == SERVICES_MENU_LOOKREG) {
@@ -353,7 +376,7 @@ void CServices::OnLoadItem(TNotifyUI& msg)
 	}
 }
 
-void CServices::OnInput(TNotifyUI& msg)
+void CServices::OnKeyDown(TNotifyUI& msg)
 {
 	DWORD dwSearchStart = 0;
 	TEventUI* pInputEvent = (TEventUI*)msg.lParam;
@@ -607,4 +630,28 @@ BOOL CServices::TerminateProcessByProcessId(DWORD dwProcessId)
 		CloseHandle(hProcess);
 
 	return bSuccess;
+}
+
+void CServices::NotifyTask(PCNTCHDR pNTCHDR)
+{
+	CJsonObject JsonObject;
+	JsonObject.FromString(pNTCHDR->strData);
+	DWORD dwProcessId = 0;
+	JsonObject.GetValue(_T("pid"), (UINT*)&dwProcessId);
+
+	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("Service"));
+	if (pList == NULL)
+		return;
+
+	for (int n=0; n<pList->GetCount(); ++n)
+	{
+		CFileListItemUI* pProcess = (CFileListItemUI*)pList->GetItemAt(n);
+		DWORD dwPid = _ttoi(pProcess->GetSubControlText(_T("PID")));
+		if (dwPid == dwProcessId)
+		{
+			pList->SelectItem(n);
+			pList->EnsureVisible(n);
+			break;
+		}
+	}
 }

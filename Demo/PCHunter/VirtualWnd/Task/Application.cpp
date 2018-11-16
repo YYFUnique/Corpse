@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "Application.h"
 #include "DllCore/Log/LogHelper.h"
+#include "DllCore/Json/JsonObject.h"
 #include <Psapi.h>
 #include <Winuser.h>
 #pragma comment(lib,"Psapi.lib")
@@ -258,6 +259,22 @@ void CApplication::OnAppMenu(CControlUI* pControl)
 				CloseHandle(hProcess);
 			}
 		}
+	}
+	else if (strItemName == _T("SwitchProcess"))
+	{
+		DWORD dwPid = 0;
+		GetWindowThreadProcessId(hWnd, &dwPid);
+
+		CJsonObject JsonObject;
+		JsonObject.SetValue(_T("pid"), (UINT)dwPid);
+
+		NTCHDR NotifyHDR;
+		NotifyHDR.nWizardId = WIZARD_ID_TASK;
+		NotifyHDR.strTabTo    = VIRTUAL_WND_PROCESS;
+		NotifyHDR.strTabFrom = VIRTUAL_WND_APP;
+		NotifyHDR.strData			= JsonObject.ToString();
+
+		SendMessage(m_pPaintManager->GetPaintWindow(), WM_NOTIFY_TAB_CHANGE, NULL, (LPARAM)&NotifyHDR);
 	}
 	else if (strItemName == _T("ProcessInfo"))
 	{
