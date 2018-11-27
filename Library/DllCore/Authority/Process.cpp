@@ -186,63 +186,63 @@ BOOL IsRunAsSystem()
 	return ProcessRunAsSystem.IsProcessRunAsSystem();
 }
 
-BOOL ModifyObjectSecurityToAccessAll(HANDLE hObject)
-{
-	DWORD dwLengthNeeded=0;PSECURITY_DESCRIPTOR pSecurityInfo=0;
-	GetKernelObjectSecurity(hObject,DACL_SECURITY_INFORMATION,0,0,&dwLengthNeeded);
-	if (dwLengthNeeded)
-	{
-		pSecurityInfo=(PSECURITY_DESCRIPTOR)new BYTE[dwLengthNeeded];
-		GetKernelObjectSecurity(hObject,DACL_SECURITY_INFORMATION,pSecurityInfo,dwLengthNeeded,&dwLengthNeeded);
-
-		BOOL bDaclPresent,bDaclDefaulted;PACL pDacl;
-		GetSecurityDescriptorDacl(pSecurityInfo,&bDaclPresent,&pDacl,&bDaclDefaulted);
-
-		TCHAR szUserName[MAX_PATH];DWORD dwBufferSize=MAX_PATH;
-		GetUserName(szUserName,&dwBufferSize);
-
-		EXPLICIT_ACCESS ea;
-		BuildExplicitAccessWithName(&ea,szUserName,TOKEN_ALL_ACCESS,GRANT_ACCESS,FALSE);
-
-		PACL pNewDacl;
-		SetEntriesInAcl(1,&ea,pDacl,&pNewDacl);
-		LocalFree(pDacl);
-
-		DWORD dwAbsoluteSDSize=0,dwAbsDaclSize=0,dwSaclSize=0,dwOwnerSize=0,dwPrimaryGroupSize=0;
-		MakeAbsoluteSD(pSecurityInfo,0,&dwAbsoluteSDSize,0,&dwAbsDaclSize,0,&dwSaclSize,0,&dwOwnerSize,0,&dwPrimaryGroupSize);
-
-		PSECURITY_DESCRIPTOR pAbsoluteSD=0;
-		PACL pAbsDacl=0,pSacl=0;PSID pOwner=0,pPrimaryGroup=0;
-		if (dwAbsoluteSDSize)
-			pAbsoluteSD=LocalAlloc(LPTR,dwAbsoluteSDSize);
-		if (dwAbsDaclSize)
-			pAbsDacl=(PACL)LocalAlloc(LPTR,dwAbsDaclSize);
-		if (dwSaclSize)
-			pSacl=(PACL)LocalAlloc(LPTR,dwSaclSize);
-		if (dwOwnerSize)
-			pOwner=(PSID)LocalAlloc(LPTR,dwOwnerSize);
-		if (dwPrimaryGroupSize)
-			pPrimaryGroup=(PSID)LocalAlloc(LPTR,dwPrimaryGroupSize);
-		MakeAbsoluteSD(pSecurityInfo,pAbsoluteSD,&dwAbsoluteSDSize,pAbsDacl,&dwAbsDaclSize,pSacl,&dwSaclSize,pOwner,&dwOwnerSize,pPrimaryGroup,&dwPrimaryGroupSize);
-		SetSecurityDescriptorDacl(pAbsoluteSD,bDaclPresent,pNewDacl,bDaclDefaulted);
-		SetKernelObjectSecurity(hObject,DACL_SECURITY_INFORMATION, pAbsoluteSD);
-
-		if (pAbsoluteSD)
-			LocalFree(pAbsoluteSD);
-		if (pAbsDacl)
-			LocalFree(pAbsDacl);
-		if (pSacl)
-			LocalFree(pSacl);
-		if (pOwner)
-			LocalFree(pOwner);
-		if (pPrimaryGroup)
-			LocalFree(pPrimaryGroup);
-	}
-
-	if (pSecurityInfo)
-		delete[] pSecurityInfo;
-	return TRUE;
-}
+//BOOL ModifyObjectSecurityToAccessAll(HANDLE hObject)
+//{
+//	DWORD dwLengthNeeded=0;PSECURITY_DESCRIPTOR pSecurityInfo=0;
+//	GetKernelObjectSecurity(hObject,DACL_SECURITY_INFORMATION,0,0,&dwLengthNeeded);
+//	if (dwLengthNeeded)
+//	{
+//		pSecurityInfo=(PSECURITY_DESCRIPTOR)new BYTE[dwLengthNeeded];
+//		GetKernelObjectSecurity(hObject,DACL_SECURITY_INFORMATION,pSecurityInfo,dwLengthNeeded,&dwLengthNeeded);
+//
+//		BOOL bDaclPresent,bDaclDefaulted;PACL pDacl;
+//		GetSecurityDescriptorDacl(pSecurityInfo,&bDaclPresent,&pDacl,&bDaclDefaulted);
+//
+//		TCHAR szUserName[MAX_PATH];DWORD dwBufferSize=MAX_PATH;
+//		GetUserName(szUserName,&dwBufferSize);
+//
+//		EXPLICIT_ACCESS ea;
+//		BuildExplicitAccessWithName(&ea,szUserName,TOKEN_ALL_ACCESS,GRANT_ACCESS,FALSE);
+//
+//		PACL pNewDacl;
+//		SetEntriesInAcl(1,&ea,pDacl,&pNewDacl);
+//		LocalFree(pDacl);
+//
+//		DWORD dwAbsoluteSDSize=0,dwAbsDaclSize=0,dwSaclSize=0,dwOwnerSize=0,dwPrimaryGroupSize=0;
+//		MakeAbsoluteSD(pSecurityInfo,0,&dwAbsoluteSDSize,0,&dwAbsDaclSize,0,&dwSaclSize,0,&dwOwnerSize,0,&dwPrimaryGroupSize);
+//
+//		PSECURITY_DESCRIPTOR pAbsoluteSD=0;
+//		PACL pAbsDacl=0,pSacl=0;PSID pOwner=0,pPrimaryGroup=0;
+//		if (dwAbsoluteSDSize)
+//			pAbsoluteSD=LocalAlloc(LPTR,dwAbsoluteSDSize);
+//		if (dwAbsDaclSize)
+//			pAbsDacl=(PACL)LocalAlloc(LPTR,dwAbsDaclSize);
+//		if (dwSaclSize)
+//			pSacl=(PACL)LocalAlloc(LPTR,dwSaclSize);
+//		if (dwOwnerSize)
+//			pOwner=(PSID)LocalAlloc(LPTR,dwOwnerSize);
+//		if (dwPrimaryGroupSize)
+//			pPrimaryGroup=(PSID)LocalAlloc(LPTR,dwPrimaryGroupSize);
+//		MakeAbsoluteSD(pSecurityInfo,pAbsoluteSD,&dwAbsoluteSDSize,pAbsDacl,&dwAbsDaclSize,pSacl,&dwSaclSize,pOwner,&dwOwnerSize,pPrimaryGroup,&dwPrimaryGroupSize);
+//		SetSecurityDescriptorDacl(pAbsoluteSD,bDaclPresent,pNewDacl,bDaclDefaulted);
+//		SetKernelObjectSecurity(hObject,DACL_SECURITY_INFORMATION, pAbsoluteSD);
+//
+//		if (pAbsoluteSD)
+//			LocalFree(pAbsoluteSD);
+//		if (pAbsDacl)
+//			LocalFree(pAbsDacl);
+//		if (pSacl)
+//			LocalFree(pSacl);
+//		if (pOwner)
+//			LocalFree(pOwner);
+//		if (pPrimaryGroup)
+//			LocalFree(pPrimaryGroup);
+//	}
+//
+//	if (pSecurityInfo)
+//		delete[] pSecurityInfo;
+//	return TRUE;
+//}
 
 //BOOL GetProcessHandle(DWORD dwPID, HANDLE& hProcess)
 //{

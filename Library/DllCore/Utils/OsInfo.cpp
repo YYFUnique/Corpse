@@ -353,7 +353,7 @@ CString GetSystemDirectory(LPCTSTR lpszFileName)
 {
 	TCHAR szSystemPath[MAX_PATH];
 	GetSystemDirectory(szSystemPath,sizeof(szSystemPath));
-	if (lpszFileName[0] != NULL)
+	if (lpszFileName != NULL && lpszFileName[0] != NULL)
 		PathCombine(szSystemPath,szSystemPath,lpszFileName);
 
 	return szSystemPath;

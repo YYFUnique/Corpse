@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "Security.h"
 #include "ErrorInfo.h"
+#include <AclAPI.h>
 
 BOOL EnablePrivilege(LPCTSTR lpszPrivilegeName, BOOL bEnable /*= TRUE*/)
 {
@@ -161,6 +162,132 @@ BOOL UnLoadViewOfModule(DWORD dwProcessId, LPVOID lpBaseAddr)
 		CloseHandle(hProcess);
 		hProcess = NULL;
 	}
+
+	return bSuccess;
+}
+
+BOOL ModifyObjectSecurityToAccessAll(HANDLE hObject)
+{
+	BOOL bSuccess = FALSE;
+	DWORD dwLen = 0;
+	PSECURITY_DESCRIPTOR pSecurityInfo = NULL;
+	do 
+	{
+		if (hObject == NULL)
+			break;
+
+		// 获取安全描述符长度
+		if (GetKernelObjectSecurity(hObject, DACL_SECURITY_INFORMATION, 0, 0, &dwLen) == FALSE)
+			break;
+
+		// 获取安全描述内容
+		pSecurityInfo = (PSECURITY_DESCRIPTOR)new BYTE[dwLen];
+		if (GetKernelObjectSecurity(hObject, DACL_SECURITY_INFORMATION, pSecurityInfo, dwLen,&dwLen) == FALSE)
+			break;
+
+		BOOL bDaclPresent,bDaclDefaulted;
+		PACL pDacl = NULL;
+		GetSecurityDescriptorDacl(pSecurityInfo, &bDaclPresent, &pDacl, &bDaclDefaulted);
+
+		TCHAR szUserName[MAX_PATH];DWORD dwBufferSize=MAX_PATH;
+		GetUserName(szUserName, &dwBufferSize);
+
+		EXPLICIT_ACCESS ea;
+		BuildExplicitAccessWithName(&ea,szUserName,TOKEN_ALL_ACCESS,GRANT_ACCESS,FALSE);
+
+		PACL pNewDacl;
+		SetEntriesInAcl(1,&ea,pDacl,&pNewDacl);
+		LocalFree(pDacl);
+
+		DWORD dwAbsoluteSDSize=0,dwAbsDaclSize=0,dwSaclSize=0,dwOwnerSize=0,dwPrimaryGroupSize=0;
+		MakeAbsoluteSD(pSecurityInfo,0,&dwAbsoluteSDSize,0,&dwAbsDaclSize,0,&dwSaclSize,0,&dwOwnerSize,0,&dwPrimaryGroupSize);
+
+		PSECURITY_DESCRIPTOR pAbsoluteSD=0;
+		PACL pAbsDacl=0,pSacl=0;PSID pOwner=0,pPrimaryGroup=0;
+		if (dwAbsoluteSDSize)
+			pAbsoluteSD=LocalAlloc(LPTR,dwAbsoluteSDSize);
+		if (dwAbsDaclSize)
+			pAbsDacl=(PACL)LocalAlloc(LPTR,dwAbsDaclSize);
+		if (dwSaclSize)
+			pSacl=(PACL)LocalAlloc(LPTR,dwSaclSize);
+		if (dwOwnerSize)
+			pOwner=(PSID)LocalAlloc(LPTR,dwOwnerSize);
+		if (dwPrimaryGroupSize)
+			pPrimaryGroup=(PSID)LocalAlloc(LPTR,dwPrimaryGroupSize);
+		MakeAbsoluteSD(pSecurityInfo,pAbsoluteSD,&dwAbsoluteSDSize,pAbsDacl,&dwAbsDaclSize,pSacl,&dwSaclSize,pOwner,&dwOwnerSize,pPrimaryGroup,&dwPrimaryGroupSize);
+		SetSecurityDescriptorDacl(pAbsoluteSD,bDaclPresent,pNewDacl,bDaclDefaulted);
+		SetKernelObjectSecurity(hObject,DACL_SECURITY_INFORMATION, pAbsoluteSD);
+
+		if (pAbsoluteSD)
+			LocalFree(pAbsoluteSD);
+		if (pAbsDacl)
+			LocalFree(pAbsDacl);
+		if (pSacl)
+			LocalFree(pSacl);
+		if (pOwner)
+			LocalFree(pOwner);
+		if (pPrimaryGroup)
+			LocalFree(pPrimaryGroup);
+
+		bSuccess = TRUE;
+	} while (FALSE);
+	
+	if (pSecurityInfo)
+		delete[] pSecurityInfo;
+
+	return bSuccess;
+}
+
+BOOL ModifyAccessToEveryOne(LPCTSTR lpszRegPath)
+{
+	BOOL bSuccess = FALSE;
+
+	PSECURITY_DESCRIPTOR pSD = NULL;
+	PACL pOldDacl = NULL;
+	PACL pNewDacl = NULL;
+
+	do
+	{
+		//获取主键的DACL     
+		DWORD dwRet = GetNamedSecurityInfo((LPTSTR)lpszRegPath, SE_REGISTRY_KEY, DACL_SECURITY_INFORMATION,     
+																			NULL, NULL, &pOldDacl, NULL, &pSD);
+		if (dwRet != ERROR_SUCCESS)
+		{
+			SetErrorInfo(SYSTEM_ERROR, dwRet, _T("获取主键DACL失败"));
+			break;
+		}     
+
+		//创建一个ACE，允许Everyone完全控制对象，并允许子对象继承此权限
+		EXPLICIT_ACCESS ea;     
+		ZeroMemory(&ea, sizeof(EXPLICIT_ACCESS));     
+		BuildExplicitAccessWithName(&ea, _T("Everyone"), KEY_ALL_ACCESS, SET_ACCESS, SUB_CONTAINERS_AND_OBJECTS_INHERIT);     
+
+		//将新的ACE加入DACL     
+		dwRet = SetEntriesInAcl(1, &ea, pOldDacl, &pNewDacl);     
+		if (dwRet !=ERROR_SUCCESS)     
+		{
+			SetErrorInfo(SYSTEM_ERROR, dwRet, _T("将新创建的ACE加入DACL失败"));
+			break;
+		}     
+
+		//更新主键的DACL     
+		dwRet = SetNamedSecurityInfo((LPTSTR)lpszRegPath, SE_REGISTRY_KEY, DACL_SECURITY_INFORMATION,     
+			NULL, NULL, pNewDacl, NULL);     
+		if (dwRet != ERROR_SUCCESS)     
+		{
+			SetErrorInfo(SYSTEM_ERROR, dwRet, _T("更新主键的DACL失败"));
+			break;
+		}
+
+		bSuccess = TRUE;
+	}while(FALSE);
+
+	if (pSD)
+		LocalFree(pSD);
+	if (pOldDacl)
+		LocalFree(pOldDacl);
+	if (pNewDacl)
+		LocalFree(pNewDacl);
 
 	return bSuccess;
 }

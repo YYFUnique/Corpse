@@ -74,7 +74,7 @@ DLL_API BOOL IsRunAsAdmin();
 /************************************************************************/
 DLL_API BOOL IsRunAsSystem();
 
-DLL_API BOOL ModifyObjectSecurityToAccessAll(HANDLE hObject);
+//DLL_API BOOL ModifyObjectSecurityToAccessAll(HANDLE hObject);
 
 //DLL_API BOOL GetProcessHandle(DWORD dwPID, HANDLE& hProcess);
 
