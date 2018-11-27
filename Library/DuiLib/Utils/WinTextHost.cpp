@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "TxtWinHost.h"
+#include "WinTextHost.h"
 
 namespace DuiLib
 {
@@ -86,12 +86,12 @@ namespace DuiLib
 		return S_OK;
 	}
 
-	HRESULT CreateHost(CControlUI* pControl, const CREATESTRUCT *pcs, CTxtWinHost **pptec)
+	HRESULT CreateHost(CControlUI* pControl, const CREATESTRUCT *pcs, CWinTextHost **pptec)
 	{
 		HRESULT hRet = E_FAIL;
 		//GdiSetBatchLimit(1);
 
-		CTxtWinHost *phost = new CTxtWinHost();
+		CWinTextHost *phost = new CWinTextHost();
 		if(phost)
 		{
 			if (phost->Init(pControl, pcs))
@@ -109,15 +109,15 @@ namespace DuiLib
 		return TRUE;
 	}
 
-	CTxtWinHost::CTxtWinHost() 
+	CWinTextHost::CWinTextHost() 
 		: m_pControl(NULL)
 	{
-		::ZeroMemory(&m_cRefs, sizeof(CTxtWinHost) - offsetof(CTxtWinHost, m_cRefs));
+		::ZeroMemory(&m_cRefs, sizeof(CWinTextHost) - offsetof(CWinTextHost, m_cRefs));
 		cchTextMost = cInitTextMax;
 		laccelpos = -1;
 	}
 
-	CTxtWinHost::~CTxtWinHost()
+	CWinTextHost::~CWinTextHost()
 	{
 		if (m_pTextSrv)
 		{
@@ -131,7 +131,7 @@ namespace DuiLib
 
 	////////////////////// Create/Init/Destruct Commands ///////////////////////
 
-	BOOL CTxtWinHost::Init(CControlUI* pControl, const CREATESTRUCT *pcs)
+	BOOL CWinTextHost::Init(CControlUI* pControl, const CREATESTRUCT *pcs)
 	{
 		BOOL bSuccess = FALSE;
 		IUnknown *pUnk = NULL;
@@ -250,7 +250,7 @@ namespace DuiLib
 	/////////////////////////////////  IUnknown ////////////////////////////////
 
 
-	HRESULT CTxtWinHost::QueryInterface(REFIID riid, void **ppvObject)
+	HRESULT CWinTextHost::QueryInterface(REFIID riid, void **ppvObject)
 	{
 		HRESULT hRet = E_NOINTERFACE;
 		*ppvObject = NULL;
@@ -265,12 +265,12 @@ namespace DuiLib
 		return hRet;
 	}
 
-	ULONG CTxtWinHost::AddRef(void)
+	ULONG CWinTextHost::AddRef(void)
 	{
 		return ++m_cRefs;
 	}
 
-	ULONG CTxtWinHost::Release(void)
+	ULONG CWinTextHost::Release(void)
 	{
 		ULONG c_Refs = --m_cRefs;
 
@@ -282,29 +282,29 @@ namespace DuiLib
 
 	/////////////////////////////////  Far East Support  //////////////////////////////////////
 
-	HIMC CTxtWinHost::TxImmGetContext(void)
+	HIMC CWinTextHost::TxImmGetContext(void)
 	{
 		return NULL;
 	}
 
-	void CTxtWinHost::TxImmReleaseContext(HIMC himc)
+	void CWinTextHost::TxImmReleaseContext(HIMC himc)
 	{
 		//::ImmReleaseContext( hwnd, himc );
 	}
 
 	//////////////////////////// ITextHost Interface  ////////////////////////////
 
-	HDC CTxtWinHost::TxGetDC()
+	HDC CWinTextHost::TxGetDC()
 	{
 		return m_pControl->GetManager()->GetPaintDC();
 	}
 
-	int CTxtWinHost::TxReleaseDC(HDC hdc)
+	int CWinTextHost::TxReleaseDC(HDC hdc)
 	{
 		return 1;
 	}
 
-	BOOL CTxtWinHost::TxShowScrollBar(INT fnBar, BOOL fShow)
+	BOOL CWinTextHost::TxShowScrollBar(INT fnBar, BOOL fShow)
 	{
 		CRichEditUI* pRich = (CRichEditUI*)m_pControl->GetInterface(DUI_CTR_RICHEDIT);
 		if (pRich == NULL)
@@ -325,7 +325,7 @@ namespace DuiLib
 		return TRUE;
 	}
 
-	BOOL CTxtWinHost::TxEnableScrollBar (INT fuSBFlags, INT fuArrowflags)
+	BOOL CWinTextHost::TxEnableScrollBar (INT fuSBFlags, INT fuArrowflags)
 	{
 		CRichEditUI* pRich = (CRichEditUI*)m_pControl->GetInterface(DUI_CTR_RICHEDIT);
 		if (pRich == NULL)
@@ -347,7 +347,7 @@ namespace DuiLib
 		return TRUE;
 	}
 
-	BOOL CTxtWinHost::TxSetScrollRange(INT fnBar, LONG nMinPos, INT nMaxPos, BOOL fRedraw)
+	BOOL CWinTextHost::TxSetScrollRange(INT fnBar, LONG nMinPos, INT nMaxPos, BOOL fRedraw)
 	{
 		CRichEditUI* pRich = (CRichEditUI*)m_pControl->GetInterface(DUI_CTR_RICHEDIT);
 		if (pRich == NULL)
@@ -376,7 +376,7 @@ namespace DuiLib
 		return TRUE;
 	}
 
-	BOOL CTxtWinHost::TxSetScrollPos (INT fnBar, INT nPos, BOOL fRedraw)
+	BOOL CWinTextHost::TxSetScrollPos (INT fnBar, INT nPos, BOOL fRedraw)
 	{
 		CRichEditUI* pRich = (CRichEditUI*)m_pControl->GetInterface(DUI_CTR_RICHEDIT);
 		if (pRich == NULL)
@@ -398,7 +398,7 @@ namespace DuiLib
 		return TRUE;
 	}
 
-	void CTxtWinHost::TxInvalidateRect(LPCRECT prc, BOOL fMode)
+	void CWinTextHost::TxInvalidateRect(LPCRECT prc, BOOL fMode)
 	{
 		if( prc == NULL ) {
 			m_pControl->GetManager()->Invalidate(rcClient);
@@ -408,14 +408,14 @@ namespace DuiLib
 		m_pControl->GetManager()->Invalidate(rc);
 	}
 
-	void CTxtWinHost::TxViewChange(BOOL fUpdate) 
+	void CWinTextHost::TxViewChange(BOOL fUpdate) 
 	{
 		CRichEditUI* pRich = (CRichEditUI*)m_pControl->GetInterface(DUI_CTR_RICHEDIT);
 
 		if(pRich != NULL && pRich->OnTxViewChanged() ) m_pControl->Invalidate();
 	}
 
-	BOOL CTxtWinHost::TxCreateCaret(HBITMAP hbmp, INT xWidth, INT yHeight)
+	BOOL CWinTextHost::TxCreateCaret(HBITMAP hbmp, INT xWidth, INT yHeight)
 	{
 		CRichEditUI* pRich = (CRichEditUI*)m_pControl->GetInterface(DUI_CTR_RICHEDIT);
 
@@ -424,7 +424,7 @@ namespace DuiLib
 		return ::CreateCaret(m_pControl->GetManager()->GetPaintWindow(), hbmp, xWidth, yHeight);
 	}
 
-	BOOL CTxtWinHost::TxShowCaret(BOOL fShow)
+	BOOL CWinTextHost::TxShowCaret(BOOL fShow)
 	{
 		CRichEditUI* pRich = (CRichEditUI*)m_pControl->GetInterface(DUI_CTR_RICHEDIT);
 
@@ -436,7 +436,7 @@ namespace DuiLib
 			return ::HideCaret(m_pControl->GetManager()->GetPaintWindow());
 	}
 
-	BOOL CTxtWinHost::TxSetCaretPos(INT x, INT y)
+	BOOL CWinTextHost::TxSetCaretPos(INT x, INT y)
 	{
 		CRichEditUI* pRich = (CRichEditUI*)m_pControl->GetInterface(DUI_CTR_RICHEDIT);
 		if (pRich != NULL && pRich->GetManager()->IsLayered())
@@ -444,105 +444,105 @@ namespace DuiLib
 		return ::SetCaretPos(x, y);
 	}
 
-	BOOL CTxtWinHost::TxSetTimer(UINT idTimer, UINT uTimeout)
+	BOOL CWinTextHost::TxSetTimer(UINT idTimer, UINT uTimeout)
 	{
 		fTimer = TRUE;
 		return m_pControl->GetManager()->SetTimer(m_pControl, idTimer, uTimeout) == TRUE;
 	}
 
-	void CTxtWinHost::TxKillTimer(UINT idTimer)
+	void CWinTextHost::TxKillTimer(UINT idTimer)
 	{
 		m_pControl->GetManager()->KillTimer(m_pControl, idTimer);
 		fTimer = FALSE;
 	}
 
-	void CTxtWinHost::TxScrollWindowEx (INT dx, INT dy, LPCRECT lprcScroll,	LPCRECT lprcClip,	HRGN hrgnUpdate, LPRECT lprcUpdate,	UINT fuScroll)	
+	void CWinTextHost::TxScrollWindowEx (INT dx, INT dy, LPCRECT lprcScroll,	LPCRECT lprcClip,	HRGN hrgnUpdate, LPRECT lprcUpdate,	UINT fuScroll)	
 	{
 		return;
 	}
 
-	void CTxtWinHost::TxSetCapture(BOOL fCapture)
+	void CWinTextHost::TxSetCapture(BOOL fCapture)
 	{
 		if (fCapture) m_pControl->GetManager()->SetCapture();
 		else m_pControl->GetManager()->ReleaseCapture();
 		fCaptured = fCapture;
 	}
 
-	void CTxtWinHost::TxSetFocus()
+	void CWinTextHost::TxSetFocus()
 	{
 		m_pControl->SetFocus();
 	}
 
-	void CTxtWinHost::TxSetCursor(HCURSOR hcur,	BOOL fText)
+	void CWinTextHost::TxSetCursor(HCURSOR hcur,	BOOL fText)
 	{
 		::SetCursor(hcur);
 	}
 
-	BOOL CTxtWinHost::TxScreenToClient(LPPOINT lppt)
+	BOOL CWinTextHost::TxScreenToClient(LPPOINT lppt)
 	{
 		return ::ScreenToClient(m_pControl->GetManager()->GetPaintWindow(), lppt);	
 	}
 
-	BOOL CTxtWinHost::TxClientToScreen(LPPOINT lppt)
+	BOOL CWinTextHost::TxClientToScreen(LPPOINT lppt)
 	{
 		return ::ClientToScreen(m_pControl->GetManager()->GetPaintWindow(), lppt);
 	}
 
-	HRESULT CTxtWinHost::TxActivate(LONG *plOldState)
+	HRESULT CWinTextHost::TxActivate(LONG *plOldState)
 	{
 		return S_OK;
 	}
 
-	HRESULT CTxtWinHost::TxDeactivate(LONG lNewState)
+	HRESULT CWinTextHost::TxDeactivate(LONG lNewState)
 	{
 		return S_OK;
 	}
 
-	HRESULT CTxtWinHost::TxGetClientRect(LPRECT prc)
+	HRESULT CWinTextHost::TxGetClientRect(LPRECT prc)
 	{
 		*prc = rcClient;
 		GetControlRect(prc);
 		return NOERROR;
 	}
 
-	HRESULT CTxtWinHost::TxGetViewInset(LPRECT prc) 
+	HRESULT CWinTextHost::TxGetViewInset(LPRECT prc) 
 	{
 		prc->left = prc->right = prc->top = prc->bottom = 0;
 		return NOERROR;	
 	}
 
-	HRESULT CTxtWinHost::TxGetCharFormat(const CHARFORMATW **ppCF)
+	HRESULT CWinTextHost::TxGetCharFormat(const CHARFORMATW **ppCF)
 	{
 		*ppCF = &cf;
 		return NOERROR;
 	}
 
-	HRESULT CTxtWinHost::TxGetParaFormat(const PARAFORMAT **ppPF)
+	HRESULT CWinTextHost::TxGetParaFormat(const PARAFORMAT **ppPF)
 	{
 		*ppPF = &pf;
 		return NOERROR;
 	}
 
-	COLORREF CTxtWinHost::TxGetSysColor(int nIndex) 
+	COLORREF CWinTextHost::TxGetSysColor(int nIndex) 
 	{
 		DWORD dwColor = ::GetSysColor(nIndex);
 		CRenderEngine::CheckAlphaColor(dwColor);
 		return dwColor;
 	}
 
-	HRESULT CTxtWinHost::TxGetBackStyle(TXTBACKSTYLE *pstyle)
+	HRESULT CWinTextHost::TxGetBackStyle(TXTBACKSTYLE *pstyle)
 	{
 		*pstyle = !fTransparent ? TXTBACK_OPAQUE : TXTBACK_TRANSPARENT;
 		return NOERROR;
 	}
 
-	HRESULT CTxtWinHost::TxGetMaxLength(DWORD *pLength)
+	HRESULT CWinTextHost::TxGetMaxLength(DWORD *pLength)
 	{
 		*pLength = cchTextMost;
 		return NOERROR;
 	}
 
-	HRESULT CTxtWinHost::TxGetScrollBars(DWORD *pdwScrollBar)
+	HRESULT CWinTextHost::TxGetScrollBars(DWORD *pdwScrollBar)
 	{
 		*pdwScrollBar =  dwStyle & (WS_VSCROLL | WS_HSCROLL | ES_AUTOVSCROLL | 
 			ES_AUTOHSCROLL | ES_DISABLENOSCROLL);
@@ -550,7 +550,7 @@ namespace DuiLib
 		return NOERROR;
 	}
 
-	HRESULT CTxtWinHost::TxGetPasswordChar(TCHAR *pch)
+	HRESULT CWinTextHost::TxGetPasswordChar(TCHAR *pch)
 	{
 #ifdef _UNICODE
 		*pch = chPasswordChar;
@@ -560,23 +560,23 @@ namespace DuiLib
 		return NOERROR;
 	}
 
-	HRESULT CTxtWinHost::TxGetAcceleratorPos(LONG *pcp)
+	HRESULT CWinTextHost::TxGetAcceleratorPos(LONG *pcp)
 	{
 		*pcp = laccelpos;
 		return S_OK;
 	} 										   
 
-	HRESULT CTxtWinHost::OnTxCharFormatChange(const CHARFORMATW *pcf)
+	HRESULT CWinTextHost::OnTxCharFormatChange(const CHARFORMATW *pcf)
 	{
 		return S_OK;
 	}
 
-	HRESULT CTxtWinHost::OnTxParaFormatChange(const PARAFORMAT *ppf)
+	HRESULT CWinTextHost::OnTxParaFormatChange(const PARAFORMAT *ppf)
 	{
 		return S_OK;
 	}
 
-	HRESULT CTxtWinHost::TxGetPropertyBits(DWORD dwMask, DWORD *pdwBits) 
+	HRESULT CWinTextHost::TxGetPropertyBits(DWORD dwMask, DWORD *pdwBits) 
 	{
 		DWORD dwProperties = 0;
 
@@ -630,7 +630,7 @@ namespace DuiLib
 	}
 
 
-	HRESULT CTxtWinHost::TxNotify(DWORD iNotify, void *pv)
+	HRESULT CWinTextHost::TxNotify(DWORD iNotify, void *pv)
 	{
 		// 这里没有对 m_pControl控件有效性进行判断
 		CRichEditUI* pRich = (CRichEditUI*)m_pControl->GetInterface(DUI_CTR_RICHEDIT);
@@ -658,31 +658,31 @@ namespace DuiLib
 		return S_OK;
 	}
 
-	HRESULT CTxtWinHost::TxGetExtent(LPSIZEL lpExtent)
+	HRESULT CWinTextHost::TxGetExtent(LPSIZEL lpExtent)
 	{
 		*lpExtent = sizelExtent;
 		return S_OK;
 	}
 
-	HRESULT	CTxtWinHost::TxGetSelectionBarWidth (LONG *plSelBarWidth)
+	HRESULT	CWinTextHost::TxGetSelectionBarWidth (LONG *plSelBarWidth)
 	{
 		*plSelBarWidth = lSelBarWidth;
 		return S_OK;
 	}
 
-	void CTxtWinHost::SetWordWrap(BOOL fWordWrap)
+	void CWinTextHost::SetWordWrap(BOOL fWordWrap)
 	{
 		fWordWrap = fWordWrap;
 		if (m_pTextSrv)
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_WORDWRAP, fWordWrap ? TXTBIT_WORDWRAP : 0);
 	}
 
-	BOOL CTxtWinHost::GetReadOnly()
+	BOOL CWinTextHost::GetReadOnly()
 	{
 		return (dwStyle & ES_READONLY) != 0;
 	}
 
-	void CTxtWinHost::SetReadOnly(BOOL fReadOnly)
+	void CWinTextHost::SetReadOnly(BOOL fReadOnly)
 	{
 		if (fReadOnly)
 			dwStyle |= ES_READONLY;
@@ -693,7 +693,7 @@ namespace DuiLib
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_READONLY, fReadOnly ? TXTBIT_READONLY : 0);
 	}
 
-	void CTxtWinHost::SetFont(HFONT hFont) 
+	void CWinTextHost::SetFont(HFONT hFont) 
 	{
 		if( hFont == NULL ) return;
 		LOGFONT lf;
@@ -719,7 +719,7 @@ namespace DuiLib
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_CHARFORMATCHANGE, TXTBIT_CHARFORMATCHANGE);
 	}
 
-	void CTxtWinHost::SetColor(DWORD dwColor)
+	void CWinTextHost::SetColor(DWORD dwColor)
 	{
 		CRenderEngine::CheckAlphaColor(dwColor);
 		cf.crTextColor = RGB(GetBValue(dwColor), GetGValue(dwColor), GetRValue(dwColor));
@@ -727,19 +727,19 @@ namespace DuiLib
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_CHARFORMATCHANGE, TXTBIT_CHARFORMATCHANGE);
 	}
 
-	SIZEL* CTxtWinHost::GetExtent() 
+	SIZEL* CWinTextHost::GetExtent() 
 	{
 		return &sizelExtent;
 	}
 
-	void CTxtWinHost::SetExtent(SIZEL *psizelExtent) 
+	void CWinTextHost::SetExtent(SIZEL *psizelExtent) 
 	{ 
 		sizelExtent = *psizelExtent; 
 		if (m_pTextSrv)
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_EXTENTCHANGE, TXTBIT_EXTENTCHANGE);
 	}
 
-	void CTxtWinHost::LimitText(LONG nChars)
+	void CWinTextHost::LimitText(LONG nChars)
 	{
 		cchTextMost = nChars;
 		if( cchTextMost <= 0 ) cchTextMost = cInitTextMax;
@@ -747,17 +747,17 @@ namespace DuiLib
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_MAXLENGTHCHANGE, TXTBIT_MAXLENGTHCHANGE);
 	}
 
-	BOOL CTxtWinHost::IsCaptured()
+	BOOL CWinTextHost::IsCaptured()
 	{
 		return fCaptured;
 	}
 
-	BOOL CTxtWinHost::GetAllowBeep()
+	BOOL CWinTextHost::GetAllowBeep()
 	{
 		return fAllowBeep;
 	}
 
-	void CTxtWinHost::SetAllowBeep(BOOL fAllowBeep)
+	void CWinTextHost::SetAllowBeep(BOOL fAllowBeep)
 	{
 		fAllowBeep = fAllowBeep;
 
@@ -765,12 +765,12 @@ namespace DuiLib
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_ALLOWBEEP, fAllowBeep ? TXTBIT_ALLOWBEEP : 0);
 	}
 
-	WORD CTxtWinHost::GetDefaultAlign()
+	WORD CWinTextHost::GetDefaultAlign()
 	{
 		return pf.wAlignment;
 	}
 
-	void CTxtWinHost::SetDefaultAlign(WORD wNewAlign)
+	void CWinTextHost::SetDefaultAlign(WORD wNewAlign)
 	{
 		pf.wAlignment = wNewAlign;
 
@@ -779,31 +779,31 @@ namespace DuiLib
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_PARAFORMATCHANGE, 0);
 	}
 
-	BOOL CTxtWinHost::GetRichTextFlag()
+	BOOL CWinTextHost::GetRichTextFlag()
 	{
 		return fRich;
 	}
 
-	void CTxtWinHost::SetRichTextFlag(BOOL fNew)
+	void CWinTextHost::SetRichTextFlag(BOOL fNew)
 	{
 		fRich = fNew;
 		if (m_pTextSrv)
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_RICHTEXT, fNew ? TXTBIT_RICHTEXT : 0);
 	}
 
-	LONG CTxtWinHost::GetDefaultLeftIndent()
+	LONG CWinTextHost::GetDefaultLeftIndent()
 	{
 		return pf.dxOffset;
 	}
 
-	void CTxtWinHost::SetDefaultLeftIndent(LONG lNewIndent)
+	void CWinTextHost::SetDefaultLeftIndent(LONG lNewIndent)
 	{
 		pf.dxOffset = lNewIndent;
 		if (m_pTextSrv)
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_PARAFORMATCHANGE, 0);
 	}
 
-	void CTxtWinHost::SetClientRect(RECT *prc) 
+	void CWinTextHost::SetClientRect(RECT *prc) 
 	{
 		rcClient = *prc;
 
@@ -816,7 +816,7 @@ namespace DuiLib
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_VIEWINSETCHANGE, TXTBIT_VIEWINSETCHANGE);
 	}
 
-	BOOL CTxtWinHost::SetSaveSelection(BOOL f_SaveSelection)
+	BOOL CWinTextHost::SetSaveSelection(BOOL f_SaveSelection)
 	{
 		BOOL fResult = f_SaveSelection;
 
@@ -829,7 +829,7 @@ namespace DuiLib
 		return fResult;		
 	}
 
-	HRESULT	CTxtWinHost::OnTxInPlaceDeactivate()
+	HRESULT	CWinTextHost::OnTxInPlaceDeactivate()
 	{
 		HRESULT hRet = m_pTextSrv->OnTxInPlaceDeactivate();
 
@@ -839,7 +839,7 @@ namespace DuiLib
 		return hRet;
 	}
 
-	HRESULT	CTxtWinHost::OnTxInPlaceActivate(LPCRECT prcClient)
+	HRESULT	CWinTextHost::OnTxInPlaceActivate(LPCRECT prcClient)
 	{
 		fInplaceActive = TRUE;
 
@@ -851,7 +851,7 @@ namespace DuiLib
 		return hRet;
 	}
 
-	BOOL CTxtWinHost::DoSetCursor(RECT *prc, POINT *pt)
+	BOOL CWinTextHost::DoSetCursor(RECT *prc, POINT *pt)
 	{
 		RECT rc = prc ? *prc : rcClient;
 
@@ -868,7 +868,7 @@ namespace DuiLib
 		return FALSE;
 	}
 
-	void CTxtWinHost::GetControlRect(LPRECT prc)
+	void CWinTextHost::GetControlRect(LPRECT prc)
 	{
 		prc->top = rcClient.top;
 		prc->bottom = rcClient.bottom;
@@ -876,7 +876,7 @@ namespace DuiLib
 		prc->right = rcClient.right;
 	}
 
-	void CTxtWinHost::SetTransparent(BOOL f_Transparent)
+	void CWinTextHost::SetTransparent(BOOL f_Transparent)
 	{
 		fTransparent = f_Transparent;
 
@@ -885,7 +885,7 @@ namespace DuiLib
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_BACKSTYLECHANGE, 0);
 	}
 
-	LONG CTxtWinHost::SetAccelPos(LONG l_accelpos)
+	LONG CWinTextHost::SetAccelPos(LONG l_accelpos)
 	{
 		LONG laccelposOld = l_accelpos;
 
@@ -898,7 +898,7 @@ namespace DuiLib
 		return laccelposOld;
 	}
 
-	WCHAR CTxtWinHost::SetPasswordChar(WCHAR ch_PasswordChar)
+	WCHAR CWinTextHost::SetPasswordChar(WCHAR ch_PasswordChar)
 	{
 		WCHAR chOldPasswordChar = chPasswordChar;
 
@@ -911,7 +911,7 @@ namespace DuiLib
 		return chOldPasswordChar;
 	}
 
-	void CTxtWinHost::SetDisabled(BOOL fOn)
+	void CWinTextHost::SetDisabled(BOOL fOn)
 	{
 		cf.dwMask	 |= CFM_COLOR | CFM_DISABLED;
 		cf.dwEffects |= CFE_AUTOCOLOR | CFE_DISABLED;
@@ -925,7 +925,7 @@ namespace DuiLib
 			m_pTextSrv->OnTxPropertyBitsChange(TXTBIT_CHARFORMATCHANGE, TXTBIT_CHARFORMATCHANGE);
 	}
 
-	LONG CTxtWinHost::SetSelBarWidth(LONG l_SelBarWidth)
+	LONG CWinTextHost::SetSelBarWidth(LONG l_SelBarWidth)
 	{
 		LONG lOldSelBarWidth = lSelBarWidth;
 
@@ -942,17 +942,17 @@ namespace DuiLib
 		return lOldSelBarWidth;
 	}
 
-	BOOL CTxtWinHost::GetTimerState()
+	BOOL CWinTextHost::GetTimerState()
 	{
 		return fTimer;
 	}
 
-	void CTxtWinHost::SetCharFormat(CHARFORMAT2W &c)
+	void CWinTextHost::SetCharFormat(CHARFORMAT2W &c)
 	{
 		cf = c;
 	}
 
-	void CTxtWinHost::SetParaFormat(PARAFORMAT2 &p)
+	void CWinTextHost::SetParaFormat(PARAFORMAT2 &p)
 	{
 		pf = p;
 	}

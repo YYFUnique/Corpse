@@ -12,16 +12,29 @@ namespace DuiLib
 	{
 	public:
 		CComboBoxUI();
+		~CComboBoxUI();
+	public:
 		LPCTSTR GetClass() const;
+		UINT GetControlFlags() const;
+		LPVOID GetInterface(LPCTSTR pstrName);
 
+		void DoInit();
+		void DoEvent(TEventUI& event);
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
+		CDuiString GetText() const;
 		void PaintText(HDC hDC);
+		void PaintBorder(HDC hDC);
 		void PaintStatusImage(HDC hDC);
-
+	public:
+		bool SelectItem(int iIndex, bool bTakeFocus = false);
+		void SetCaretWidth(UINT nCaretWidth);
+		void SetArrowWidth(UINT nArrowWidth);
+		void SetDigitalMode(BOOL bDigital);
+		void SetLimitLength(UINT nLimitLen);
 	protected:
-		CDuiString m_sArrowImage;
-		int        m_nArrowWidth;
+		int						m_nArrowWidth;
+		CEditTextHost*	m_pTextHost;
 	};
 }
 

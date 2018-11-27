@@ -15,12 +15,12 @@ namespace DuiLib
 	#define HIMETRIC_PER_INCH 2540
 	#endif
 
-	class UILIB_API CTxtWinHost : public ITextHost
+	class UILIB_API CWinTextHost : public ITextHost
 	{
 	public:
-		CTxtWinHost();
+		CWinTextHost();
 		BOOL Init(CControlUI* pControl , const CREATESTRUCT *pcs);
-		virtual ~CTxtWinHost();
+		virtual ~CWinTextHost();
 
 		ITextServices* GetTextServices(void) const { return m_pTextSrv; }
 		void SetClientRect(RECT *prc);
@@ -190,5 +190,5 @@ namespace DuiLib
 		WCHAR		chPasswordChar;		    // Password character
 	};
 
-	HRESULT CreateHost(CControlUI* pControl, const CREATESTRUCT *pcs, CTxtWinHost **pptec);
+	HRESULT CreateHost(CControlUI* pControl, const CREATESTRUCT *pcs, CWinTextHost **pptec);
 }

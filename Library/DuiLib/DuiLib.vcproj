@@ -314,7 +314,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Utils\TxtWinHost.cpp"
+					RelativePath=".\Utils\EditTextHost.cpp"
 					>
 				</File>
 				<File
@@ -335,6 +335,10 @@
 				</File>
 				<File
 					RelativePath=".\Utils\WinImplBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\WinTextHost.cpp"
 					>
 				</File>
 				<File
@@ -587,6 +591,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Utils\EditTextHost.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\FlashEventHandler.h"
 					>
 				</File>
@@ -600,10 +608,6 @@
 				</File>
 				<File
 					RelativePath=".\Utils\stb_image.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\TxtWinHost.h"
 					>
 				</File>
 				<File
@@ -632,6 +636,10 @@
 				</File>
 				<File
 					RelativePath=".\Utils\WinImplBase.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\WinTextHost.h"
 					>
 				</File>
 				<File

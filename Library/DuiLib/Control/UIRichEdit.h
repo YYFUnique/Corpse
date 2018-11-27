@@ -174,7 +174,7 @@ public:
 	BOOL CanPaste(UINT nFormat = 0);
 	void PasteSpecial(UINT uClipFormat, DWORD dwAspect = 0, HMETAFILE hMF = 0);
 protected:
-    CTxtWinHost* m_pTwh;
+    CWinTextHost* m_pTwh;
     bool m_bVScrollBarFixing;
     bool m_bWantTab;
     bool m_bWantReturn;
