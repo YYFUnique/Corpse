@@ -102,8 +102,9 @@
 					<!--<Text text="电脑专家" float="true" pos="380,100,500,400" textcolor="#FF000000" font="2" />-->
 					<Include source="HardNotify.xml" />
 				</VerticalLayout>
-				<VerticalLayout name="6" >
-					<Text text="电脑门诊" float="true" pos="380,100,500,400" textcolor="#FF000000" font="2" />
+				<VerticalLayout name="6" virtualwnd="security">
+					<!--<Text text="电脑门诊" float="true" pos="380,100,500,400" textcolor="#FF000000" font="2" />-->
+					<Include source="Security.xml" />
 				</VerticalLayout>
 				<VerticalLayout name="7" >
 					<Text text="软件管家" float="true" pos="380,100,500,400" textcolor="#FF000000" font="2" />

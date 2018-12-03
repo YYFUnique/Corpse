@@ -176,11 +176,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ListViewWnd.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.cpp"
+				RelativePath=".\StdAfx.cpp"
 				>
 			</File>
 		</Filter>
@@ -194,11 +198,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
+				RelativePath=".\ListViewWnd.h"
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.h"
+				RelativePath=".\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\StdAfx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Typedef.h"
 				>
 			</File>
 		</Filter>

@@ -135,6 +135,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
+				UACExecutionLevel="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -383,6 +384,18 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="Security"
+					>
+					<File
+						RelativePath=".\VirtualWnd\Security\AutoStart.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Security\SecurityMgr.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Wnd"
@@ -598,6 +611,18 @@
 					</File>
 					<File
 						RelativePath=".\VirtualWnd\System\TrayIcon.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Security"
+					>
+					<File
+						RelativePath=".\VirtualWnd\Security\AutoStart.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Security\SecurityMgr.h"
 						>
 					</File>
 				</Filter>

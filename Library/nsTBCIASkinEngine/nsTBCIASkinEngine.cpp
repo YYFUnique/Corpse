@@ -110,55 +110,6 @@ void NextPage(HWND hwndParent, int string_size, LPTSTR variables, stack_t** stac
 	}
 }
 
-void ShowMsgBox(HWND hwndParent, int string_size, LPTSTR variables, stack_t** stacktop, extra_parameters *extra)
-{
-	NSMETHOD_INIT(hwndParent);
-	{
-		TCHAR szTitle[MAX_PATH], szText[MAX_PATH];
-		popstring(szText);
-		popstring(szTitle);
-
-		BOOL bSuccess = FALSE;
-
-		do 
-		{
-			if (CPaintManagerUI::GetInstance() == NULL)
-				CPaintManagerUI::SetInstance(g_hInstance);
-
-			TBCIAMessageBox* pMessageBox = new TBCIAMessageBox(); 
-			if (pMessageBox == NULL)
-				break;
-
-			HWND hParent = NULL;
-			if (g_pMainWnd != NULL)
-				hParent = g_pMainWnd->GetHWND();
-
-			pMessageBox->Create(hParent, _T("TBCIAMessageBox"), UI_WNDSTYLE_DIALOG, WS_EX_TOOLWINDOW , 0, 0, 800, 600);
-			pMessageBox->CenterWindow(); 
-
-			CControlUI* pTitle = static_cast<CControlUI*>(pMessageBox->GetPaintManager()->FindControl(_T("Title"))); 
-			CControlUI* pTipText = static_cast<CControlUI*>(pMessageBox->GetPaintManager()->FindControl(_T("MsgText"))); 
-
-			if (pTitle != NULL) 
-				pTitle->SetText(szTitle); 
-
-			if (pTipText != NULL)
-				pTipText->SetText(szText);
-
-			if (pMessageBox->ShowModal() != IDYES)
-				break;
-
-			bSuccess = TRUE;
-		} while (FALSE);
-
-		// 返回0表示不继续执行，非0代表继续执行
-		if (bSuccess == FALSE)
-			pushint(FALSE);
-		else
-			pushint(TRUE);
-	}
-}
-
 void FindControl(HWND hwndParent, int string_size, LPTSTR variables, stack_t** stacktop, extra_parameters *extra)
 {
 	TCHAR szControlName[MAX_PATH];

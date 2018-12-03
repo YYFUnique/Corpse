@@ -5,6 +5,10 @@
     <Font name="微软雅黑" size="14" bold="false" italic="false" />
 	<Default name="Edit2" value="normalimage=&quot;file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;&quot; hotimage=&quot;file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;&quot; focusedimage=&quot;file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;&quot;" />
 	<Default name="Button" value="normalimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;&quot; hotimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;&quot; pushedimage=&quot;file=&apos;InstallBtn.png&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;&quot;" />
+	<Default name="Combo" value="textpadding=&quot;4,4,20,1&quot; itemdisabledtextcolor=&quot;0xFF6D6D6D&quot; normalimage=&quot;file=&apos;Combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;3,3,15,4&apos;&quot; hotimage=&quot;file=&apos;Combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;3,3,15,4&apos;&quot; pushedimage=&quot;file=&apos;Combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;3,3,15,4&apos;&quot; disabledimage=&quot;file=&apos;Combo.png&apos; source=&apos;0,66,100,88&apos; corner=&apos;3,3,15,4&apos;&quot;" />
+	<Default name="ComboBox" value="textpadding=&quot;4,4,1,1&quot; normalimage=&quot;file=&apos;ComboBox.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;&quot; hotimage=&quot;file=&apos;ComboBox.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;&quot; pushedimage=&quot;file=&apos;ComboBox.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot; focusedimage=&quot;file=&apos;ComboBox.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot;" />
+	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="List" value="scrollstepsize=&quot;50&quot; vscrollbar=&quot;true&quot; hscrollbar=&quot;true&quot; itemalign=&quot;left&quot; itemaltbk=&quot;true&quot; itemtextpadding=&quot;5,0,0,0&quot; itemlinecolor=&quot;#FF939393&quot;" />
     <VerticalLayout name="VLayoutTotal" pos="0,1,0,1" borderround="5,5" bkcolor="#FFFFFFFF">
         <VerticalLayout name="WinBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;">
             <VerticalLayout name="VLayoutHead" >
@@ -19,10 +23,10 @@
                     </HorizontalLayout>
                 </HorizontalLayout>
                 <HorizontalLayout name="HLayoutCenter">
-					<Label text="进程ID:" font="0" align="right" float="true" pos="5,5,80,32"/>
-					<Edit2 name="ProcessID" font="0" float="true" pos="85,7,200,32" textpadding="4,4,4,3" textcolor="#FF000000"/>
+					<Label text="进程名:" font="0" align="right" float="true" pos="5,7,80,34"/>
+					<Edit2 name="ProcessID" font="0" watertext="请输入要注入的进程名称" float="true" pos="85,7,300,32" textpadding="4,4,20,3" textcolor="#FF000000"/>
 					<Label text="动态库:" font="0" align="right" float="true" pos="5,40,80,67"/>
-					<Edit2 name="DllFile" readonly="true" font="0" float="true" pos="85,42,300,67" textpadding="4,4,4,3" textcolor="#FF000000"/>
+					<Edit2 name="DllFile" readonly="true" enabled="false" font="0" float="true" pos="85,42,300,67" textpadding="4,4,4,3" textcolor="#FF000000"/> 
 					<Button name="BtnLookup" text="浏览..." font="0" float="true" pos="305,38,380,70"/>
 					<Button name="BtnInject" text="注入" font="2" float="true" pos="85,100,300,140"/>
                 </HorizontalLayout>

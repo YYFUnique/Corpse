@@ -39,7 +39,7 @@ BYTE ShellCode[] = {
 };
 
 
-BOOL Wow64Injectx64(DWORD dwProcessid, LPCTSTR lpszFilePath, DWORD dwWaitTime /*= INFINITE*/)
+BOOL Wow64InjectX64(DWORD dwProcessid, LPCTSTR lpszFilePath, DWORD dwWaitTime /*= INFINITE*/)
 {
 	HANDLE hProcess = NULL;
 	BOOL bSuccess = FALSE;

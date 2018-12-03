@@ -76,7 +76,7 @@ namespace DuiLib
 		} else if (event.Type == UIEVENT_SETFOCUS) {
 			m_bFocused = TRUE;
 			if (IsWaterMode())
-				SetWaterMode(false);
+				SetWaterMode(FALSE);
 			
 			pManager->SetTimer(m_pOwner, IME_BLINK_TIMER_ID, GetCaretBlinkTime());
 			CreateCaret(hWnd, NULL, m_nCaretWidth, 2);
@@ -86,7 +86,7 @@ namespace DuiLib
 			m_nCaretOffset = 0;
 			m_bCaretOn = FALSE;
 			m_bFocused = FALSE;
-			if (IsWaterMode() && GetText().IsEmpty() == FALSE)
+			if (m_strTextBak.IsEmpty() && m_strWaterText.IsEmpty() == FALSE)
 				SetWaterMode(TRUE);
 	
 			pManager->KillTimer(m_pOwner, IME_BLINK_TIMER_ID);

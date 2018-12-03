@@ -11,9 +11,6 @@
 // 初始化 Duilib 界面库
 NSIS_API void InitTBCIASkinEngine(HWND hwndParent, int string_size, LPTSTR variables, stack_t** stacktop, extra_parameters *extra);
 
-// 显示对话框
-NSIS_API void ShowMsgBox(HWND hwndParent, int string_size, LPTSTR variables, stack_t** stacktop, extra_parameters *extra);
-
 NSIS_API void ShowPage(HWND hwndParent, int nStringSize, LPTSTR lpszVariables, stack_t** pStackTop, extra_parameters *extra);
 NSIS_API void BackPage(HWND hwndParent, int string_size, LPTSTR variables, stack_t** stacktop, extra_parameters *extra);
 NSIS_API void NextPage(HWND hwndParent, int string_size, LPTSTR variables, stack_t** stacktop, extra_parameters *extra);

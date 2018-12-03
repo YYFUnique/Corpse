@@ -245,8 +245,8 @@ void CHostScan::OnRangeMenu(CControlUI* pControl)
 	if (strMenuText.IsEmpty())
 		return;
 
-	CEditUI2* pStartIP = (CEditUI2*)m_pPaintManager->FindControl(_T("EditStartIP"));
-	CEditUI2* pEndIP = (CEditUI2*)m_pPaintManager->FindControl(_T("EditEndIP"));
+	CIPAddressUI* pStartIP = (CIPAddressUI*)m_pPaintManager->FindControl(_T("StartIP"));
+	CIPAddressUI* pEndIP = (CIPAddressUI*)m_pPaintManager->FindControl(_T("EndIP"));
 
 	TCHAR szNetIP[20], szBroadcastIP[20];
 	_stscanf(strMenuText, _T("%[^|]|%s"), szNetIP, szBroadcastIP);
@@ -279,7 +279,7 @@ void CHostScan::StartScan()
 
 	if (m_pThreadTaskMgr == NULL)
 	{
-		m_pThreadTaskMgr = new CThreadTaskMgr(50,(ThreadPoolTaskFun)TaskThread);
+		m_pThreadTaskMgr = new CThreadTaskMgr(50, (ThreadPoolTaskFun)TaskThread);
 		if (m_pThreadTaskMgr != NULL)
 			m_pThreadTaskMgr->RegisterNotify((LPTASKJOBRESULT_NOTIFY)OnTaskResult,(LPTASKJOBFINSH_NOTIFY)OnTaskFinsh,this);
 	}
@@ -302,8 +302,8 @@ void CHostScan::StartScan()
 			break;
 		}
 
-		CIPAddressUI* pStart = (CIPAddressUI*)m_pPaintManager->FindControl(_T("EditStartIP"));
-		CIPAddressUI* pEnd = (CIPAddressUI*)m_pPaintManager->FindControl(_T("EditEndIP"));
+		CIPAddressUI* pStart = (CIPAddressUI*)m_pPaintManager->FindControl(_T("StartIP"));
+		CIPAddressUI* pEnd = (CIPAddressUI*)m_pPaintManager->FindControl(_T("EndIP"));
 		if (pStart == NULL || pEnd == NULL)
 		{
 			strTipInfo = _T("IP地址控件初始化失败，请检查资源是否损坏");
