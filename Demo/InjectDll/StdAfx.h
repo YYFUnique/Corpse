@@ -10,8 +10,11 @@
 #include "DuiLib/UIlib.h"
 using namespace DuiLib;
 
-#ifndef __POSITION
-typedef struct __POSITION
-{
-}__POSITION,*POSITION;
-#endif
+//#ifndef __POSITION
+//typedef struct __POSITION
+//{
+//}__POSITION,*POSITION;
+//#endif
+
+#define MAX max
+#define MIN min

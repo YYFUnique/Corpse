@@ -17,6 +17,8 @@ namespace DuiLib
 		UINT GetControlFlags() const;
 		void DoInit();
 
+		CDuiString GetText() const;
+
 		void DoEvent(TEventUI& event);
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 

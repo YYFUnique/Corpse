@@ -1193,13 +1193,6 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             event.dwTimestamp = ::GetTickCount();
             pControl->Event(event);
             m_pEventClick = pControl;
-			/******************************************************************************/
-			/* 如果应用程序响应了UIEVENT_DBLCLICK对应Notify											 */
-			/*	消息切换程序焦点后，可能导致系统不会向窗口发送WM_LBUTTONUP消息  	 */
-			/******************************************************************************/
-			//HWND hCapture = GetCapture();
-			//if (hCapture == NULL || hCapture != m_hWndPaint)
-			PostMessage(m_hWndPaint, WM_LBUTTONUP, wParam, lParam);
         }
         break;
     case WM_LBUTTONUP:
@@ -1362,6 +1355,25 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             pControl->Event(event);
         }
         return true;
+	case WM_SETFOCUS:
+		{
+			if (m_pFocus != NULL) {
+				TEventUI event = {0};
+				event.Type = UIEVENT_SETFOCUS;
+				event.wParam = wParam;
+				event.lParam = lParam;
+				event.pSender = m_pFocus;
+				event.dwTimestamp = ::GetTickCount();
+				m_pFocus->Event(event);
+			}
+		}
+		break;
+	case WM_KILLFOCUS:
+		{
+			if (IsCaptured()) ReleaseCapture();
+			SetFocus(NULL);
+		}
+		break;
     case WM_NOTIFY:
         {
             LPNMHDR lpNMHDR = (LPNMHDR) lParam;
@@ -1391,7 +1403,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 	case WM_IME_COMPOSITION:
 	case WM_IME_STARTCOMPOSITION:
 		{
-			if (m_pFocus == NULL)
+			if (::GetFocus() != m_hWndPaint)
 				break;
 			TEventUI event = { 0 };
 			if (uMsg == WM_IME_COMPOSITION)
@@ -1405,9 +1417,6 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 			event.dwTimestamp = ::GetTickCount();
 			m_pFocus->Event(event);
 		}
-		break;
-	case WM_KILLFOCUS:
-			SetFocus(NULL);
 		break;
     default:
         break;
@@ -2830,8 +2839,8 @@ UINT CPaintManagerUI::MapKeyState()
 {
 	UINT uState = 0;
 	if( ::GetKeyState(VK_CONTROL) < 0 ) uState |= MK_CONTROL;
-	if( ::GetKeyState(VK_RBUTTON) < 0 ) uState |= MK_LBUTTON;
-	if( ::GetKeyState(VK_LBUTTON) < 0 ) uState |= MK_RBUTTON;
+	if( ::GetKeyState(VK_LBUTTON) < 0 ) uState |= MK_LBUTTON;
+	if( ::GetKeyState(VK_RBUTTON) < 0 ) uState |= MK_RBUTTON;
 	if( ::GetKeyState(VK_SHIFT) < 0 ) uState |= MK_SHIFT;
 	if( ::GetKeyState(VK_MENU) < 0 ) uState |= MK_ALT;
 	return uState;

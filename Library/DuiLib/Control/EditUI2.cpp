@@ -48,6 +48,11 @@ namespace DuiLib
 		m_pTextHost->SetCaretColor(m_dwCaretColor);
 	}
 
+	CDuiString CEditUI2::GetText() const
+	{
+		return m_pTextHost->GetText();
+	}
+
 	void CEditUI2::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
 		if (_tcsicmp(pstrName,_T("readonly")) == 0)	 SetReadOnly(_tcsicmp(pstrValue,_T("true")) == 0);
