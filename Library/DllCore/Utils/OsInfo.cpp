@@ -4,6 +4,9 @@
 
 #define WINDOWS_COMPUTER_PLANTFORM   ((bWow64) ? (_T("x64")) :(_T("x86")))
 
+typedef BOOL (WINAPI *FN_IsWow64Process)(HANDLE hProcess,PBOOL Wow64Process);
+typedef void   (WINAPI *FN_GetNativeSystemInfo)(LPSYSTEM_INFO);
+
 BOOL OsIsWow64Process()
 {
 	static BOOL bWow64Process = -1;
@@ -11,14 +14,12 @@ BOOL OsIsWow64Process()
 	if (bWow64Process==TRUE || bWow64Process==FALSE)
 		return bWow64Process;
 
-	typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE hProcess,PBOOL Wow64Process);
-
 	HMODULE hModule=GetModuleHandle(_T("Kernel32.dll"));
 
 	if (hModule==NULL)
 		return FALSE;
 
-	LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(hModule,"IsWow64Process");
+	FN_IsWow64Process fnIsWow64Process = (FN_IsWow64Process)GetProcAddress(hModule,"IsWow64Process");
 	if (fnIsWow64Process==NULL)
 		return FALSE; //win2000
 
@@ -27,6 +28,30 @@ BOOL OsIsWow64Process()
 		return FALSE;
 
 	return bWow64Process;
+}
+
+BOOL Is64BitOS()
+{
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		HMODULE hModule=GetModuleHandle(_T("Kernel32.dll"));
+
+		if (hModule == NULL)
+			break;
+
+		FN_GetNativeSystemInfo fnGetNativeSystemInfo = (FN_GetNativeSystemInfo)GetProcAddress(hModule, "GetNativeSystemInfo");
+		if (fnGetNativeSystemInfo==NULL)
+			break;
+
+		SYSTEM_INFO SystemInfo;
+		fnGetNativeSystemInfo(&SystemInfo);
+		if (SystemInfo.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64 || 
+			SystemInfo.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_IA64 )
+			bSuccess = TRUE;
+	} while (FALSE);
+
+	return bSuccess;
 }
 
 BOOL OsIsVistaOrLater() 

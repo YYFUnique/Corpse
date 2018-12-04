@@ -459,6 +459,10 @@
 				Name="Window"
 				>
 				<File
+					RelativePath=".\Window\Desktop.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Window\DwmHelper.cpp"
 					>
 				</File>
@@ -468,6 +472,14 @@
 				</File>
 				<File
 					RelativePath=".\Window\MagnetFrame.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Window\SystemTray.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Window\WinHelper.cpp"
 					>
 				</File>
 			</Filter>
@@ -609,6 +621,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Utils\RemoteProcess.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Utils\Security.h"
 					>
 				</File>
@@ -729,6 +745,10 @@
 				Name="Window"
 				>
 				<File
+					RelativePath=".\Window\Desktop.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Window\DwmHelper.h"
 					>
 				</File>
@@ -738,6 +758,14 @@
 				</File>
 				<File
 					RelativePath=".\Window\MagnetFrame.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Window\SystemTray.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Window\WinHelper.h"
 					>
 				</File>
 			</Filter>
