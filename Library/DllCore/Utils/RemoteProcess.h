@@ -1,6 +1,15 @@
 #pragma once
 
-template<typename T> class CRemoteProcess
+#ifdef LS_STATIC_LIB_CALL
+#define DLL_API 
+#elif defined  DLL_EXPORTS
+#define DLL_API __declspec(dllexport)
+#else
+#define DLL_API __declspec(dllimport)
+#endif
+
+template<typename T> 
+class DLL_API CRemoteProcess
 {
 public:
 	CRemoteProcess(DWORD dwProcessId = 0, DWORD dwDesiredAccess = PROCESS_VM_OPERATION|PROCESS_VM_READ|PROCESS_VM_WRITE ,
@@ -13,7 +22,7 @@ public:
 		ASSERT(m_hProcess);
 		if(m_hProcess)
 		{
-			m_lpData = VirtualAllocEx(m_hProcess, NULL, sizeof T, flAllocationType, flProtect);
+			m_lpData = VirtualAllocEx(m_hProcess, NULL, sizeof(T), flAllocationType, flProtect);
 			ASSERT(m_lpData);
 		}
 	}
@@ -35,14 +44,14 @@ public:
 	BOOL WriteData(const T& data)
 	{
 		return (m_hProcess && m_lpData) ? WriteProcessMemory(m_hProcess, m_lpData, 
-			(LPCVOID)&data, sizeof T, NULL) : FALSE;
+			(LPCVOID)&data, sizeof(T), NULL) : FALSE;
 	}
 
 	//ReadData reads back data from memory in the foreign process
 	BOOL ReadData(T* data)
 	{
 		return (m_hProcess && m_lpData) ? ReadProcessMemory(m_hProcess, m_lpData, 
-			(LPVOID)data, sizeof T, NULL) : FALSE;
+			(LPVOID)data, sizeof(T), NULL) : FALSE;
 	}
 
 	//Templated ReadData that's used to read a specific data type from
@@ -50,7 +59,7 @@ public:
 	template<typename TSUBTYPE> BOOL ReadData(TSUBTYPE* data, LPCVOID lpData)
 	{
 		return m_hProcess ? ReadProcessMemory(m_hProcess, lpData, 
-			(LPVOID)data, sizeof TSUBTYPE, NULL) : FALSE;
+			(LPVOID)data, sizeof(TSUBTYPE), NULL) : FALSE;
 	}
 
 	template<typename TSUBTYPE,SIZE_T nElement>BOOL ReadData(TSUBTYPE* pData,LPCVOID lpData)

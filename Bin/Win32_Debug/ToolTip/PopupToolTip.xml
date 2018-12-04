@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="210,65" sizebox="4,4,6,6" caption="0,0,0,0" mininfo="210,65" bktrans="true" maxbox="false" >
+    <Font name="微软雅黑" size="12" bold="false" italic="false" />
+    <Font name="楷体" size="16" bold="false" italic="false" />
+    <Font name="微软雅黑" size="14" bold="false" italic="false" />
+	<VerticalLayout name="VLayout" >
+	   <Label height="65" bkimage="file=&apos;ToolTip.png&apos;"/>
+	   <Label name="tip" text="" valign="vcenter" float="true" pos="23,3,180,34"/>
+	   <Button name="BtnOK" text="我知道了" float="true" pos="108,36,168,57"/>
+	</VerticalLayout>
+</Window>

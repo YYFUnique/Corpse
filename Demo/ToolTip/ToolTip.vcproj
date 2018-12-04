@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="ITrayClock"
-	ProjectGUID="{439B8E43-1D46-4B66-8DC7-754F75F85E9E}"
-	RootNamespace="ITrayClock"
+	Name="ToolTip"
+	ProjectGUID="{A8A53FD6-37A2-44EB-90EA-47F49E01D963}"
+	RootNamespace="ToolTip"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -12,17 +12,14 @@
 		<Platform
 			Name="Win32"
 		/>
-		<Platform
-			Name="x64"
-		/>
 	</Platforms>
 	<ToolFiles>
 	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			ConfigurationType="2"
-			InheritedPropertySheets="..\DllProperty.vsprops"
+			ConfigurationType="1"
+			InheritedPropertySheets="..\ExeProperty.vsprops"
 			CharacterSet="1"
 			>
 			<Tool
@@ -43,7 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ITRAYCLOCK_EXPORTS"
+				AdditionalIncludeDirectories="$(SolutionDir)Library"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -90,80 +88,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Debug|x64"
-			ConfigurationType="2"
-			InheritedPropertySheets="..\DllProperty.vsprops"
-			CharacterSet="1"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-				TargetEnvironment="3"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;ITRAYCLOCK_EXPORTS"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				UsePrecompiledHeader="0"
-				WarningLevel="3"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-				LinkIncremental="2"
-				GenerateDebugInformation="true"
-				SubSystem="2"
-				TargetMachine="17"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
 			Name="Release|Win32"
-			ConfigurationType="2"
-			InheritedPropertySheets="..\DllProperty.vsprops"
+			ConfigurationType="1"
+			InheritedPropertySheets="..\ExeProperty.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -186,7 +113,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;ITRAYCLOCK_EXPORTS"
+				AdditionalIncludeDirectories="$(SolutionDir)Library"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -205,7 +133,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -234,9 +162,9 @@
 			/>
 		</Configuration>
 		<Configuration
-			Name="Release|x64"
-			ConfigurationType="2"
-			InheritedPropertySheets="..\DllProperty.vsprops"
+			Name="Static_Release|Win32"
+			ConfigurationType="1"
+			InheritedPropertySheets="..\ExeProperty.vsprops"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -254,13 +182,13 @@
 			/>
 			<Tool
 				Name="VCMIDLTool"
-				TargetEnvironment="3"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;ITRAYCLOCK_EXPORTS"
+				AdditionalIncludeDirectories="$(SolutionDir)Library"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;LS_STATIC_LIB_CALL"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -279,11 +207,11 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
-				GenerateDebugInformation="true"
+				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				TargetMachine="17"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -317,15 +245,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\libMain.cpp"
+				RelativePath=".\ListViewWnd.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Menu.cpp"
+				RelativePath=".\MainFrame.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\MenuHandler.cpp"
+				RelativePath=".\PopupToolTip.cpp"
 				>
 			</File>
 			<File
@@ -341,23 +269,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\ThemeHelper.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TrayClock.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\UILabel.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\UIManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\WinImplBase.cpp"
+				RelativePath=".\ToolTip.cpp"
 				>
 			</File>
 		</Filter>
@@ -367,19 +279,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Define.h"
+				RelativePath=".\ListViewWnd.h"
 				>
 			</File>
 			<File
-				RelativePath=".\IMenuHandler.h"
+				RelativePath=".\PopupToolTip.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Menu.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MenuHandler.h"
+				RelativePath=".\resource.h"
 				>
 			</File>
 			<File
@@ -387,23 +295,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ThemeHelper.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TrayClock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\UILabel.h"
-				>
-			</File>
-			<File
-				RelativePath=".\UIManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\WinImplBase.h"
+				RelativePath=".\ToolTip.h"
 				>
 			</File>
 		</Filter>
@@ -412,7 +304,23 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\Res\ToolTip.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\ToolTip.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\res\zipres1.bin"
+				>
+			</File>
 		</Filter>
+		<File
+			RelativePath=".\Res\ToolTip.zip"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
