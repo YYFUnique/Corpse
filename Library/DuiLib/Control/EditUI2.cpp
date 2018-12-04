@@ -46,6 +46,8 @@ namespace DuiLib
 		m_pTextHost->SetDisabledTextColor(m_dwDisabledTextColor);
 		m_pTextHost->SetTextPadding(m_rcTextPadding);
 		m_pTextHost->SetCaretColor(m_dwCaretColor);
+
+		Invalidate();
 	}
 
 	CDuiString CEditUI2::GetText() const

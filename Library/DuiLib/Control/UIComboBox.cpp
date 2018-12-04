@@ -49,6 +49,8 @@ namespace DuiLib
 		m_pTextHost->SetCaretColor(m_dwCaretColor);
 
 		m_pTextHost->SetText(CComboUI::GetText());
+
+		Invalidate();
 	}
 
 	void CComboBoxUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
@@ -57,6 +59,12 @@ namespace DuiLib
 		else if (_tcsicmp(pstrName, _T("arrowwidth")) == 0) SetArrowWidth(_ttoi(pstrValue));
 		else if (_tcsicmp(pstrName, _T("digital")) == 0) SetDigitalMode(_tcsicmp(pstrValue,_T("true")) == 0);
 		else if (_tcsicmp(pstrName, _T("limited")) == 0) SetLimitLength(_ttoi(pstrValue));
+		else if (_tcsicmp(pstrName, _T("noprefix")) == 0) {
+			if( _tcsicmp(pstrValue, _T("true")) == 0)
+				m_ListInfo.uTextStyle |= DT_NOPREFIX;
+			else
+				m_ListInfo.uTextStyle &= ~DT_NOPREFIX;
+		}
 		else
 			CComboUI::SetAttribute(pstrName, pstrValue);
 	}

@@ -61,6 +61,8 @@ namespace DuiLib
 		SetWaterMode(m_strTextBak.IsEmpty() == TRUE);
 		
 		CDuiString strText = GetEditText();
+		// 设置文本内容后，需要重置光标偏移量，否则显示不正常
+		m_nCaretOffset = 0;
 		m_nSelStart = m_nCaretPos = strText.GetLength();
 		Invalidate();
 	}
@@ -614,6 +616,8 @@ namespace DuiLib
 	void CEditTextHost::SetTextStyle(int uTextStyle)
 	{
 		m_uTextStyle = uTextStyle;
+		if ((m_uTextStyle & DT_NOPREFIX) == FALSE)
+			m_uTextStyle |= DT_NOPREFIX;
 	}
 
 	void CEditTextHost::SetCaretColor(DWORD dwCaretColor)
