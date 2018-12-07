@@ -305,5 +305,6 @@ protected:                                                                \
 
 #define	 IME_RICHEDIT_BLINK_TIMER_ID		0x1000		//Richedit定时器ID
 #define	 FRAME_ANIMATE_TIME_ID				0x1001		//帧动画定时器ID
+#define    IME_BLINK_TIMER_ID							0x1000		
 }// namespace DuiLib
 

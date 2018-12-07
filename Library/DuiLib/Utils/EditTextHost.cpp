@@ -3,7 +3,6 @@
 
 namespace DuiLib
 {
-	#define    IME_BLINK_TIMER_ID			1000
 	CEditTextHost::CEditTextHost()
 		: m_pOwner(NULL)
 		, m_bCaretOn(FALSE)

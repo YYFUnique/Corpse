@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DllCore/DllCore.h"
+#include "DllCore/Utils/DuiList.h"
 
 #ifdef LS_STATIC_LIB_CALL
 #define DLL_API 

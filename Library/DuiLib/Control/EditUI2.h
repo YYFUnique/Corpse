@@ -51,15 +51,16 @@ namespace DuiLib
 
 		BOOL CanPaste() const;
 		BOOL IsWaterMode() const;
-	protected:
-		void OnCut(int nPos,int nLen);
-		int OnPaste(int nMin,int nMax);
-		void OnCopy(int nPos,int nLen);
-		void OnSelectAll();
+	public:
+		void Cut(int nPos,int nLen);
+		int Paste(int nMin,int nMax);
+		void Copy(int nPos,int nLen);
+		void SelectAll();
 
 		UINT GetTextState() const;
 
 		void SetWaterMode(BOOL bWaterMode);
+	protected:
 		bool GetEditText(CDuiString& strEditText);
 		void FixedCaretPos(int nFixed);
 

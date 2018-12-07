@@ -134,7 +134,11 @@ void CHostScan::OnAddUserName(CListTextElementUI* pItem)
 	pAddUserName->SetUserName(pListTextElement->GetText(5));
 	if (pAddUserName->ShowModal() == IDOK)
 	{
+		// 如果名称为空，则不添加
 		CDuiString strUserName = pAddUserName->GetUserName();
+		if (strUserName.IsEmpty())
+			return;
+
 		pListTextElement->SetText(5, strUserName);
 
 		CDuiString strSectionName = pListTextElement->GetText(1);
@@ -586,6 +590,10 @@ void CHostScan::OnTaskResult(LPVOID lParam)
 		}
 		else
 			pListElement = (CListTextElementUI*)pScanResultList->GetItemAt(TaskResultInfo.nItemIndex);
+
+		// 如果清除了第一步主机扫描结果，然后再收到任务结果，匹配列表可能存在异常
+		if (pListElement == NULL)
+			return;
 
 		if ((TaskResultInfo.HostScanType & HOST_SCAN_TYPE_ARP) == HOST_SCAN_TYPE_ARP)
 		{

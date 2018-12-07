@@ -59,37 +59,36 @@ namespace DuiLib
 
 	void CIPAddressUI::DoEvent(TEventUI& event)
 	{
-		if( !IsMouseEnabled() && event.Type > UIEVENT__MOUSEBEGIN && event.Type < UIEVENT__MOUSEEND ) {
+		if (!IsMouseEnabled() && event.Type > UIEVENT__MOUSEBEGIN && event.Type < UIEVENT__MOUSEEND) {
 			if( m_pParent != NULL ) m_pParent->DoEvent(event);
 			else CHorizontalLayoutUI::DoEvent(event);
 			return;
 		}
 
-		if( event.Type == UIEVENT_MOUSEENTER ){
+		if (event.Type == UIEVENT_MOUSEENTER) {
 			if( IsEnabled() ) {
 				m_nButtonState |= UISTATE_HOT;
 				Invalidate();
 			}
 			return;
-		}else if( event.Type == UIEVENT_MOUSELEAVE ){
+		} else if (event.Type == UIEVENT_MOUSELEAVE) {
 			if( IsEnabled() ) {
 				m_nButtonState &= ~UISTATE_HOT;
 				Invalidate();
 			}
 			return;
-		}else if( event.Type == UIEVENT_SETFOCUS){
+		} else if (event.Type == UIEVENT_SETFOCUS) {
 			if (IsEnabled()){
 				m_bFocused = true;
 				Invalidate();
 			}
 			return ;
-		}else if (event.Type == UIEVENT_KILLFOCUS){
+		} else if (event.Type == UIEVENT_KILLFOCUS) {
 			if (IsEnabled()){
 				m_bFocused = false;
 				Invalidate();
 			}
-		}
-		else
+		} else
 			CHorizontalLayoutUI::DoEvent(event);
 	}
 

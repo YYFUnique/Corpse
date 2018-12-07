@@ -285,6 +285,26 @@ namespace DuiLib
 		return m_pTextHost->CanPaste();
 	}
 
+	void CEditUI2::Cut(int nPos,int nLen)
+	{
+		m_pTextHost->OnCut(nPos, nLen);
+	}
+
+	int CEditUI2::Paste(int nMin,int nMax)
+	{
+		return m_pTextHost->OnPaste(nMax, nMax);
+	}
+
+	void CEditUI2::Copy(int nPos,int nLen)
+	{
+		m_pTextHost->OnCopy(nPos, nLen);
+	}
+
+	void CEditUI2::SelectAll()
+	{
+		m_pTextHost->SelectAll();
+	}
+
 	UINT CEditUI2::GetTextState() const
 	{
 		return m_pTextHost->GetTextState();
@@ -301,8 +321,6 @@ namespace DuiLib
 			return;
 
 		m_pTextHost->SetWaterMode(bWaterMode);
-
-		//m_sText = bWaterMode && IsFocused() == false ? m_sWaterText : m_sTextBak;
 	}
 
 	void CEditUI2::SetText(LPCTSTR pstrText)

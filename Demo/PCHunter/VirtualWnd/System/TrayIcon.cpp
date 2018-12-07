@@ -1,6 +1,5 @@
 #include "StdAfx.h"
 #include "TrayIcon.h"
-#include "Utils/RemoteProcess.h"
 
 #include "DllCore/Utils/OsInfo.h"
 

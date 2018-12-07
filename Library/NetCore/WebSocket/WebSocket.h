@@ -90,6 +90,7 @@ namespace NetCore
 	/// must be returned.
 	class NET_API WebSocket : public StreamSocket
 	{
-		
+	public:
+		WebSocket();
 	};
 }

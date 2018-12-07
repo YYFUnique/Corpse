@@ -367,7 +367,19 @@
 				Name="HTTP"
 				>
 				<File
+					RelativePath=".\HTTP\HTTPCookie.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\HTTP\HTTPMessage.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\HTTP\HTTPRequest.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\HTTP\HTTPResponse.cpp"
 					>
 				</File>
 				<File
@@ -388,6 +400,22 @@
 				</File>
 				<File
 					RelativePath=".\WebSocket\WebSocketImpl.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="HTTPServer"
+				>
+				<File
+					RelativePath=".\HTTPServer\HTTPServerParams.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\HTTPServer\HTTPServerRequest.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\HTTPServer\HTTPServerResponse.cpp"
 					>
 				</File>
 			</Filter>
@@ -505,7 +533,19 @@
 				Name="HTTP"
 				>
 				<File
+					RelativePath=".\HTTP\HTTPCookie.h"
+					>
+				</File>
+				<File
 					RelativePath=".\HTTP\HTTPMessage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\HTTP\HTTPRequest.h"
+					>
+				</File>
+				<File
+					RelativePath=".\HTTP\HTTPResponse.h"
 					>
 				</File>
 				<File
@@ -526,6 +566,22 @@
 				</File>
 				<File
 					RelativePath=".\WebSocket\WebSocketImpl.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="HTTPServer"
+				>
+				<File
+					RelativePath=".\HTTPServer\HTTPServerParams.h"
+					>
+				</File>
+				<File
+					RelativePath=".\HTTPServer\HTTPServerRequest.h"
+					>
+				</File>
+				<File
+					RelativePath=".\HTTPServer\HTTPServerResponse.h"
 					>
 				</File>
 			</Filter>

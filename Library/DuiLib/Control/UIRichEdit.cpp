@@ -864,7 +864,7 @@ long CRichEditUI::GetTextLength(DWORD dwFlags) const
     return (long)lResult;
 }
 
-CDuiString CRichEditUI::GetText() const
+CDuiString CRichEditUI::GetRichHostText() const
 {
     long lLen = GetTextLength(GTL_DEFAULT);
     LPTSTR lpText = NULL;
@@ -887,6 +887,11 @@ CDuiString CRichEditUI::GetText() const
     CDuiString sText(lpText);
     delete[] lpText;
     return sText;
+}
+
+CDuiString CRichEditUI::GetText() const
+{
+	return m_sText;
 }
 
 void CRichEditUI::SetText(LPCTSTR pstrText)
@@ -1616,15 +1621,13 @@ void CRichEditUI::DoEvent(TEventUI& event)
         return;
     }
 
-    if( event.Type == UIEVENT_SETCURSOR && IsEnabled() )
-    {
+    if (event.Type == UIEVENT_SETCURSOR && IsEnabled()) {
         if( m_pTwh && m_pTwh->DoSetCursor(NULL, &event.ptMouse) ) {
             return;
         }
-    }
-	if( event.Type == UIEVENT_SETFOCUS ) {
+    } else if (event.Type == UIEVENT_SETFOCUS) {
 		if (GetManager()->IsLayered())
-			GetManager()->SetTimer(this,IME_RICHEDIT_BLINK_TIMER_ID,GetCaretBlinkTime());
+			GetManager()->SetTimer(this, IME_RICHEDIT_BLINK_TIMER_ID, GetCaretBlinkTime());
 		if( m_pTwh ) {
 			m_pTwh->OnTxInPlaceActivate(NULL);
 			m_pTwh->GetTextServices()->TxSendMessage(WM_SETFOCUS, 0, 0, 0);
@@ -1633,8 +1636,7 @@ void CRichEditUI::DoEvent(TEventUI& event)
 			Invalidate();
 			return;
 		}
-	}
-	if( event.Type == UIEVENT_KILLFOCUS )  {
+	} else if (event.Type == UIEVENT_KILLFOCUS) {
 		if (GetManager()->IsLayered())
 			GetManager()->KillTimer(this);
 		if( m_pTwh ) {
@@ -1644,56 +1646,40 @@ void CRichEditUI::DoEvent(TEventUI& event)
 		m_bFocused = false;
 		Invalidate();
 		return;
-	}
-	if( event.Type == UIEVENT_TIMER ) {
-		if( m_pTwh ) {
+	} else if (event.Type == UIEVENT_TIMER) {
+		if (m_pTwh)
 			m_pTwh->GetTextServices()->TxSendMessage(WM_TIMER, event.wParam, event.lParam, 0);
-		} 
 		if (GetManager()->IsLayered() && event.wParam == IME_RICHEDIT_BLINK_TIMER_ID)
 		{
 			m_bShowCaret = !m_bShowCaret;
 			InvalidateRect(GetManager()->GetPaintWindow(),&m_rcPos,FALSE);
 		}
-	}
-	else if( event.Type == UIEVENT_SCROLLWHEEL ) {
-		if( (event.wKeyState & MK_CONTROL) != 0  ) {
+	} else if( event.Type == UIEVENT_SCROLLWHEEL) {
+		if ((event.wKeyState & MK_CONTROL) != 0) {
 			return;
 		}
-	}
-    else if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_DBLCLICK ) 
-    {
+	} else if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_DBLCLICK) {
         return;
-    }
-
-    else if( event.Type == UIEVENT_MOUSEMOVE ) 
-    {
+    } else if( event.Type == UIEVENT_MOUSEMOVE) {
 	    return;
-    }
-    else if( event.Type == UIEVENT_BUTTONUP ) 
-    {
+    } else if( event.Type == UIEVENT_BUTTONUP) {
         return;
-    }
-	else if( event.Type == UIEVENT_MOUSEENTER )
-    {
-		if( IsEnabled() ) {
+    } else if( event.Type == UIEVENT_MOUSEENTER) {
+		if (IsEnabled()){
 			m_uButtonState |= UISTATE_HOT;
 			Invalidate();
 		}
         return;
-    }
-	else if( event.Type == UIEVENT_MOUSELEAVE )
-    {
-		if( IsEnabled() ) {
+    } else if( event.Type == UIEVENT_MOUSELEAVE) {
+		if (IsEnabled()) {
 			m_uButtonState &= ~UISTATE_HOT;
 			Invalidate();
 		}
         return;
-    }
-    if( event.Type > UIEVENT__KEYBEGIN && event.Type < UIEVENT__KEYEND )
-    {
+    } else if( event.Type > UIEVENT__KEYBEGIN && event.Type < UIEVENT__KEYEND) {
         return;
-    }
-    CContainerUI::DoEvent(event);
+    } else
+		CContainerUI::DoEvent(event);
 }
 
 LPCTSTR CRichEditUI::GetNormalImage()
@@ -2234,13 +2220,18 @@ LRESULT CRichEditUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, boo
 	}
 
     LRESULT lResult = 0;
-	HRESULT Hr = TxSendMessage(uMsg, wParam, lParam, &lResult);
-	if( Hr == S_OK ) bHandled = bWasHandled;
+	HRESULT hRet = TxSendMessage(uMsg, wParam, lParam, &lResult);
+	if (hRet == S_OK ) bHandled = bWasHandled;
 	else if( (uMsg >= WM_KEYFIRST && uMsg <= WM_KEYLAST) || uMsg == WM_CHAR || uMsg == WM_IME_CHAR )
         bHandled = bWasHandled;
 	else if( uMsg >= WM_MOUSEFIRST && uMsg <= WM_MOUSELAST ) {
         if( m_pTwh->IsCaptured() ) bHandled = bWasHandled;
     }
+
+	// 更新用于存放内容的变量
+	if (hRet == S_OK && uMsg == WM_CHAR)
+		m_sText = GetRichHostText();
+
     return lResult;
 }
 
