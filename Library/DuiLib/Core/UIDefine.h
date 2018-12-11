@@ -237,11 +237,12 @@ protected:                                                                \
 #define  DUI_CTR_BUTTON										(_T("Button"))
 #define  DUI_CTR_OPTION											(_T("Option"))
 #define  DUI_CTR_SLIDER											(_T("Slider"))
+#define  DUI_CTR_SHADOW										(_T("Shadow"))
+#define  DUI_CTR_WINHEX										(_T("WinHex"))
 
 #define  DUI_CTR_CONTROL										(_T("Control"))
 #define  DUI_CTR_ACTIVEX										(_T("ActiveX"))
 #define  DUI_CTR_PICTURE										(_T("Picture"))
-#define  DUI_CTR_SHADOW										(_T("Shadow"))
 
 #define  DUI_CTR_LISTITEM										(_T("ListItem"))
 #define  DUI_CTR_LISTBODY										(_T("ListBody"))

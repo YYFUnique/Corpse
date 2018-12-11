@@ -396,6 +396,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
                 if( _tcscmp(pstrClass, DUI_CTR_BUTTON) == 0 )						pControl = new CButtonUI;
                 else if( _tcscmp(pstrClass, DUI_CTR_OPTION) == 0 )				pControl = new COptionUI;
                 else if( _tcscmp(pstrClass, DUI_CTR_SLIDER) == 0 )					pControl = new CSliderUI;
+				else if( _tcsicmp(pstrClass, DUI_CTR_WINHEX) == 0)				pControl = new CWinHexUI;
                 break;
             case 7:
                 if( _tcscmp(pstrClass, DUI_CTR_CONTROL) == 0 )					pControl = new CControlUI;

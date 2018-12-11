@@ -124,6 +124,7 @@
 #include "Control/UIActiveX.h"
 #include "Control/UIWebBrowser.h"
 #include "Control/UIWkeBrowser.h"
+#include "Control/UIWinHex.h"
 #include "Control/UIFlash.h"
 /*#include "Control/UIPicture.h"*/
 /*#include "Control/UICrack.h"*/

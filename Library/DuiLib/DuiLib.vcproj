@@ -554,6 +554,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Control\UIWinHex.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Control\UIWkeBrowser.cpp"
 					>
 				</File>
@@ -856,6 +860,10 @@
 				</File>
 				<File
 					RelativePath=".\Control\UIWebBrowser.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Control\UIWinHex.h"
 					>
 				</File>
 				<File
