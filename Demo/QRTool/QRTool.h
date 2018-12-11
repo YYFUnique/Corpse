@@ -30,8 +30,6 @@ public:
 	virtual void InitWindow();
 	virtual void OnFinalMessage(HWND hWnd);
 
-	CControlUI* CreateControl(LPCTSTR pstrClass);
-	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 protected:
 	void OnSave();
@@ -40,7 +38,5 @@ protected:
 	LRESULT OnQRCodeItemInfo(WPARAM wParam, LPARAM lParam);
 
 	LRESULT OnMoving(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-	LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 private:
-	/*CMagnetFrame m_WndMagnet;*/
 };

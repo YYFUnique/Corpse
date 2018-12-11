@@ -6,6 +6,8 @@
 #include "DllCore/Utils/TextTools.h"
 #include <CommDlg.h>
 
+#define QR_BKIMG		_T("QrBkImg.bmp")
+
 CQRTool::CQRTool()
 {
 
@@ -45,39 +47,12 @@ CDuiString CQRTool::GetSkinFile()
 CDuiString CQRTool::GetSkinFolder()
 {
 	return _T("QRTool");
-	//return _T("");
 }
 
 void CQRTool::Notify(TNotifyUI& msg)
 {
 	if (msg.sType == DUI_MSGTYPE_CLICK)
 		OnClick(msg);
-}
-
-CControlUI* CQRTool::CreateControl(LPCTSTR pstrClass)
-{
-	CControlUI* pControl = NULL;
-	/*if (_tcsicmp(pstrClass,_T("")) == 0)
-		pControl = new CQRPicture;*/
-
-	return pControl;
-}
-
-LRESULT CQRTool::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	//switch(uMsg)
-	//{
-	//	case WM_MOVING:
-	//		{
-	//			//RECT rcWnd = *(LPRECT)lParam;
-	//			//m_WndMagnet.OnMoving(m_hWnd, &rcWnd);
-	//		}
-	//		break;
-	//	default:
-	//		return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
-	//}
-return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
-	return FALSE;
 }
 
 LRESULT CQRTool::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -93,13 +68,6 @@ LRESULT CQRTool::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	}
 }
 
-LRESULT CQRTool::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	//m_WndMagnet.OnSize(m_hWnd, wParam);
-
-	return WindowImplBase::OnSize(uMsg, wParam, lParam ,bHandled);
-}
-
 void CQRTool::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
@@ -107,32 +75,32 @@ void CQRTool::InitWindow()
 	CMagnetFrame::Initialize();
 	CMagnetFrame::GetInstance()->SetMainWnd(m_hWnd);
 
-	int nCode = QR_ERR_NONE;
-	QRCode* pCode = qrInit(6, QR_EM_8BIT, QR_ECL_M, 7, &nCode);
+	//int nCode = QR_ERR_NONE;
+	//QRCode* pCode = qrInit(6, QR_EM_8BIT, QR_ECL_M, 7, &nCode);
 
-	if (pCode == NULL)
-		return;
+	//if (pCode == NULL)
+	//	return;
 
-	LPCSTR lpszText = "直接一耳巴子!";
-	LPSTR lpszUtf8 = Gb32ToUtf8(lpszText);
-	if (qrAddData(pCode, (const qr_byte_t* )lpszUtf8, strlen(lpszUtf8)) == FALSE)
-		return;
-	//注意需要调用qrFinalize函数
-	if (qrFinalize(pCode) == FALSE)
-		return;
+	//LPCSTR lpszText = "直接一耳巴子!";
+	//LPSTR lpszUtf8 = Gb32ToUtf8(lpszText);
+	//if (qrAddData(pCode, (const qr_byte_t* )lpszUtf8, strlen(lpszUtf8)) == FALSE)
+	//	return;
+	////注意需要调用qrFinalize函数
+	//if (qrFinalize(pCode) == FALSE)
+	//	return;
 
-	int size = 0;
-	qr_byte_t * buffer = qrSymbolToBMP(pCode, 1, 6, &size);
-	if (buffer == NULL)
-		return;
+	//int size = 0;
+	//qr_byte_t * buffer = qrSymbolToBMP(pCode, 1, 6, &size);
+	//if (buffer == NULL)
+	//	return;
 
-	m_PaintManager.AddImage(_T("BtnFace.bmp"), (LPBYTE)buffer, size);
+	//m_PaintManager.AddImage(_T("BtnFace.bmp"), (LPBYTE)buffer, size);
 
-	qrFreeBMP(buffer);
+	//qrFreeBMP(buffer);
 
-	CLabelUI* pLabel = (CButtonUI*)m_PaintManager.FindControl(_T("pic"));
-	if (pLabel)
-		pLabel->SetBkImage(_T("BtnFace.bmp"));
+	//CLabelUI* pLabel = (CButtonUI*)m_PaintManager.FindControl(_T("pic"));
+	//if (pLabel)
+	//	pLabel->SetBkImage(_T("BtnFace.bmp"));
 }
 
 void CQRTool::OnClick(TNotifyUI& msg)
@@ -153,14 +121,10 @@ void CQRTool::OnCreate(TNotifyUI& msg)
 	if (hQRWnd != NULL)
 		return;
 
-	CQRDlg* pQRDlg = new CQRDlg(m_hWnd/*, &m_WndMagnet*/);
+	CQRDlg* pQRDlg = new CQRDlg(m_hWnd);
 	
 	pQRDlg->ShowWindow();
-	CMagnetFrame::GetInstance()->AddSubWnd(pQRDlg->GetHWND(), ATTCH_MODE_RIGHT,ATTCH_ALIGN_TOP);
-
-	/*RECT rcWnd;
-	GetWindowRect(pQRDlg->GetHWND(),&rcWnd);
-	m_WndMagnet.OnMoving(pQRDlg->GetHWND(),&rcWnd);*/
+	CMagnetFrame::GetInstance()->AddSubWnd(pQRDlg->GetHWND(), ATTCH_MODE_RIGHT, ATTCH_ALIGN_TOP);
 }
 
 void CQRTool::OnSave()
@@ -183,7 +147,7 @@ void CQRTool::OnSave()
 	if (GetSaveFileName(&SaveFileName) == FALSE)
 		return ;
 
-	const TImageInfo* pImage = m_PaintManager.GetImage(_T("BtnFace.bmp"));
+	const TImageInfo* pImage = m_PaintManager.GetImage(QR_BKIMG);
 	CRenderEngine::SaveBitmapFile(pImage->hBitmap,SaveFileName.lpstrFile);
 }
 
@@ -221,19 +185,19 @@ LRESULT CQRTool::OnQRCodeItemInfo(WPARAM wParam, LPARAM lParam)
 		if (lpData == NULL)
 			break;
 
-		m_PaintManager.RemoveImage(_T("BtnFace.bmp"));
-		m_PaintManager.AddImage(_T("BtnFace.bmp"), (LPBYTE)lpData, size);
+		m_PaintManager.RemoveImage(QR_BKIMG);
+		m_PaintManager.AddImage(QR_BKIMG, (LPBYTE)lpData, size);
 
 		qrFreeBMP(lpData);
 
 		if (pQRPic)
 		{
-			pQRPic->SetBkImage(_T("BtnFace.bmp"));
+			pQRPic->SetBkImage(QR_BKIMG);
 
 			if (pQRCodeInfo->strLogoFile.IsEmpty() == FALSE)
 			{
 				CDuiString strLogoFile;
-				strLogoFile.Format(_T("file='%s' dest='120,120,180,180'"),pQRCodeInfo->strLogoFile);
+				strLogoFile.Format(_T("file='%s' dest='120,120,180,180'"), pQRCodeInfo->strLogoFile);
 				pQRPic->SetForeImage(strLogoFile);
 			}
 
