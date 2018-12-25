@@ -29,6 +29,10 @@ typedef struct tagMARGINS
 	int cyBottomHeight;   // height of bottom border that retains its size
 } MARGINS, *PMARGINS;
 
+
+// 由于枚举值DWMWA_EXCLUDED_FROM_PEEK只存在于v7.0的SDK中，v6aSDK不存在，故直接使用其值
+// DwmSetWindowAttribute(m_hWnd, 12, &renderPolicy, sizeof(int));
+// 目前将v7.0 SDK相关定义拷贝至DwmHelper帮助类中，只需要引用该文件即可
 // Window attributes
 typedef enum tagDWMWINDOWATTRIBUTE
 {
@@ -41,6 +45,9 @@ typedef enum tagDWMWINDOWATTRIBUTE
 	DWMWA_FORCE_ICONIC_REPRESENTATION,  // [set] Force this window to display iconic thumbnails.
 	DWMWA_FLIP3D_POLICY,                // [set] Designates how Flip3D will treat the window.
 	DWMWA_EXTENDED_FRAME_BOUNDS,        // [get] Gets the extended frame bounds rectangle in screen space
+	DWMWA_HAS_ICONIC_BITMAP,            // [set] Indicates an available bitmap when there is no better thumbnail representation.
+	DWMWA_DISALLOW_PEEK,                // [set] Don't invoke Peek on the window.
+	DWMWA_EXCLUDED_FROM_PEEK,           // [set] LivePreview exclusion information
 	DWMWA_LAST
 }DWMWINDOWATTRIBUTE;
 
@@ -53,12 +60,21 @@ typedef enum tagDWMNCRENDERINGPOLICY
 	DWMNCRP_LAST
 }DWMNCRENDERINGPOLICY;
 
-typedef HRESULT (__stdcall *funcDwmExtendFrameIntoClientArea)(HWND hWnd, const MARGINS *pMarInset);
-typedef HRESULT (__stdcall *funcDwmEnableBlurBehindWindow)(HWND hWnd, __in const DWM_BLURBEHIND* pBlurBehind);
-typedef HRESULT (__stdcall *funcDwmIsCompositionEnabled)(BOOL *pfEnabled);
-typedef HRESULT (__stdcall *funcDwmGetWindowAttribute)(HWND hwnd, DWORD dwAttribute, PVOID pvAttribute, DWORD cbAttribute);
-typedef HRESULT (__stdcall *funcDwmSetWindowAttribute)(HWND hwnd, DWORD dwAttribute, LPCVOID pvAttribute, DWORD cbAttribute);
-typedef HRESULT (__stdcall *funcDwmDefWindowProc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam, LRESULT *plResult);
+// Values designating how Flip3D treats a given window.
+typedef enum tagDWMFLIP3DWINDOWPOLICY
+{
+	DWMFLIP3D_DEFAULT,      // Hide or include the window in Flip3D based on window style and visibility.
+	DWMFLIP3D_EXCLUDEBELOW, // Display the window under Flip3D and disabled.
+	DWMFLIP3D_EXCLUDEABOVE, // Display the window above Flip3D and enabled.
+	DWMFLIP3D_LAST
+}DWMFLIP3DWINDOWPOLICY;
+
+typedef HRESULT (WINAPI *funcDwmExtendFrameIntoClientArea)(HWND hWnd, const MARGINS *pMarInset);
+typedef HRESULT (WINAPI *funcDwmEnableBlurBehindWindow)(HWND hWnd, __in const DWM_BLURBEHIND* pBlurBehind);
+typedef HRESULT (WINAPI *funcDwmIsCompositionEnabled)(BOOL *pfEnabled);
+typedef HRESULT (WINAPI *funcDwmGetWindowAttribute)(HWND hwnd, DWORD dwAttribute, PVOID pvAttribute, DWORD cbAttribute);
+typedef HRESULT (WINAPI *funcDwmSetWindowAttribute)(HWND hwnd, DWORD dwAttribute, LPCVOID pvAttribute, DWORD cbAttribute);
+typedef HRESULT (WINAPI *funcDwmDefWindowProc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam, LRESULT *plResult);
 
 
 class DLL_API DwmHelper
@@ -70,7 +86,10 @@ protected:
 public:
 	static DwmHelper* GetInstance();
 	BOOL IsEnable();
+	
 	void EnableTransition(HWND hWnd, BOOL bEnable);
+	void SetAreoWithPeek(HWND hWnd, DWMNCRENDERINGPOLICY RenderPolicy = DWMNCRP_ENABLED);
+	void SetFlip3DPolicy(HWND hWnd, DWMFLIP3DWINDOWPOLICY Flip3D = DWMFLIP3D_EXCLUDEABOVE);
 protected:
 	HMODULE			m_hModule;
 	funcDwmExtendFrameIntoClientArea		m_pDwmExtendFrameIntoClientArea;

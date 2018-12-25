@@ -7,11 +7,11 @@
 CRemoteThreadInject::CRemoteThreadInject(void)
 {
 	m_hMod = NULL;
-	m_hInjecthread = NULL;
 }
 
 CRemoteThreadInject::~CRemoteThreadInject(void)
 {
+
 }
 
 DWORD CRemoteThreadInject::GetProcessId(LPCTSTR lpszProcessName)
@@ -45,9 +45,9 @@ DWORD CRemoteThreadInject::GetProcessId(LPCTSTR lpszProcessName)
     return dwProcessId;
 }
 
-BOOL CRemoteThreadInject::InjectDll(DWORD dwProcessId, LPCTSTR lpszFilePath, DWORD dwWaitTime = INFINITE)
+BOOL CRemoteThreadInject::InjectDll(DWORD dwProcessId, LPCTSTR lpszFilePath, DWORD dwWaitTime/* = INFINITE*/)
 {
-	HANDLE hRemoteThread = NULL;
+	HANDLE hInjectThread = NULL;
 	HANDLE hRemoteProcess = NULL;
 	LPVOID   pRemoteAddr = NULL;
 	DWORD dwSize = 0;
@@ -88,32 +88,32 @@ BOOL CRemoteThreadInject::InjectDll(DWORD dwProcessId, LPCTSTR lpszFilePath, DWO
 #endif
 
 		//启动远程线程LoadLibrary，通过远程线程调用创建新的线程
-		m_hInjecthread = CreateRemoteThread(hRemoteProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pfnStartAddr, pRemoteAddr, 0, NULL);
-		if (m_hInjecthread == NULL)
+		hInjectThread = CreateRemoteThread(hRemoteProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pfnStartAddr, pRemoteAddr, 0, NULL);
+		if (hInjectThread == NULL)
 		{
 			SetErrorInfo(SYSTEM_ERROR, 0, _T("创建远程线程失败"));
 			break;
 		}
 
 		if (dwWaitTime != 0 )
-			WaitForSingleObject(hRemoteThread, dwWaitTime);
+			WaitForSingleObject(hInjectThread, dwWaitTime);
 
 		DWORD dwExitCode;
-		GetExitCodeThread(m_hInjecthread, &dwExitCode);
+		GetExitCodeThread(hInjectThread, &dwExitCode);
 		m_hMod = (HMODULE)dwExitCode;
 
 		bSuccess = TRUE;
 	} while (FALSE);
 
-	if (hRemoteThread != NULL)
+	if (hInjectThread != NULL)
 	{
-		CloseHandle(hRemoteThread);
-		hRemoteThread = NULL;
+		CloseHandle(hInjectThread);
+		hInjectThread = NULL;
 	}
 
 	if (hRemoteProcess != NULL)
 	{
-		VirtualFreeEx(hRemoteProcess, pRemoteAddr, dwSize, MEM_COMMIT);
+		VirtualFreeEx(hRemoteProcess, pRemoteAddr, dwSize, MEM_RELEASE);
 		CloseHandle(hRemoteProcess);
 		hRemoteProcess = NULL;
 	}
@@ -121,9 +121,10 @@ BOOL CRemoteThreadInject::InjectDll(DWORD dwProcessId, LPCTSTR lpszFilePath, DWO
 	return bSuccess;
 }
 
-BOOL CRemoteThreadInject::RelaseDll(DWORD dwProcessId, DWORD dwWaitTime = INFINITE)
+BOOL CRemoteThreadInject::RelaseDll(DWORD dwProcessId, DWORD dwWaitTime /*= INFINITE*/)
 {
 	BOOL bSuccess = FALSE;
+	HANDLE hInjectThread = NULL;
 	HANDLE hRemoteProcess = NULL;
 	do 
 	{
@@ -144,19 +145,19 @@ BOOL CRemoteThreadInject::RelaseDll(DWORD dwProcessId, DWORD dwWaitTime = INFINI
 #endif
 
 	   //	启动远程线程LoadLibrary，通过远程线程调用创建新的线程
-	   m_hInjecthread = CreateRemoteThread(hRemoteProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pfnStartAddr, m_hMod, 0, NULL);
-	   if (m_hInjecthread == NULL)
+	   hInjectThread = CreateRemoteThread(hRemoteProcess, NULL, 0, (LPTHREAD_START_ROUTINE)pfnStartAddr, m_hMod, 0, NULL);
+	   if (hInjectThread == NULL)
 	   {
 		   SetErrorInfo(SYSTEM_ERROR, 0, _T("创建远程线程失败"));
 		   break;
 	   }
 
 	   //	5. 等待线程结束返回
-	   WaitForSingleObject(m_hInjecthread, dwWaitTime);
+	   WaitForSingleObject(hInjectThread, dwWaitTime);
 
 	   //	6. 获取线程退出码,即LoadLibrary的返回值，即dll的首地址
 	   DWORD dwExitCode;
-	   GetExitCodeThread(m_hInjecthread, &dwExitCode);
+	   GetExitCodeThread(hInjectThread, &dwExitCode);
 
 	   m_hMod = NULL;
 

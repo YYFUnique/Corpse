@@ -16,6 +16,7 @@ protected:
 	DUI_DECLARE_MESSAGE_MAP()
 		void OnSelectChanged( TNotifyUI &msg );
 private:
-	CHideFile m_HideFile;
+	CWinHex				   m_WinHex;
+	CHideFile				   m_HideFile;
 	CPaintManagerUI* m_pPaintManager;
 };

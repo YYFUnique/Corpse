@@ -17,6 +17,7 @@ DUI_END_MESSAGE_MAP()
 
 void CFileProcMgr::ClearVirtualWnd(CNotifyPump* pNotifyPump)
 {
+	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_WINHEX);
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_FILE_HIDE);
 }
 
@@ -26,6 +27,9 @@ void CFileProcMgr::SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPai
 
 	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_FILE_HIDE, &m_HideFile);
 	m_HideFile.SetPaintMagager(pPaintManager);
+
+	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_WINHEX, &m_WinHex);
+	m_WinHex.SetPaintMagager(pPaintManager);
 }
 
 void CFileProcMgr::OnSelectChanged( TNotifyUI &msg )

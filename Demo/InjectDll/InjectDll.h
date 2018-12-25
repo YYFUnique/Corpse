@@ -4,6 +4,15 @@
 
 #include "DllCore/Security/RemoteThreadInject.h"
 
+typedef struct tagINJECT_INFO 
+{
+	DWORD	dwProcessId;			// 被注入进程ID
+	HANDLE	hEvent;						// 事件句柄
+	CString		strEvent;					// 全局事件名称
+}INJECT_INFO, *PINJECT_INFO;
+
+typedef CDuiList <INJECT_INFO, const INJECT_INFO&> CInjectInfoList;
+
 class CInjectDll : public WindowImplBase
 {
 public:
@@ -22,6 +31,7 @@ public:
 
 	LRESULT OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 protected:
 	void OnClick(TNotifyUI& msg);
 	void OnReturn(TNotifyUI& msg);
@@ -31,8 +41,9 @@ protected:
 	void OnFileLookup(TNotifyUI& msg);
 protected:
 	BOOL EnumProcessesBySnapshot(CProcessInfoList& ProcessInfoList);
-	BOOL InjectDll(LPCTSTR lpszFilePath, DWORD dwRemoteProcessId);
+	BOOL InjectDll(DWORD dwRemoteProcessId, LPCTSTR lpszFilePath);
 private:
 	CListViewWnd* m_pListView;
-	CRemoteThreadInject m_RemoteInject;
+	CInjectInfoList		m_InjectInfoList;
+	CRemoteThreadInject* m_pRemoteInject;
 };

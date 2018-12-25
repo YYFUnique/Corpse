@@ -1,6 +1,5 @@
 #include "StdAfx.h"
 #include "MzfFileMon.h"
-
 #include "DllCore/File/MiniDump.h"
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
 {
@@ -20,10 +19,10 @@ BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSh
 		if (pMzfFileMon == NULL) 
 			break;
 
-		pMzfFileMon->Create(NULL, _T("文件管家"), UI_WNDSTYLE_FRAME, 0, 0, 0, 800, 600);
+		pMzfFileMon->Create(NULL, _T("文件管家"), UI_WNDSTYLE_DIALOG, 0, 800, 600);
 		pMzfFileMon->CenterWindow();
 		pMzfFileMon->ShowWindow(true);
-		//pPCMaster->HandleCmdLine(strCmdLine);
+
 		CPaintManagerUI::MessageLoop();
 
 		CPaintManagerUI::Term();

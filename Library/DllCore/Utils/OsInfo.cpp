@@ -54,6 +54,40 @@ BOOL Is64BitOS()
 	return bSuccess;
 }
 
+BOOL Is64BitPorcess(DWORD dwProcessID)
+{
+	if (Is64BitOS() == FALSE)
+		return FALSE;
+	
+	BOOL b64BitProcess = TRUE;
+	HANDLE hProcess = NULL;
+	do 
+	{
+		hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, dwProcessID);
+		if (hProcess == NULL)
+			break;
+
+		HMODULE hModule=GetModuleHandle(_T("Kernel32.dll"));
+
+		if (hModule == NULL)
+			break;
+		FN_IsWow64Process fnIsWow64Process = (FN_IsWow64Process)GetProcAddress(hModule,"IsWow64Process");
+		if (fnIsWow64Process == NULL)
+			break;
+
+		BOOL bIsWow64 = FALSE;
+		// 判断是否运行在Wow64系统中，如果运行在Wow64系统中，说明是32位进程
+		fnIsWow64Process(hProcess, &bIsWow64);
+	
+		b64BitProcess = bIsWow64 ? FALSE: TRUE ;
+	} while (FALSE);
+	
+	if (hProcess != NULL)
+		CloseHandle(hProcess);
+
+	return b64BitProcess;
+}
+
 BOOL OsIsVistaOrLater() 
 {
 	OSVERSIONINFOEX osvi;

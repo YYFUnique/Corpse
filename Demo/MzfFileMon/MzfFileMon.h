@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DllCore/Window/FloatWindow.h"
+
 class CMzfFileMon : public WindowImplBase
 {
 public:
@@ -14,6 +16,7 @@ public:
 public:
 	/*virtual void Notify(TNotifyUI& msg);*/
 	virtual void InitWindow();
+	void PinToDesktop();
 	virtual void OnFinalMessage(HWND hWnd);
 	virtual CControlUI* CreateControl(LPCTSTR pstrClass);
 	LRESULT OnMenuClick(WPARAM wParam, LPARAM lParam);
@@ -28,4 +31,5 @@ protected:
 	CControlUI* GetViewObject(CTabLayoutUI* pTabLayout,int nIndex);
 private:
 	CFileProcMgr m_FileProcMgr;
+	CFloatWindow* m_pFloatWindow;
 };

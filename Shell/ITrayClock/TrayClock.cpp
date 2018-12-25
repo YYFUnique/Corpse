@@ -24,7 +24,7 @@ CTrayClock::~CTrayClock()
 
 void CTrayClock::OnFinalMessage(HWND hWnd)
 {
-	WinImplBase::OnFinalMessage(hWnd);
+	WindowImplBase::OnFinalMessage(hWnd);
 	delete this;
 }
 
@@ -32,7 +32,7 @@ void CTrayClock::Init(HWND hWnd)
 {
 	// 窗口应用主题服务
 	SetWindowTheme(hWnd, L"TrayNotify", NULL);
-	WinImplBase::Init(hWnd);
+	WindowImplBase::Init(hWnd);
 	SetTimer(hWnd, TCLOCK_TIMER_ID_REFRESH, 1000, NULL);
 	m_pThemeHelper = new CThemeHelper;
 	m_pThemeHelper->OpenThemeData(hWnd, VSCLASS_CLOCK);
@@ -75,7 +75,7 @@ BOOL SaveBitmapFile(HBITMAP hBitmap,LPCTSTR lpszFileName)
 		wBitCount = 32;
 	//计算调色板大小
 	if (wBitCount <= 8)
-		dwPaletteSize=(1<<wBitCount)*sizeof(RGBQUAD);
+		dwPaletteSize = (DWORD)(1<<wBitCount) * sizeof(RGBQUAD);
 	//设置位图信息头结构
 	GetObject(hBitmap, sizeof(BITMAP), (LPSTR)&Bitmap);
 	bi.biSize              = sizeof(BITMAPINFOHEADER);
@@ -304,7 +304,7 @@ void CTrayClock::DrawClock(HWND hWnd, HDC hdc, const SYSTEMTIME* pt)
 		while(*p && *p != 0x0d) p++;
 		ep = p;
 		if(*p == 0x0d) p += 2;
-		TextOutW(m_hdcClock, x, y, sp, ep - sp);
+		TextOutW(m_hdcClock, x, y, sp, (int)(ep - sp));
 
 		if(*p) y += tm.tmHeight - tm.tmInternalLeading + 2 + 5;
 	}
@@ -395,7 +395,7 @@ LRESULT CTrayClock::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				FreeRemoteLibrary(m_hWnd);
 			break;
 		default:
-			return WinImplBase::HandleMessage(uMsg, wParam, lParam);
+			return WindowImplBase::HandleMessage(uMsg, wParam, lParam);
 	}	
 	return 0;
 }
@@ -408,7 +408,7 @@ LRESULT CTrayClock::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam,
 				return OnCalcRect(m_hWnd);
 			break;
 		default:
-			return WinImplBase::HandleCustomMessage(uMsg, wParam, lParam, bHandled);
+			return WindowImplBase::HandleCustomMessage(uMsg, wParam, lParam, bHandled);
 	}
 }
 
@@ -429,8 +429,8 @@ void CTrayClock::GetClockTextSize(HDC hdc, const TEXTMETRIC* ptm, const wchar_t*
 		ep = p;
 		if(*p == _T('\n')) p += 2;
 
-		if (GetTextExtentPoint32W(hdc, sp, ep - sp, &sz) == 0)
-			sz.cx = (ep - sp) * ptm->tmAveCharWidth;
+		if (GetTextExtentPoint32W(hdc, sp, (int)(ep - sp), &sz) == 0)
+			sz.cx = (LONG)(ep - sp) * ptm->tmAveCharWidth;
 		if(w < sz.cx) w = sz.cx;
 		h += heightFont;
 

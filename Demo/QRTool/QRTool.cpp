@@ -15,7 +15,7 @@ CQRTool::CQRTool()
 
 CQRTool::~CQRTool()
 {
-
+	CMagnetFrame::GetInstance()->Release();
 }
 
 void CQRTool::OnFinalMessage(HWND hWnd)

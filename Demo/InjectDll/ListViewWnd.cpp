@@ -181,9 +181,5 @@ LRESULT CListViewWnd::OnPosChanged(UINT , WPARAM , LPARAM , BOOL& bHandle)
 	ClientToScreen(hMainWnd, &pt);
 	SetWindowPos(m_hWnd, HWND_TOP, pt.x + rcPos.left, pt.y + rcPos.bottom, rcPos.right - rcPos.left, 110, /*SWP_SHOWWINDOW|*/SWP_NOACTIVATE);
 
-	CDuiString strTipInfo;
-	strTipInfo.Format(_T("OnPosChanged:len:%d"), rcPos.right - rcPos.left);
-	OutputDebugString(strTipInfo);
-
 	return FALSE;
 }

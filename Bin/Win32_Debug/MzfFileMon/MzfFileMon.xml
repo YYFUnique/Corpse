@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<Window size="910,610" sizebox="4,4,6,6" caption="0,0,0,90" roundcorner="5,5" shadow="true" esckey="false" shadowimage="shadow.png" shadowcorner="5,3,5,3" layered="true">
+<Window size="910,610" sizebox="4,4,6,6" caption="0,0,0,90" roundcorner="5,5" shadow="false" esckey="false" shadowimage="shadow.png" shadowcorner="5,3,5,3" layered="true">
     <Font name="微软雅黑" size="12" bold="false" italic="false" />
-    <Font name="微软雅黑" size="12" bold="true" italic="false" />
+    <Font name="Courier New" size="16" bold="false" italic="false" />
 	<Font name="微软雅黑" size="14" bold="false" italic="false" />
     <Font name="微软雅黑" size="16" bold="false" italic="false" />
 	<Default name="Option" value="disabledtextcolor=&quot;#FFA7A6AA&quot; font=&quot;0&quot; align=&quot;center&quot; hotimage=&quot;file=&apos;ToolbarHover.png&apos;corner=apos;10,10,10,10&apos;&quot; pushedimage=&quot;file=&apos;ToolbarSelect.png&apos;corner=apos;10,10,10,10&apos;&quot; selectedimage=&quot;file=&apos;ToolbarSelect.png&apos;corner=apos;10,10,10,10&apos;&quot;" />
@@ -93,7 +93,7 @@
 				</VerticalLayout>
 				<VerticalLayout name="3" >
 					<!--<Text text="电脑清理" float="true" pos="380,100,500,400" textcolor="#FF000000" font="2" />-->
-					<RollText name="showtext" rolltype="right" overstop="false" text="电脑清理电脑清理电脑清理电脑清理电脑清理电脑清理电脑清理" float="true" pos="100,100,400,400" bkcolor="#FFFF0000" textcolor="#FF000000" font="2" />
+					<!-- <RollText name="showtext" rolltype="right" overstop="false" text="电脑清理电脑清理电脑清理电脑清理电脑清理电脑清理电脑清理" float="true" pos="100,100,400,400" bkcolor="#FFFF0000" textcolor="#FF000000" font="2" /> -->
 				</VerticalLayout>
 				<VerticalLayout name="4" virtualwnd="sysinfo">
 					<Include source="SysInfo.xml" />

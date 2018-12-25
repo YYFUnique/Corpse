@@ -28,10 +28,12 @@ protected:
 
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnPaint();
 	afx_msg void OnExitMainframe();
 	afx_msg void OnDestroy();
 	afx_msg HCURSOR OnQueryDragIcon();
+	afx_msg void OnSyncPaint();
 	afx_msg LRESULT OnNotiyfIconMessage( WPARAM wParam, LPARAM lParam );
 	DECLARE_MESSAGE_MAP()
 

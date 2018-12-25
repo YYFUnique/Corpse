@@ -7,9 +7,9 @@
 	<Style name="OptionTab" value="normalimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;0,0,109,32&apos; &quot; hotimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;109,0,218,32&apos; &quot; selectedimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;218,0,327,32&apos;&quot;" />
 	<VerticalLayout name="VLayout" >
 		<VerticalLayout name="VLayoutTask" height="30" bkimage="subtab_bg.png" >
-			<Option name="OptionUI1" font="0" text="文件隐藏" tooltip="文件隐藏" userdata="0" style="OptionTab" float="true" pos="8,0,92,29" group="task" selected="true"/>
-			<!-- <Option name="OptionUI2" font="0" text="进程" tooltip="进程" userdata="1" float="true" style="OptionTab" pos="90,0,174,29" group="task" />
-			<Option name="OptionUI3" font="0" text="Win32服务" tooltip="win32服务" userdata="2" style="OptionTab" float="true" pos="172,0,256,29" group="task"/>
+			<Option name="OptionUI1" font="0" text="WinHex" tooltip="WinHex" userdata="0" style="OptionTab" float="true" pos="8,0,92,29" group="task" selected="true"/>
+			<Option name="OptionUI2" font="0" text="文件隐藏" tooltip="文件隐藏" userdata="1" float="true" style="OptionTab" pos="90,0,174,29" group="task" />
+			<!--<Option name="OptionUI3" font="0" text="Win32服务" tooltip="win32服务" userdata="2" style="OptionTab" float="true" pos="172,0,256,29" group="task"/>
 			<Option name="OptionUI4" font="0" text="核心服务" tooltip="核心服务" userdata="3" style="OptionTab" float="true" pos="254,0,338,29" group="task" />
 			<Option name="OptionUI5" font="0" text="加密服务" tooltip="加密服务" userdata="4" style="OptionTab" float="true" pos="336,0,420,29" group="task" />
 			<Option name="OptionUI6" font="0" text="查看证书" tooltip="查看证书" userdata="5" style="OptionTab" float="true" pos="418,0,502,29" group="task" />
@@ -17,6 +17,9 @@
 			<Option name="OptionUI8" font="0" text="计划任务" tooltip="计划任务" userdata="7" float="true" style="OptionTab" pos="580,0,666,29" group="task" /> -->
 		</VerticalLayout>
 		<TabLayout name="ProcWizard" showanimate="false" > 
+			<!-- <VerticalLayout name="VLayoutHex" virtualwnd="winhex">
+				<WinHex name="Hex" font="1" vscrollbar="true" />
+			</VerticalLayout> -->
 			<VerticalLayout name="VLayoutHide" virtualwnd="hide">
 				<FileList name="Hide" menu="true" vscrollbar="true" itemtextcolor="#FFFF0000" itemrowline="true" itemfont="0">
 					<ListHeader menu="true" bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">

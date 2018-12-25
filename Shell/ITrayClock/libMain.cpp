@@ -5,7 +5,7 @@
 HMODULE gLibModule = 0;
 
 // 用于保存时钟窗口原始处理过程,DLL卸载时应该还原
-static LONG_PTR gOldWndProc = 0;
+/*static LONG_PTR gOldWndProc = 0;*/
 
 CTrayClock* pTrayClock = NULL;
 
@@ -27,11 +27,11 @@ static DWORD WINAPI FreeSelf(LPVOID param)
 	FreeLibraryAndExitThread(gLibModule, EXIT_SUCCESS);
 }
 
-static void RestoreWndProc()
-{
-	if (gOldWndProc != 0)
-		SetWindowLongPtr(FindClockWindow(), GWLP_WNDPROC, gOldWndProc);
-}
+//static void RestoreWndProc()
+//{
+//	if (gOldWndProc != 0)
+//		SetWindowLongPtr(FindClockWindow(), GWLP_WNDPROC, gOldWndProc);
+//}
 
 void RefreshRebar(HWND hwndRebar)
 {
@@ -83,13 +83,11 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 	{
 	case DLL_PROCESS_ATTACH:
 		{
-			OutputDebugString(_T("DLL_PROCESS_ATTACH"));
 			gLibModule = hModule;
 			HWND hClock = FindClockWindow();
 			if (IsWindow(hClock))
 			{
 				gLibModule = hModule;
-				/*PostMessage(hClock)*/
 				pTrayClock = new CTrayClock;
 				pTrayClock->Init(hClock);
 				RefreshTaskbar(hClock);
@@ -99,10 +97,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 
 	case DLL_PROCESS_DETACH:
 		{
-			OutputDebugString(_T("DLL_PROCESS_DETACH"));
-			//if (pTrayClock != NULL)
-			//	delete pTrayClock;
-
 			break;
 		}
 	}

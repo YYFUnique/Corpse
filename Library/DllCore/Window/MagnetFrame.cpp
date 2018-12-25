@@ -23,6 +23,15 @@ BOOL CMagnetFrame::Initialize()
 	return m_pMagnet != NULL;
 }
 
+void CMagnetFrame::Release()
+{
+	if (m_pMagnet != NULL)
+	{
+		delete m_pMagnet;
+		m_pMagnet = NULL;
+	}
+}
+
 CMagnetFrame* CMagnetFrame::GetInstance()
 {
 	return m_pMagnet;
@@ -309,7 +318,7 @@ int CMagnetFrame::CalcDistance(int nV1, int nV2)
 	return nDist;
 }
 
-LRESULT CALLBACK CMagnetFrame::MagnetWndProc(HWND hWnd, UINT uMsg, WPARAM wParma, LPARAM lParam)
+LRESULT CALLBACK CMagnetFrame::MagnetWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	CMagnetFrame *pMagnet = GetInstance();
 
@@ -386,7 +395,7 @@ LRESULT CALLBACK CMagnetFrame::MagnetWndProc(HWND hWnd, UINT uMsg, WPARAM wParma
 	}
 	
 	if (WndData.pProc != NULL)
-		return WndData.pProc(hWnd, uMsg, wParma, lParam);
+		return WndData.pProc(hWnd, uMsg, wParam, lParam);
 	else
-		return DefWindowProc(hWnd, uMsg, wParma, lParam);
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

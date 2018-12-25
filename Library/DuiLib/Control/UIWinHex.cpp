@@ -12,7 +12,6 @@ namespace DuiLib
 		, m_dwCaretColor(0xFF1F1FFF)
 		, m_dwBackColor(0xFFE0E0FF)
 	{
-		//m_ClipboardFormatID = RegisterClipboardFormat(CLIPBOARD_FORMAT_NAME);
 		m_pWinHexData = new WINHEX_DATA;
 		
 		m_pWinHexData->hBuffer						= NULL;
