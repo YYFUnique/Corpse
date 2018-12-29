@@ -8,4 +8,6 @@
 #define DLL_API __declspec(dllimport)
 #endif
 
+inline DLL_API HMODULE GetModuleFromAddr(PVOID lpfnAddr);
+
 DLL_API LRESULT GetUserPicturePath(LPCTSTR lpszUserName, LPWSTR pwszPicPath, UINT picPathLen);

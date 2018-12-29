@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ProjectFile FilePath="1" name="QRCode">
+	<NoSuchFile commit="文件不存在" textcolor="#FFFF0000"/>
+	<ErrorAttribute commit="文件属性不一致" textcolor="#FF7F0000"/>
+	<!-- <FileInfo> -->
+		<File name="QRTool.exe" src="..\..\Bin\Win32_Release\" dest="..\NSIS 打包\QRCode\QRCode\" />
+		<File name="DllCore.dll" src="..\..\Bin\Win32_Release\" dest="..\NSIS 打包\QRCode\QRCode\" />
+		<File name="DuiLib.dll" src="..\..\Bin\Win32_Release\" dest="..\NSIS 打包\QRCode\QRCode\" />
+		<File name="QRCode.dll" src="..\..\Bin\Win32_Release\" dest="..\NSIS 打包\QRCode\QRCode\" />		
+		<File name="12.jpg" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="border.png" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="BtnClose.png" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="BtnMin.png" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="combo.png" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="Edit.png" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="error.png" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="InstallBtn.png" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="main_bkg.jpg" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="picture_.png" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="QRDlg.xml" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="QRTool.xml" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="shadow.png" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="user.png" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="vscrollbar_bkg.png" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+		<File name="vscrollbarthumb.png" src="..\..\Bin\Win32_Release\QRTool" dest="..\NSIS 打包\QRCode\QRCode\QRTool\" />
+	<!-- </FileInfo> -->
+</ProjectFile>

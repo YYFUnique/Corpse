@@ -2,6 +2,14 @@
 #include "APIs.h"
 #include "OsInfo.h"
 
+HMODULE GetModuleFromAddr(PVOID lpfnAddr)
+{
+	MEMORY_BASIC_INFORMATION BaseInfo = {0};
+	// 返回指定内存所在模块
+	VirtualQuery(lpfnAddr, &BaseInfo, sizeof(MEMORY_BASIC_INFORMATION));
+	return (HMODULE) BaseInfo.AllocationBase;
+}
+
 LRESULT GetUserPicturePathV2(LPCTSTR lpszUserName, LPTSTR pwszPicPath, UINT picPathLen)
 {
 	HINSTANCE hInst = LoadLibrary(_T("shell32.dll"));   

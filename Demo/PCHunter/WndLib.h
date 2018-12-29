@@ -30,6 +30,8 @@
 #include "VirtualWnd/HardWizard/ClipBoardMonitor.h"
 
 #include "VirtualWnd/System/TrayIcon.h"
+#include "VirtualWnd/System/SystemInfo.h"
+#include "VirtualWnd/System/LocalUser.h"
 
 #include "VirtualWnd/Security/AutoStart.h"
 

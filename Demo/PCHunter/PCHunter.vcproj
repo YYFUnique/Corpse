@@ -376,6 +376,14 @@
 					Name="System"
 					>
 					<File
+						RelativePath=".\VirtualWnd\System\LocalUser.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\System\SystemInfo.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\VirtualWnd\System\SystemMgr.cpp"
 						>
 					</File>
@@ -605,6 +613,14 @@
 				<Filter
 					Name="System"
 					>
+					<File
+						RelativePath=".\VirtualWnd\System\LocalUser.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\System\SystemInfo.h"
+						>
+					</File>
 					<File
 						RelativePath=".\VirtualWnd\System\SystemMgr.h"
 						>

@@ -28,6 +28,7 @@ public:
     bool LoadFromFile(LPCTSTR pstrFilename, int encoding = XMLFILE_ENCODING_UTF8);
     void Release();
     bool IsValid() const;
+	void Initialize();
 
     void SetPreserveWhitespace(bool bPreserve = true);
     void GetLastErrorMessage(LPTSTR pstrMessage, SIZE_T cchMax) const;
