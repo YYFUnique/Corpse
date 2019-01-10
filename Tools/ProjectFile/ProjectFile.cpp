@@ -6,11 +6,16 @@
 
 CProjectFile::CProjectFile()
 {
+	m_pHistory = new CHistory;
 	m_pCreateControl = new CControlBuilder;
 }
 
 CProjectFile::~CProjectFile()
 {
+	if (m_pHistory != NULL)
+	{
+		delete m_pHistory;
+	}
 	if (m_pCreateControl != NULL)
 	{
 		delete m_pCreateControl;
@@ -102,8 +107,40 @@ void CProjectFile::OnClick(TNotifyUI& msg)
 			return ;
 
 		LoadProjectFileList(szProjectFilePath);
+
+		if (m_ProjectFileManager.GetProjectName().IsEmpty() == FALSE)
+			AddToHistory(m_ProjectFileManager.GetProjectName(), szProjectFilePath);
+	} else if (msg.pSender->GetName() == _T("OptionUI2")) {
+		MessageBox(m_hWnd, _T("暂未开放！"), _T("提示"), MB_OK |MB_ICONINFORMATION);
+
 	} else if (msg.pSender->GetName() == _T("OptionUI3")) {
 		OnCopyFiles(msg);
+	} else if (msg.pSender->GetName() == _T("BtnLogo")) {
+		CAboutDialog* pDlg = new CAboutDialog(m_hWnd);
+		pDlg->ShowModal();
+	} else if (msg.pSender->GetName() == _T("BtnSkin")) {
+		CStdArray strProjectName;
+		m_pHistory->EnumHistoryProjectName(strProjectName);
+
+		if (strProjectName.IsEmpty() == FALSE)
+		{
+			CMenuWnd* pMenu = new CMenuWnd();
+			const RECT& rcPos = msg.pSender->GetPos();
+			CDuiPoint pt(rcPos.left,rcPos.bottom);
+			ClientToScreen(m_hWnd, &pt);
+			STRINGorID strXmlFile(_T("History.xml"));
+			pMenu->Init(NULL,strXmlFile, pt,&m_PaintManager);
+
+			CMenuUI* pRoot = pMenu->GetMenuUI();
+			for (int n=0; n<strProjectName.GetCount(); ++n)
+			{
+				CMenuElementUI* pElementItem = new CMenuElementUI;
+				pRoot->Add(pElementItem);
+
+				pElementItem->SetText(strProjectName.GetAt(n));
+			}
+			pMenu->ResizeMenu();
+		}
 	}
 }
 
@@ -400,6 +437,24 @@ void CProjectFile::LoadProjectFileList(LPCTSTR lpszProjectFilePath)
 	}
 }
 
+LRESULT CProjectFile::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	LRESULT bRes = FALSE;
+	bHandled = TRUE;
+	switch (uMsg)
+	{
+		case WM_MENUCLICK:
+				bRes = OnMenuClick(wParam, lParam);
+			break;
+		default:
+			bHandled = FALSE;
+	}
+
+	if (bHandled) return bRes;
+
+	return WindowImplBase::HandleCustomMessage(uMsg,wParam,lParam,bHandled);
+}
+
 LRESULT CProjectFile::OnKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LRESULT lRes = FALSE;
@@ -413,4 +468,35 @@ LRESULT CProjectFile::OnKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& b
 		return lRes;
 	} else
 		return WindowImplBase::OnKeyDown(uMsg, wParam, lParam, bHandled);
+}
+
+LRESULT CProjectFile::OnMenuClick(WPARAM wParam, LPARAM lParam)
+{
+	CControlUI* pControl = (CControlUI*)lParam;
+	ASSERT(pControl);
+	if (pControl == NULL)
+		return FALSE;
+
+	//获取菜单对应根节点的控件名称
+	CDuiString strMenuName = pControl->GetManager()->GetRoot()->GetName();
+	if (strMenuName == _T("History"))
+	{
+		CDuiString strSenderName = pControl->GetText();
+		CString strProjectPath;
+		m_pHistory->GetHistoryInfo(strSenderName, strProjectPath);
+		if (PathFileExists(strProjectPath) == FALSE)
+		{
+			MessageBox(m_hWnd, _T("项目文件不存在，请确认后重新选择^_^"), _T("提示"), MB_OK | MB_ICONINFORMATION);
+			return FALSE;
+		}
+
+		LoadProjectFileList(strProjectPath);
+	}
+
+	return TRUE;
+}
+
+void CProjectFile::AddToHistory(LPCTSTR lpszProjectName, LPCTSTR szProjectFilePath)
+{
+	m_pHistory->AddToHistory(lpszProjectName, szProjectFilePath);
 }

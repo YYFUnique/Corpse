@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="ProjectFile"
-	ProjectGUID="{8F3A99C2-5DA5-45AB-B5C6-2B8F4705941E}"
-	RootNamespace="ProjectFile"
+	Name="WinMTR"
+	ProjectGUID="{DBAD468B-457F-4396-8AA1-63FB25AB30B8}"
+	RootNamespace="WinMTR"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -113,10 +113,11 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="$(SolutionDir)Library"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="0"
+				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
@@ -174,14 +175,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MemLeakDetect.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectFile.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -192,56 +185,52 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\WinMTR.cpp"
+				>
+			</File>
+			<Filter
+				Name="VirtualWnd"
+				>
+				<File
+					RelativePath=".\VirtualWnd\IVirtualWndMgr.cpp"
+					>
+				</File>
+				<Filter
+					Name="IPv4"
+					>
+					<File
+						RelativePath=".\VirtualWnd\IPv4\IPv4Mgr.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\IPv4\IPv4Param.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\IPv4\IPv4Result.cpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
 			<Filter
 				Name="Utils"
 				>
 				<File
-					RelativePath=".\Utils\History.cpp"
+					RelativePath=".\Utils\ControlBuilder.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Utils\ProjectFileInfo.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\ProjectFileManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\TimeInfo.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Core"
-				>
-				<File
-					RelativePath=".\Core\ControlBuilder.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Core\ProjectFileBuilder.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Core\ProjectFileMarkup.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Control"
-				>
-				<File
-					RelativePath=".\Control\UIFileList.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Wnd"
-				>
-				<File
-					RelativePath=".\Wnd\AboutDialog.cpp"
+					RelativePath=".\Utils\UIFileList.cpp"
 					>
 				</File>
 			</Filter>
@@ -252,15 +241,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Define.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MemLeakDetect.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ProjectFile.h"
+				RelativePath=".\MacroDefine.h"
 				>
 			</File>
 			<File
@@ -271,59 +252,51 @@
 				RelativePath=".\StdAfx.h"
 				>
 			</File>
+			<File
+				RelativePath=".\UserDefine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VirtualWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WinMTR.h"
+				>
+			</File>
+			<Filter
+				Name="VirtualWnd"
+				>
+				<File
+					RelativePath=".\VirtualWnd\IVirtualWndMgr.h"
+					>
+				</File>
+				<Filter
+					Name="IPv4"
+					>
+					<File
+						RelativePath=".\VirtualWnd\IPv4\IPv4Mgr.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\IPv4\IPv4Param.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\IPv4\IPv4Result.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
 			<Filter
 				Name="Utils"
 				>
 				<File
-					RelativePath=".\Utils\History.h"
+					RelativePath=".\Utils\ControlBuilder.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Utils\IMarkup.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\ProjectFileInfo.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\ProjectFileManager.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Utils\TimeInfo.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Core"
-				>
-				<File
-					RelativePath=".\Core\ControlBuilder.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Core\ProjectFileBuilder.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Core\ProjectFileMarkup.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Control"
-				>
-				<File
-					RelativePath=".\Control\UIFileList.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Wnd"
-				>
-				<File
-					RelativePath=".\Wnd\AboutDialog.h"
+					RelativePath=".\Utils\UIFileList.h"
 					>
 				</File>
 			</Filter>
@@ -334,11 +307,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\Res\ProjectFile.ico"
+				RelativePath=".\Res\PingTool.ico"
 				>
 			</File>
 			<File
-				RelativePath=".\ProjectFile.rc"
+				RelativePath=".\WinMTR.rc"
 				>
 			</File>
 		</Filter>

@@ -12,27 +12,26 @@
                 <HorizontalLayout name="HorizontalLayoutUI2">
                     <Label name="TextUI1" text="项目文件拷贝工具" float="true" pos="7,1,207,41" textpadding="2,0,2,0" textcolor="#FFFFFFFF" font="3"/>
 				</HorizontalLayout>
-                <HorizontalLayout name="HorizontalLayoutUI4" pos="0,0,145,0">
-					<Button name="BtnMedal" maxheight="30" maxwidth="26" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="medal.png" hotimage="medal.png" pushedimage="medal.png" />
-                    <Button name="BtnSkin" maxheight="22" maxwidth="27" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="skin_normal.png" hotimage="skin_hover.png" pushedimage="skin_pressed.png" />
-                    <Button name="BtnMenu" maxheight="22" maxwidth="27" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="menu_normal.png" hotimage="menu_hover.png" pushedimage="menu_pressed.png" />
-                    <Button name="BtnMin" maxheight="22" maxwidth="27" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="min_normal.png" hotimage="min_hover.png" pushedimage="min_pressed.png" />
-                    <Button name="BtnClose" maxheight="22" maxwidth="27" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="close_normal.png" hotimage="close_hover.png" pushedimage="close_pressed.png" />
+                <HorizontalLayout name="HorizontalLayoutUI4" pos="0,0,118,0">
+                    <Button name="BtnSkin" tooltip="历史记录" maxheight="22" maxwidth="27" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="skin_normal.png" hotimage="skin_hover.png" pushedimage="skin_pressed.png" />
+                    <Button name="BtnMenu" tooltip="菜单" maxheight="22" maxwidth="27" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="menu_normal.png" hotimage="menu_hover.png" pushedimage="menu_pressed.png" />
+                    <Button name="BtnMin" tooltip="最小化" maxheight="22" maxwidth="27" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="min_normal.png" hotimage="min_hover.png" pushedimage="min_pressed.png" />
+                    <Button name="BtnClose" tooltip="关闭" maxheight="22" maxwidth="27" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="close_normal.png" hotimage="close_hover.png" pushedimage="close_pressed.png" />
                 </HorizontalLayout>
             </HorizontalLayout>
             <HorizontalLayout name="HorizontalLayoutUI5" pos="0,0,0,85" height="85">
                 <HorizontalLayout width="700" name="TabSwitch" >
                     <Option name="OptionUI1" text="打开文件" textpadding="0,45,0,0" textcolor="#FFFFFFFF" tooltip="打开文件" userdata="0" float="true" pos="15,10,85,85" group="main_toolbar" selected="true" foreimage="file=&apos;ico_Examine.png&apos; dest=&apos;11,5,59,53&apos;" />
-                    <Option name="OptionUI2" text="新建文件" textpadding="0,45,0,0" textcolor="#FFFFFFFF" tooltip="新建文件" userdata="1" float="true" pos="97,10,167,85" group="main_toolbar" foreimage="file=&apos;ico_dsmain.png&apos; dest=&apos;11,5,59,53&apos;" />
-                    <Option name="OptionUI3" text="开始拷贝" textpadding="0,45,0,0" textcolor="#FFFFFFFF" tooltip="开始拷贝" userdata="2" float="true" pos="179,10,249,85" group="main_toolbar" foreimage="file=&apos;ico_SysRepair.png&apos; dest=&apos;11,5,59,53&apos;" />
-                    <Option name="OptionUI4" text="关于" textpadding="0,45,0,0" textcolor="#FFFFFFFF" tooltip="关于" userdata="3" float="true" pos="261,10,331,85" group="main_toolbar" foreimage="file=&apos;ico_TraceCleaner.png&apos; dest=&apos;11,5,59,53&apos;" />
+                    <!-- <Option name="OptionUI2" text="新建文件" textpadding="0,45,0,0" textcolor="#FFFFFFFF" tooltip="新建文件" userdata="1" float="true" pos="97,10,167,85" group="main_toolbar" foreimage="file=&apos;ico_dsmain.png&apos; dest=&apos;11,5,59,53&apos;" /> -->
+                    <Option name="OptionUI3" text="开始拷贝" textpadding="0,45,0,0" textcolor="#FFFFFFFF" tooltip="开始拷贝" userdata="2" float="true" pos="97,10,167,85" group="main_toolbar" foreimage="file=&apos;ico_SysRepair.png&apos; dest=&apos;11,5,59,53&apos;" /> <!-- pos="179,10,249,85" -->
+                    <!-- <Option name="OptionUI4" text="关于" textpadding="0,45,0,0" textcolor="#FFFFFFFF" tooltip="关于" userdata="3" float="true" pos="261,10,331,85" group="main_toolbar" foreimage="file=&apos;ico_TraceCleaner.png&apos; dest=&apos;11,5,59,53&apos;" /> -->
                     <!--<Option name="OptionUI5" text="优化加速" textpadding="0,45,0,0" textcolor="#FFFFFFFF" tooltip="优化加速" userdata="4" float="true" pos="343,10,413,85" group="main_toolbar" foreimage="file=&apos;ico_SpeedupOpt.png&apos; dest=&apos;11,5,59,53&apos;" />
                     <Option name="OptionUI6" text="变化通知" textpadding="0,45,0,0" textcolor="#FFFFFFFF" tooltip="变化通知" userdata="5" float="true" pos="425,10,495,85" group="main_toolbar" foreimage="file=&apos;ico_expert.png&apos; dest=&apos;11,5,59,53&apos;" />
                     <Option name="OptionUI7" text="电脑门诊" textpadding="0,45,0,0" textcolor="#FFFFFFFF" tooltip="电脑门诊" userdata="6" float="true" pos="507,10,577,85" group="main_toolbar" foreimage="file=&apos;ico_diannaomenzhen.png&apos; dest=&apos;11,5,59,53&apos;" />
                     <Option name="OptionUI8" text="软件管家" textpadding="0,45,0,0" textcolor="#FFFFFFFF" tooltip="软件管家" userdata="7" float="true" pos="589,10,659,85" group="main_toolbar" foreimage="file=&apos;ico_softmgr.png&apos; dest=&apos;11,5,59,53&apos;" />-->
                 </HorizontalLayout>
 				<Control />
-				<Button name="BtnLogo" visible="false" width="148" height="62" padding="0,18,10,10" name="BtnLogo" normalimage="logo.png" hotimage="logo.png" pushedimage="logo.png" />
+				<Button name="BtnLogo" tooltip="关于" width="148" height="62" padding="0,18,10,10" name="BtnLogo" normalimage="logo.png" hotimage="logo.png" pushedimage="logo.png" />
             </HorizontalLayout>
             <VerticalLayout name="VFileLayout" bkimage="file=&apos;white.png&apos;" padding="1,0,1,0">
 				<FileList name="FileList" menu="true" itemfont="0" vscrollbar="true" hscrollbar="true" scrollstepsize="100">

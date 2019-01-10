@@ -24,7 +24,7 @@
 				</TreeView>
 			</VerticalLayout>
 			<VerticalLayout virtualwnd="connect" name="VLayoutConnect" >
-				<List name="Connect" menu="true" itemfont="0" hscrollbar="false" scrollstepsize="100">
+				<List name="Connect2" menu="true" itemfont="0" hscrollbar="false" scrollstepsize="100">
 					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
 						<ListHeaderItem text="协议" width="50" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
 						<ListHeaderItem text="本地地址" width="130" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
@@ -39,7 +39,7 @@
 				<Control height="3"/>
 			</VerticalLayout>
 			<VerticalLayout virtualwnd="route" name="VLayoutRoute" >
-				<List name="Route" menu="true" itemfont="0" >
+				<List name="Route2" menu="true" itemfont="0" >
 					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">						
 						<ListHeaderItem text="目标地址" width="120"/>
 						<ListHeaderItem text="掩码" width="120" />
@@ -51,7 +51,7 @@
 				</List>
 			</VerticalLayout>
 			<VerticalLayout virtualwnd="provider" name="VLayoutProvider" >
-				<List name="Provider" menu="true" itemfont="0" >
+				<List name="Provider2" menu="true" itemfont="0" >
 					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
 						<ListHeaderItem text="编号" width="30" />
 						<ListHeaderItem text="服务名称" width="300"/>

@@ -25,6 +25,7 @@ protected:
 	// 释放添加到Tag标签中的对象
 	void ReleaseFileItemTagObject(CListUI* pList);
 	void LoadProjectFileList(LPCTSTR lpszProjectFilePath);
+	void AddToHistory(LPCTSTR lpszProjectName, LPCTSTR szProjectFilePath);
 	void UpdateItemTextColor(CFileListItemUI* pFileListItem, DWORD dwTextColor) const;
 	void CreateProjectFileItem(CListUI* pList, const TListInfoUI* pListInfo, IMarkup* pMarkup);
 	void GetFilePath(CProjectFileInfo* pProjectFileInfo, CString& strSrcFile, CString& strDestFile) const;
@@ -33,8 +34,11 @@ protected:
 protected:
 	void OnClick(TNotifyUI& msg);
 	void OnCopyFiles(TNotifyUI& msg);
+	LRESULT OnMenuClick(WPARAM wParam, LPARAM lParam);
+	LRESULT HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 private:
+	CHistory*						m_pHistory;
 	CControlBuilder*			m_pCreateControl;
 	CDialogBuilder			m_DialogBuilder;
 	CProjectFileManager	m_ProjectFileManager;

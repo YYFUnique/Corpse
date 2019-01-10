@@ -16,12 +16,10 @@ using namespace DuiLib;
 #include "Utils/ProjectFileManager.h"
 #include "Core/ProjectFileMarkup.h"
 #include "Core/ControlBuilder.h"
-
 #include "Core/ProjectFileBuilder.h"
-
-
 #include "Utils/ProjectFileInfo.h"
-
+#include "Wnd/AboutDialog.h"
+#include "Utils/History.h"
 //#ifndef __POSITION
 //typedef struct __POSITION
 //{
