@@ -10,4 +10,4 @@
 #include "DuiLib/UIlib.h"
 using namespace DuiLib;
 
-
+#include "ScintillaWnd.h"

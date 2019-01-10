@@ -40,6 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="$(SolutionDir)Library"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;NETCORE_EXPORTS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -419,6 +420,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Application"
+				>
+				<File
+					RelativePath=".\Application\DNSLookup.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Application\PingHelper.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -582,6 +595,18 @@
 				</File>
 				<File
 					RelativePath=".\HTTPServer\HTTPServerResponse.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Application"
+				>
+				<File
+					RelativePath=".\Application\DNSLookup.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Application\PingHelper.h"
 					>
 				</File>
 			</Filter>

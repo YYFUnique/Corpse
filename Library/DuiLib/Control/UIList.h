@@ -235,12 +235,14 @@ public:
     void SetScrollPos(SIZE szPos);
     void SetPos(RECT rc);
     void DoEvent(TEventUI& event);
+	void SetAutoScroll(BOOL bAutoScroll);
     BOOL SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData);
 protected:
 	static int __cdecl ItemComareFunc(void *pvlocale, const void *item1, const void *item2);
 	int __cdecl ItemComareFunc(const void *item1, const void *item2);
 protected:
     CListUI* m_pOwner;
+	BOOL	  m_bAutoScroll;
 	PULVCompareFunc m_pCompareFunc;
 	UINT_PTR m_compareData;
 };

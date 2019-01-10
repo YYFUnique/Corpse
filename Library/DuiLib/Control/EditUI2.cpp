@@ -274,9 +274,9 @@ namespace DuiLib
 
 	void CEditUI2::SetWaterText(LPCTSTR lpszWaterText)
 	{
-		SetWaterMode(TRUE);
 		m_pTextHost->SetWaterText(lpszWaterText);
-		
+		SetWaterMode(TRUE);
+
 		Invalidate();
 	}
 

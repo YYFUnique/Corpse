@@ -48,7 +48,7 @@ namespace DuiLib
 
 	CDuiString CEditTextHost::GetText() const
 	{
-		return m_sText;
+		return m_strTextBak;
 	}
 
 	void CEditTextHost::SetText(LPCTSTR pstrText)
@@ -232,7 +232,10 @@ namespace DuiLib
 			rcText.top += rcTextPadding.top;
 			rcText.right -= rcTextPadding.right;
 			rcText.bottom -= rcTextPadding.bottom;
-			CRenderEngine::DrawText(hDC, GetManager(), rcText, sText, 0, m_iFont, m_uTextStyle|DT_CALCRECT);
+
+			// 自己构造内容
+			CalcTextRect(hDC, _T("Host"), rcText, 0, 1);
+
 			m_rcCaret.left = rcText.left;
 			m_rcCaret.right = m_rcCaret.left + m_nCaretWidth;
 			m_rcCaret.top = rcText.top;

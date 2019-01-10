@@ -296,12 +296,12 @@ UINT CMultiRequest::workThread(LPVOID lParam)
 	do 
 	{
 		DWORD dwRet = WaitForSingleObject(pMulti->m_hEvent, INFINITE);
-		if (dwRet != 0)
+		/*if (dwRet != 0)
 		{
 			CString strTipInfo;
 			strTipInfo.Format(_T("WaitForSingleObject Return :%d, hEvent:0x%X"), dwRet, pMulti->m_hEvent);
 			OutputDebugString(strTipInfo);
-		}
+		}*/
  		if (pMulti->m_bExist)
  			break;
 		uv_run(pMulti->m_pLoop, UV_RUN_DEFAULT);

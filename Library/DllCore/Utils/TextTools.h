@@ -53,6 +53,10 @@ DLL_API BOOL URLEncode(LPCTSTR lpszSrcURL, CString& strEncodeURL);
 
 DLL_API BOOL URLDecode(LPCSTR lpszEncodeURL, CString& strDecodeURL);
 
+DLL_API int FindItemInStringArray(const CStdArray& InfoArray, LPCTSTR lpszFindText , BOOL bCompareNoCase);
+
+DLL_API BOOL RemoveItemInStringArray(CStdArray& InfoArray, LPCTSTR lpszFindText , BOOL bCompareNoCase);
+
 DLL_API BOOL StrFormatNumber(ULONGLONG ullNumber, LPTSTR lpszOutput, UINT cchBuf);
 
 DLL_API BOOL StrFromTimeIntervalEx(LPTSTR pszOut, UINT cchMax, DWORD dwTimeMS, int digits);

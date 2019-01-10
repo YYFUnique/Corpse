@@ -833,7 +833,8 @@ void CListUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     else if( _tcscmp(pstrName, _T("scrollselect")) == 0 ) SetScrollSelect(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("multiexpanding")) == 0 ) SetMultiExpanding(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("itemfont")) == 0 ) m_ListInfo.nFont = _ttoi(pstrValue);
-    else if( _tcscmp(pstrName, _T("itemalign")) == 0 ) {
+	else if( _tcsicmp(pstrName, _T("autovscroll")) == 0) m_pList->SetAutoScroll(_tcscmp(pstrValue, _T("true")) == 0);
+	else if( _tcscmp(pstrName, _T("itemalign")) == 0 ) {
         if( _tcsstr(pstrValue, _T("left")) != NULL ) {
             m_ListInfo.uTextStyle &= ~(DT_CENTER | DT_RIGHT);
             m_ListInfo.uTextStyle |= DT_LEFT;
@@ -1045,6 +1046,7 @@ BOOL CListUI::SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData)
 
 CListBodyUI::CListBodyUI(CListUI* pOwner) : m_pOwner(pOwner)
 {
+	m_bAutoScroll = FALSE;
     ASSERT(m_pOwner);
 }
 
@@ -1089,6 +1091,11 @@ int __cdecl CListBodyUI::ItemComareFunc(const void *item1, const void *item2)
 	CControlUI *pControl1 = *(CControlUI**)item1;
 	CControlUI *pControl2 = *(CControlUI**)item2;
 	return m_pCompareFunc((UINT_PTR)pControl1, (UINT_PTR)pControl2, m_compareData);
+}
+
+void CListBodyUI::SetAutoScroll(BOOL bAutoScroll)
+{
+	m_bAutoScroll = bAutoScroll;
 }
 
 void CListBodyUI::SetScrollPos(SIZE szPos)
@@ -1288,6 +1295,8 @@ void CListBodyUI::SetPos(RECT rc)
 
     // Process the scrollbar
     ProcessScrollBar(rc, cxNeeded, cyNeeded);
+	if (m_bAutoScroll == TRUE && m_pVerticalScrollBar != NULL && m_pVerticalScrollBar->IsVisible())
+		EndDown();
 }
 
 void CListBodyUI::DoEvent(TEventUI& event)
