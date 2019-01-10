@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="259,325" sizebox="4,4,6,6" caption="0,0,0,90" roundcorner="5,5" shadow="true" maxbox="false" shadowimage="shadow.png" shadowcorner="5,3,5,3" layered="true">
+    <Font name="微软雅黑" size="12" bold="false" italic="false" />
+    <Font name="微软雅黑" size="12" bold="true" italic="false" />
+	<Font name="微软雅黑" size="14" bold="false" italic="false" />
+    <Font name="微软雅黑" size="16" bold="false" italic="false" />
+	<!--<Style name="Option" value="group=&quot;tabbar&quot; iconsize=&quot;16,16&quot; iconpadding=&quot;2,6,3,0&quot; iconimage=&quot;file=&apos;tab_icon.png&apos;&quot; closesize=&quot;10,10&quot; closepadding=&quot;0,6,3,3&quot; closeimage=&quot;file='btn_close.png' source='21,0,41,20'&quot; textpadding=&quot;20,0,21,0&quot; align=&quot;left&quot; valign=&quot;vcenter&quot; endellipsis=&quot;true&quot; maxwidth=&quot;120&quot; minwidth=&quot;40&quot; normalimage=&quot;res='tabbtn_normal.png' corner='4,4,4,4'&quot; hotimage=&quot;res='tabbtn_hover.png' corner='4,4,4,4'&quot; pushedimage=&quot;res='tabbtn_pushed.png' corner='4,4,4,4'&quot; selectedimage=&quot;res='tabbtn_pushed.png' corner='4,4,4,4'&quot;"/>-->
+	<Style name="Option" value="group=&quot;tabbar&quot; closesize=&quot;15,15&quot; closepadding=&quot;0,3,3,3&quot; closeimage=&quot;file='btn_close.png' source='21,0,41,20'&quot; textpadding=&quot;20,0,21,0&quot; align=&quot;left&quot; valign=&quot;vcenter&quot; endellipsis=&quot;true&quot; maxwidth=&quot;120&quot; minwidth=&quot;40&quot; normalimage=&quot;res='tabbtn_normal.png' corner='4,4,4,4'&quot; hotimage=&quot;res='tabbtn_hover.png' corner='4,4,4,4'&quot; pushedimage=&quot;res='tabbtn_pushed.png' corner='4,4,4,4'&quot; selectedimage=&quot;res='tabbtn_pushed.png' corner='4,4,4,4'&quot;"/>
+	<Default name="Button" value="align=&quot;center&quot; normalimage=&quot;file=&apos;InstallBtn.png&apos; dest=&apos;0,0,164,38&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;&quot; hotimage=&quot;file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;&quot; pushedimage=&quot;file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;&quot;" />
+	<VerticalLayout name="VHeader"  bkimage="file=&apos;white.png&apos;" borderround="5,5">
+		<VerticalLayout name="VLayout" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;" >
+			<VerticalLayout padding="1,1,1,0" name="VLayoutScan"  >
+				<HorizontalLayout>
+					<VerticalLayout width="247">
+						<HorizontalLayout name="HLayoutScanSetting" pos="0,0,247,320" bkimage="file='InfoBox.png' corner='10,30,10,10' dest='2,2,245,315'">
+							<Label name="LabelUI1" text="Ping & DNS" noprefix="true" font="1" float="true" pos="8,0,247,26" textpadding="5,0,0,0" textcolor="#FFFFFFFF" disabledtextcolor="#FFA7A6AA" />
+							<Edit2 name="HostName" float="true" watertext="Enter host name or IP" pos="13,30,237,57" bkcolor="#FFFFFFFF" textpadding="4,5,4,4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="0" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;"/>
+							<Label name="LabelUI2" text="Ping:" font="0" float="true" pos="10,60,50,92" textpadding="5,0,0,0" textcolor="#00000000" bordersize="0" bordercolor="#FFFF0000"/>
+							<Button name="BtnV4" text="IPv4" float="true" pos="50,60,110,92" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0"/>
+							<Button name="BtnV6" text="IPv6" font="1" float="true" pos="115,60,175,92" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnV6" text="TCP" font="1" float="true" pos="180,60,240,92" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnDNS" text="DNS" font="1" float="true" pos="10,95,110,127" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnReverse" text="ReverseDNS" font="1" float="true" pos="115,95,240,127" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnDNS" text="Traceroute" font="1" float="true" pos="10,130,110,162" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnReverse" text="HTTP Headers" font="1" float="true" pos="115,130,240,162" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnDNS" text="SSL Scan" font="1" float="true" pos="10,165,110,197" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnReverse" text="Port Range" font="1" float="true" pos="115,165,240,197" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnDNS" text="Whois" font="1" float="true" pos="10,200,110,232" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnReverse" text="Network Info" font="1" float="true" pos="115,200,240,232" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnDNS" text="Geo Lookup" font="1" float="true" pos="10,235,110,267" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnReverse" text="IDN <-> ACE" font="1" float="true" pos="115,235,240,267" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnDNS" text="Wake On LAN" font="1" float="true" pos="10,270,110,302" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+							<Button name="BtnReverse" text="Is it up?" font="1" float="true" pos="115,270,240,302" textcolor="#00000000" disabledtextcolor="#FFA7A6AA" font="0" />
+						</HorizontalLayout>
+						<HorizontalLayout float="true" pos="150,0,247,30">
+							<Control />
+							<Button name="BtnMin" maxheight="22" maxwidth="27" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="min_normal.png" hotimage="min_hover.png" pushedimage="min_pressed.png" />
+							<Button name="BtnClose" maxheight="22" maxwidth="27" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="close_normal.png" hotimage="close_hover.png" pushedimage="close_pressed.png" />
+						</HorizontalLayout>
+					</VerticalLayout>
+					<!-- <Control width="2" bkcolor="#FF54A5D5" />
+					<VerticalLayout >
+						<HorizontalLayout name="VLayoutTab" bkcolor="#FFDEDEDE" height="32" childpadding="2" inset="2,2,2,0">
+							<Button name="newtab" width="18" height="18" padding="0,5,0,0" normalimage="file='newtab.png' source='0,0,18,18'" hotimage="file='newtab.png' source='19,0,37,18'" pushedimage="file='newtab.png' source='38,0,56,18'"/>
+						</HorizontalLayout>
+						<TabLayout name="TabWizard">
+						</TabLayout>
+					</VerticalLayout> -->
+				</HorizontalLayout>
+			</VerticalLayout>
+		<Control height="1"/>
+		</VerticalLayout>
+    </VerticalLayout>
+</Window>

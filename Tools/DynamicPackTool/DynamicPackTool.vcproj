@@ -187,20 +187,16 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ScintillaWnd.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Solution.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.cpp"
+				RelativePath=".\StdAfx.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
 			</File>
 			<Filter
 				Name="helper"
@@ -211,6 +207,18 @@
 				</File>
 				<File
 					RelativePath=".\helper\UmPath.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Utils"
+				>
+				<File
+					RelativePath=".\Utils\UIWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\Wnd.cpp"
 					>
 				</File>
 			</Filter>
@@ -233,7 +241,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
+				RelativePath=".\Resource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ScintillaWnd.h"
 				>
 			</File>
 			<File
@@ -241,7 +253,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.h"
+				RelativePath=".\StdAfx.h"
 				>
 			</File>
 			<Filter
@@ -253,6 +265,18 @@
 				</File>
 				<File
 					RelativePath=".\helper\UmPath.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Utils"
+				>
+				<File
+					RelativePath=".\Utils\UIWnd.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\Wnd.h"
 					>
 				</File>
 			</Filter>
