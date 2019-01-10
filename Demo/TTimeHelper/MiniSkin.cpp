@@ -7,6 +7,8 @@
 #include "DllCore/Log/LogHelper.h"
 #include "DllCore/Utils/ErrorInfo.h"
 
+#define TIMER_INJECT_DLL	0x1000
+
 const UINT WM_TASKBARCREATED			= RegisterWindowMessage(_T("TaskbarCreated"));
 const UINT WM_TOGGLEDESKTOP			= RegisterWindowMessage(TOGGLEDESKTOP);
 
@@ -72,22 +74,18 @@ void CMiniSkin::InitWindow()
 	//m_pFloatWindow = new CFloatWindow;
 	//m_pFloatWindow->StickWndToDesktop(m_hWnd);
 
-	// 窗口注入，捕获显示桌面消息
-	m_pDesktopHelper = ToggleDesktopHelper::GetInstance();
-	if (m_pDesktopHelper != NULL)
-	{
-		BOOL bRet = m_pDesktopHelper->IsShellDesktopRunning();
-		if (bRet == FALSE)
-			InjectPluginToDesktop();
-
-		m_pDesktopHelper->AddRef();
-	}
+	// 进程启动后，延迟5s再将桌面插件注入桌面进程中
+	CHorizontalLayoutUI* pLayout = (CHorizontalLayoutUI*)m_PaintManager.FindControl(_T("VLayoutTotal"));
+	if (pLayout != NULL)
+		m_PaintManager.SetTimer(pLayout, TIMER_INJECT_DLL, 5*1000);
 }
 
 void CMiniSkin::Notify(TNotifyUI& msg)
 {
 	if (msg.sType == DUI_MSGTYPE_WINDOWINIT)
 		OnWindowInit(msg);
+	else if (msg.sType == DUI_MSGTYPE_TIMER)
+		OnTimer(msg);
 }
 
 void CMiniSkin::OnWindowInit(TNotifyUI& msg)
@@ -101,6 +99,24 @@ void CMiniSkin::OnWindowInit(TNotifyUI& msg)
 
 	CTTimeHelper* pTimerHelper = new CTTimeHelper;
 	pTimerHelper->ShowWindow(true, false);
+}
+
+void CMiniSkin::OnTimer(TNotifyUI& msg)
+{
+	if (msg.pSender->GetName() == _T("VLayoutTotal")) {
+		if (msg.wParam == TIMER_INJECT_DLL) {
+			m_pDesktopHelper = ToggleDesktopHelper::GetInstance();
+			if (m_pDesktopHelper != NULL)
+			{
+				BOOL bRet = m_pDesktopHelper->IsShellDesktopRunning();
+				if (bRet == FALSE)
+					InjectPluginToDesktop();
+
+				m_pDesktopHelper->AddRef();
+			}
+			m_PaintManager.KillTimer(msg.pSender, msg.wParam);
+		}
+	}
 }
 
 BOOL CMiniSkin::InjectPluginToDesktop()
@@ -148,15 +164,9 @@ HRESULT CMiniSkin::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 	// 桌面资源管理器崩溃重启后产生该消息
 	if (uMsg == WM_TASKBARCREATED)
 	{
-		m_pDesktopHelper = ToggleDesktopHelper::GetInstance();
-		if (m_pDesktopHelper != NULL)
-		{
-			BOOL bRet = m_pDesktopHelper->IsShellDesktopRunning();
-			if (bRet == FALSE)
-				InjectPluginToDesktop();
-			
-			m_pDesktopHelper->AddRef();
-		}
+		CHorizontalLayoutUI* pLayout = (CHorizontalLayoutUI*)m_PaintManager.FindControl(_T("VLayoutTotal"));
+		if (pLayout != NULL)
+			m_PaintManager.SetTimer(pLayout, TIMER_INJECT_DLL, 5*1000);
 	}
 
 	if (uMsg == WM_TOGGLEDESKTOP)

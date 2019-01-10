@@ -19,6 +19,7 @@ public:
 
 	void Notify(TNotifyUI& msg);
 protected:
+	void OnTimer(TNotifyUI& msg);
 	BOOL InjectPluginToDesktop();
 	void OnWindowInit(TNotifyUI& msg);
 	HRESULT HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
