@@ -5,6 +5,7 @@
 	<Font name="微软雅黑" size="14" bold="false" italic="false" commit="列表"/>
     <Font name="微软雅黑" size="25" bold="false" italic="false" commit="编辑框"/>
 	<!--<Style name="Option" value="group=&quot;tabbar&quot; iconsize=&quot;16,16&quot; iconpadding=&quot;2,6,3,0&quot; iconimage=&quot;file=&apos;tab_icon.png&apos;&quot; closesize=&quot;10,10&quot; closepadding=&quot;0,6,3,3&quot; closeimage=&quot;file='btn_close.png' source='21,0,41,20'&quot; textpadding=&quot;20,0,21,0&quot; align=&quot;left&quot; valign=&quot;vcenter&quot; endellipsis=&quot;true&quot; maxwidth=&quot;120&quot; minwidth=&quot;40&quot; normalimage=&quot;res='tabbtn_normal.png' corner='4,4,4,4'&quot; hotimage=&quot;res='tabbtn_hover.png' corner='4,4,4,4'&quot; pushedimage=&quot;res='tabbtn_pushed.png' corner='4,4,4,4'&quot; selectedimage=&quot;res='tabbtn_pushed.png' corner='4,4,4,4'&quot;"/>-->
+	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
 	<Style name="Option" value="group=&quot;tabbar&quot; closesize=&quot;15,15&quot; closepadding=&quot;0,3,3,3&quot; closeimage=&quot;file='btn_close.png' source='21,0,41,20'&quot; textpadding=&quot;20,0,21,0&quot; align=&quot;left&quot; valign=&quot;vcenter&quot; endellipsis=&quot;true&quot; maxwidth=&quot;120&quot; minwidth=&quot;40&quot; normalimage=&quot;res='tabbtn_normal.png' corner='4,4,4,4'&quot; hotimage=&quot;res='tabbtn_hover.png' corner='4,4,4,4'&quot; pushedimage=&quot;res='tabbtn_pushed.png' corner='4,4,4,4'&quot; selectedimage=&quot;res='tabbtn_pushed.png' corner='4,4,4,4'&quot;"/>
 	<Default name="Button" value="align=&quot;center&quot; normalimage=&quot;file=&apos;InstallBtn.png&apos; dest=&apos;0,0,164,38&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;&quot; hotimage=&quot;file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;&quot; pushedimage=&quot;file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;&quot;" />
 	<VerticalLayout name="VHeader" bkcolor="#FFF4F7FC" borderround="5,5">
@@ -22,25 +23,7 @@
 			<Control bkimage="file=&apos;line.png&apos;" height="1" padding="1,0,1,0"/>
 			<HorizontalLayout inset="1,0,1,1">
 				<VerticalLayout width="150">
-					<List header="hidden" name="TabSwitch" itemaltbk="true" itemalign="center" itemfont="2">
-						<ListLabelElement text="IPv4" />
-						<ListLabelElement text="IPv6" />
-						<ListLabelElement text="TCP" />
-						<ListLabelElement text="DNS" />
-						<ListLabelElement text="Port" />
-						<ListLabelElement text="Tracert" />
-						<ListLabelElement text="IPv4" />
-						<ListLabelElement text="IPv6" />
-						<ListLabelElement text="TCP" />
-						<ListLabelElement text="DNS" />
-						<ListLabelElement text="Port" />
-						<ListLabelElement text="Tracert" />
-						<ListLabelElement text="IPv4" />
-						<ListLabelElement text="IPv6" />
-						<ListLabelElement text="TCP" />
-						<ListLabelElement text="DNS" />
-						<ListLabelElement text="Port" />
-						<ListLabelElement text="Tracert" />
+					<List header="hidden" name="TabSwitch" vscrollbar="true" itemaltbk="true" itemalign="center" itemfont="2">
 						<ListLabelElement text="IPv4" />
 						<ListLabelElement text="IPv6" />
 						<ListLabelElement text="TCP" />
