@@ -1117,6 +1117,13 @@ namespace DuiLib
 		return (int)(p - m_pstr);
 	}
 
+	int CDuiString::FindOneOf(LPCTSTR pszCharSet, int iPos /*= 0*/) const
+	{
+		ASSERT(!::IsBadStringPtr(pszCharSet,-1));
+		LPCTSTR psz = _tcspbrk(m_pstr, pszCharSet);
+		return( (psz == NULL) ? -1 : int( psz-m_pstr));
+	}
+
 	int CDuiString::ReverseFind(TCHAR ch) const
 	{
 		LPCTSTR p = _tcsrchr(m_pstr, ch);

@@ -339,6 +339,9 @@ namespace DuiLib
 
 		int Find(TCHAR ch, int iPos = 0) const;
 		int Find(LPCTSTR pstr, int iPos = 0) const;
+
+		int FindOneOf(LPCTSTR pstr, int iPos = 0) const;
+
 		int ReverseFind(TCHAR ch) const;
 		int Replace(LPCTSTR pstrFrom, LPCTSTR pstrTo);
 

@@ -41,6 +41,7 @@ namespace DuiLib
 		void SetTextColor(DWORD dwTextColor);
 		int GetLimitText();
 		void SetLimitText(int iChars);
+		int SetTabStops(int nTab, int nTabWidth = 4);
 		long GetTextLength(DWORD dwFlags = GTL_DEFAULT) const;
 		CDuiString GetRichHostText() const;
 		CDuiString GetText() const;
@@ -68,6 +69,7 @@ namespace DuiLib
 		void HideSelection(bool bHide = true, bool bChangeStyle = false);
 		void ScrollCaret();
 		LONG GetFirstVisibleLine() const;
+		LONG GetLastVisibleLine() const;
 		void SetMargin(DWORD dwPixels);
 		int InsertText(long nInsertAfterChar, LPCTSTR lpstrText, bool bCanUndo = false);
 		int AppendText(LPCTSTR lpstrText, bool bCanUndo = false);
@@ -90,6 +92,7 @@ namespace DuiLib
 		int GetLineIndex(int nLine = -1) const;
 		// 获取字符所在行的文本长度
 		int GetLineLength(int nLine = -1) const;
+		int SetRedraw(BOOL bRedraw = TRUE) const;
 		bool LineScroll(int nLines, int nChars = 0);
 		CDuiPoint GetCharPos(long lChar) const;
 		long GetLineFromChar(long nIndex) const;
@@ -193,7 +196,6 @@ namespace DuiLib
 		BOOL m_bShowCaret;
 		CDuiString m_sTipValue;
 		DWORD m_dwTipValueColor;
-		BOOL	  m_bShowLineNum;		//是否显示行号
 		UINT m_uButtonState;
 		CDuiString m_sNormalImage;
 		CDuiString m_sHotImage;
