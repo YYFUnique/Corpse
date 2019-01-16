@@ -63,3 +63,11 @@ IRichEditOleCallbackEx : public IRichEditOleCallback
 	STDMETHOD(GetContextMenu(WORD seltyp, LPOLEOBJECT lpoleobj, CHARRANGE FAR *lpchrg,
 		HMENU FAR *lphmenu)) PURE;
 };
+
+interface __declspec(uuid("89FC1386-91E5-415f-AD8F-04415C15F8F5")) 
+IRichEditOleCallback2 : public IRichEditOleCallback
+{
+	STDMETHOD(SetNotifyHwnd)(HWND hWnd) PURE;	// 设置通知窗口句柄
+	STDMETHOD(SetRichEditHwnd)(HWND hWnd) PURE;	// 设置RichEdit窗口句柄
+	STDMETHOD(SetTextServices)(ITextServices *pTextServices) PURE;	// 设置ITextServices接口指针
+};
