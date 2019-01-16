@@ -233,6 +233,14 @@
 					RelativePath=".\Utils\UIFileList.cpp"
 					>
 				</File>
+				<File
+					RelativePath=".\Utils\UIMuiltLayout.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\UITabOption.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -297,6 +305,14 @@
 				</File>
 				<File
 					RelativePath=".\Utils\UIFileList.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\UIMuiltLayout.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\UITabOption.h"
 					>
 				</File>
 			</Filter>

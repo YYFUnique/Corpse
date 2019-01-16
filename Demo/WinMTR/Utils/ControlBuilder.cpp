@@ -18,6 +18,9 @@ CControlUI* CControlBuilder::CreateControl(LPCTSTR pstrClass)
 		pControl = new CFileListUI;
 	else if (_tcsicmp(pstrClass, DUI_CTR_FILELISTITEM) == 0)
 		pControl = new CFileListItemUI;
-
+	else if (_tcsicmp(pstrClass, DUI_CTR_MUILTLAYOUT) == 0)
+		pControl = new CMuiltLayoutUI;
+	//else if (_tcsicmp(pstrClass, DUI_CTR_TABOPTION) == 0)
+	//	pControl = new CTabOptionUI;
 	return pControl;
 }

@@ -145,7 +145,7 @@ UINT CIPv4Result::ThreadProc()
 			pList->Add(pListElement);
 			pListElement->SetText(strTipInfo);
 			pListElement->SetFixedHeight(27);
-			//LOG_PRINT(_T("Ping 请求找不到主机 %s 。请检查该名称，然后重试。"), m_pHostInfo->strHostName);
+
 			return FALSE;
 		}
 	
@@ -179,15 +179,11 @@ UINT CIPv4Result::ThreadProc()
 	pListElement->SetText(strTipInfo);
 	pListElement->SetFixedHeight(27);
 
+	DWORD dwRet = WAIT_TIMEOUT;
 	int nCount = 0;
 	while(TRUE)
 	{
 		if (nCount++ == m_pHostInfo->dwCount && m_pHostInfo->dwCount != 0)
-			break;
-
-		DWORD dwInterval = m_pHostInfo->dwInterval;
-		DWORD dwRet = WaitForSingleObject(m_NotificationEvent, dwInterval);
-		if (dwRet == WAIT_OBJECT_0 || m_bExitThread == TRUE)
 			break;
 
 		if (dwRet == WAIT_TIMEOUT)
@@ -196,85 +192,19 @@ UINT CIPv4Result::ThreadProc()
 			if (dwRet == ICMP_REQUEST_SUCCESS)
 				strTipInfo.Format(_T("来自 %s 的回复: 字节=%ld 时间=%ldms TTL=%ld\n"), strHostIPAddr, PingReply.m_dwBytes, PingReply.m_dwRoundTripTime, PingReply.m_dwTTL);
 			else 
-				strTipInfo.Format(_T("Ping 超时\n"));
+				strTipInfo.Format(_T("Ping 请求超时\n"));
 
 			CListLabelElementUI* pListElement = new CListLabelElementUI;
 			pList->Add(pListElement);
 			pListElement->SetText(strTipInfo);
 			pListElement->SetFixedHeight(27);
 		}
+
+		DWORD dwInterval = m_pHostInfo->dwInterval;
+		dwRet = WaitForSingleObject(m_NotificationEvent, dwInterval);
+		if (dwRet == WAIT_OBJECT_0 || m_bExitThread == TRUE)
+			break;
 	}
-
-	//CTabLayoutUI* pTabLayout = (CTabLayoutUI*)m_pPaintManager->FindControl(_T("IPv4Wizard"));
-	//int nIndex = pTabLayout->GetCurSel();
-	//CVerticalLayoutUI* pLayout = (CVerticalLayoutUI*)pTabLayout->GetItemAt(nIndex);
-	//CListUI* pList = (CListUI*)pLayout->FindSubControlByClassName(_T("FileListUI"));
-
-	// 创建管道用于接收编译参数
-	//HANDLE hRead = INVALID_HANDLE_VALUE ;
-	//HANDLE hWrite = INVALID_HANDLE_VALUE;
-	//SECURITY_ATTRIBUTES sa; 
-	//sa.nLength = sizeof(SECURITY_ATTRIBUTES); 
-	//sa.lpSecurityDescriptor= NULL;//使用系统默认的安全描述符
-	//sa.bInheritHandle= TRUE;//创建的进程继承句柄
-
-	//do 
-	//{
-	//	 创建匿名管道
-	//	if (CreatePipe(&hRead, &hWrite, &sa, 0) == FALSE)
-	//		break;
-
-	//	 创建PING进程
-	//	STARTUPINFO si; 
-	//	PROCESS_INFORMATION pi;
-	//	ZeroMemory(&pi, sizeof(pi));
-	//	ZeroMemory(&si,sizeof(STARTUPINFO)); 
-	//	si.cb=sizeof(STARTUPINFO); 
-	//	GetStartupInfo(&si); 
-	//	si.hStdError= hWrite; 
-	//	si.hStdOutput= hWrite;//新创建进程的标准输出连在写管道一端
-	//	si.wShowWindow= SW_HIDE;//隐藏窗口
-	//	si.dwFlags = STARTF_USESHOWWINDOW | STARTF_USESTDHANDLES;
-
-	//	创建子进程
-	//	DWORD dwRet = CreateProcess(_T("C:\\windows\\system32\\ping.exe"), (LPTSTR)_T(" www.baidu.com -t"), NULL, NULL, TRUE, NULL, NULL, NULL, &si, &pi);
-	//	if (dwRet == 0)
-	//	{
-	//		OutputDebugString(_T("CreateProcess失败"));
-	//		break;
-	//	}
-	//	
-	//	DWORD dwRead = 0;
-	//	CHAR szBuffer[MAX_PATH]={0};
-	//	while(TRUE)
-	//	{
-	//		if (ReadFile(hRead, szBuffer, _countof(szBuffer), &dwRead,NULL) == FALSE)
-	//			break;  
-
-	//		CListLabelElementUI* pListElement = new CListLabelElementUI;
-	//		pList->Add(pListElement);
-	//		pListElement->SetText(CString(szBuffer));
-	//		pListElement->SetFixedHeight(27);
-	//	}
-
-	//	DWORD dwQuitCode = 0;
-	//	if (GetExitCodeThread(pi.hThread, &dwQuitCode))
-	//	{
-	//		if (dwQuitCode != 0)
-	//		{
-	//			PostMessage(AfxGetMainWnd()->m_hWnd, UM_PACK_FINISHED, (WPARAM)1, 0);
-	//		}
-	//	}
-
-	//	CloseHandle(pi.hThread);
-	//	CloseHandle(pi.hProcess);
-
-	//} while (FALSE);
-
-	//if (hRead != INVALID_HANDLE_VALUE)
-	//	CloseHandle(hRead);
-	//if (hWrite != INVALID_HANDLE_VALUE)
-	//	CloseHandle(hWrite);
 
 	return TRUE;
 }

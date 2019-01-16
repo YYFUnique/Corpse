@@ -17,6 +17,9 @@ using namespace DuiLib;
 #include "NetCore/Application/DNSLookup.h"
 
 #include "Utils/UIFileList.h"
+
+#include "Utils/UIMuiltLayout.h"
+#include "Utils/UITabOption.h"
 #include "Utils/ControlBuilder.h"
 
 #define	WM_MESSAGE_BASE					(WM_USER + 0x2000)

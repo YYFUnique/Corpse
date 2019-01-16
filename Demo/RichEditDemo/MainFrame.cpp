@@ -4,7 +4,7 @@
 
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
-	CDuiString strFileName = CPaintManagerUI::GetInstancePath() + _T("ImageOleCtrl.dll");
+	CDuiString strFileName = CPaintManagerUI::GetInstancePath() + _T("ImageOle.dll");
 	if (DllRegisterServer(strFileName) == FALSE)	// 注册COM组件
 	{
 		::MessageBox(NULL, _T("COM组件注册失败，应用程序无法完成初始化操作！"), _T("提示"), MB_OK);
