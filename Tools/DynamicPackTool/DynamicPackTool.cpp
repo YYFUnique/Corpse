@@ -3,9 +3,7 @@
 #include "DynamicPackTool.h"
 #include "DynamicPackage.h"
 #include "helper/UmPath.h"
-/*#include "DuiLib/Layout/UITreeLayout.h"*/
 #include "DuiLib/Layout/UISplitLayout.h"
-#include "Scintilla/include/Scintilla.h"
 
 #include <shlobj.h>
 #include <TOM.h>
@@ -155,8 +153,10 @@ void CDynamicPackTool::InitWindow()
 CControlUI* CDynamicPackTool::CreateControl(LPCTSTR pstrClass)
 {
 	CControlUI* pControl = NULL;
-	if (_tcsicmp(pstrClass, _T("Scintilla")) == 0)
-		pControl = new CScintillaWnd;
+	/*if (_tcsicmp(pstrClass, _T("Scintilla")) == 0)
+		pControl = new CScintillaWnd;*/
+	if (_tcsicmp(pstrClass, _T("RichText")) == 0)
+		pControl = new CRichTextUI;
 	return pControl;
 }
 

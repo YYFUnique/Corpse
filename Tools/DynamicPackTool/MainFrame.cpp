@@ -1,9 +1,9 @@
 #include "StdAfx.h"
 #include "DynamicPackTool.h"
+#include <iostream>
 
 //打包工具互斥对象
 #define  DYNAMIC_PACKAGE_TOOL_NAME		_T("{F5644FCB-751C-4d6f-811B-1A9914AC7D38}")
-
 
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
 {
@@ -25,7 +25,7 @@ BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdSh
 		if (pDynamicPackTool == NULL) 
 			break;
 
-		pDynamicPackTool->Create(NULL, _T("NSIS 打包工具"), UI_WNDSTYLE_FRAME, 0, 800, 600);
+		pDynamicPackTool->Create(NULL, _T("NSIS 打包工具"), UI_WNDSTYLE_DIALOG, 0, 800, 600);
 		pDynamicPackTool->ShowWindow(true);
 		pDynamicPackTool->CenterWindow();
 		CPaintManagerUI::MessageLoop();

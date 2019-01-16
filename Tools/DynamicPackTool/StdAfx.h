@@ -10,4 +10,6 @@
 #include "DuiLib/UIlib.h"
 using namespace DuiLib;
 
-#include "ScintillaWnd.h"
+#include "RichText/RichText.h"
+
+#define VK_SPECTAB WM_USER + 500

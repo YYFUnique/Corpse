@@ -12,7 +12,7 @@ CWnd::~CWnd()
 
 }
 
-LRESULT CWnd::SendMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CWnd::SendMessageEx(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (IsWindow(m_hWnd))
 		return ::SendMessage(m_hWnd, uMsg, wParam, lParam);

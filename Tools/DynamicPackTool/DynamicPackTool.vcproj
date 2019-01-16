@@ -187,19 +187,23 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ScintillaWnd.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Solution.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\StdAfx.cpp"
 				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<Filter
-				Name="helper"
+				Name="Helper"
 				>
 				<File
 					RelativePath=".\helper\TreeView.cpp"
@@ -213,12 +217,16 @@
 			<Filter
 				Name="Utils"
 				>
+			</Filter>
+			<Filter
+				Name="RichText"
+				>
 				<File
-					RelativePath=".\Utils\UIWnd.cpp"
+					RelativePath=".\RichText\LexerMarker.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Utils\Wnd.cpp"
+					RelativePath=".\RichText\RichText.cpp"
 					>
 				</File>
 			</Filter>
@@ -245,10 +253,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ScintillaWnd.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Solution.h"
 				>
 			</File>
@@ -257,7 +261,7 @@
 				>
 			</File>
 			<Filter
-				Name="helper"
+				Name="Helper"
 				>
 				<File
 					RelativePath=".\helper\TreeView.h"
@@ -271,12 +275,16 @@
 			<Filter
 				Name="Utils"
 				>
+			</Filter>
+			<Filter
+				Name="RichText"
+				>
 				<File
-					RelativePath=".\Utils\UIWnd.h"
+					RelativePath=".\RichText\LexerMarker.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Utils\Wnd.h"
+					RelativePath=".\RichText\RichText.h"
 					>
 				</File>
 			</Filter>
