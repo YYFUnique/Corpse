@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ProjectFile FilePath="1" name="TTimeHelper">
+	<NoSuchFile commit="文件不存在" textcolor="#FFFF0000"/>
+	<ErrorAttribute commit="文件属性不一致" textcolor="#FF7F0000"/>
+	<!-- <FileInfo> -->
+		<File name="TTimeHelper.exe" src="..\..\Bin\Win32_Release\" dest="..\NSIS 打包\TTimeHelper\APP\" />
+		<File name="DllCore.dll" src="..\..\Bin\Win32_Release\" dest="..\NSIS 打包\TTimeHelper\APP\" />
+		<File name="DuiLib.dll" src="..\..\Bin\Win32_Release\" dest="..\NSIS 打包\TTimeHelper\APP\" />
+		<File name="libcurl.dll" src="..\..\Bin\Win32_Release\" dest="..\NSIS 打包\TTimeHelper\APP\" />
+		<File name="Installer.zip" src="..\..\Bin\Win32_Release\" dest="..\NSIS 打包\TTimeHelper\APP\" />
+		<File name="TTimeHelper.zip" src="..\..\Bin\Win32_Release\" dest="..\NSIS 打包\TTimeHelper\APP\" />
+		<File name="TTimeHelper.ini" src="..\..\Bin\Win32_Release\" dest="..\NSIS 打包\TTimeHelper\APP\" />
+		<File name="IShellDesktop.dll" src="..\..\Bin\Win32_Static_Release\" dest="..\NSIS 打包\TTimeHelper\APP\Plugin\" />
+		<File name="IShellDesktop.dll" destname="IShellDesktopX64.dll" src="..\..\Bin\x64_Static_Release\" dest="..\NSIS 打包\TTimeHelper\APP\Plugin\" />
+	<!-- </FileInfo> -->
+</ProjectFile>

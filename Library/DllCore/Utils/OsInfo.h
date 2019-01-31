@@ -1,11 +1,11 @@
 #pragma once
 
 #ifdef LS_STATIC_LIB_CALL
-#define DLL_CORE_API 
+#define DLL_API 
 #elif defined  DLL_EXPORTS
-#define DLL_CORE_API __declspec(dllexport)
+#define DLL_API __declspec(dllexport)
 #else
-#define DLL_CORE_API __declspec(dllimport)
+#define DLL_API __declspec(dllimport)
 #endif
 
 /************************************************************************/
@@ -15,7 +15,23 @@
 /* 返  回 值：如果当前进程运行在WOW64中返回TRUE，否则返回FALSE    */
 /************************************************************************/
 
-DLL_CORE_API BOOL OsIsWow64Process();
+DLL_API BOOL OsIsWow64Process();
+
+/************************************************************************/
+/* 函  数  名：Is64BitOs										                                       */
+/* 函数功能：判断是否是64位操作系统														   */
+/* 输入参数：无																						   */
+/* 返  回 值：如果64位系统返回TRUE，否则返回FALSE							       */
+/************************************************************************/
+DLL_API BOOL Is64BitOS();
+
+/************************************************************************/
+/* 函  数  名：Is64BitPorcess								                                       */
+/* 函数功能：判断指定进程是32位还是64位应用										   */
+/* 输入参数：进程ID																					   */
+/* 返  回 值：如果64位应用返回TRUE，否则返回FALSE							       */
+/************************************************************************/
+DLL_API BOOL Is64BitPorcess(DWORD dwProcessID);
 
 /************************************************************************/
 /* 函  数  名：OsIsWinXpSp2OrLater                                                         */
@@ -23,7 +39,7 @@ DLL_CORE_API BOOL OsIsWow64Process();
 /* 输入参数：无																						   */
 /* 返  回 值：如果是XPsp2及以后系统返回TRUE，否则返回FALSE			   */
 /************************************************************************/
-DLL_CORE_API BOOL OsIsWinXpSp2OrLater();
+DLL_API BOOL OsIsWinXpSp2OrLater();
 
 /************************************************************************/
 /* 函  数  名：OsIsWorkstationWinXpSp2OrLater                                     */
@@ -32,7 +48,7 @@ DLL_CORE_API BOOL OsIsWinXpSp2OrLater();
 /* 输入参数：无																						   */
 /* 返  回 值：如果是XPsp2及以后非服务器系统返回TRUE，否则返回FALSE */
 /************************************************************************/
-DLL_CORE_API BOOL OsIsWorkstationWinXpSp2OrLater();
+DLL_API BOOL OsIsWorkstationWinXpSp2OrLater();
 
 /************************************************************************/
 /* 函  数  名：OsIsWinXpOrLater	                                                               */
@@ -40,7 +56,7 @@ DLL_CORE_API BOOL OsIsWorkstationWinXpSp2OrLater();
 /* 输入参数：无																						   */
 /* 返  回 值：如果是XP及以后系统返回TRUE，否则返回FALSE					   */
 /************************************************************************/
-DLL_CORE_API BOOL OsIsWinXpOrLater();
+DLL_API BOOL OsIsWinXpOrLater();
 
 /************************************************************************/
 /* 函  数  名：OsIsWinXpSp2OrWin2003Sp1Later                                     */
@@ -48,7 +64,7 @@ DLL_CORE_API BOOL OsIsWinXpOrLater();
 /* 输入参数：无																						   */
 /* 返  回 值：如果是以上系统返回TRUE，否则返回FALSE      					   */
 /************************************************************************/
-DLL_CORE_API BOOL OsIsWinXpSp2OrWin2003Sp1Later();
+DLL_API BOOL OsIsWinXpSp2OrWin2003Sp1Later();
 
 /************************************************************************/
 /* 函  数  名：OsIsVista                                                                               */
@@ -56,7 +72,7 @@ DLL_CORE_API BOOL OsIsWinXpSp2OrWin2003Sp1Later();
 /* 输入参数：无																						   */
 /* 返  回 值：如果是Vista系统返回TRUE，否则返回FALSE      					   */
 /************************************************************************/
-DLL_CORE_API BOOL OsIsVista();
+DLL_API BOOL OsIsVista();
 
 /************************************************************************/
 /* 函  数  名：OsIsVistaOrLater	                                                               */
@@ -64,7 +80,7 @@ DLL_CORE_API BOOL OsIsVista();
 /* 输入参数：无																						   */
 /* 返  回 值：如果是Vista及以后系统返回TRUE，否则返回FALSE				   */
 /************************************************************************/
-DLL_CORE_API BOOL OsIsVistaOrLater();
+DLL_API BOOL OsIsVistaOrLater();
 
 /************************************************************************/
 /* 函  数  名：OsIsWin7	                                                                           */
@@ -72,7 +88,7 @@ DLL_CORE_API BOOL OsIsVistaOrLater();
 /* 输入参数：无																						   */
 /* 返  回 值：如果是Win7及以后系统返回TRUE，否则返回FALSE				   */
 /************************************************************************/
-DLL_CORE_API BOOL OsIsWin7();
+DLL_API BOOL OsIsWin7();
 
 /************************************************************************/
 /* 函  数  名：OsIsWorkstationVistaOrLater	                                           */
@@ -80,7 +96,7 @@ DLL_CORE_API BOOL OsIsWin7();
 /* 输入参数：无																						   */
 /* 返  回 值：如果是Vista及以后非服务器系统返回TRUE，否则返回FALSE	   */
 /************************************************************************/
-DLL_CORE_API BOOL OsIsWorkstationVistaOrLater();
+DLL_API BOOL OsIsWorkstationVistaOrLater();
 
 /************************************************************************/
 /* 函  数  名：OsIsWin8OrLater                   	                                           */
@@ -88,7 +104,7 @@ DLL_CORE_API BOOL OsIsWorkstationVistaOrLater();
 /* 输入参数：无																						   */
 /* 返  回 值：如果是Win8及以后系统返回TRUE，否则返回FALSE	               */
 /************************************************************************/
-DLL_CORE_API BOOL OsIsWin8OrLater();
+DLL_API BOOL OsIsWin8OrLater();
 
 /************************************************************************/
 /* 函  数  名：GetOsTypeName                   	                                           */
@@ -96,7 +112,7 @@ DLL_CORE_API BOOL OsIsWin8OrLater();
 /* 输入参数：无																						   */
 /* 返  回 值：如果是Vista及以后非服务器系统返回TRUE，否则返回FALSE	   */
 /************************************************************************/
-DLL_CORE_API CString GetOsTypeName();
+DLL_API CString GetOsTypeName();
 
 /************************************************************************/
 /* 函  数  名：GetOsSpText                          	                                           */
@@ -104,7 +120,7 @@ DLL_CORE_API CString GetOsTypeName();
 /* 输入参数：无																						   */
 /* 返  回 值：如果是Vista及以后非服务器系统返回TRUE，否则返回FALSE	   */
 /************************************************************************/
-DLL_CORE_API CString GetOsSpText();
+DLL_API CString GetOsSpText();
 
 /************************************************************************/
 /* 函  数  名：OsIsServer                   	                                                       */
@@ -112,7 +128,7 @@ DLL_CORE_API CString GetOsSpText();
 /* 输入参数：无																						   */
 /* 返  回 值：如果是Vista及以后非服务器系统返回TRUE，否则返回FALSE	   */
 /************************************************************************/
-DLL_CORE_API BOOL OsIsServer();
+DLL_API BOOL OsIsServer();
 
 /************************************************************************/
 /* 函  数  名：GetOsVersion               	                                                       */
@@ -121,7 +137,7 @@ DLL_CORE_API BOOL OsIsServer();
                      OUT dwMinorVersion 次版本号                                            */
 /* 返  回 值：如果是Vista及以后非服务器系统返回TRUE，否则返回FALSE	   */
 /************************************************************************/
-DLL_CORE_API BOOL GetOsVersion(DWORD& dwMajorVersion, DWORD& dwMinorVersion);
+DLL_API BOOL GetOsVersion(DWORD& dwMajorVersion, DWORD& dwMinorVersion);
 
 /************************************************************************/
 /* 函  数  名：GetOsInLogicalDrive    	                                                       */
@@ -129,8 +145,8 @@ DLL_CORE_API BOOL GetOsVersion(DWORD& dwMajorVersion, DWORD& dwMinorVersion);
 /* 输入参数：无                                                                                           */
 /* 返  回 值：返回操作系统所在驱动器符号名称，如"C:\"                          	   */
 /************************************************************************/
-DLL_CORE_API CString GetOsInLogicalDrive();
+DLL_API CString GetOsInLogicalDrive();
 
-DLL_CORE_API CString GetSystemDirectory(LPCTSTR lpszFileName);
+DLL_API CString GetSystemDirectory(LPCTSTR lpszFileName);
 
-DLL_CORE_API CString GetWindowsDirectory();
+DLL_API CString GetWindowsDirectory();

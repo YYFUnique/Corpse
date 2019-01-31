@@ -56,8 +56,12 @@ void CAddUserName::Notify(TNotifyUI& msg)
 void CAddUserName::InitWindow()
 {
 	CenterWindow();
-	/*CControlUI* pEditControl = m_PaintManager.FindControl(_T("EditUserName"));
-	pEditControl->SetFocus();*/
+	CEditUI2* pUserName = (CEditUI2*)m_PaintManager.FindControl(_T("EditUserName"));
+	if (pUserName)
+	{
+		pUserName->SetFocus();
+		pUserName->SelectAll();
+	}
 }
 
 LRESULT CAddUserName::ResponseDefaultKeyEvent(WPARAM wParam)

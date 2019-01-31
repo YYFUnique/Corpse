@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 #include "FloatWindow.h"
-
+#include "DllCore/Log/LogHelper.h"
 CEventMainWnd CFloatWindow::m_sHookMainWnd;
 
 CFloatWindow::CFloatWindow()
@@ -18,6 +18,11 @@ BOOL CFloatWindow::StickWndToDesktop(HWND hMainWnd)
 	if (m_hEventHook != NULL)
 		return FALSE;
 
+	DWORD dwStyle = GetWindowLongPtr(hMainWnd, GWL_EXSTYLE);
+	if ((dwStyle & WS_EX_TOOLWINDOW) == 0)
+		return FALSE;
+
+	//m_hEventHook = SetWinEventHook(EVENT_OBJECT_STATECHANGE, EVENT_OBJECT_STATECHANGE, NULL, WinEventHookProc, 0, 0, WINEVENT_OUTOFCONTEXT|WINEVENT_SKIPOWNPROCESS);
 	//m_hEventHook = SetWinEventHook(EVENT_OBJECT_SHOW, EVENT_OBJECT_HIDE, NULL, WinEventHookProc, 0, 0, WINEVENT_OUTOFCONTEXT|WINEVENT_SKIPOWNPROCESS);
 	m_hEventHook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, NULL, WinEventHookProc, 0, 0, WINEVENT_OUTOFCONTEXT|WINEVENT_SKIPOWNPROCESS);
 	if (m_hEventHook != NULL)
@@ -86,20 +91,33 @@ void CFloatWindow::WinEventHookProc(HWINEVENTHOOK hEventHook, DWORD dwEvent, HWN
 		if (dwEvent == EVENT_SYSTEM_FOREGROUND)
 		{
 			if (_tcsicmp(szClassName, _T("WorkerW")) == 0)
-			{
-				SetWindowPos(hFloatWnd, HWND_TOPMOST,0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
-			}
+				SetWindowPos(hFloatWnd, HWND_TOPMOST,0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
 			else 
 			{
 				//判断当前是否处于顶层窗体，如果是将窗体置于底层
 				DWORD dwStyle = GetWindowLongPtr(hFloatWnd, GWL_EXSTYLE);
 				if (dwStyle & WS_EX_TOPMOST)
-				{
-					//不能是无名对话框
-					if (_tcsicmp(szClassName, _T("#32770")) != 0)
-						SetWindowPos(hFloatWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE);
-				}
+					SetWindowPos(hFloatWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
 			}
+		} else if (dwEvent == EVENT_OBJECT_SHOW || dwEvent == EVENT_OBJECT_HIDE) {
+			if (dwEvent == EVENT_OBJECT_SHOW)
+			{
+				if (_tcsicmp(szClassName, _T("WorkerW")) == 0)
+				{
+					QLOG_INFO(_T("ClassName:%s#####################"), szClassName);
+					SetWindowPos(hFloatWnd, HWND_TOPMOST,0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
+				}
+				else
+					QLOG_APP(_T("ClassName:%s"), szClassName);
+			}
+			else
+			{
+				DWORD dwStyle = GetWindowLongPtr(hFloatWnd, GWL_EXSTYLE);
+				if (dwStyle & WS_EX_TOPMOST)
+					SetWindowPos(hFloatWnd, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE);
+			}
+		} else if (dwEvent == EVENT_OBJECT_STATECHANGE){
+			OutputDebugString(szClassName);
 		}
 	}
 }

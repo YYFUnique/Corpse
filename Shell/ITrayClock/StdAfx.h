@@ -7,10 +7,12 @@
 #include <crtdbg.h> 
 #include <vssym32.h>
 #include "Define.h"
+#include "ThemeHelper.h"
 #include "UILabel.h"
 #include "IMenuHandler.h"
-#include "UIManager.h"
-#include "WinImplBase.h"
+#include "IShell/IShell.h"
+
+using namespace IShell;
 
 #ifndef ASSERT
 #define ASSERT(expr)  _ASSERTE(expr)

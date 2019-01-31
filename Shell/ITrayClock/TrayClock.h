@@ -1,10 +1,8 @@
 #pragma once
 
-#include "ThemeHelper.h"
-
 void FreeRemoteLibrary(HWND hWnd); 
 
-class CTrayClock : public WinImplBase
+class CTrayClock : public WindowImplBase
 {
 public:
 	CTrayClock();

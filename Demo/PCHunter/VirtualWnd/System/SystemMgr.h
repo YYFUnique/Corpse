@@ -15,6 +15,8 @@ protected:
 	DUI_DECLARE_MESSAGE_MAP()
 	void OnSelectChanged( TNotifyUI &msg );
 private:
+	CSystemInfo	m_SystemInfo;
+	CLocalUser		m_LocalUser;
 	CTrayIcon		m_TrayIcon;
 	CPaintManagerUI* m_pPaintManager;
 };

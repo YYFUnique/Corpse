@@ -37,3 +37,14 @@ DLL_API BOOL EnablePrivilege(LPCTSTR lpszPrivilegeName, BOOL bEnable = TRUE);
 /*	返 回 值：成功返回TRUE，失败返回FALSE								              */
 /************************************************************************/
 DLL_API BOOL UnLoadViewOfModule(DWORD dwProcessId, LPVOID lpBaseAddr);
+
+DLL_API BOOL ModifyObjectSecurityToAccessAll(HANDLE hObject);
+/************************************************************************/
+/* 函数名称：ModifyAccessToEveryOne                                                   */
+/* 函数作用：将注册表项的访问权限修改为任何人										   */
+/* 输入参数：lpszRegPath 需要修改的注册表项路径									   */
+/* 参数举例：CLASSES_ROOT\SomePath												   */
+/*					 \\ComputerName\CLASSES_ROOT\SomePath.					   */
+/*	返 回 值：成功返回TRUE，失败返回FALSE								               */
+/************************************************************************/
+DLL_API BOOL ModifyAccessToEveryOne(LPCTSTR lpszRegPath);

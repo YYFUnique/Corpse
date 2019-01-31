@@ -12,4 +12,4 @@
 #define SPEC_API __declspec(dllimport)
 #endif
 
-SPEC_API BOOL Wow64Injectx64(DWORD processid, LPCTSTR lpszFilePath, DWORD dwWaitTime = INFINITE);
+SPEC_API BOOL Wow64InjectX64(DWORD processid, LPCTSTR lpszFilePath, DWORD dwWaitTime = INFINITE);

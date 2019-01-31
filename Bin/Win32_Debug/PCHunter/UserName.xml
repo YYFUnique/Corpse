@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <Window size="281,132" sizebox="4,4,6,6" caption="0,0,0,30" roundcorner="5,5">
-    <Font name="微软雅黑" size="16" bold="false" italic="false" />
-    <Font name="微软雅黑" size="13" bold="false" italic="false" />
+    <Font name="微软雅黑" size="14" bold="false" italic="false" />
+    <Font name="微软雅黑" size="12" bold="false" italic="false" />
     <VerticalLayout name="VLayoutTotal" pos="51,94,111,124" width="60" height="30" bkcolor="#FFFFFFFF">
         <VerticalLayout name="VLayoutBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos; mask=&apos;0xffffffff&apos;">
             <HorizontalLayout name="HorizontalLayoutUI1" pos="0,0,0,30" height="30">
@@ -13,7 +13,7 @@
                 </HorizontalLayout>
             </HorizontalLayout>
             <Label name="LabelUserName" text="用户名:" float="true" pos="22,47,68,77" disabledtextcolor="#FFA7A6AA" font="1" />
-            <Edit2 name="EditUserName" float="true" pos="74,50,254,76" bkcolor="#FFFFFFFF" textpadding="4,3,4,4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="1" normalimage="file=&apos;EDIT.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;EDIT.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;EDIT.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" disabledimage="" />
+            <Edit2 name="EditUserName" float="true" pos="74,50,254,76" bkcolor="#FFFFFFFF" textpadding="4,4,4,4" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="1" normalimage="file=&apos;EDIT.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;EDIT.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;EDIT.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" disabledimage="" />
             <Button name="BtnAddUserName" text="确定" float="true" pos="37,95,107,125" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="1" align="center" normalimage="file=&apos;InstallBtn.png&apos; source=&apos;0,0,162,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" />
             <Button name="BtnCloseBox" text="关闭" float="true" pos="174,95,244,125" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="1" align="center" normalimage="file=&apos;InstallBtn.png&apos; source=&apos;0,0,162,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" />
         </VerticalLayout>

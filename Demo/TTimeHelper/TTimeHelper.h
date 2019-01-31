@@ -5,6 +5,7 @@
 #include "CityHelper.h"
 //#include "MailHelper.h"
 //#include "Thread/SendMailThread.h"
+#include "DllCore/Window/DwmHelper.h"
 #include "DllCore/Window/FloatWindow.h"
 
 class CTTimeHelper : public WindowImplBase, public CityInfoReceiver
@@ -26,7 +27,6 @@ class CTTimeHelper : public WindowImplBase, public CityInfoReceiver
 		HRESULT HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	public:
 		void SetCityLocation(LPCTSTR lpszCityLocation);
-
 	protected:
 		BOOL PtInRect(LPCTSTR lpszName);
 		void InitWindow();
@@ -44,6 +44,7 @@ class CTTimeHelper : public WindowImplBase, public CityInfoReceiver
 		LRESULT OnMouseHover(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	private:
 		void PraseMailInfo();
+		//void PinToDesktop();
 	protected:
 		SYSTEMTIME		m_SysTime;					//保存上一次获取到的系统时间
 		CFrameUI* 			m_pFrame[4];				//用于保存界面上显示时间的4个控件

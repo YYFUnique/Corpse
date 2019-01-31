@@ -256,6 +256,54 @@ BOOL URLDecode(LPCSTR lpszEncodeURL, CString& strDecodeURL)
 	return TRUE;
 }
 
+int FindItemInStringArray(const CStdArray& InfoArray, LPCTSTR lpszFindText , BOOL bCompareNoCase)
+{
+	int nArraySize = (int)InfoArray.GetSize();
+	for(int n=0; n<nArraySize; n++)
+	{
+		const CString& strArrayText = InfoArray.GetAt(n);
+
+		BOOL bFindItem;
+
+		if (bCompareNoCase)
+			bFindItem = strArrayText.CompareNoCase(lpszFindText) == 0;
+		else
+			bFindItem = strArrayText.Compare(lpszFindText) == 0;
+
+		if (bFindItem)
+			return n;
+	}
+
+	return -1;
+}
+
+BOOL RemoveItemInStringArray(CStdArray& InfoArray, LPCTSTR lpszFindText , BOOL bCompareNoCase)
+{
+	BOOL bRemoveItem = FALSE;
+
+	int nArraySize = (int)InfoArray.GetSize();
+	for(int i=0; i<nArraySize; ++i)
+	{
+		const CString& strArrayText = InfoArray.ElementAt(i);
+
+		BOOL bFindItem;
+		if (bCompareNoCase)
+			bFindItem = strArrayText.CompareNoCase(lpszFindText) == 0;
+		else
+			bFindItem = strArrayText.Compare(lpszFindText) == 0;
+
+		if (bFindItem == FALSE)
+			continue;
+
+		InfoArray.RemoveAt(i);
+		--nArraySize;
+		--i;
+		bRemoveItem = TRUE;
+	}
+
+	return bRemoveItem;
+}
+
 BOOL StrFormatNumber(ULONGLONG ullNumber, LPTSTR pszBuf, UINT cchBuf)
 {
 	TCHAR szNumberString[64];

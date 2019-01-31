@@ -5,7 +5,7 @@
 	<Font name="微软雅黑" size="14" bold="true" italic="false" />
     <Font name="微软雅黑" size="16" bold="false" italic="false" />
 	<Default name="Option" value="disabledtextcolor=&quot;#FFA7A6AA&quot; font=&quot;0&quot; align=&quot;center&quot; hotimage=&quot;file=&apos;ToolbarHover.png&apos;corner=apos;10,10,10,10&apos;&quot; pushedimage=&quot;file=&apos;ToolbarSelect.png&apos;corner=apos;10,10,10,10&apos;&quot; selectedimage=&quot;file=&apos;ToolbarSelect.png&apos;corner=apos;10,10,10,10&apos;&quot;" />
-	<VerticalLayout name="VLayout"  bkimage="file=&apos;12.jpg&apos; source=&apos;300,200,700,600&apos;" borderround="5,5">
+	<VerticalLayout name="VLayout"  bkimage="file=&apos;12.jpg&apos; source=&apos;300,200,700,600&apos; corner=&apos;5,5,5,5&apos;" borderround="5,5">
 		<VerticalLayout name="VBorder" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;" >
 			<HorizontalLayout name="HLayoutTitle" pos="0,0,0,40" bkcolor="#4F000000">
 				<HorizontalLayout name="HLayoutName" pos="0,0,150,40">

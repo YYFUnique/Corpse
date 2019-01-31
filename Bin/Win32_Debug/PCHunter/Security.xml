@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="List" value="scrollstepsize=&quot;50&quot; vscrollbar=&quot;true&quot; hscrollbar=&quot;true&quot; itemalign=&quot;left&quot; itemaltbk=&quot;true&quot; itemtextpadding=&quot;5,0,0,0&quot; itemlinecolor=&quot;#FF939393&quot;" />
+	<Default name="ListHeaderItem" value="sepimage=&quot;file=&apos;ListHeadSep.png&apos;&quot; sepwidth=&quot;1&quot;"/>
+	<Default name="Combo" value="textpadding=&quot;4,1,1,1&quot; normalimage=&quot;file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;&quot; hotimage=&quot;file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;&quot; pushedimage=&quot;file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot; focusedimage=&quot;file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot;" />
+	<Style name="Radio" value="disabledtextcolor=&quot;#FFA7A6AA&quot; font=&quot;0&quot; align=&quot;center&quot; normalimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;0,0,15,15&apos; dest=&apos;0,5,15,20&apos;&quot; hotimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;15,0,30,15&apos; dest=&apos;0,5,15,20&apos;&quot; pushedimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;30,0,45,15&apos; dest=&apos;0,5,15,20&apos;&quot; selectedimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;75,0,90,15&apos; dest=&apos;0,5,15,20&apos;&quot; selectedpressimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;90,0,105,15&apos; dest=&apos;0,5,15,20&apos;&quot;" />
+	<Style name="OptionTab" value="normalimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;0,0,109,32&apos; &quot; hotimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;109,0,218,32&apos; &quot; selectedimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;218,0,327,32&apos;&quot;" />
+	<VerticalLayout name="VLayout">
+		<VerticalLayout name="VLayoutSecurity" height="30" bkimage="subtab_bg.png" >
+			<Option name="OptionUI1" font="0" text="开机启动" tooltip="开机启动" userdata="0" style="OptionTab" float="true" pos="15,2,85,30" group="security" selected="true"/>
+			<Option name="OptionUI2" font="0" text="映像劫持" tooltip="映像劫持" userdata="1" style="OptionTab" float="true" pos="97,2,167,30" group="security" />
+			<Option name="OptionUI3" font="0" text="打印监控" tooltip="打印监控" userdata="2" style="OptionTab" float="true" pos="179,2,249,30" group="security"/>
+			<!-- <Option name="OptionUI4" font="0" text="LSA提供者" tooltip="LSA提供者" userdata="3" style="OptionTab" float="true" pos="261,2,331,30" group="security" /> -->
+			<!-- <Option name="OptionUI5" font="0" text="主机扫描" tooltip="主机扫描" userdata="4" style="OptionTab" float="true" pos="343,2,413,30" group="security" /> -->
+			<!-- <Option name="OptionUI6" font="0" text="网络抓包" tooltip="网络抓包" userdata="5" float="true" pos="425,1,495,30" group="network" /> -->
+            <!-- <Option name="OptionUI7" font="0" text="电脑门诊" tooltip="电脑门诊" userdata="6" float="true" pos="507,1,577,30" group="network" /> -->
+			<!-- <Option name="OptionUI8" font="0" text="无线网络" tooltip="无线网络" userdata="5" style="OptionTab" float="true" pos="425,2,495,30" group="network" /> -->
+			<!-- <Option name="OptionUI9" font="0" text="SNMP" tooltip="SNMP" userdata="6" style="OptionTab" float="true" pos="507,2,577,30" group="network" /> -->
+		</VerticalLayout>
+		<TabLayout name="SecurityWizard" Padding="1,0,1,1">
+			<VerticalLayout virtualwnd="autostart"  name="VLayoutAdapter" inset="0,0,0,2">
+				<TreeView name="AutoStart" visiblefolderbtn="false" vscrollbar="true" visiblecheckbtn="false" >
+				</TreeView>
+			</VerticalLayout>
+			<VerticalLayout virtualwnd="connect" name="VLayoutConnect" >
+				<List name="Connect2" menu="true" itemfont="0" hscrollbar="false" scrollstepsize="100">
+					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
+						<ListHeaderItem text="协议" width="50" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="本地地址" width="130" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="外部地址" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="状态" width="80" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="创建时间" width="60" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="进程ID" width="40"  epimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="进程(服务)名" width="120" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+						<ListHeaderItem text="路径名称" width="300" sepimage="file=&apos;ListHeadSep.png&apos;" sepwidth="1"/>
+					</ListHeader>
+				</List>
+				<Control height="3"/>
+			</VerticalLayout>
+			<VerticalLayout virtualwnd="route" name="VLayoutRoute" >
+				<List name="Route2" menu="true" itemfont="0" >
+					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">						
+						<ListHeaderItem text="目标地址" width="120"/>
+						<ListHeaderItem text="掩码" width="120" />
+						<ListHeaderItem text="网关" width="120" />
+						<ListHeaderItem text="接口" width="120" />
+						<ListHeaderItem text="接口名称" />
+						<ListHeaderItem text="跃点数" width="50"/>
+					</ListHeader>
+				</List>
+			</VerticalLayout>
+			<VerticalLayout virtualwnd="provider" name="VLayoutProvider" >
+				<List name="Provider2" menu="true" itemfont="0" >
+					<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;">
+						<ListHeaderItem text="编号" width="30" />
+						<ListHeaderItem text="服务名称" width="300"/>
+						<ListHeaderItem text="标识ID" width="50"/>
+						<ListHeaderItem text="版本" width="30"/>
+						<ListHeaderItem text="协议族" width="80"/>
+						<ListHeaderItem text="协议号" width="80"/>
+						<ListHeaderItem text="协议链" width="40"/>
+						<ListHeaderItem text="服务程序路径" />
+					</ListHeader>
+				</List>
+			</VerticalLayout>
+		</TabLayout>
+	</VerticalLayout>
+</Window>
+

@@ -6,6 +6,7 @@
 
 #pragma warning(disable : 4251)
 
+#include <atlstr.h>
 #include "NetCore.h"
 
 #pragma comment(lib,"ws2_32.lib")

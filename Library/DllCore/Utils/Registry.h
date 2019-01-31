@@ -41,3 +41,5 @@ DLL_API BOOL LsRegQueryValue(HKEY hKey , LPCTSTR lpszValueName , CString& strVal
 DLL_API BOOL LsRegQueryValue(HKEY hKey , LPCTSTR lpszValueName , CStdArray& strValueArray);
 
 DLL_API BOOL LsRegQueryValue(HKEY hKey , LPCTSTR lpszValueName , BYTE* lpValue , DWORD& dwValueLen);
+
+DLL_API BOOL RegSetVolatile(LPCTSTR lpszSubKey, LPCTSTR lpszKeyName, DWORD dwValue);

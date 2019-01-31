@@ -63,6 +63,7 @@ protected:
 	CNetworkMgr	m_NetworkMgr;
 	CHardMgr		m_HardMgr;
 	CSystemMgr	m_SystemMgr;
+	CSecurityMgr	m_SecurityMgr;
 	CUITrayIcon		m_Tray;
 	//CMessageTip* m_pMsgTip;
 	//CUIDropTarget* m_pDropTarget;

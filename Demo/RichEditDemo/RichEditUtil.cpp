@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "RichEditUtil.h"
 #include "DuiLib/Utils/DuiFunc.h"
-#include "ImageOleCtrl/ImageOle.h"
+#include "ImageOle/IImageOle.h"
 #include <atlstr.h>
 
 DWORD RichEdit_GetDefaultCharFormat(ITextServices * pTextServices, CHARFORMAT& cf)

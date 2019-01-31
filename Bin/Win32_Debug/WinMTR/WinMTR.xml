@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="800,600" sizebox="4,4,6,6" caption="0,0,0,45" roundcorner="5,5" shadow="true" maxbox="false" shadowimage="shadow.png" shadowcorner="5,3,5,3" layered="true">
+    <Font name="微软雅黑" size="12" bold="false" italic="false" commit="通用"/>
+    <Font name="微软雅黑" size="16" bold="true" italic="false" commit="标题栏"/>
+	<Font name="微软雅黑" size="14" bold="false" italic="false" commit="列表"/>
+    <Font name="微软雅黑" size="25" bold="false" italic="false" commit="编辑框"/>
+	<!--<Style name="Option" value="group=&quot;tabbar&quot; iconsize=&quot;16,16&quot; iconpadding=&quot;2,6,3,0&quot; iconimage=&quot;file=&apos;tab_icon.png&apos;&quot; closesize=&quot;10,10&quot; closepadding=&quot;0,6,3,3&quot; closeimage=&quot;file='btn_close.png' source='21,0,41,20'&quot; textpadding=&quot;20,0,21,0&quot; align=&quot;left&quot; valign=&quot;vcenter&quot; endellipsis=&quot;true&quot; maxwidth=&quot;120&quot; minwidth=&quot;40&quot; normalimage=&quot;res='tabbtn_normal.png' corner='4,4,4,4'&quot; hotimage=&quot;res='tabbtn_hover.png' corner='4,4,4,4'&quot; pushedimage=&quot;res='tabbtn_pushed.png' corner='4,4,4,4'&quot; selectedimage=&quot;res='tabbtn_pushed.png' corner='4,4,4,4'&quot;"/>-->
+	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Style name="Option" value="group=&quot;tabbar&quot; closesize=&quot;15,15&quot; closepadding=&quot;0,3,3,3&quot; closeimage=&quot;file='btn_close.png' source='21,0,41,20'&quot; textpadding=&quot;20,0,21,0&quot; align=&quot;left&quot; valign=&quot;vcenter&quot; endellipsis=&quot;true&quot; maxwidth=&quot;120&quot; minwidth=&quot;40&quot; normalimage=&quot;res='tabbtn_normal.png' corner='4,4,4,4'&quot; hotimage=&quot;res='tabbtn_hover.png' corner='4,4,4,4'&quot; pushedimage=&quot;res='tabbtn_pushed.png' corner='4,4,4,4'&quot; selectedimage=&quot;res='tabbtn_pushed.png' corner='4,4,4,4'&quot;"/>
+	<Default name="Button" value="align=&quot;center&quot; normalimage=&quot;file=&apos;InstallBtn.png&apos; dest=&apos;0,0,164,38&apos; source=&apos;0,0,164,38&apos; corner=&apos;8,8,8,8&apos;&quot; hotimage=&quot;file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;&quot; pushedimage=&quot;file=&apos;InstallBtn.png&apos; dest=&apos;0,0,162,38&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;&quot;" />
+	<VerticalLayout name="VHeader" bkcolor="#FFF4F7FC" borderround="5,5">
+		<VerticalLayout name="VLayout" bkimage="file=&apos;border.png&apos; corner=&apos;5,5,5,5&apos;" >
+			<HorizontalLayout height="40" >
+				<HorizontalLayout height="35">
+					<Label name="Title" float="true" pos="22,10,300,35" text="Ping & DNS 网络诊断工具(评估版)" noprefix="true" font="1"/>
+				</HorizontalLayout>
+				<HorizontalLayout width="96" height="20">
+					<Button name="BtnSkin" tooltip="换肤" visible="false" float="true" pos="1,0,29,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnSkin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnSkin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnSkin.png&apos; source=&apos;56,0,84,20&apos;" />
+					<Button name="BtnMin" tooltip="最小化" float="true" pos="29,0,57,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnMin.png&apos; source=&apos;0,0,28,20&apos;" hotimage="file=&apos;BtnMin.png&apos; source=&apos;28,0,56,20&apos;" pushedimage="file=&apos;BtnMin.png&apos; source=&apos;56,0,84,20&apos;" />
+					<Button name="BtnClose" tooltip="关闭" float="true" pos="57,0,96,20" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage="file=&apos;BtnClose.png&apos; source=&apos;0,0,39,20&apos;" hotimage="file=&apos;BtnClose.png&apos; source=&apos;39,0,78,20&apos;" pushedimage="file=&apos;BtnClose.png&apos; source=&apos;78,0,117,20&apos;" />
+				</HorizontalLayout>
+			</HorizontalLayout>
+			<Control bkimage="file=&apos;line.png&apos;" height="1" padding="1,0,1,0"/>
+			<HorizontalLayout inset="1,0,1,1">
+				<VerticalLayout width="150">
+					<List header="hidden" name="TabSwitch" vscrollbar="true" itemaltbk="true" itemalign="center" itemfont="2">
+						<ListLabelElement text="IPv4" />
+						<ListLabelElement text="IPv6" />
+						<ListLabelElement text="TCP" />
+						<ListLabelElement text="DNS" />
+						<ListLabelElement text="Port" />
+						<ListLabelElement text="Tracert" />
+					</List>
+				</VerticalLayout>
+				<Control width="2" bkcolor="#FF54A5D5" />
+				<VerticalLayout>
+					<HorizontalLayout height="70" >
+						<Edit2 name="Addr" font="3" watertext="请输入需要测试的主机名或IP地址" tooltip="请输入需要测试的主机名或IP地址" textpadding="5,3,3,3" float="true" pos="100,15,500,54" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" /> 
+					</HorizontalLayout>
+					<TabLayout name="TabWizard" bkimage="file=&apos;white.png&apos;" padding="1,0,1,0" showanimate="false" frame="20" >
+						<VerticalLayout virtualwnd="IPv4">
+							<Include source="IPv4.xml" />
+						</VerticalLayout>
+						<VerticalLayout virtualwnd="IPv6">
+							<Include source="IPv6.xml" />
+						</VerticalLayout>
+					</TabLayout>
+				</VerticalLayout>
+			</HorizontalLayout>
+		</VerticalLayout>
+    </VerticalLayout>
+</Window>

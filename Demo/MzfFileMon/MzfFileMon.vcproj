@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Demo\MzfFileMon&quot;;&quot;$(SolutionDir)Include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Demo\MzfFileMon&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Shell&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -113,7 +113,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)Demo\MzfFileMon&quot;;&quot;$(SolutionDir)Include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)Demo\MzfFileMon&quot;;&quot;$(SolutionDir)Include&quot;;&quot;$(SolutionDir)Shell&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -228,6 +228,10 @@
 						RelativePath=".\VirtualWnd\FileProc\HideFile.cpp"
 						>
 					</File>
+					<File
+						RelativePath=".\VirtualWnd\FileProc\WinHex.cpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -296,6 +300,10 @@
 					</File>
 					<File
 						RelativePath=".\VirtualWnd\FileProc\HideFile.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\FileProc\WinHex.h"
 						>
 					</File>
 				</Filter>

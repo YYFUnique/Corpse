@@ -134,7 +134,11 @@ void CHostScan::OnAddUserName(CListTextElementUI* pItem)
 	pAddUserName->SetUserName(pListTextElement->GetText(5));
 	if (pAddUserName->ShowModal() == IDOK)
 	{
+		// 如果名称为空，则不添加
 		CDuiString strUserName = pAddUserName->GetUserName();
+		if (strUserName.IsEmpty())
+			return;
+
 		pListTextElement->SetText(5, strUserName);
 
 		CDuiString strSectionName = pListTextElement->GetText(1);
@@ -245,8 +249,8 @@ void CHostScan::OnRangeMenu(CControlUI* pControl)
 	if (strMenuText.IsEmpty())
 		return;
 
-	CEditUI2* pStartIP = (CEditUI2*)m_pPaintManager->FindControl(_T("EditStartIP"));
-	CEditUI2* pEndIP = (CEditUI2*)m_pPaintManager->FindControl(_T("EditEndIP"));
+	CIPAddressUI* pStartIP = (CIPAddressUI*)m_pPaintManager->FindControl(_T("StartIP"));
+	CIPAddressUI* pEndIP = (CIPAddressUI*)m_pPaintManager->FindControl(_T("EndIP"));
 
 	TCHAR szNetIP[20], szBroadcastIP[20];
 	_stscanf(strMenuText, _T("%[^|]|%s"), szNetIP, szBroadcastIP);
@@ -279,7 +283,7 @@ void CHostScan::StartScan()
 
 	if (m_pThreadTaskMgr == NULL)
 	{
-		m_pThreadTaskMgr = new CThreadTaskMgr(50,(ThreadPoolTaskFun)TaskThread);
+		m_pThreadTaskMgr = new CThreadTaskMgr(50, (ThreadPoolTaskFun)TaskThread);
 		if (m_pThreadTaskMgr != NULL)
 			m_pThreadTaskMgr->RegisterNotify((LPTASKJOBRESULT_NOTIFY)OnTaskResult,(LPTASKJOBFINSH_NOTIFY)OnTaskFinsh,this);
 	}
@@ -302,8 +306,8 @@ void CHostScan::StartScan()
 			break;
 		}
 
-		CIPAddressUI* pStart = (CIPAddressUI*)m_pPaintManager->FindControl(_T("EditStartIP"));
-		CIPAddressUI* pEnd = (CIPAddressUI*)m_pPaintManager->FindControl(_T("EditEndIP"));
+		CIPAddressUI* pStart = (CIPAddressUI*)m_pPaintManager->FindControl(_T("StartIP"));
+		CIPAddressUI* pEnd = (CIPAddressUI*)m_pPaintManager->FindControl(_T("EndIP"));
 		if (pStart == NULL || pEnd == NULL)
 		{
 			strTipInfo = _T("IP地址控件初始化失败，请检查资源是否损坏");
@@ -586,6 +590,10 @@ void CHostScan::OnTaskResult(LPVOID lParam)
 		}
 		else
 			pListElement = (CListTextElementUI*)pScanResultList->GetItemAt(TaskResultInfo.nItemIndex);
+
+		// 如果清除了第一步主机扫描结果，然后再收到任务结果，匹配列表可能存在异常
+		if (pListElement == NULL)
+			return;
 
 		if ((TaskResultInfo.HostScanType & HOST_SCAN_TYPE_ARP) == HOST_SCAN_TYPE_ARP)
 		{

@@ -671,8 +671,7 @@ void COleInPlaceFrame::ReinstateUI(void)
 CRichEditUI::CRichEditUI() :m_pCallback(NULL), m_pTwh(NULL),m_pRichEditOle(NULL), m_bVScrollBarFixing(false), m_bWantTab(true), m_bWantReturn(true), 
     m_bWantCtrlReturn(true), m_bRich(true), m_bReadOnly(false), m_bWordWrap(false), m_dwTextColor(0), m_iFont(-1), 
     m_iLimitText(cInitTextMax), m_lTwhStyle(ES_MULTILINE), m_bInited(false), m_chLeadByte(0),m_bNum(false),
-	m_uButtonState(0),m_dwTipValueColor(0xFFBAC0C5),m_bShowLineNum(FALSE),
-	m_bShowCaret(FALSE)
+	m_uButtonState(0),m_dwTipValueColor(0xFFBAC0C5),	m_bShowCaret(FALSE)
 {
 
 #ifndef _UNICODE
@@ -850,6 +849,28 @@ void CRichEditUI::SetLimitText(int iChars)
     }
 }
 
+int CRichEditUI::SetTabStops(int nTab, int nTabWidth /*= 4*/)
+{
+	if (nTab>MAX_TAB_STOPS)
+		nTab = MAX_TAB_STOPS;
+
+	if (nTabWidth<=0)
+		nTabWidth = 1;
+	else if (nTabWidth>=8)
+		nTabWidth = 8;
+
+	int* pnTabArray = new int[nTab];
+	LONG lDialogUnitsX = LOWORD(GetDialogBaseUnits());
+	LONG lPixelsX = 20;
+	for (int n=0; n<nTab; n++)
+		pnTabArray[n] =((lPixelsX * (n+1)) * nTabWidth) / lDialogUnitsX;
+	HRESULT hRet;
+	TxSendMessage(EM_SETTABSTOPS, nTab, LONG(pnTabArray), &hRet);
+	delete[] pnTabArray;
+
+	return (int)hRet;
+}
+
 long CRichEditUI::GetTextLength(DWORD dwFlags) const
 {
     GETTEXTLENGTHEX textLenEx;
@@ -864,7 +885,7 @@ long CRichEditUI::GetTextLength(DWORD dwFlags) const
     return (long)lResult;
 }
 
-CDuiString CRichEditUI::GetText() const
+CDuiString CRichEditUI::GetRichHostText() const
 {
     long lLen = GetTextLength(GTL_DEFAULT);
     LPTSTR lpText = NULL;
@@ -887,6 +908,11 @@ CDuiString CRichEditUI::GetText() const
     CDuiString sText(lpText);
     delete[] lpText;
     return sText;
+}
+
+CDuiString CRichEditUI::GetText() const
+{
+	return m_sText;
 }
 
 void CRichEditUI::SetText(LPCTSTR pstrText)
@@ -1082,6 +1108,21 @@ LONG CRichEditUI::GetFirstVisibleLine() const
 	return (LONG)lRet;
 }
 
+LONG CRichEditUI::GetLastVisibleLine() const
+{
+	RECT rcPos = GetPos();
+	rcPos.left++;
+	rcPos.bottom -= 2;
+
+	// The EM_CHARFROMPOS message retrieves information about the character
+	// closest to a specified point in the client area of an edit control
+	POINT pt = {rcPos.left, rcPos.bottom};
+	int nCharIndex =  GetCharFromPos(pt);
+
+	//The EM_EXLINEFROMCHAR message determines which line contains the specified character in a rich edit control
+	return GetLineFromChar(nCharIndex);
+}
+
 void CRichEditUI::SetMargin(DWORD dwPixels)
 {
 	LRESULT lRet;
@@ -1252,6 +1293,13 @@ int CRichEditUI::GetLineLength(int nLine) const
     LRESULT lResult;
     TxSendMessage(EM_LINELENGTH, nLine, 0, &lResult);
     return (int)lResult;
+}
+
+int CRichEditUI::SetRedraw(BOOL bRedraw /*= TRUE*/) const
+{
+	LRESULT lResult;
+	TxSendMessage(WM_SETREDRAW, bRedraw, 0, &lResult);
+	return (int)lResult;
 }
 
 bool CRichEditUI::LineScroll(int nLines, int nChars)
@@ -1624,7 +1672,7 @@ void CRichEditUI::DoEvent(TEventUI& event)
     }
 	if( event.Type == UIEVENT_SETFOCUS ) {
 		if (GetManager()->IsLayered())
-			GetManager()->SetTimer(this,IME_RICHEDIT_BLINK_TIMER_ID,GetCaretBlinkTime());
+			GetManager()->SetTimer(this, IME_RICHEDIT_BLINK_TIMER_ID, GetCaretBlinkTime());
 		if( m_pTwh ) {
 			m_pTwh->OnTxInPlaceActivate(NULL);
 			m_pTwh->GetTextServices()->TxSendMessage(WM_SETFOCUS, 0, 0, 0);
@@ -1773,20 +1821,6 @@ void CRichEditUI::SetTipValueColor( LPCTSTR pStrColor )
 DWORD CRichEditUI::GetTipValueColor()
 {
 	return m_dwTipValueColor;
-}
-
-void CRichEditUI::SetShowLineNum(BOOL bShowLineNumber)
-{
-	if (m_bShowLineNum == bShowLineNumber)
-		return;
-
-	m_bShowLineNum = bShowLineNumber;
-	Invalidate();
-}
-
-BOOL CRichEditUI::IsShowLineNum()
-{
-	return m_bShowLineNum;
 }
 
 void CRichEditUI::PaintStatusImage(HDC hDC)
@@ -2087,7 +2121,7 @@ void CRichEditUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	else if( _tcscmp(pstrName, _T("wordwrap")) == 0 ) {
 		SetWordWrap(_tcsicmp(pstrValue,_T("true")) == 0);
 	}
-	else if (_tcsicmp(pstrName, _T("linenum")) == 0)	SetShowLineNum(_tcsicmp(pstrValue, _T("true")) == 0);
+	else if(_tcsicmp(pstrName, _T("tabstops")) == 0 ) SetTabStops(0, _ttoi(pstrValue));
     else CContainerUI::SetAttribute(pstrName, pstrValue);
 }
 
@@ -2234,13 +2268,18 @@ LRESULT CRichEditUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, boo
 	}
 
     LRESULT lResult = 0;
-	HRESULT Hr = TxSendMessage(uMsg, wParam, lParam, &lResult);
-	if( Hr == S_OK ) bHandled = bWasHandled;
+	HRESULT hRet = TxSendMessage(uMsg, wParam, lParam, &lResult);
+	if (hRet == S_OK ) bHandled = bWasHandled;
 	else if( (uMsg >= WM_KEYFIRST && uMsg <= WM_KEYLAST) || uMsg == WM_CHAR || uMsg == WM_IME_CHAR )
         bHandled = bWasHandled;
 	else if( uMsg >= WM_MOUSEFIRST && uMsg <= WM_MOUSELAST ) {
         if( m_pTwh->IsCaptured() ) bHandled = bWasHandled;
     }
+
+	// 更新用于存放内容的变量
+	if (hRet == S_OK && uMsg == WM_CHAR)
+		m_sText = GetRichHostText();
+
     return lResult;
 }
 

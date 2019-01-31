@@ -167,10 +167,13 @@ LRESULT WindowImplBase::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 	}
 
 	RECT rcCaption = m_PaintManager.GetCaptionRect();
-	if( rcCaption.bottom == -1 || 
-		pt.x >= rcClient.left + rcCaption.left && pt.x < rcClient.right - rcCaption.right && 
-		pt.y >= rcCaption.top && pt.y < rcCaption.bottom ) {
-			CControlUI* pControl = static_cast<CControlUI*>(m_PaintManager.FindControl(pt));
+	if (rcCaption.bottom == -1)
+		rcCaption.bottom = rcClient.bottom;
+
+	if (pt.x >= rcClient.left + rcCaption.left && pt.x < rcClient.right - rcCaption.right && 
+		pt.y >= rcCaption.top && pt.y < rcCaption.bottom ) 
+	{
+			CControlUI* pControl = m_PaintManager.FindControl(pt);
 			if ( pControl && pControl->GetInterface(DUI_CTR_CONTAINER) != NULL ||
 										pControl->GetInterface(DUI_CTR_TEXT) != NULL ||
 										_tcsicmp (pControl->GetClass(), _T("LabelUI")) == 0 ||		//	使用GetInterface会导致Label派生子类也会响应

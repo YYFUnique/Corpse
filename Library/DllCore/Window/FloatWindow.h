@@ -26,8 +26,28 @@ public:
 	~CFloatWindow();
 
 public:
+	/************************************************************************/
+	/* 函数名称 : ReleaseHookWinEvent                                                          */
+	/* 函数说明：释放事件Hook句柄																   */
+	/* 参数说明：无																						   */
+	/* 返  回 值：无																						   */
+	/************************************************************************/
 	void ReleaseHookWinEvent();
+
+	/************************************************************************/
+	/* 函数名称 : StickWndToDesktop                                                              */
+	/* 函数说明：用于将窗口钉在桌面																   */
+	/* 参数说明：hMainWnd 需要钉在桌面的窗口句柄									   */
+	/* 返  回 值：操作成功返回TRUE，否则返回FALSE									   */
+	/*           注：该操作需要窗口具有WS_EX_TOOLWINDOW 扩展属性		   */
+	/************************************************************************/
 	BOOL StickWndToDesktop(HWND hMainWnd);
+
+	/************************************************************************/
+	/* 函数名称 : CannelWndSticked		                                                           */
+	/* 函数说明：取消钉在桌面																		   */
+	/* 参数说明：hMainWnd 钉在桌面的窗口句柄											   */
+	/************************************************************************/
 	void    CannelWndSticked(HWND hMainWnd);
 protected:
 	static void CALLBACK WinEventHookProc(HWINEVENTHOOK hEventHook, DWORD dwEvent, HWND hWnd, LONG idObject, LONG idChild, DWORD dwEventThread, DWORD dwmsEventTime);

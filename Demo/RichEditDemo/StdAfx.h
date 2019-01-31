@@ -36,7 +36,7 @@
 #include <tchar.h>
 #include <shlwapi.h>
 #include <list>
-
+#include <GdiPlus.h>
 #include "DuiLib\UIlib.h"
 using namespace DuiLib;
 #include "FontInfo.h"

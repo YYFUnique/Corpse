@@ -10,9 +10,7 @@
 #include "DllCore/Json/JsonObject.h"
 #include "DllCore/Encrypt/Base64.h"
 #include "DllCore/Utils/TextTools.h"
-/*#include "DllCore/Thread/LsThreadMgr.h"*/
 
-#include <dwmapi.h>
 #include <atltime.h>
 #pragma comment(lib, "shlwapi.lib")
 
@@ -27,6 +25,8 @@ const LPCTSTR DayOfWeek[] = {_T("星期天"),_T("星期一"),_T("星期二"),_T("星期三")
 //#define WM_DWMSENDICONICLIVEPREVIEWBITMAP   0x0326
 
 #define INI_APP_NAME	_T("mail")		//	配置文件中app名称
+// 
+// const UINT WM_TOGGLEDESKTOP			= RegisterWindowMessage(TOGGLEDESKTOP);
 
 CTTimeHelper::CTTimeHelper()
 {
@@ -46,8 +46,8 @@ CTTimeHelper::CTTimeHelper()
 	m_pWeatherInfo = NULL;
 	m_pCityInfo = NULL;
 
-	//m_pMailHelper = NULL;
-	//m_pSendMailThread = NULL;
+	HWND hTxMini = FindWindow(_T("MiniSkin"), NULL);
+	Create(hTxMini, _T("TimerHelper"), WS_POPUP, WS_EX_TOOLWINDOW, 0, 0, 0, 0, NULL);
 }
 
 CTTimeHelper::~CTTimeHelper()
@@ -71,12 +71,6 @@ CTTimeHelper::~CTTimeHelper()
 		m_pWeatherInfo = NULL;
 	}
 
-	/*if (m_pMailHelper != NULL)
-	{
-		delete m_pMailHelper;
-		m_pMailHelper = NULL;
-	}*/
-
 	//	无需单独释放线程对象，由框架自动释放
 	// m_pSendMailThread;
 	//CLsThreadMgr& LsThreadMgr = GetLsThreadMgr();
@@ -86,7 +80,7 @@ CTTimeHelper::~CTTimeHelper()
 void CTTimeHelper::OnFinalMessage( HWND hWnd )
 {
 	WindowImplBase::OnFinalMessage(hWnd);
-	delete this;
+	//delete this;
 }
 
 LPCTSTR CTTimeHelper::GetWindowClassName() const
@@ -134,29 +128,19 @@ void CTTimeHelper::InitWindow()
 	SetParent(m_hWnd, hProgram);
 	BringWindowToTop(m_hWnd);*/
 
-	m_pFloatWindow = new CFloatWindow;
-	m_pFloatWindow->StickWndToDesktop(m_hWnd);
+	// 使用系统HOOK方式，由系统通知应用特定窗口状态变化
+	//m_pFloatWindow = new CFloatWindow;
+	//m_pFloatWindow->StickWndToDesktop(m_hWnd);
 	
-	HMODULE hModule = LoadLibrary(_T("dwmapi.dll"));
-	if (hModule != NULL)
+	DwmHelper* pDwmHelper = DwmHelper::GetInstance();
+	if (pDwmHelper != NULL)
 	{
-		typedef HRESULT (WINAPI* DwmSetWindowAttributeFn)(HWND, DWORD, LPCVOID, DWORD);
-		DwmSetWindowAttributeFn pFnDwmSetWindowAttribute = (DwmSetWindowAttributeFn)GetProcAddress(hModule, "DwmSetWindowAttribute");
-		if (pFnDwmSetWindowAttribute != NULL)
-		{
-			DWMNCRENDERINGPOLICY RenderPolicy = DWMNCRP_ENABLED;
-
-			//由于枚举值DWMWA_EXCLUDED_FROM_PEEK只存在于v7.0的SDK中，v6aSDK不存在，故直接使用其值
-			//DwmSetWindowAttribute(m_hWnd, 12, &renderPolicy, sizeof(int));
-			pFnDwmSetWindowAttribute(m_hWnd, 12, &RenderPolicy, sizeof(int));
-		}
-		FreeLibrary(hModule);
+		// Areo模式中，可以预览应用
+		pDwmHelper->SetAreoWithPeek(m_hWnd);
+		// 3D切换时，应用显示在上层
+		pDwmHelper->SetFlip3DPolicy(m_hWnd);
 	}
 
-	/*CLabelUI* pText = (CLabelUI*)m_PaintManager.FindControl(_T("News"));
-	UINT nUnicode[] = {0x06DE};
-	pText->SetText((LPCTSTR)nUnicode);
-*/
 	//设置窗口显示位置
 	TCHAR szTimeMgr[MAX_PATH];
 	GetModuleFileName(NULL, szTimeMgr, _countof(szTimeMgr));
@@ -263,6 +247,10 @@ void CTTimeHelper::OnClick(TNotifyUI& msg)
 		if (nRet == IDOK)
 		{
 			Close(IDOK);
+			// 通知父窗口关闭，以减少插件引用次数
+			HWND hParent = GetParent(m_hWnd);
+			if (hParent != NULL)
+				::SendMessage(hParent, WM_CLOSE, IDOK ,NULL);
 			PostQuitMessage(0);
 		}
 	}
@@ -690,6 +678,10 @@ HRESULT CTTimeHelper::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lPara
 					break;
 
 				POINT ptClientPos = {pWinPos->x, pWinPos->y};
+
+				HWND hOwner = FindWindow(_T("MiniSkin"), NULL);
+				if (IsWindow(hOwner))
+					SetWindowPos(hOwner, NULL, ptClientPos.x, ptClientPos.y, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 
 				if (ptClientPos.x == 0 && ptClientPos.y == 0)
 					break;

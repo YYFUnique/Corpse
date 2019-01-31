@@ -1,0 +1,33 @@
+<Window>
+	<!-- <Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" /> -->
+	<Default name="HScrollBar" value="showscrollbar=&quot;false&quot; height=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;hscrollbarthumb.png&apos; source=&apos;0,0,34,10&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;hscrollbarthumb.png&apos; source=&apos;0,10,34,20&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;hscrollbarthumb.png&apos; source=&apos;0,20,34,30&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;hscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="List" value="vscrollbar=&quot;true&quot; hscrollbar=&quot;true&quot; itemalign=&quot;left&quot; itemaltbk=&quot;false&quot; itemrowline=&quot;true&quot; itemtextpadding=&quot;5,0,0,0&quot; itemlinecolor=&quot;#FF939393&quot;" />
+	<Style name="IPv4Option" value="font=&quot;2&quot; textpadding=&quot;5,0,5,0&quot; inset=&quot;0,2,0,0&quot; autocalcwidth=&quot;true&quot; group=&quot;ipv4&quot; normalimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;0,0,109,32&apos; &quot; hotimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;109,0,218,32&apos; &quot; selectedimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;218,0,327,32&apos;&quot;" />
+	<VerticalLayout>
+		<HorizontalLayout name="VLayoutIPv4" height="30" bkimage="subtab_bg.png" >
+			<Control width="5"/>
+			<Option name="OptionUI1" text="参数设置" tooltip="参数设置" userdata="0" style="IPv4Option" selected="true"/>
+		</HorizontalLayout>
+		<TabLayout name="IPv4Wizard" Padding="1,0,1,1">
+			<VerticalLayout virtualwnd="ipv4param" name="VLayoutAdapter" >
+				<VerticalLayout float="true" pos="150,20,50,0">
+					<VerticalLayout height="160">
+						<Label name="IpAddrLabel" font="2" text="Ping次数 : " align="right"  float="true"  pos="15,5,120,32" />
+						<Edit2 name="Times" font="2" float="true" text="4" pos="125,5,260,32" digital="true" textpadding="4,3,4,3" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;"/>
+						<Label name="HexHostOrderLabel" font="2"  text="时间间隔(ms) : " align="right"  float="true"  pos="5,35,120,62" />
+						<Edit2 name="Interval" font="2" text="1000" float="true"  pos="125,35,260,62" digital="true" textpadding="4,3,4,3" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;"/>
+						<Label name="HexNetOrderLabel" font="2" text="存活时间(TTL) : " align="right"  float="true"  pos="5,65,120,92" />
+						<Edit2 name="TTL" font="2" text="64" float="true"  pos="125,65,260,92" digital="true" textpadding="4,3,4,3" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;"/>
+						<Label name="TenHostOrderLabel" font="2" text="网络包大小 : " align="right"  float="true"  pos="15,95,120,122" />
+						<Edit2 name="Size" font="2" text="32" float="true"  pos="125,95,260,122" digital="true" textpadding="4,3,4,3" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;"/>
+						<Label name="TenNetOrderLabel" font="2" text="超时时间(secs) : " align="right"  float="true"  pos="5,125,120,152" />
+						<Edit2 name="Timeout" font="2" text="2" float="true"  pos="125,125,260,152" digital="true" textpadding="4,3,4,3" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" normalimage="file=&apos;Edit.png&apos; source=&apos;0,0,30,26&apos; corner=&apos;5,5,5,5&apos;" hotimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;" focusedimage="file=&apos;Edit.png&apos; source=&apos;30,0,60,26&apos; corner=&apos;5,5,5,5&apos;"/>
+					</VerticalLayout>
+					<VerticalLayout height="40">
+						<Button name="BtnOk" text="确定" float="true" pos="37,5,260,38" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="2" align="center" normalimage="file=&apos;InstallBtn.png&apos; source=&apos;0,0,162,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" />
+					</VerticalLayout>
+				</VerticalLayout>
+			</VerticalLayout>
+		</TabLayout>
+	</VerticalLayout>
+</Window>

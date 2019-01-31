@@ -79,7 +79,8 @@
 #include "Core/ImageAttribute.h"
 #include "Core/UIRender.h"
 
-#include "Utils/TxtWinHost.h"
+#include "Utils/EditTextHost.h"
+#include "Utils/WinTextHost.h"
 #include "Utils/WinImplBase.h"
 #include "Utils/UITrayIcon.h"
 #include "Effect/UIAnimation.h"
@@ -123,6 +124,7 @@
 #include "Control/UIActiveX.h"
 #include "Control/UIWebBrowser.h"
 #include "Control/UIWkeBrowser.h"
+#include "Control/UIWinHex.h"
 #include "Control/UIFlash.h"
 /*#include "Control/UIPicture.h"*/
 /*#include "Control/UICrack.h"*/

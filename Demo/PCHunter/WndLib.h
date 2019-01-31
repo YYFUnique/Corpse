@@ -30,6 +30,10 @@
 #include "VirtualWnd/HardWizard/ClipBoardMonitor.h"
 
 #include "VirtualWnd/System/TrayIcon.h"
+#include "VirtualWnd/System/SystemInfo.h"
+#include "VirtualWnd/System/LocalUser.h"
+
+#include "VirtualWnd/Security/AutoStart.h"
 
 #include "VirtualWnd/IVirtualWndMgr.h"
 
@@ -37,3 +41,4 @@
 #include "VirtualWnd/Network/NetworkMgr.h"
 #include "VirtualWnd/HardWizard/HardMgr.h"
 #include "VirtualWnd/System/SystemMgr.h"
+#include "VirtualWnd/Security/SecurityMgr.h"

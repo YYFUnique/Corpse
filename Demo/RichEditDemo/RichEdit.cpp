@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "RichEdit.h"
-#include "resource.h"
+#include "Resource.h"
 #include "RichEditUtil.h"
 #include "Utils.h"
 #include "FileDialogEx.h"
 #include "UIBubbleLayout.h"
 #include "BubbleMgr.h"
-#include "ImageOleCtrl/ImageOle.h"
+#include "ImageOle/IImageOle.h"
 
 CFontInfo g_BuddyFontInfo;
 

@@ -1,0 +1,11 @@
+<VerticalLayout bkcolor="#FFFF0000">
+	<VerticalLayout>
+		<FileList vscrollbar="true" itemtextpadding="5,0,0,0" autovscroll="true" header="hidden" itemrowline="true" itemfont="0">
+		</FileList>
+		<Control height="3"/>
+		<HorizontalLayout height="50" >
+			<Button name="BtnStop" text="停止" tooltip="停止发送数据包，并统计结果" float="true" pos="200,5,450,45" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" font="2" align="center" normalimage="file=&apos;InstallBtn.png&apos; source=&apos;0,0,162,38&apos; corner=&apos;8,8,8,8&apos;" hotimage="file=&apos;InstallBtn.png&apos; source=&apos;0,38,162,76&apos; corner=&apos;8,8,8,8&apos;" pushedimage="file=&apos;InstallBtn.png&apos; source=&apos;0,76,162,114&apos; corner=&apos;8,8,8,8&apos;" />
+		</HorizontalLayout>
+		<Control height="3"/>
+	</VerticalLayout>
+</VerticalLayout>

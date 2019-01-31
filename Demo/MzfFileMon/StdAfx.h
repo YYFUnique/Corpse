@@ -16,6 +16,7 @@ using namespace DuiLib;
 #include "MacroDefine.h"
 #include "FileMonlib.h"
 #include "Utils/ControlBuilder.h"
+
 #define	DUI_MSGTYPE_REFRESH		_T("refresh")
 #define	DUI_MSGTYPE_LOADITEM	_T("loaditem")
 
@@ -27,3 +28,5 @@ using namespace DuiLib;
 //{
 //}__POSITION,*POSITION;
 //#endif
+#define MIN min
+#define MAX max

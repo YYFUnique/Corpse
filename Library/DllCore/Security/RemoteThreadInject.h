@@ -18,13 +18,13 @@ public:
     BOOL Attach(LPCTSTR lpszExeName, LPCTSTR lpszDllName, DWORD dwWaitTime = INFINITE);
     BOOL Detach(LPCTSTR lpszExeName, DWORD dwWaitTime = INFINITE);
 
+	BOOL InjectDll(DWORD dwProcessId, LPCTSTR lpszDllName, DWORD dwWaitTime = INFINITE);
+	BOOL RelaseDll(DWORD dwProcessId, DWORD dwWaitTime = INFINITE);
+
 protected:
 	DWORD GetProcessId(LPCTSTR pszProcessName);
-	BOOL InjectDll(DWORD dwProcessId, LPCTSTR lpszDllName, DWORD dwWaitTime);
-	BOOL RelaseDll(DWORD dwProcessId, DWORD dwWaitTime);
 
 private:
     HMODULE	m_hMod;
-    HANDLE		m_hInjecthread;
 };
 

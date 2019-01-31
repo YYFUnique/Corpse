@@ -19,6 +19,8 @@ CControlUI* CControlBuilder::CreateControl(LPCTSTR pstrClass)
 		pControl = new CFileListUI;
 	else if (_tcsicmp(pstrClass, DUI_CTR_FILELISTITEM) == 0)
 		pControl = new CFileListItemUI;
+	/*else if (_tcsicmp(pstrClass, DUI_CTR_WINHEX) == 0)
+		pControl = new CWinHexUI;*/
 
 	return pControl;
 }

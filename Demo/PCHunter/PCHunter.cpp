@@ -31,6 +31,9 @@ CPCHunter::CPCHunter()
 
 	AddVirtualWnd(VIRTUAL_WND_SYSTEM, &m_SystemMgr);
 	m_SystemMgr.SetVirtualWnd(this, &m_PaintManager);
+
+	AddVirtualWnd(VIRTUAL_WND_SECURITY, &m_SecurityMgr);
+	m_SecurityMgr.SetVirtualWnd(this, &m_PaintManager);
 }
 
 CPCHunter::~CPCHunter()
@@ -46,6 +49,9 @@ CPCHunter::~CPCHunter()
 
 	RemoveVirtualWnd(VIRTUAL_WND_SYSTEM);
 	m_SystemMgr.ClearVirtualWnd(this);
+
+	RemoveVirtualWnd(VIRTUAL_WND_SECURITY);
+	m_SecurityMgr.ClearVirtualWnd(this);
 	//m_Tray.DeleteTrayIcon();
 	//	释放线程存储空间
 	ReleaseProcessErrorInfo();

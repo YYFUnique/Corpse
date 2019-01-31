@@ -3,38 +3,17 @@
 
 namespace DuiLib
 {
-#define    IME_BLINK_TIMER_ID			1000
-
 	CEditUI2::CEditUI2()
-		:m_uMaxChar(-1)
-		,m_bReadOnly(false)
-		,m_bPasswordMode(false)
-		,m_bDigitalMode(false)
-		,m_bDeleteKeyDown(false)
-		,m_bCaretOn(true)
-		,m_bWaterMode(true)
-		,m_cPasswordChar(_T('*'))
-		,m_nEditState(0)
-		,m_nSelStart(0)
-		,m_nCaretPos(0)
-		,m_nCaretOffset(0)
-		,m_nCaretWidth(1)
-		,m_nLimitText(-1)
-		,m_dwSelectTextColor(0xFFFFFFFF)
-		,m_dwSelectbkColor(0xFF3399FF)
-		,m_dwWaterColor(0xFFBAC0C5)
-		,CalcCaretType(CALC_CARET_TYPE_NONE)
+		: m_pTextHost(NULL)
 	{
 		m_CursorType = IDC_IBEAM;
-		SetRect(&m_rcTextPadding,4,4,4,4);
-		ZeroMemory(&m_rcCaret,sizeof(RECT));
-		ZeroMemory(&m_szCaretPt,sizeof(POINT));
-		m_uTextStyle = DT_SINGLELINE|DT_LEFT|DT_VCENTER|DT_NOPREFIX;
+		m_pTextHost = new CEditTextHost;
 	}
 
 	CEditUI2::~CEditUI2()
 	{
-
+		if (m_pTextHost != NULL)
+			delete m_pTextHost;
 	}
 
 	LPCTSTR CEditUI2::GetClass() const
@@ -57,13 +36,32 @@ namespace DuiLib
 		return UIFLAG_SETCURSOR | UIFLAG_TABSTOP | UIFLAG_IME_COMPOSITION;
 	}
 
+	void CEditUI2::DoInit()
+	{
+		m_pTextHost->SetOwner(this);
+
+		m_pTextHost->SetTextStyle(m_uTextStyle);
+		m_pTextHost->SetFont(GetFont());
+		m_pTextHost->SetTextColor(m_dwTextColor);
+		m_pTextHost->SetDisabledTextColor(m_dwDisabledTextColor);
+		m_pTextHost->SetTextPadding(m_rcTextPadding);
+		m_pTextHost->SetCaretColor(m_dwCaretColor);
+
+		Invalidate();
+	}
+
+	CDuiString CEditUI2::GetText() const
+	{
+		return m_pTextHost->GetText();
+	}
+
 	void CEditUI2::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
-		if (_tcsicmp(pstrName,_T("readonly")) == 0)		SetReadOnly(_tcsicmp(pstrValue,_T("true")) == 0);
+		if (_tcsicmp(pstrName,_T("readonly")) == 0)	 SetReadOnly(_tcsicmp(pstrValue,_T("true")) == 0);
 		else if (_tcsicmp(pstrName,_T("password")) == 0)	SetPasswordMode(_tcsicmp(pstrValue,_T("true")) == 0);
 		else if (_tcsicmp(pstrName,_T("passwordchar")) == 0)	SetPasswordChar(pstrValue);
 		else if (_tcsicmp(pstrName,_T("digital")) == 0)	SetDigitalMode(_tcsicmp(pstrValue,_T("true")) == 0);
-		else if (_tcsicmp(pstrName,_T("limited")) == 0) SetLimitText(_ttoi(pstrValue));
+		else if (_tcsicmp(pstrName,_T("limited")) == 0) SetLimitLength(_ttoi(pstrValue));
 		else if (_tcsicmp(pstrName,_T("normalimage")) == 0)	SetNormalImage(pstrValue);
 		else if (_tcsicmp(pstrName,_T("hotimage")) == 0)	SetHotImage(pstrValue);
 		else if (_tcsicmp(pstrName,_T("focusedimage")) == 0)  SetFocusedImage(pstrValue);
@@ -101,211 +99,44 @@ namespace DuiLib
 			return;
 		}
 
-		if (event.Type == UIEVENT_TIMER)
-		{
-			m_bCaretOn = !m_bCaretOn;
-			InvalidateRect(m_pManager->GetPaintWindow(),&m_rcCaret,FALSE);
+		if (m_pTextHost->DoEvent(event) != FALSE)
 			return;
-		}
-		
-		if (event.Type == UIEVENT_SETFOCUS){
+
+		if (event.Type == UIEVENT_DBLCLICK) {
 			if (IsEnabled()){
-				m_bFocused = true;
-				SetWaterMode(false);
-				m_pManager->SetTimer(this,IME_BLINK_TIMER_ID,GetCaretBlinkTime());
-				CreateCaret(m_pManager->GetPaintWindow(),NULL,2,2);
+				GetManager()->SendNotify(this, DUI_MSGTYPE_DBCLICK, event.wParam, event.lParam);
 				Invalidate();
 			}
-			return;
-		}else if (event.Type == UIEVENT_KILLFOCUS){
-			if (IsEnabled()){
-				m_nSelStart = m_nCaretPos;
-				m_nCaretOffset = 0;
-				m_bCaretOn = false;
-				m_bFocused = false;
-
-				if (m_sText.IsEmpty())
-					SetWaterMode(true);
-
-				m_pManager->KillTimer(this,IME_BLINK_TIMER_ID);
-				DestroyCaret();
-				Invalidate();
-			}
-			return;
-		}
-
-		if( event.Type == UIEVENT_MOUSEENTER ){
-			if( IsEnabled() ) {
-				m_nEditState |= UISTATE_HOT;
-				Invalidate();
-			}
-			return;
-		}else if( event.Type == UIEVENT_MOUSELEAVE ){
-			if( IsEnabled() ) {
-				m_nEditState &= ~UISTATE_HOT;
-				Invalidate();
-			}
-			return;
-		}
-		if (event.Type == UIEVENT_KEYDOWN){
-			if (IsEnabled()){
-				if (IsReadOnly())
-					return;
-
-				if (OnKeyEvent(event) && (event.chKey < 'A' || event.chKey > 'Z'))
-				{
-					if ((event.wKeyState & MK_CONTROL) != MK_CONTROL &&
-						(event.wKeyState & MK_SHIFT) != MK_SHIFT)
-						m_nSelStart = m_nCaretPos;
-					RestartCaretBlinkTimer();
-				}
-				Invalidate();
-			}
-			return;
-		}
-
-		if (event.Type == UIEVENT_CHAR){
-			
-			if (event.chKey == VK_BACK || event.chKey == VK_RETURN || 
-				event.chKey == VK_ESCAPE || event.chKey == VK_TAB)
-				return;
-			if (event.wKeyState && (event.wKeyState & MK_SHIFT) != MK_SHIFT)
-				return;
-
-			if (IsEnabled()){
-				if (IsReadOnly())
-					return;
-
-				if (IsDigitalMode() == true && (event.chKey < 256 && isdigit(event.chKey)) == FALSE)
-					return;
-
-				int nMin = __min(m_nSelStart,m_nCaretPos);
-				int nMax = __max(m_nSelStart,m_nCaretPos);
-				CDuiString strLeft = m_sText.Left(nMin);
-				CDuiString strRight = m_sText.Right(m_sText.GetLength()-nMax);
-				CDuiString strValue;
-				strValue.Format(_T("%s%c%s"),(LPCTSTR)strLeft,event.chKey,(LPCTSTR)strRight);
-				if ((UINT)strValue.GetLength()<=GetLimitText())
-				{
-					SetText(strValue);
-					m_nSelStart = m_nCaretPos = nMin+1;
-					//SaveEditText(m_sText);
-					RestartCaretBlinkTimer();
-					m_pManager->SendNotify(this,DUI_MSGTYPE_TEXTCHANGED);
-					Invalidate();
-				}
-			}
-			return;
-		}
-		if (event.Type == UIEVENT_MOUSEMOVE){
-			if ((m_nEditState & UISTATE_PUSHED) != UISTATE_PUSHED)
-				return;
-			//确定选择区域
-			CalcCaretType = CALC_CARET_TYPE_SELECT_MODE;
-			m_szCaretPt.x = event.ptMouse.x;
-			m_szCaretPt.y = event.ptMouse.y;
-			Invalidate();
-			return;
-		}
-		if( event.Type == UIEVENT_CONTEXTMENU ){
-			if (IsContextMenuUsed())
-				m_pManager->SendNotify(this, DUI_MSGTYPE_MENU, event.wParam, event.lParam);
-			return;
-		}
-		//调整输入法窗口位置
-		if (event.Type == UIEVENT_IME_STARTCOMPOSITION)
-			AdjustImeWindowPos();
-
-		/*if (event.Type == UIEVENT_IME_COMPOSITION)
-		{
-			if ((event.lParam & GCS_RESULTSTR) == 0)
-				return;
-			HIMC hIMC;
-			DWORD dwSize;
-			HGLOBAL hGlobal;
-			LPTSTR lpEditText;
-			hIMC = ImmGetContext(m_pManager->GetPaintWindow());
-			if (hIMC == NULL)
-				return;
-			dwSize = ImmGetCompositionString(hIMC, GCS_RESULTSTR, NULL, 0);
-			dwSize += sizeof(TCHAR);
-			hGlobal = GlobalAlloc(GHND,dwSize);
-			lpEditText = (LPTSTR)GlobalLock(hGlobal);
-			ImmGetCompositionString(hIMC, GCS_RESULTSTR, lpEditText, dwSize);
-			ImmReleaseContext(m_pManager->GetPaintWindow(), hIMC);
-			int nMin = __min(m_nSelStart,m_nCaretPos);
-			int nMax = __max(m_nSelStart,m_nCaretPos);
-			LPCTSTR lpszLeft = m_sText.Left(nMin);
-			LPCTSTR lpszRight = m_sText.Right(m_sText.GetLength()-nMax);
-			m_sText.Format(_T("%s%s%s"),lpszLeft,lpEditText,lpszRight);
-			m_nCaretPos += _tcslen(lpEditText);
-			m_nSelStart = m_nCaretPos;
-			GlobalUnlock(hGlobal);
-			GlobalFree(hGlobal);
-			Invalidate();
-			return;
-		}*/
-
-		if (event.Type == UIEVENT_DBLCLICK){
-			if (IsEnabled()){
-				m_nSelStart = 0;
-				m_nCaretPos = m_sText.GetLength();
-				m_pManager->SendNotify(this, DUI_MSGTYPE_DBCLICK, event.wParam, event.lParam);
-				Invalidate();
-			}
-			return;
-		}
-		if (event.Type == UIEVENT_BUTTONDOWN){
-			if (IsEnabled()){
-				if ((event.wKeyState & MK_CONTROL) == MK_CONTROL || (event.wKeyState & MK_SHIFT) == MK_SHIFT)
-					CalcCaretType = CALC_CARET_TYPE_SELECT_MODE;
-				else
-					CalcCaretType = CALC_CARET_TYPE_POS;
-				m_nEditState |= UISTATE_PUSHED;
-				m_szCaretPt.x = event.ptMouse.x;
-				m_szCaretPt.y = event.ptMouse.y;
-				RestartCaretBlinkTimer();
-				Invalidate();
-			}
-			return;
-		}
-
-		if (event.Type == UIEVENT_BUTTONUP){
-			if (IsEnabled()){
-				m_nEditState &= ~UISTATE_PUSHED;
-				CalcCaretType = CALC_CARET_TYPE_NONE;
-				Invalidate();
-			}			
-			return;
-		}
-		CLabelUI::DoEvent(event);
+		} else if( event.Type == UIEVENT_CONTEXTMENU ){
+			if (IsContextMenuUsed() && IsEnabled())
+				GetManager()->SendNotify(this, DUI_MSGTYPE_MENU, event.wParam, event.lParam);
+		} else
+			CLabelUI::DoEvent(event);
 	}
 
 	void CEditUI2::PaintStatusImage(HDC hDC)
 	{
-		if( IsFocused() ) m_nEditState |= UISTATE_FOCUSED;
-		else m_nEditState &= ~UISTATE_FOCUSED;
-		if( !IsEnabled() ) m_nEditState |= UISTATE_DISABLED;
-		else m_nEditState &= ~UISTATE_DISABLED;
+		m_pTextHost->PaintStatusImage(hDC);
+		UINT nTextState = m_pTextHost->GetTextState();
 
 		if (!m_sBkImage.IsEmpty()){
 			if (!DrawImage(hDC,(LPCTSTR)m_sBkImage)) m_sBkImage.Empty();
 			else CRenderEngine::DrawColor(hDC,m_rcItem,m_dwBackColor);
 		}
 
-		if( (m_nEditState & UISTATE_DISABLED) != 0 ) {
+		if( (nTextState & UISTATE_DISABLED) != 0 ) {
 			if( !m_sDisabledImage.IsEmpty() ) {
 				if( !DrawImage(hDC, (LPCTSTR)m_sDisabledImage) ) m_sDisabledImage.Empty();
 				else return;
 			}
 		}
-		else if( (m_nEditState & UISTATE_FOCUSED) != 0 ) {
+		else if( (nTextState & UISTATE_FOCUSED) != 0 ) {
 			if( !m_sFocusedImage.IsEmpty() ) {
 				if( !DrawImage(hDC, (LPCTSTR)m_sFocusedImage) ) m_sFocusedImage.Empty();
 				else return;
 			}
 		}
-		else if( (m_nEditState & UISTATE_HOT) != 0 ) {
+		else if( (nTextState & UISTATE_HOT) != 0 ) {
 			if( !m_sHotImage.IsEmpty() ) {
 				if( !DrawImage(hDC, (LPCTSTR)m_sHotImage) ) m_sHotImage.Empty();
 				else return;
@@ -320,194 +151,87 @@ namespace DuiLib
 
 	void CEditUI2::PaintBorder(HDC hDC)
 	{
-		PaintCaret(hDC);
-	}
-
-	void CEditUI2::PaintCaret(HDC hDC)
-	{
-		if (m_nEditState & UISTATE_FOCUSED && m_bCaretOn)
-		{
-			CRenderEngine::DrawColor(hDC,m_rcCaret,m_dwCaretColor);
-			SetCaretPos(m_rcCaret.left,m_rcCaret.top+(m_rcCaret.bottom-m_rcCaret.top)/2);
-
-			AdjustImeWindowPos();
-		}
+		m_pTextHost->PaintCaret(hDC);
 	}
 
 	void CEditUI2::PaintText(HDC hDC)
 	{
-		if( m_dwTextColor == 0 ) m_dwTextColor = m_pManager->GetDefaultFontColor();
-		if( m_dwDisabledTextColor == 0 ) m_dwDisabledTextColor = m_pManager->GetDefaultDisabledColor();
-
-		CDuiString sText;
-		GetEditText(sText);
-
-		RECT rc = m_rcItem;
-		rc.left += m_rcTextPadding.left;
-		rc.right -= m_rcTextPadding.right;
-		rc.top += m_rcTextPadding.top;
-		rc.bottom -= m_rcTextPadding.bottom;
-
-		if ((CalcCaretType & CALC_CARET_TYPE_POS) == CALC_CARET_TYPE_POS)
-		{
-			m_nCaretPos = GetCaretPos(hDC,sText);
-			m_nSelStart = m_nCaretPos;
-		}
-		else if ((CalcCaretType & CALC_CARET_TYPE_SELECT_MODE) == CALC_CARET_TYPE_SELECT_MODE)
-		{
-			m_nCaretPos = GetCaretPos(hDC,sText);
-		}		
-		else if (CalcCaretType & CALC_CARET_TYPE_SELECT_ALL)
-		{
-			m_nSelStart = 0;
-			m_nCaretPos = sText.GetLength();
-		}
-
-		CalcCaretType = CALC_CARET_TYPE_NONE;
-
-		if (m_nEditState & UISTATE_FOCUSED)
-			CalcCaretRect(hDC,sText);
-
-		if( sText.IsEmpty() ) return;
-
-		DrawText(hDC,rc,sText);
-
-		if( m_nCaretPos != m_nSelStart )
-			DrawSelectionText(hDC,rc,sText);
+		m_pTextHost->PaintText(hDC);
 	}
 
-	/************************************************************************/
-	/* 显示编辑框文本内容                                                                     */
-	/************************************************************************/
-	void CEditUI2::DrawText(HDC hDC,const RECT& rc,const CDuiString& sText)
+	BOOL CEditUI2::IsReadOnly() const
 	{
-		RECT rcTextRange = {0};
-		CRenderEngine::DrawText(hDC,m_pManager,rcTextRange,sText,0,m_iFont,DT_CALCRECT|DT_NOPREFIX);
-		int nWidth = rcTextRange.right - rcTextRange.left;
-		int nHeight = rcTextRange.bottom - rcTextRange.top;
-
-		if( m_dwTextColor == 0 ) m_dwTextColor = m_pManager->GetDefaultFontColor();
-		if( m_dwDisabledTextColor == 0 ) m_dwDisabledTextColor = m_pManager->GetDefaultDisabledColor();
-
-		DWORD clColor = IsEnabled() ? ( IsWaterMode() ? m_dwWaterColor : m_dwTextColor) : m_dwDisabledTextColor;
-
-		////在内存兼容设备上绘制文字
-		HDC hMemDC=::CreateCompatibleDC(hDC);
-		HBITMAP hBitmap = CreateCompatibleBitmap(hDC,nWidth,nHeight);
-		SelectObject(hMemDC,hBitmap);
-		
-		BitBlt(hMemDC,rcTextRange.left+m_nCaretOffset,rcTextRange.top,rc.right-rc.left,rc.bottom-rc.top,hDC,rc.left,rc.top,SRCCOPY);
-		CRenderEngine::DrawColor(hMemDC,rcTextRange,m_dwBackColor);
-
-		CRenderEngine::DrawText(hMemDC, m_pManager, rcTextRange, sText, clColor, m_iFont, DT_SINGLELINE | m_uTextStyle);
-
-		//展示编辑框内容
-		int nDstWidth = rc.right-rc.left;
-		int nDstHeight = rc.bottom-rc.top;
-		BitBlt(hDC,rc.left,rc.top,nDstWidth,nDstHeight,hMemDC,rcTextRange.left+m_nCaretOffset,rcTextRange.top,SRCCOPY);
-
-		DeleteDC(hMemDC);
-		DeleteObject(hBitmap);
+		return m_pTextHost->IsReadOnly();
 	}
 
-	/************************************************************************/
-	/* 绘制选择区域文字                                                                     */
-	/************************************************************************/
-	void CEditUI2::DrawSelectionText(HDC hDC,const RECT& rc,const CDuiString& sText)
+	void CEditUI2::SetReadOnly(BOOL bReadonly)
 	{
-		//绘制选择区域文本
-		int nFirstToRender = __min(m_nSelStart,m_nCaretPos);
-		int nNumChatToRender = __max( m_nSelStart, m_nCaretPos ) - nFirstToRender;
-		CDuiString strSelectionText = sText.Mid(nFirstToRender,nNumChatToRender);
+		if (IsReadOnly() == bReadonly)
+			return;
 
-		RECT rcSelection = {0};
-		CRenderEngine::DrawText(hDC,m_pManager,rcSelection,strSelectionText,0,m_iFont,DT_CALCRECT|DT_NOPREFIX);
-
-		HDC hSectionDC = CreateCompatibleDC(hDC);
-		HBITMAP hSectionBitmap = CreateCompatibleBitmap(hDC,rcSelection.right - rcSelection.left,rcSelection.bottom - rcSelection.top);
-
-		SelectObject(hSectionDC,hSectionBitmap);
-		CRenderEngine::DrawColor(hSectionDC,rcSelection,m_dwSelectbkColor);
-		CRenderEngine::DrawText(hSectionDC, m_pManager, rcSelection, strSelectionText, m_dwSelectTextColor, m_iFont, DT_SINGLELINE | m_uTextStyle);
-
-		int nStartPos = 0;
-		RECT rcStartSel = {0};
-		CalcStartSelRect(hDC,sText,m_nSelStart,rcStartSel);
-
-		int nOffset = 0;
-		int nLenMin = 0;
-		int nMinPos = 0;
-		if (m_nCaretPos>m_nSelStart){
-			nLenMin = __min(rcSelection.right - rcSelection.left,rc.right-rcStartSel.left);
-			nLenMin = __min(nLenMin+m_nCaretOffset,rc.right-rc.left);
-			nMinPos = rcStartSel.left - m_nCaretOffset;
-		}
-		else{
-			nLenMin = __min(rcSelection.right - rcSelection.left,rcStartSel.right-rc.left);
-			nLenMin = __min(nLenMin,rc.right-m_rcCaret.left);
-			nMinPos = m_rcCaret.left;
-		}
-		
-		if (nMinPos > rc.left)
-			nStartPos = nMinPos;
-		else{
-			nStartPos = rc.left;
-			nOffset = rc.left - (rcStartSel.left - m_nCaretOffset);
-		}
-
-		if (nOffset <=0)
-			nOffset = 0;
-
-		BitBlt(hDC,nStartPos,rc.top,nLenMin,rc.bottom-rc.top,hSectionDC,rcSelection.left+nOffset,rcSelection.top,SRCCOPY);
-
-		DeleteDC(hSectionDC);
-		DeleteObject(hSectionBitmap);
+		m_pTextHost->SetReadOnly(bReadonly);
 	}
 
-	bool CEditUI2::IsReadOnly()
+	BOOL CEditUI2::IsPasswordMode() const
 	{
-		return m_bReadOnly;
+		return m_pTextHost->IsPasswordMode();
 	}
 
-	void CEditUI2::SetReadOnly(bool breadonly)
+	void CEditUI2::SetPasswordMode(BOOL bPassword)
 	{
-		m_bReadOnly = breadonly;
-	}
+		if (IsPasswordMode() == bPassword)
+			return;
 
-	void CEditUI2::SetPasswordMode(bool bpassword)
-	{
-		m_bPasswordMode = bpassword;
+		m_pTextHost->SetPasswordMode(bPassword);
 	}
 
 	void CEditUI2::SetPasswordChar(LPCTSTR lpszPasswordChar)
 	{
-		if (m_cPasswordChar == lpszPasswordChar[0])
-			return;
-
-		m_cPasswordChar = lpszPasswordChar[0];
+		m_pTextHost->SetPasswordChar(lpszPasswordChar);
 		Invalidate();
 	}
 
-	bool CEditUI2::IsDigitalMode()
+	BOOL CEditUI2::IsDigitalMode() const
 	{
-		return m_bDigitalMode;
+		return m_pTextHost->IsDigitalMode();
 	}
 
-	void CEditUI2::SetDigitalMode(bool bdigital)
+	void CEditUI2::SetDigitalMode(BOOL bDigital)
 	{
-		m_bDigitalMode = bdigital;
-	}
-
-	UINT CEditUI2::GetLimitText()
-	{
-		return m_nLimitText;
-	}
-
-	void CEditUI2::SetLimitText(UINT nLimitText)
-	{
-		if (m_nLimitText == nLimitText)
+		if (IsDigitalMode() == bDigital)
 			return;
-		m_nLimitText = nLimitText;
+		
+		m_pTextHost->SetDigitalMode(bDigital);
+	}
+
+	UINT CEditUI2::GetLimitLength() const
+	{
+		return m_pTextHost->GetLimitLength();
+	}
+
+	void CEditUI2::SetLimitLength(UINT nLimitText)
+	{
+		if (GetLimitLength() == nLimitText)
+			return;
+		m_pTextHost->SetLimitLength(nLimitText);
+	}
+
+	void CEditUI2::SetSelectBkColor(DWORD dwSelectBkColor)
+	{
+		m_pTextHost->SetSelectBkColor(dwSelectBkColor);
+		Invalidate();
+	}
+
+	void CEditUI2::SetCaretWidth(int nCaretWidth)
+	{
+		m_pTextHost->SetCaretWidth(nCaretWidth);
+		Invalidate();
+	}
+
+	void CEditUI2::SetSelectTextColor(DWORD dwSelectTextColor)
+	{
+		m_pTextHost->SetSelectTextColor(dwSelectTextColor);
+		Invalidate();
 	}
 
 	void CEditUI2::SetDisabledImage(LPCTSTR lpszDisabledImage)
@@ -515,24 +239,6 @@ namespace DuiLib
 		if (m_sDisabledImage == lpszDisabledImage)
 			return;
 		m_sDisabledImage = lpszDisabledImage;
-		Invalidate();
-	}
-
-	void CEditUI2::SetSelectBkColor(DWORD dwSelectBkColor)
-	{
-		if (m_dwSelectbkColor == dwSelectBkColor)
-			return;
-
-		m_dwSelectbkColor = dwSelectBkColor;
-		Invalidate();
-	}
-
-	void CEditUI2::SetSelectTextColor(DWORD dwSelectTextColor)
-	{
-		if (m_dwSelectTextColor == dwSelectTextColor)
-			return;
-
-		m_dwSelectTextColor = dwSelectTextColor;
 		Invalidate();
 	}
 
@@ -560,44 +266,61 @@ namespace DuiLib
 		Invalidate();
 	}
 
-	void CEditUI2::SetCaretWidth(int nCaretWidth)
-	{
-		if (m_nCaretWidth == nCaretWidth)
-			return;
-		m_nCaretWidth = nCaretWidth;
-		Invalidate();
-	}
-
 	void CEditUI2::SetWaterTextColor(DWORD dwWaterColor)
 	{
-		if (m_dwWaterColor == dwWaterColor)
-			return;
-		m_dwWaterColor = dwWaterColor;
+		m_pTextHost->SetWaterTextColor(dwWaterColor);
 		Invalidate();
 	}
 
 	void CEditUI2::SetWaterText(LPCTSTR lpszWaterText)
 	{
-		if (m_sWaterText == lpszWaterText)
-			return;
-		m_sWaterText = lpszWaterText;
-		SetWaterMode(true);
+		m_pTextHost->SetWaterText(lpszWaterText);
+		SetWaterMode(TRUE);
+
 		Invalidate();
 	}
 
-	bool CEditUI2::IsWaterMode()
+	BOOL CEditUI2::CanPaste() const
 	{
-		return m_bWaterMode;
+		return m_pTextHost->CanPaste();
 	}
 
-	/************************************************************************/
-	/* 是否显示水印文字，如果不需要显示水印文字，需要保存水印文字内容     */
-	/************************************************************************/
-	void CEditUI2::SetWaterMode(bool bWaterMode)
+	void CEditUI2::Cut(int nPos,int nLen)
 	{
-		m_bWaterMode = bWaterMode;
+		m_pTextHost->OnCut(nPos, nLen);
+	}
 
-		m_sText = bWaterMode && IsFocused() == false ? m_sWaterText : m_sTextBak;
+	int CEditUI2::Paste(int nMin,int nMax)
+	{
+		return m_pTextHost->OnPaste(nMax, nMax);
+	}
+
+	void CEditUI2::Copy(int nPos,int nLen)
+	{
+		m_pTextHost->OnCopy(nPos, nLen);
+	}
+
+	void CEditUI2::SelectAll()
+	{
+		m_pTextHost->SelectAll();
+	}
+
+	UINT CEditUI2::GetTextState() const
+	{
+		return m_pTextHost->GetTextState();
+	}
+
+	BOOL CEditUI2::IsWaterMode() const
+	{
+		return m_pTextHost->IsWaterMode();
+	}
+
+	void CEditUI2::SetWaterMode(BOOL bWaterMode)
+	{
+		if (IsWaterMode() == bWaterMode)
+			return;
+
+		m_pTextHost->SetWaterMode(bWaterMode);
 	}
 
 	void CEditUI2::SetText(LPCTSTR pstrText)
@@ -605,448 +328,12 @@ namespace DuiLib
 		if (pstrText == NULL || m_sText == pstrText)
 			return;
 
-		m_sTextBak = pstrText;
-		SetWaterMode(m_sTextBak.IsEmpty() == TRUE);
-		
-		CDuiString strText;
-		GetEditText(strText);
-		
-		m_nSelStart = m_nCaretPos = strText.GetLength();
+		m_pTextHost->SetText(pstrText);
 		Invalidate();
-	}
-
-	/************************************************************************/
-	/* 暂时废弃的函数                                                                     */
-	/************************************************************************/
-	void CEditUI2::SaveEditText(LPCTSTR lpszEditText)
-	{
-		if (IsWaterMode() == false && m_sTextBak == lpszEditText)
-			return;
-		m_sTextBak = lpszEditText;
-	}
-
-	/************************************************************************/
-	/* 根据文字计算文字应该占用的宽度                                                            */
-	/************************************************************************/
-	void CEditUI2::CalcTextRect(HDC hDC,const CDuiString& strText,RECT& rcSelection,int nStart,int nLen)
-	{
-		ZeroMemory(&rcSelection,sizeof(RECT));
-		CDuiString strSelectionText;
-		if (nStart == 0)
-			strSelectionText = strText.Left(nLen);
-		else 
-			strSelectionText = strText.Mid(nStart,nLen);
-
-		CRenderEngine::DrawText(hDC,m_pManager,rcSelection,strSelectionText,0,m_iFont,DT_CALCRECT|DT_NOPREFIX);
-
-		//计算出的文字占用矩形
-		UINT nWidth = rcSelection.right - rcSelection.left;
-		UINT nHeight = rcSelection.bottom - rcSelection.top;
-
-		//还需要除去选择文字前面所占空间
-		if (nStart != 0)
-		{
-			RECT rcSelectionOffset = {0};
-			strSelectionText = strText.Left(nStart);
-			CRenderEngine::DrawText(hDC,m_pManager,rcSelectionOffset,strSelectionText,0,m_iFont,DT_CALCRECT|DT_NOPREFIX);
-			
-			rcSelection.left += rcSelectionOffset.right;
-		}
-
-		rcSelection.left += m_rcItem.left + m_rcTextPadding.left;
-		rcSelection.top += m_rcItem.top + m_rcTextPadding.top;
-		rcSelection.right = rcSelection.left +nWidth;
-		rcSelection.bottom = rcSelection.top + nHeight ;
-	}
-
-	int CEditUI2::GetCaretPos(HDC hDC,const CDuiString& sText)
-	{
-		//鼠标在第几个文字后面
-		int nCaretPos = 0;
-
-		RECT rcCaretPos = {0};
-		//测试鼠标点击命中位置，该算法是否有待优化
-		for (int n=0;n<sText.GetLength();++n)
-		{
-			CalcTextRect(hDC,sText,rcCaretPos,n,1);
-			int nWidth = rcCaretPos.right-rcCaretPos.left;
-			rcCaretPos.left -= m_nCaretOffset;
-			rcCaretPos.right = rcCaretPos.left + nWidth;
-			//测试鼠标点击是命中目标文字
-			if (PtInRect(&rcCaretPos,m_szCaretPt))
-			{
-				int nLeft = m_szCaretPt.x - rcCaretPos.left;
-				int nRight = rcCaretPos.right - m_szCaretPt.x;
-				int nMin = __min(nLeft,nRight);
-				int nPos = nMin == nLeft ? n : n+1;
-				if (nPos > sText.GetLength())
-					nCaretPos = sText.GetLength();
-				else
-					nCaretPos = nPos;
-				break;
-			}
-		}
-
-		if (rcCaretPos.right != rcCaretPos.left && rcCaretPos.top != rcCaretPos.bottom)
-		{
-			if (rcCaretPos.right <= m_szCaretPt.x)
-				nCaretPos = sText.GetLength();
-		}
-
-		return nCaretPos;
-	}
-
-	bool CEditUI2::OnKeyEvent(TEventUI& event)
-	{
-		bool bValidKey = true;
-		int nCalcCaretPos = m_nCaretPos;
-		CDuiString sText;
-		GetEditText(sText);
-		int nLen = sText.GetLength();
-		switch (event.chKey)
-		{
-			case VK_HOME:
-					nCalcCaretPos = 0;
-				break;
-			case VK_END:
-					nCalcCaretPos = nLen;
-				break;
-			case VK_UP:
-			case VK_LEFT:
-					nCalcCaretPos -= 1;
-				break;
-			case VK_DOWN:
-			case VK_RIGHT:
-					nCalcCaretPos += 1;
-				break;
-			case VK_BACK:
-			case VK_DELETE:
-				{
-					m_bDeleteKeyDown = true;
-					int nMin = __min(m_nSelStart,m_nCaretPos);
-					int nMax = __max(m_nSelStart,m_nCaretPos);
-					if (nMax == nMin)
-					{
-						if (event.chKey == VK_BACK) --nMin;
-						else	++nMax;
-					}
-
-					//重新构造编辑框内容
-					CDuiString strRight = m_sText.Right(m_sText.GetLength()-nMax);
-					CDuiString strLeft = m_sText.Left(nMin);
-					CDuiString strValue;
-					strValue.Format(_T("%s%s"),(LPCTSTR)strLeft,(LPCTSTR)strRight);
-					SetText(strValue);
-					nCalcCaretPos = nMin;
-				}
-				break;
-			case VK_RETURN:
-				if (m_pManager)
-					m_pManager->SendNotify(this,DUI_MSGTYPE_RETURN,event.wParam,event.lParam);
-				return false;
-			case 'C':
-				if ((event.wKeyState & MK_CONTROL) == MK_CONTROL)
-				{
-					const int nMin = __min(m_nSelStart,m_nCaretPos);
-					const int nMax = __max(m_nSelStart,m_nCaretPos);
-					OnCopy(nMin,nMax-nMin);
-				}
-				break;
-			case 'V':
-				if ((event.wKeyState & MK_CONTROL) == MK_CONTROL)
-				{
-					const int nMin = __min(m_nSelStart,m_nCaretPos);
-					const int nMax = __max(m_nSelStart,m_nCaretPos);
-					nCalcCaretPos = OnPaste(nMin,nMax);
-					nLen = m_sText.GetLength();
-					m_nSelStart = nCalcCaretPos;
-				}
-				break;
-			case 'X':
-				if ((event.wKeyState & MK_CONTROL) == MK_CONTROL)
-				{
-					const int nMin = __min(m_nSelStart,m_nCaretPos);
-					const int nMax = __max(m_nSelStart,m_nCaretPos);
-					OnCut(nMin,nMax-nMin);
-				}
-				break;
-			case 'A':
-				if ((event.wKeyState & MK_CONTROL) == MK_CONTROL)
-					OnSelectAll();
-				break;
-			default:
-					bValidKey = false;
-				break;
-		}
-
-		if (nLen != m_sText.GetLength())
-			m_pManager->SendNotify(this,DUI_MSGTYPE_TEXTCHANGED);
-
-		CDuiString strTipInfo;
-		if (nCalcCaretPos < 0)
-			nCalcCaretPos = 0;
-		else if (nCalcCaretPos > nLen)
-			nCalcCaretPos = nLen;
-
-		m_nCaretPos = nCalcCaretPos;
-		return bValidKey;
-	}
-
-	bool CEditUI2::GetEditText(CDuiString& strEditText)
-	{
-		strEditText = m_sText;
-		if (m_bWaterMode)
-			return true;
-		if( m_bPasswordMode ) {
-			strEditText.Empty();
-			LPCTSTR p = m_sText.GetData();
-			while( *p != _T('\0') ) {
-				strEditText += m_cPasswordChar;
-				p = ::CharNext(p);
-			}
-		}
-
-		return true;
-	}
-
-	bool CEditUI2::AdjustImeWindowPos()
-	{
-		HIMC hIMC = ImmGetContext(m_pManager->GetPaintWindow());
-		if (hIMC == NULL)
-			return false;
-
-		POINT point;
-		::GetCaretPos(&point);
-
-		COMPOSITIONFORM Composition;
-		Composition.dwStyle = CFS_POINT;
-		Composition.ptCurrentPos.x = point.x;
-		Composition.ptCurrentPos.y = point.y;
-		ImmSetCompositionWindow(hIMC, &Composition);
-
-		ImmReleaseContext(m_pManager->GetPaintWindow(),hIMC);
-		return true;
-	}
-
-	void CEditUI2::RestartCaretBlinkTimer()
-	{
-		m_pManager->KillTimer(this,IME_BLINK_TIMER_ID);
-		m_pManager->SetTimer(this,IME_BLINK_TIMER_ID,GetCaretBlinkTime());
-		/*m_dfLastBlink = m_dfBlink = 0;*/
-		m_bCaretOn = true;
 	}
 
 	void CEditUI2::SetPos(RECT rc)
 	{
 		CLabelUI::SetPos(rc);
-	}
-
-	void CEditUI2::FixedCaretPos(int nFixed)
-	{
-		m_rcCaret.left -= nFixed;
-		m_rcCaret.right = m_rcCaret.left + m_nCaretWidth;
-	}
-
-	/************************************************************************/
-	/* 计算选择文字开始位置			                                                                   */
-	/************************************************************************/
-	void CEditUI2::CalcStartSelRect(HDC hDC,const CDuiString& sText,int nPos,RECT& rcRange)
-	{
-		if (nPos == 0 ||sText.IsEmpty())
-		{
-			CDuiString strText(_T("EditUI"));
-			CalcTextRect(hDC,strText,rcRange,0,1);
-			rcRange.right = rcRange.left;
-		}
-		else
-		{
-			CalcTextRect(hDC,sText,rcRange,0,nPos);
-			rcRange.left = rcRange.right;
-		}
-	}
-
-	void CEditUI2::CalcCaretRect(HDC hDC,const CDuiString& sText)
-	{
-		static DWORD dwOffset = 0;
-
-		if (m_nCaretPos == 0 || sText.IsEmpty())
-		{
-			RECT rcText=m_rcItem;
-			rcText.left += m_rcTextPadding.left;
-			rcText.top += m_rcTextPadding.top;
-			rcText.right -= m_rcTextPadding.right;
-			rcText.bottom -= m_rcTextPadding.bottom;
-			CRenderEngine::DrawText(hDC, m_pManager, rcText, sText, 0, m_iFont, m_uTextStyle|DT_CALCRECT);
-			m_rcCaret.left = rcText.left;
-			m_rcCaret.right = m_rcCaret.left + m_nCaretWidth;
-			m_rcCaret.top = rcText.top;
-			m_rcCaret.bottom = rcText.bottom;
-		}
-		else
-		{
-			CalcTextRect(hDC,sText,m_rcCaret,0,m_nCaretPos);
-			m_rcCaret.left = m_rcCaret.right;
-			m_rcCaret.right += m_nCaretWidth;
-		}
-
-		//计算输入光标相对于编辑框的偏移量
-		if (m_bDeleteKeyDown)
-		{
-			RECT rcTextRange = {0};
-		 	CDuiString strDrawText = sText.Left(m_nCaretPos);
-			CRenderEngine::DrawText(hDC,m_pManager,rcTextRange,strDrawText,0,m_iFont,DT_CALCRECT|DT_NOPREFIX);
-
-			m_nCaretOffset = rcTextRange.right - rcTextRange.left - dwOffset;
-		
-			if (m_nCaretOffset > 0 )
-			{
-				CRenderEngine::DrawText(hDC,m_pManager,rcTextRange,sText,0,m_iFont,DT_CALCRECT|DT_NOPREFIX);
-				LONG lTextRight = rcTextRange.right + m_rcItem.left + m_rcTextPadding.left - m_nCaretOffset;
-				if (lTextRight < m_rcItem.right - m_rcTextPadding.right)
-					m_nCaretOffset -= m_rcItem.right - m_rcTextPadding.right - lTextRight - m_nCaretWidth;
-			}
-
-			if (m_nCaretOffset <= 0)
-				m_nCaretOffset = 0;
-			FixedCaretPos(m_nCaretOffset);
-
-			m_bDeleteKeyDown = false;
-		}
-		else if (m_rcCaret.left <= m_rcItem.left + m_rcTextPadding.left + m_nCaretOffset)
-		{
-			m_nCaretOffset = m_rcCaret.left - m_rcTextPadding.left - m_rcItem.left;
-			FixedCaretPos(m_nCaretOffset);
-		}
-		else if (m_rcCaret.right > m_rcItem.right - m_rcTextPadding.right && (m_rcItem.right  - m_rcTextPadding.right + m_nCaretOffset < m_rcCaret.right))
-		{
-			m_nCaretOffset = m_rcCaret.right - m_rcItem.right + m_rcTextPadding.right;
-			FixedCaretPos(m_nCaretOffset);
-		}
-		else if (m_nCaretOffset)
-		{
-			FixedCaretPos(m_nCaretOffset);
-		}
-
-		dwOffset = m_rcCaret.left - m_rcItem.left - m_rcTextPadding.left;
-	}
-
-	bool CEditUI2::CanPaste()
-	{
-		return IsReadOnly() == false;
-	}
-
-	void CEditUI2::OnSelectAll()
-	{
-		CalcCaretType = CALC_CARET_TYPE_SELECT_ALL;
-		Invalidate();
-	}
-
-	void CEditUI2::OnCopy(int nPos,int nLen)
-	{
-		BOOL bSuccess = FALSE;
-		HANDLE hMem = NULL;
-		do 
-		{
-			bSuccess = OpenClipboard(m_pManager->GetPaintWindow());
-			if (bSuccess == FALSE)
-				break;
-
-			if (EmptyClipboard() == 0)
-				break;
-
-			hMem = GlobalAlloc(GMEM_ZEROINIT,(nLen+1)*sizeof(TCHAR));
-			if (hMem == NULL)
-				break;
-
-			LPTSTR lpText = (LPTSTR)GlobalLock(hMem);
-			CDuiString strSrcText = CDuiString((LPCTSTR)m_sText+nPos,nLen);
-			_tcscpy_s(lpText,nLen+1,(LPCTSTR)strSrcText);
-			GlobalUnlock(hMem);
-
-			if (SetClipboardData(CF_UNICODETEXT,hMem) == FALSE)
-				break;
-		} while (FALSE);
-		
-		if (bSuccess)
-			CloseClipboard();
-	}
-
-	int CEditUI2::OnPaste(int nMin,int nMax)
-	{
-		int nLen = 0;
-		if (CanPaste() == false)
-			return nLen;
-
-		BOOL bSuccess = FALSE;
-		HANDLE hMem = NULL;
-		do 
-		{
-			bSuccess = OpenClipboard(m_pManager->GetPaintWindow());
-			if (bSuccess == FALSE)
-				break;
-
-			HANDLE hMem = GetClipboardData(CF_UNICODETEXT);
-			if (hMem == NULL)
-				break;
-
-			CDuiString strLeft = m_sText.Left(nMin);
-			CDuiString strRight = m_sText.Right(m_sText.GetLength()-nMax);
-			CDuiString strMid = (LPCTSTR)GlobalLock(hMem);
-			nLen = strMid.GetLength()+nMin;
-			CDuiString strPaste;
-			strPaste.Format(_T("%s%s%s"),(LPCTSTR)strLeft,(LPCTSTR)strMid,(LPCTSTR)strRight);
-			//如果粘贴后的文字超过编辑框数量限制则失败
-			if ((UINT)strPaste.GetLength() <= GetLimitText())
-				SetText(strPaste);
-			else
-				nLen = 0;
-			GlobalUnlock(hMem);
-
-			m_pManager->SendNotify(this,DUI_MSGTYPE_TEXTCHANGED);
-		} while (FALSE);
-
-		if (bSuccess)
-			CloseClipboard();
-
-		return nLen;
-	}
-
-	void CEditUI2::OnCut(int nPos,int nLen)
-	{
-		BOOL bSuccess = FALSE;
-		HANDLE hMem = NULL;
-		do 
-		{
-			bSuccess = OpenClipboard(m_pManager->GetPaintWindow());
-			if (bSuccess == FALSE)
-				break;
-
-			if (EmptyClipboard() == 0)
-				break;
-
-			hMem = GlobalAlloc(GMEM_ZEROINIT,(nLen+1)*sizeof(TCHAR));
-			if (hMem == NULL)
-				break;
-
-			CDuiString strLeft = m_sText.Left(nPos);
-			CDuiString strRight = m_sText.Right(m_sText.GetLength()-nPos-nLen);
-			CDuiString strCutText;
-			strCutText.Format(_T("%s%s"),(LPCTSTR)strLeft,(LPCTSTR)strRight);
-			SetText(strCutText);
-
-			m_pManager->SendNotify(this,DUI_MSGTYPE_TEXTCHANGED);
-
-			LPTSTR lpText = (LPTSTR)GlobalLock(hMem);
-			CDuiString strSrcText = CDuiString((LPCTSTR)m_sText+nPos,nLen);
-			_tcscpy_s(lpText,nLen+1,(LPCTSTR)strSrcText);
-			GlobalUnlock(hMem);
-
-			if (SetClipboardData(CF_UNICODETEXT,hMem) == FALSE)
-				break;
-
-		} while (FALSE);
-
-		if (bSuccess)
-			CloseClipboard();
 	}
 }

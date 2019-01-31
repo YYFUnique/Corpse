@@ -191,7 +191,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.cpp"
+				RelativePath=".\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -203,7 +203,7 @@
 				</FileConfiguration>
 			</File>
 			<Filter
-				Name="helper"
+				Name="Helper"
 				>
 				<File
 					RelativePath=".\helper\TreeView.cpp"
@@ -211,6 +211,22 @@
 				</File>
 				<File
 					RelativePath=".\helper\UmPath.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Utils"
+				>
+			</Filter>
+			<Filter
+				Name="RichText"
+				>
+				<File
+					RelativePath=".\RichText\LexerMarker.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\RichText.cpp"
 					>
 				</File>
 			</Filter>
@@ -233,7 +249,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\resource.h"
+				RelativePath=".\Resource.h"
 				>
 			</File>
 			<File
@@ -241,11 +257,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\stdafx.h"
+				RelativePath=".\StdAfx.h"
 				>
 			</File>
 			<Filter
-				Name="helper"
+				Name="Helper"
 				>
 				<File
 					RelativePath=".\helper\TreeView.h"
@@ -253,6 +269,22 @@
 				</File>
 				<File
 					RelativePath=".\helper\UmPath.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Utils"
+				>
+			</Filter>
+			<Filter
+				Name="RichText"
+				>
+				<File
+					RelativePath=".\RichText\LexerMarker.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\RichText.h"
 					>
 				</File>
 			</Filter>

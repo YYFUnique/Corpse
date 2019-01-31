@@ -135,6 +135,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkIncremental="1"
+				UACExecutionLevel="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -375,11 +376,31 @@
 					Name="System"
 					>
 					<File
+						RelativePath=".\VirtualWnd\System\LocalUser.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\System\SystemInfo.cpp"
+						>
+					</File>
+					<File
 						RelativePath=".\VirtualWnd\System\SystemMgr.cpp"
 						>
 					</File>
 					<File
 						RelativePath=".\VirtualWnd\System\TrayIcon.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Security"
+					>
+					<File
+						RelativePath=".\VirtualWnd\Security\AutoStart.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Security\SecurityMgr.cpp"
 						>
 					</File>
 				</Filter>
@@ -593,11 +614,31 @@
 					Name="System"
 					>
 					<File
+						RelativePath=".\VirtualWnd\System\LocalUser.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\System\SystemInfo.h"
+						>
+					</File>
+					<File
 						RelativePath=".\VirtualWnd\System\SystemMgr.h"
 						>
 					</File>
 					<File
 						RelativePath=".\VirtualWnd\System\TrayIcon.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Security"
+					>
+					<File
+						RelativePath=".\VirtualWnd\Security\AutoStart.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\Security\SecurityMgr.h"
 						>
 					</File>
 				</Filter>

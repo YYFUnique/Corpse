@@ -29,15 +29,3 @@ typedef enum tagMENU_ITEM
 	IDM_ITEM_DISABLE	=	4,
 	IDM_ITEM_EXIT			=	5,
 }MENU_ITEM;
-
-typedef struct tagTEventUI
-{
-	int Type;
-	void* pSender;
-	DWORD dwTimestamp;
-	POINT ptMouse;
-	TCHAR chKey;
-	WORD wKeyState;
-	WPARAM wParam;
-	LPARAM lParam;
-} TEventUI;

@@ -111,7 +111,7 @@ void CCityWeatherInfo::InitWindow()
 	RECT rcWnd;
 	GetWindowRect(m_hParent, &rcWnd);
 
-	SetWindowPos(m_hWnd, HWND_BOTTOM, rcWnd.left, rcWnd.bottom, 0, 0, SWP_NOSIZE|SWP_NOZORDER|SWP_SHOWWINDOW);
+	SetWindowPos(m_hWnd, HWND_TOPMOST, rcWnd.left, rcWnd.bottom, 0, 0, SWP_NOACTIVATE | SWP_NOSIZE | SWP_SHOWWINDOW);
 }
 
 LRESULT CCityWeatherInfo::OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)

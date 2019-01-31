@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DllCore/DllCore.h"
+#include "DllCore/Utils/DuiList.h"
 
 #ifdef LS_STATIC_LIB_CALL
 #define DLL_API 
@@ -74,7 +74,7 @@ DLL_API BOOL IsRunAsAdmin();
 /************************************************************************/
 DLL_API BOOL IsRunAsSystem();
 
-DLL_API BOOL ModifyObjectSecurityToAccessAll(HANDLE hObject);
+//DLL_API BOOL ModifyObjectSecurityToAccessAll(HANDLE hObject);
 
 //DLL_API BOOL GetProcessHandle(DWORD dwPID, HANDLE& hProcess);
 

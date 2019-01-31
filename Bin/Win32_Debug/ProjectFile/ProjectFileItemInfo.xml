@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+	<FileListItem>
+		<HorizontalLayout>
+			<Label name="Index" text="" align="right" textpadding="0,0,5,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="Name" text="" align="left" textpadding="5,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="SrcPath" text="" align="left" textpadding="5,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="DestPath" text="" align="left" textpadding="5,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="FileTime" text="" align="center"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="FileSize" text="" align="center"/>
+		</HorizontalLayout>
+	</FileListItem>
+</Window>

@@ -212,8 +212,7 @@ namespace DuiLib
 
 	SIZE COptionUI::EstimateSize(SIZE szAvailable)
 	{
-		if( m_cxyFixed.cy == 0 ) return CDuiSize(m_cxyFixed.cx, m_pManager->GetFontInfo(GetFont())->tm.tmHeight + 8);
-		return CControlUI::EstimateSize(szAvailable);
+		return CButtonUI::EstimateSize(szAvailable);
 	}
 
 	void COptionUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)

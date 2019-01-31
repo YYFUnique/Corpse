@@ -4,6 +4,9 @@
 
 #define WINDOWS_COMPUTER_PLANTFORM   ((bWow64) ? (_T("x64")) :(_T("x86")))
 
+typedef BOOL (WINAPI *FN_IsWow64Process)(HANDLE hProcess,PBOOL Wow64Process);
+typedef void   (WINAPI *FN_GetNativeSystemInfo)(LPSYSTEM_INFO);
+
 BOOL OsIsWow64Process()
 {
 	static BOOL bWow64Process = -1;
@@ -11,14 +14,12 @@ BOOL OsIsWow64Process()
 	if (bWow64Process==TRUE || bWow64Process==FALSE)
 		return bWow64Process;
 
-	typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE hProcess,PBOOL Wow64Process);
-
 	HMODULE hModule=GetModuleHandle(_T("Kernel32.dll"));
 
 	if (hModule==NULL)
 		return FALSE;
 
-	LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(hModule,"IsWow64Process");
+	FN_IsWow64Process fnIsWow64Process = (FN_IsWow64Process)GetProcAddress(hModule,"IsWow64Process");
 	if (fnIsWow64Process==NULL)
 		return FALSE; //win2000
 
@@ -27,6 +28,64 @@ BOOL OsIsWow64Process()
 		return FALSE;
 
 	return bWow64Process;
+}
+
+BOOL Is64BitOS()
+{
+	BOOL bSuccess = FALSE;
+	do 
+	{
+		HMODULE hModule=GetModuleHandle(_T("Kernel32.dll"));
+
+		if (hModule == NULL)
+			break;
+
+		FN_GetNativeSystemInfo fnGetNativeSystemInfo = (FN_GetNativeSystemInfo)GetProcAddress(hModule, "GetNativeSystemInfo");
+		if (fnGetNativeSystemInfo==NULL)
+			break;
+
+		SYSTEM_INFO SystemInfo;
+		fnGetNativeSystemInfo(&SystemInfo);
+		if (SystemInfo.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64 || 
+			SystemInfo.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_IA64 )
+			bSuccess = TRUE;
+	} while (FALSE);
+
+	return bSuccess;
+}
+
+BOOL Is64BitPorcess(DWORD dwProcessID)
+{
+	if (Is64BitOS() == FALSE)
+		return FALSE;
+	
+	BOOL b64BitProcess = TRUE;
+	HANDLE hProcess = NULL;
+	do 
+	{
+		hProcess = OpenProcess(PROCESS_QUERY_INFORMATION, FALSE, dwProcessID);
+		if (hProcess == NULL)
+			break;
+
+		HMODULE hModule=GetModuleHandle(_T("Kernel32.dll"));
+
+		if (hModule == NULL)
+			break;
+		FN_IsWow64Process fnIsWow64Process = (FN_IsWow64Process)GetProcAddress(hModule,"IsWow64Process");
+		if (fnIsWow64Process == NULL)
+			break;
+
+		BOOL bIsWow64 = FALSE;
+		// 判断是否运行在Wow64系统中，如果运行在Wow64系统中，说明是32位进程
+		fnIsWow64Process(hProcess, &bIsWow64);
+	
+		b64BitProcess = bIsWow64 ? FALSE: TRUE ;
+	} while (FALSE);
+	
+	if (hProcess != NULL)
+		CloseHandle(hProcess);
+
+	return b64BitProcess;
 }
 
 BOOL OsIsVistaOrLater() 
@@ -353,7 +412,7 @@ CString GetSystemDirectory(LPCTSTR lpszFileName)
 {
 	TCHAR szSystemPath[MAX_PATH];
 	GetSystemDirectory(szSystemPath,sizeof(szSystemPath));
-	if (lpszFileName[0] != NULL)
+	if (lpszFileName != NULL && lpszFileName[0] != NULL)
 		PathCombine(szSystemPath,szSystemPath,lpszFileName);
 
 	return szSystemPath;

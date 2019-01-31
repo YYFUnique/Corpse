@@ -16,7 +16,7 @@ CProcess::CProcess()
 	// 获取系统默认应用程序图标
 	SHFILEINFO ShFileInfo;
 	memset(&ShFileInfo , 0 , sizeof(SHFILEINFO));
-	SHGetFileInfo(_T("C:\\Windows\\System32\\wininit.exe") , NULL , &ShFileInfo , sizeof(SHFILEINFO) , SHGFI_ICON|SHGFI_SMALLICON);
+	SHGetFileInfo(_T("C:\\Windows\\System32\\svchost.exe") , NULL , &ShFileInfo , sizeof(SHFILEINFO) , SHGFI_ICON|SHGFI_SMALLICON);
 	m_hAppIcon = ShFileInfo.hIcon;
 
 	// 获取CPU核心数

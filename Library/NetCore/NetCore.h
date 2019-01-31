@@ -45,7 +45,14 @@
 
 #include "HTTP/MediaType.h"
 #include "HTTP/MessageHeader.h"
+#include "HTTP/HTTPCookie.h"
 #include "HTTP/HTTPMessage.h"
+#include "HTTP/HTTPRequest.h"
+#include "HTTP/HTTPResponse.h"
+
+#include "HTTPServer/HTTPServerParams.h"
+#include "HTTPServer/HTTPServerResponse.h"
+#include "HTTPServer/HTTPServerRequest.h"
 
 #include "WebSocket/WebSocketImpl.h"
 #include "WebSocket/WebSocket.h"

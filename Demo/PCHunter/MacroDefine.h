@@ -29,6 +29,8 @@
 #define	VIRTUAL_WND_SYSTEM			_T("sysinfo")
 #define	VIRTUAL_WND_TRAYICON		_T("trayinfo")
 
+#define	VIRTUAL_WND_SECURITY		_T("security")
+#define	VIRTUAL_WND_AUTOSTART	_T("autostart")
 //////////////////////// 应用程序窗口模块 ///////////////////////////////
 #define	APPLICATION_MENU				_T("AppMenu.xml")				// 应用程序模块右键菜单
 #define	APP_LIST_ITEM_INFO				_T("AppListInfo.xml")			//	应用程序模块列表定义
@@ -50,3 +52,5 @@
 //////////////////////// 系统托盘图标 ///////////////////////////////
 #define	TRAY_LIST_ITEM_INFO			_T("TrayListInfo.xml")
 #define	TRAY_MENU							_T("TrayMenu.xml")
+
+///////////////////////// 应用开机自启动 /////////////////////////////////

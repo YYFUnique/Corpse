@@ -65,3 +65,25 @@ void DwmHelper::EnableTransition(HWND hWnd, BOOL bEnable)
 
 	m_pDwmSetWindowAttribute(hWnd, DWMWA_TRANSITIONS_FORCEDISABLED, &bEnable, sizeof(bEnable));
 }
+
+void DwmHelper::SetFlip3DPolicy(HWND hWnd, DWMFLIP3DWINDOWPOLICY Flip3D/* = DWMFLIP3D_EXCLUDEABOVE*/)
+{
+	if (hWnd == NULL)
+		return;
+
+	if (m_pDwmSetWindowAttribute == NULL)
+		return;
+
+	m_pDwmSetWindowAttribute(hWnd, DWMWA_FLIP3D_POLICY, &Flip3D, sizeof(Flip3D));
+}
+
+void DwmHelper::SetAreoWithPeek(HWND hWnd, DWMNCRENDERINGPOLICY RenderPolicy/* = DWMNCRP_ENABLED*/)
+{
+	if (hWnd == NULL)
+		return;
+
+	if (m_pDwmSetWindowAttribute == NULL)
+		return;
+
+	m_pDwmSetWindowAttribute(hWnd, DWMWA_EXCLUDED_FROM_PEEK, &RenderPolicy, sizeof(RenderPolicy));
+}
