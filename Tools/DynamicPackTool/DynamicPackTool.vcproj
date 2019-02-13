@@ -217,16 +217,108 @@
 			<Filter
 				Name="Utils"
 				>
+				<File
+					RelativePath=".\Utils\ColorDesired.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\DynamicLibrary.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\FontHelper.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\Platform.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\PlatWin.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="RichText"
 				>
 				<File
+					RelativePath=".\RichText\AutoComplete.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\BuiltinRegex.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\CellBuffer.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\CharacterSet.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\CharClassify.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\Decoration.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\DocModification.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\Document.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\FolderTable.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\HighlightDelimiter.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\ILexInterface.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\RichText\LexerMarker.cpp"
 					>
 				</File>
 				<File
+					RelativePath=".\RichText\Partitioning.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\PerLine.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\RESearch.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\RichText\RichText.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\RunStyles.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\UIScintilla.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\UniConversion.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\WatcherWithUserData.cpp"
 					>
 				</File>
 			</Filter>
@@ -275,16 +367,140 @@
 			<Filter
 				Name="Utils"
 				>
+				<File
+					RelativePath=".\Utils\ColorDesired.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\DynamicLibrary.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\FontHelper.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\FontQuality.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\Platform.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\PlatWin.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\UserDefine.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="RichText"
 				>
 				<File
+					RelativePath=".\RichText\AutoComplete.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\BuiltinRegex.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\CellBuffer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\CharacterSet.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\CharClassify.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\Decoration.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\Define.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\DocModification.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\Document.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\DocumentIndexer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\FolderTable.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\HighlightDelimiter.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\IDocWatcher.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\ILexer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\ILexInterface.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\IRegexSearch.h"
+					>
+				</File>
+				<File
 					RelativePath=".\RichText\LexerMarker.h"
 					>
 				</File>
 				<File
+					RelativePath=".\RichText\Partitioning.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\PerLine.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\RESearch.h"
+					>
+				</File>
+				<File
 					RelativePath=".\RichText\RichText.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\RunStyles.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\SplitVector.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\UIScintilla.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\UniConversion.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RichText\WatcherWithUserData.h"
 					>
 				</File>
 			</Filter>

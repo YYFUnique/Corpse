@@ -28,7 +28,7 @@ class DecorationList {
 	int currentValue;
 	Decoration *current;
 	int lengthDocument;
-	Decoration *DecorationFromIndicator(int indicator);
+	Decoration *DecorationFromIndicator(int indicator) const;
 	Decoration *Create(int indicator, int length);
 	void Delete(int indicator);
 	void DeleteAnyEmpty();

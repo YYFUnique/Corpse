@@ -13,7 +13,7 @@ typedef enum tagRICHTEXT_COLOR_STATE
 #define LINE_COLORED	0x80	
 
 #define DUI_CTR_RICHTEXT	_T("RichText")
-
+#include "LexerMarker.h"
 class CRichTextUI : public CRichEditUI
 {
 public:
@@ -71,6 +71,8 @@ protected:
 	RICHTEXT_COLOR_STATE ParseLines(LPCTSTR lpszLines, int nCharPos, BOOL bColor, int nCurrentLine = -1);
 	int ColorRangeHelper(int nColorStart, int nColorEnd, CHARFORMAT2 cfText, int nColorFromChar = -1 );
 protected:
+
+	CLexerMarker* m_pLexer;
 	LONG		m_nLineCount;
 	BYTE*	   m_pLineEndState;
 

@@ -4,14 +4,20 @@
 #define KEY_TAG_START	'<'
 #define KEY_TAG_END		'>'
 #define KEY_DBL_QUOTE	'"'
-#define COMMENT_START	_T("<!--")
-#define COMMENT_END		_T("-->")
+#define COMMENT_START	_T("/*")
+#define COMMENT_END		_T("*/")
 
 #define TIMER_BACKGROUNDCOLORING	100
+
+#define GRP_KEYWORD		0
+#define GRP_PRAGMA		1
+#define GRP_DIRECTIVE	2
 
 CRichTextUI::CRichTextUI()
 	: m_bShowLineNum(FALSE)
 {
+	m_pLexer = new CLexerMarker;
+
 	UINT	uiSize				= sizeof(CHARFORMAT2);
 	DWORD	dwMask		= CFM_COLOR | CFM_FACE | CFM_SIZE; /* | CFM_CHARSET;*/
 	LONG	lHeight			= 160;	// 8 point => 160 * (1/20)
@@ -67,6 +73,11 @@ CRichTextUI::CRichTextUI()
 
 CRichTextUI::~CRichTextUI()
 {
+	if (m_pLexer != NULL)
+	{
+		delete m_pLexer;
+	}
+
 	if (m_pLineEndState != NULL)
 	{
 		free(m_pLineEndState);	
@@ -92,30 +103,47 @@ void CRichTextUI::DoInit()
 	CRichEditUI::DoInit();
 
 	//TxSendMessage(EM_EXLIMITTEXT, 0, 0x7FFFFFFF); 
-	SetLimitText(0x7FFFFFFF);
+	//SetLimitText(0x7FFFFFFF);
 
-	CHARFORMAT2 cfText;
-	GetDefaultCharFormat(cfText);
+	//CHARFORMAT2 cfText;
+	//GetDefaultCharFormat(cfText);
 
-	PARAFORMAT2 pf;
-	GetParaFormat(pf);
-	pf.cTabCount = 4;
-	pf.bLineSpacingRule = 0;
-	pf.dwMask |= PFM_LINESPACING;
-	SetParaFormat(pf);
-	// Set the event mask to include ENM_CHANGE
-	LONG lMask = GetEventMask();
-	lMask |= ENM_CHANGE | ENM_SCROLL;
-	SetEventMask(lMask);
+	//PARAFORMAT2 pf;
+	//GetParaFormat(pf);
+	//pf.cTabCount = 4;
+	//pf.bLineSpacingRule = 0;
+	//pf.dwMask |= PFM_LINESPACING;
+	//SetParaFormat(pf);
+	//// Set the event mask to include ENM_CHANGE
+	//LONG lMask = GetEventMask();
+	//lMask |= ENM_CHANGE | ENM_SCROLL;
+	//SetEventMask(lMask);
 
-	// Set the default character format to be m_cfText
-	InitlizeTagCharFormat(cfText);
-	InitlizeTextCharFormat(cfText);
-	InitlizeCommentCharFormat(cfText);
-	InitlizeQuoteCharFormat(cfText);
+	//// Set the default character format to be m_cfText
+	//InitlizeTagCharFormat(cfText);
+	//InitlizeTextCharFormat(cfText);
+	//InitlizeCommentCharFormat(cfText);
+	//InitlizeQuoteCharFormat(cfText);
 
-	SetDefaultCharFormat(m_cfText);
+	//SetDefaultCharFormat(m_cfText);
 
+	LPTSTR sKeywords = _T("for,for,else,main,struct,enum,switch,auto,")
+										_T("template,explicit,this,bool,extern,thread,break,false,")
+										_T("throw,case,namespace,true,catch,new,try,float,noreturn,")
+										_T("char,operator,typedef,class,friend,private,const,goto,")
+										_T("protected,typename,if,public,union,continue,inline,")
+										_T("unsigned,using,directive,default,int,return,delete,short,")
+										_T("signed,virtual,sizeof,void,do,static,double,long,while");
+	LPTSTR sDirectives = _T("#define,#elif,#else,#endif,#error,#ifdef,")
+										_T("#ifndef,#import,#include,#line,#pragma,#undef");
+	LPTSTR sPragmas = _T("comment,optimize,auto_inline,once,warning,")
+										_T("component,pack,function,intrinsic,setlocale,hdrstop,message");
+
+	m_pLexer->ClearKeywordList();
+	m_pLexer->AddKeyword(sKeywords,RGB(0,0,255),GRP_KEYWORD);
+	m_pLexer->AddKeyword(sDirectives,RGB(0,0,255),GRP_DIRECTIVE);
+	m_pLexer->AddKeyword(sPragmas,RGB(0,0,255),GRP_PRAGMA);
+	m_pLexer->AddKeyword(_T("#"),RGB(255,0,255),4);
 
 	/*PARAFORMAT2 MyFormat;
 	ZeroMemory(&MyFormat, sizeof(MyFormat));
@@ -219,11 +247,36 @@ void CRichTextUI::DoPaint(HDC hDC, const RECT& rcPaint)
 {
 	CRichEditUI::DoPaint(hDC, rcPaint);
 	// 按需绘制行号，折叠，书签等功能
-	/*CDuiString strVisibleLine, strLastVisibleLine;
-	strVisibleLine.Format(_T("FirstLine:%d\r\n"), GetFirstVisibleLine());
-	strLastVisibleLine.Format(_T("LasttLine:%d\r\n"), GetLastVisibleLine());
-	OutputDebugString(strVisibleLine);
-	OutputDebugString(strLastVisibleLine);*/
+
+	//UINT nLineCount = GetLineCount();
+
+	//CHARFORMAT2     CharFmt;
+	//RtlZeroMemory( &CharFmt, sizeof(CharFmt) );
+	//CharFmt.cbSize = sizeof( CharFmt );
+	///*SendMessage( hEdit, EM_GETCHARFORMAT, TRUE, (long)&CharFmt );*/
+	//GetDefaultCharFormat(CharFmt);
+	//int      CharHeight = CharFmt.yHeight / 20; 
+	//int      chHeight = CharHeight;        //字符的高度，常量 
+	//CharHeight = 1;
+
+	//UINT nFirstLine = GetFirstVisibleLine();
+	//UINT nLastLine = GetLastVisibleLine();
+	//TCHAR szLine[10];
+	//for (UINT nLine = nFirstLine; nLine<nLastLine; ++nLine)
+	//{
+	//	RECT rcLine;
+	//	rcLine.left = 0;
+	//	rcLine.top = CharHeight;
+	//	rcLine.right = 30;
+	//	rcLine.bottom = rcLine.top + chHeight;
+	//	CDuiString strTipInfo;
+	//	strTipInfo.Format(_T("left:%d,top:%d,right:%d,bottom:%d"),rcLine.left,rcLine.top,rcLine.right,rcLine.bottom);
+	//	OutputDebugString(strTipInfo);
+	//	_stprintf_s(szLine, _T("%4u"), nLine);
+	//	/*TextOut(hDC, 1, CharHeight, _countof(szLine), szLine);*/
+	//	CRenderEngine::DrawText(hDC, m_pManager, rcLine,szLine, m_dwTextColor, m_iFont, DT_SINGLELINE|DT_RIGHT|DT_BOTTOM);
+	//	CharHeight += chHeight + 4;
+	//}
 }
 
 void CRichTextUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
@@ -235,19 +288,19 @@ void CRichTextUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 
 LRESULT CRichTextUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled)
 {
-	if (uMsg == WM_CHAR)
-	{
-		HRESULT hRet = CRichEditUI::MessageHandler(uMsg, wParam, lParam, bHandled);
-		if (bHandled)
-			OnChar((UINT)wParam);
-		return hRet;		
-	} /*else if (uMsg == WM_KEYDOWN) {
-		LRESULT lRet = CRichEditUI::MessageHandler(uMsg, wParam, lParam, bHandled);
-		if (bHandled == TRUE)
-			OnKeyDown((UINT)wParam);
+	//if (uMsg == WM_CHAR)
+	//{
+	//	HRESULT hRet = CRichEditUI::MessageHandler(uMsg, wParam, lParam, bHandled);
+	//	if (bHandled)
+	//		OnChar((UINT)wParam);
+	//	return hRet;		
+	//} /*else if (uMsg == WM_KEYDOWN) {
+	//	LRESULT lRet = CRichEditUI::MessageHandler(uMsg, wParam, lParam, bHandled);
+	//	if (bHandled == TRUE)
+	//		OnKeyDown((UINT)wParam);
 
-		return lRet;
-	} */else
+	//	return lRet;
+	//} */else
 		return CRichEditUI::MessageHandler(uMsg, wParam, lParam ,bHandled);
 }
 
@@ -255,107 +308,107 @@ void CRichTextUI::OnChar(UINT nChar/*, UINT nRepCnt, UINT nFlags*/)
 {
 	// Get current caret position. Not sure if GetSel the best choice???
 	// NOTE: We call GetSel before base class to get the correct caret position
-	LONG lStart = 0, lEnd	= 0;
-	GetSel(lStart, lEnd);
-	int nCharPosition = lStart;
+	//LONG lStart = 0, lEnd	= 0;
+	//GetSel(lStart, lEnd);
+	//int nCharPosition = lStart;
 
-	// After CRichEditCtrl has added the char, we can get the following:
-	LONG lCharStart	= GetLineIndex();	// Retrieves the character index of the current line (the line that contains the caret)
-	LONG lCharFromLineStart = nCharPosition - lCharStart;
-	int nLineIndex = GetLineFromChar(lCharStart);
-	
-	// Is it a special char? If not, basically the RichEditCtrl maintains himself the current WordCharFormat.
-	// However this may change when pressing a key breaks a comment combination or after the insertion point
-	// was moved just passed an ending tag or ending double quotes. This will be handled
-	// by the 'default' clause
-	switch(nChar)
-	{
-	case KEY_TAG_START :
-		{// Invalide the colors of this and next lines as we might move to epsInTag
-			InvalidateColorStates(nCharPosition);
-			break;
-		}
-	case KEY_TAG_END :
-		{// Invalide the colors of this and next lines as we might move to InNormalText (or stay in DblQuotes\Comment)
-		// Recalculate the color state of this line because after '>' we might move to InNormalText or stay in DblQuotes\Comment.
-		 // However the color of this '>' stays the same as the previous char (Tag\DblQuotes\Comment\NormalText)	
-				InvalidateColorStates(nCharPosition);
-			break;
-		}
-	case KEY_DBL_QUOTE:
-		{// Recalculate the color state of this line because after '"' we might move to DblQuotes\Tag or stay in Comment\NormalText.
-		 // The color of this '" changes if me move to DblQuotes and affects the following lines as well, so invalide the colors of this and next lines
-			InvalidateColorStates(nCharPosition);
-			if ((m_pLineEndState[nLineIndex] &~ LINE_COLORED) == RICHTEXT_INTAG)	// These were ending double quotes so now we're in Tag
-				{BOOL bRes = SetWordCharFormat(m_cfTags);	ASSERT(bRes);}
-			InsertText(lStart, _T("\""), true);
-			SetSel(lStart,lStart);
-			break;
-		}
-	case '{':
-			InsertText(lStart, _T("\r\t\r}"), true);
-		SetSel(lStart+2,lStart+2);
-		break;
-	case '(':
-			InsertText(lStart, _T(")"), true);
-			SetSel(lStart,lStart);
-		break;
-	case '-' :
-		{
-			// Trap the Comment start ("<!--") and Comment end combinations, so we can color correctly in these case:
-			// Check if we move to epsInComment:
-			int nCommentStart = FindCommentStartHelper(nCharPosition);
-			if (nCommentStart != -1)
-				InvalidateColorStates(nCommentStart);
-			else
-			{// Check if we move to epsInNormalText
-				CString strTmp = GetTextRange(nCharPosition - 1, nCharPosition + 2);	// Search for "-->" and this char is the middle '-'
-				if (strTmp != _T("-->"))
-					strTmp = GetTextRange(nCharPosition, nCharPosition + 3);	// Search for "-->" and this char is the leftmost '-'
-				if (strTmp == _T("-->"))	// Search for "-->" and this char is the leftmost '-'
-					InvalidateColorStates(nCharPosition);
-			}
-			break;
-		}
-	case '!' :	// Trap the Comment start ("<!--"), so we can color correctly when state moves to epsInComment:
-		{
-			int nCommentStart = FindCommentStartHelper(nCharPosition+2);
-			if (nCommentStart != -1)	InvalidateColorStates(nCommentStart);
-			break;
-		}
-	case VK_RETURN :
-		{
-			UpdateLinesArraySize();	// Since a new line has just been added
+	//// After CRichEditCtrl has added the char, we can get the following:
+	//LONG lCharStart	= GetLineIndex();	// Retrieves the character index of the current line (the line that contains the caret)
+	//LONG lCharFromLineStart = nCharPosition - lCharStart;
+	//int nLineIndex = GetLineFromChar(lCharStart);
+	//
+	//// Is it a special char? If not, basically the RichEditCtrl maintains himself the current WordCharFormat.
+	//// However this may change when pressing a key breaks a comment combination or after the insertion point
+	//// was moved just passed an ending tag or ending double quotes. This will be handled
+	//// by the 'default' clause
+	//switch(nChar)
+	//{
+	//case KEY_TAG_START :
+	//	{// Invalide the colors of this and next lines as we might move to epsInTag
+	//		InvalidateColorStates(nCharPosition);
+	//		break;
+	//	}
+	//case KEY_TAG_END :
+	//	{// Invalide the colors of this and next lines as we might move to InNormalText (or stay in DblQuotes\Comment)
+	//	// Recalculate the color state of this line because after '>' we might move to InNormalText or stay in DblQuotes\Comment.
+	//	 // However the color of this '>' stays the same as the previous char (Tag\DblQuotes\Comment\NormalText)	
+	//			InvalidateColorStates(nCharPosition);
+	//		break;
+	//	}
+	//case KEY_DBL_QUOTE:
+	//	{// Recalculate the color state of this line because after '"' we might move to DblQuotes\Tag or stay in Comment\NormalText.
+	//	 // The color of this '" changes if me move to DblQuotes and affects the following lines as well, so invalide the colors of this and next lines
+	//		InvalidateColorStates(nCharPosition);
+	//		if ((m_pLineEndState[nLineIndex] &~ LINE_COLORED) == RICHTEXT_INTAG)	// These were ending double quotes so now we're in Tag
+	//			{BOOL bRes = SetWordCharFormat(m_cfTags);	ASSERT(bRes);}
+	//		InsertText(lStart, _T("\""), true);
+	//		SetSel(lStart,lStart);
+	//		break;
+	//	}
+	//case '{':
+	//		InsertText(lStart, _T("\r\t\r}"), true);
+	//	SetSel(lStart+2,lStart+2);
+	//	break;
+	//case '(':
+	//		InsertText(lStart, _T(")"), true);
+	//		SetSel(lStart,lStart);
+	//	break;
+	//case '*' :
+	//	{
+	//		// Trap the Comment start ("<!--") and Comment end combinations, so we can color correctly in these case:
+	//		// Check if we move to epsInComment:
+	//		int nCommentStart = FindCommentStartHelper(nCharPosition);
+	//		if (nCommentStart != -1)
+	//			InvalidateColorStates(nCommentStart);
+	//		else
+	//		{// Check if we move to epsInNormalText
+	//			CString strTmp = GetTextRange(nCharPosition - 1, nCharPosition + 2);	// Search for "-->" and this char is the middle '-'
+	//			if (strTmp != _T("*/"))
+	//				strTmp = GetTextRange(nCharPosition, nCharPosition + 3);	// Search for "-->" and this char is the leftmost '-'
+	//			if (strTmp == _T("*/"))	// Search for "-->" and this char is the leftmost '-'
+	//				InvalidateColorStates(nCharPosition);
+	//		}
+	//		break;
+	//	}
+	//case '/' :	// Trap the Comment start ("<!--"), so we can color correctly when state moves to epsInComment:
+	//	{
+	//		int nCommentStart = FindCommentStartHelper(nCharPosition+2);
+	//		if (nCommentStart != -1)	InvalidateColorStates(nCommentStart);
+	//		break;
+	//	}
+	//case VK_RETURN :
+	//	{
+	//		UpdateLinesArraySize();	// Since a new line has just been added
 
-			// After VK_RETURN we must explicitly set the correct color:
-			SetFirstLineCharColor(nLineIndex);
-			break;
-		}
-	default:
-		{
-			if (nChar != VK_BACK)	// VK_BACK was already handled by OnKeyDown
-			{// Pressing a key might break comment combination.
-			 // Pressing a key after the insertion point might result in a wrong color when we're
-	         // just passed an ending tag or ending double quotes.
-				int nCommentStart = FindCommentStartHelper(nCharPosition);
-				if (nCommentStart != -1)	// Just broke comment start combination
-					InvalidateColorStates(nCommentStart);
-				else
-				{					
-					int nCommentEnd = FindCommentEndHelper(nCharPosition);	// +1 to pass the currently added char 
-					if (nCommentEnd != -1)	// Just broke comment end combination
-						InvalidateColorStates(nCommentStart);
-					else
-					{
-						CString prevChar = GetTextRange(nCharPosition - 1 , nCharPosition);
-						if (prevChar == _T('>') || prevChar == _T('\"'))	// We just past ending tag/ending quotes)
-							InvalidateColorStates(nCharPosition - 1);
-					}
-				}
-			}
-		}
-	}
-	ParseAllLines();
+	//		// After VK_RETURN we must explicitly set the correct color:
+	//		SetFirstLineCharColor(nLineIndex);
+	//		break;
+	//	}
+	//default:
+	//	{
+	//		if (nChar != VK_BACK)	// VK_BACK was already handled by OnKeyDown
+	//		{// Pressing a key might break comment combination.
+	//		 // Pressing a key after the insertion point might result in a wrong color when we're
+	//         // just passed an ending tag or ending double quotes.
+	//			int nCommentStart = FindCommentStartHelper(nCharPosition);
+	//			if (nCommentStart != -1)	// Just broke comment start combination
+	//				InvalidateColorStates(nCommentStart);
+	//			else
+	//			{					
+	//				int nCommentEnd = FindCommentEndHelper(nCharPosition);	// +1 to pass the currently added char 
+	//				if (nCommentEnd != -1)	// Just broke comment end combination
+	//					InvalidateColorStates(nCommentStart);
+	//				else
+	//				{
+	//					CString prevChar = GetTextRange(nCharPosition - 1 , nCharPosition);
+	//					if (prevChar == _T('>') || prevChar == _T('\"'))	// We just past ending tag/ending quotes)
+	//						InvalidateColorStates(nCharPosition - 1);
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
+	//ParseAllLines();
 	
 	return;
 }
@@ -367,12 +420,21 @@ void CRichTextUI::OnChar(UINT nChar/*, UINT nRepCnt, UINT nFlags*/)
  */
 void CRichTextUI::OnChange() 
 {
-	if (m_nOnChangeCharPosition != -1)
-	{// OnKeyDown defers the call to OnChange when overriding selected text
-		UpdateLinesArraySize();
-		InvalidateColorStates(m_nOnChangeCharPosition);
-		m_nOnChangeCharPosition = -1;
+	//if (m_nOnChangeCharPosition != -1)
+	//{// OnKeyDown defers the call to OnChange when overriding selected text
+	//	UpdateLinesArraySize();
+	//	InvalidateColorStates(m_nOnChangeCharPosition);
+	//	m_nOnChangeCharPosition = -1;
+	//}
+	SetRedraw(FALSE);
+	if (m_pLexer != NULL)
+	{
+		CHARRANGE crPos;
+		GetSel(crPos);
+		m_pLexer->Colorize(0,-1,this);
+		SetSel(crPos);
 	}
+	SetRedraw(TRUE);
 }
 
 void CRichTextUI::SetPos(RECT rc)
@@ -889,20 +951,25 @@ void CRichTextUI::InvalidateColorStates(int nCharPosition)
  */
 int CRichTextUI::FindCommentStartHelper(int nCharPosition)
 {
-	CDuiString strComment = GetTextRange(nCharPosition - 4, nCharPosition);
-	int nIndex = strComment.Find(_T("<!--"));
+	CDuiString strComment = GetTextRange(nCharPosition - 2, nCharPosition);
+	int nIndex = strComment.Find(_T("/*"));
 	if (nIndex == -1)
 		return nIndex;
-	return nCharPosition - (4 - nIndex);
+	return nCharPosition - (2 - nIndex);
 }
 
 int CRichTextUI::FindCommentEndHelper(int nCharPosition)
 {
-   CString str1forward = GetTextRange(nCharPosition + 1, nCharPosition + 2);	// Search for "-->" and this char is the middle '-'
-	CString str2forward = GetTextRange(nCharPosition + 1, nCharPosition + 3);
-	if (str1forward == _T('>'))				return  nCharPosition + 2;
-	else if (str2forward == _T("->"))		return  nCharPosition + 3;
-	else									return -1;
+ //  CString str1forward = GetTextRange(nCharPosition + 1, nCharPosition + 2);	// Search for "-->" and this char is the middle '-'
+	//CString str2forward = GetTextRange(nCharPosition + 1, nCharPosition + 3);
+	//if (str1forward == _T('>'))				return  nCharPosition + 2;
+	//else if (str2forward == _T("->"))		return  nCharPosition + 3;
+	//else									return -1;
+	CDuiString strComment = GetTextRange(nCharPosition - 1, nCharPosition+1);
+	int nIndex = strComment.Find(_T("*/"));
+	if (nIndex == -1)
+		return nIndex;
+	return nCharPosition - (2 - nIndex);
 }
 
 /**
