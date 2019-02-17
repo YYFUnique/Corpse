@@ -4,7 +4,7 @@
 
 namespace DuiLib
 {
-#define DUI_CTR_RICHTEXT		_T("RichText")
+	#define DUI_CTR_RICHTEXT		_T("RichText")
 	class CRichTextUI : public CRichEditUI
 	{
 	public:

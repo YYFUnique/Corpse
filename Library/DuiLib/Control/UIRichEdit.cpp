@@ -2121,7 +2121,7 @@ void CRichEditUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	else if( _tcscmp(pstrName, _T("wordwrap")) == 0 ) {
 		SetWordWrap(_tcsicmp(pstrValue,_T("true")) == 0);
 	}
-	else if(_tcsicmp(pstrName, _T("tabstops")) == 0 ) SetTabStops(0, _ttoi(pstrValue));
+	else if(_tcsicmp(pstrName, _T("tabstops")) == 0 ) SetTabStops(1, _ttoi(pstrValue));
     else CContainerUI::SetAttribute(pstrName, pstrValue);
 }
 

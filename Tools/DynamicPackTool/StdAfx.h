@@ -10,6 +10,9 @@
 #include "DuiLib/UIlib.h"
 using namespace DuiLib;
 
+#define MAX max
+#define MIN min
+
 #include "RichText/RichText.h"
 
 #define VK_SPECTAB WM_USER + 500
