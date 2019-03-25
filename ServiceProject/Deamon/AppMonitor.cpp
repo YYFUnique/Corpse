@@ -7,6 +7,8 @@
 #include "DebugHelper.h"
 
 #include "DllCore/File/FileSystemRedirecte.h"
+#include "DllCore/Utils/ErrorInfo.h"
+#include "DllCore/Log/LogHelper.h"
 
 #pragma comment(lib,"WtsApi32.lib")
 #pragma comment(lib,"Userenv.lib")
@@ -29,6 +31,13 @@ CAppMonitor::CAppMonitor()
 	, m_dwPollTime(MIN_POLL_TIME)
 {
 	InitializeCriticalSection(&m_csMonitor);
+
+	APPMONITOR_INFO AppInfo;
+	AppInfo.strProcessName = _T("TTimeHelper.exe");
+	AppInfo.strFilePath = _T("C:\\Program Files (x86)\\TTimeHelper\\TTimeHelper.exe");
+
+	// 添加到监控列表中
+	AddMonitorAppInfo(AppInfo);
 }
 
 CAppMonitor::~CAppMonitor()
@@ -89,7 +98,6 @@ BOOL CAppMonitor::AddMonitorAppInfo(APPMONITOR_INFO& AppInfo)
 			//当前链表中没有找到需要保护的进程，需要后面添加
 			bSuccess = TRUE;
 		}
-		OutputDebugString(_T("2222222222222"));
 
 		if (bSuccess)
 			m_AppMonitorList.AddTail(AppInfo);
@@ -144,10 +152,10 @@ void CAppMonitor::OnSessionChange(DWORD dwEventType, LPVOID lpEventData)
 	switch (dwEventType)
 	{
 		case WTS_SESSION_LOGON:			// 添加新的会话 ID 到会话信息中
-				LOG_PRINT(DBG_TRACE_FLAG_INFO, _T("Deamon.dll!CAppMonitor::OnSessionChange[WTS_SESSION_LOGON]"));
+				LOG_DBGPRINT(DBG_TRACE_FLAG_INFO, _T("Deamon.dll!CAppMonitor::OnSessionChange[WTS_SESSION_LOGON]"));
 			break;
 		case WTS_SESSION_LOGOFF:		// 删除已退出的会话 ID
-				LOG_PRINT(DBG_TRACE_FLAG_INFO, _T("Deamon.dll!CAppMonitor::OnSessionChange[WTS_SESSION_LOGOFF]"));
+				LOG_DBGPRINT(DBG_TRACE_FLAG_INFO, _T("Deamon.dll!CAppMonitor::OnSessionChange[WTS_SESSION_LOGOFF]"));
 			break;
 
 		//  case WTS_SESSION_LOCK:
@@ -333,6 +341,7 @@ BOOL CAppMonitor::IsAppRunning()
 			{
 				BOOL bFlag = FALSE;
 				const APPMONITOR_INFO& AppMonitorInfo = m_AppMonitorList.GetNext(pos);
+
 				for (UINT n=0; n<dwCount; ++n)
 				{
 					if (wpi[n].SessionId == 0 || wpi[n].SessionId != wsi[m].SessionId)
@@ -378,6 +387,7 @@ BOOL CAppMonitor::StartApps()
 {
 	EnterCriticalSection(&m_csMonitor);
 	POSITION pos = m_AppSessionList.GetHeadPosition();
+
 	while(pos)
 	{
 		const SESSION_PROCESS_INFO& AppSessionInfo = m_AppSessionList.GetNext(pos);
@@ -385,7 +395,7 @@ BOOL CAppMonitor::StartApps()
 		HANDLE hToken = NULL;
 		if (QueryUserToken(AppSessionInfo.dwSessionId, &hToken) == FALSE)
 		{
-			LOG_PRINT(DBG_TRACE_FLAG_INFO,_T("CAppMonitor::StartApps(QueryUserToken Faild).\r\n"));
+			LOG_DBGPRINT(DBG_TRACE_FLAG_INFO,_T("CAppMonitor::StartApps(QueryUserToken Faild).\r\n"));
 			continue;
 		}
 		
@@ -394,6 +404,7 @@ BOOL CAppMonitor::StartApps()
 			LPVOID lpEnviromentStrings = NULL;
 			if (CreateEnvironmentBlock(&lpEnviromentStrings, hToken, FALSE) != FALSE)
 			{
+				OutputDebugString(_T("CreateEnvironmentBlock"));
 				STARTUPINFO si = {sizeof(si)};
 				PROCESS_INFORMATION pi = {0};
 				PROFILEINFO pfi = {sizeof(pfi)};
@@ -411,6 +422,10 @@ BOOL CAppMonitor::StartApps()
 					SetThreadToken(&pi.hThread, hToken);
 					CloseHandle(pi.hThread);
 					CloseHandle(pi.hProcess);
+				}
+				else
+				{
+					QLOG_WAR(_T("启动进程[%s]失败"), AppSessionInfo.strFilePath);
 				}
 
 				UnloadUserProfile(hToken, pfi.hProfile);

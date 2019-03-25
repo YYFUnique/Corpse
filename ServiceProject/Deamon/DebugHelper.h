@@ -20,10 +20,10 @@ void DbgPrint(LPCTSTR lpszFormatString, ...);
 DBG_TRACE_FLAG SetDbgTraceFlag(DBG_TRACE_FLAG DbgTraceFlag);
 
 #ifdef _DEBUG
-	#define LOG_PRINT( _dbgLevel, _string, ... )		 \
+	#define LOG_DBGPRINT( _dbgLevel, _string, ... )		 \
 			(FlagOn(gTraceFlags,(_dbgLevel))	?			 \
 					DbgPrint(_string, ##__VA_ARGS__)	 :	 \
 					((int)0))
 #else
-	#define LOG_PRINT( _dbgLevel, _string, ...)	((int)0)
+	#define LOG_DBGPRINT( _dbgLevel, _string, ...)	((int)0)
 #endif

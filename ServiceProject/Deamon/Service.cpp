@@ -111,7 +111,7 @@ BOOL InstallService(LPCSTR lpszSrvName)
 	} while (FALSE);
 
 	if (bSuccess == FALSE)
-		LOG_PRINT(DBG_TRACE_FLAG_ERROR, GetThreadErrorInfoString());
+		LOG_DBGPRINT(DBG_TRACE_FLAG_ERROR, GetThreadErrorInfoString());
 
 	if (hKeyName != NULL)
 	{
