@@ -5,7 +5,12 @@ const UINT WM_TOGGLEDESKTOP			= RegisterWindowMessage(TOGGLEDESKTOP);
 const UINT WM_TOGGLEDESKTOPMSG	= RegisterWindowMessage(TOGGLEDESKTOPMSG);
 const UINT WM_FreeLibrary						= RegisterWindowMessage(FREELIBRARYANDEXIT);
 
-typedef WINAPI (*BOOL) FN_ChangeWindowMessageFilter(UINT uMsg, DWORD dwFlag);
+typedef BOOL (WINAPI* FN_ChangeWindowMessageFilter)(UINT uMsg, DWORD dwFlag);
+
+#ifndef MSGFLT_ADD
+	#define MSGFLT_ADD 1
+	#define MSGFLT_REMOVE 2
+#endif
 
 CShellDesktop::CShellDesktop(IFinalCallback* pFinalCallback)
 {
@@ -28,7 +33,7 @@ void CShellDesktop::Init(HWND hWnd)
 	if (hModule)
 	{
 		FN_ChangeWindowMessageFilter fnChangeWndMsgFilter = 
-											(FN_ChangeWindowMessageFilter)GetProcAddress(hModule, _T("ChangeWindowMessageFilter"));
+											(FN_ChangeWindowMessageFilter)GetProcAddress(hModule, "ChangeWindowMessageFilter");
 		if (fnChangeWndMsgFilter)
 		{
 			fnChangeWndMsgFilter(WM_TOGGLEDESKTOPMSG, MSGFLT_ADD);

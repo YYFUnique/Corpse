@@ -14,6 +14,7 @@
 #include <Include/Desktop.h>
 
 using namespace IShell;
+
 #ifndef ASSERT
 #define ASSERT(expr)  _ASSERTE(expr)
 #endif
