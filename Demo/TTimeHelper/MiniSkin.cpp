@@ -77,7 +77,7 @@ void CMiniSkin::InitWindow()
 	// 进程启动后，延迟5s再将桌面插件注入桌面进程中
 	CHorizontalLayoutUI* pLayout = (CHorizontalLayoutUI*)m_PaintManager.FindControl(_T("VLayoutTotal"));
 	if (pLayout != NULL)
-		m_PaintManager.SetTimer(pLayout, TIMER_INJECT_DLL, 5*1000);
+		m_PaintManager.SetTimer(pLayout, TIMER_INJECT_DLL, 1*1000);
 }
 
 void CMiniSkin::Notify(TNotifyUI& msg)
@@ -110,11 +110,17 @@ void CMiniSkin::OnTimer(TNotifyUI& msg)
 			{
 				BOOL bRet = m_pDesktopHelper->IsShellDesktopRunning();
 				if (bRet == FALSE)
-					InjectPluginToDesktop();
+					bRet = InjectPluginToDesktop();
 
-				m_pDesktopHelper->AddRef();
+				if (bRet != FALSE)
+					m_pDesktopHelper->AddRef();
+				else
+					QLOG_WAR(_T("请注意桌面插件未能正常工作！"));
 			}
-			m_PaintManager.KillTimer(msg.pSender, msg.wParam);
+
+			HWND hDesktop = FindWindow(_T("Progman"), NULL);
+			if (IsWindow(hDesktop))
+				m_PaintManager.KillTimer(msg.pSender, msg.wParam);
 		}
 	}
 }
