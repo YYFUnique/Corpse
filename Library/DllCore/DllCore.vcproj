@@ -491,6 +491,10 @@
 				Name="Log"
 				>
 				<File
+					RelativePath=".\Log\AutoLog.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Log\LogHelper.cpp"
 					>
 				</File>
@@ -788,6 +792,10 @@
 			<Filter
 				Name="Log"
 				>
+				<File
+					RelativePath=".\Log\AutoLog.h"
+					>
+				</File>
 				<File
 					RelativePath=".\Log\LogHelper.h"
 					>

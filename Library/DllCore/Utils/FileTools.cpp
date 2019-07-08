@@ -32,6 +32,31 @@ BOOL SHDeleteDirectory(LPCTSTR lpszPathName)
 	return SHFileOperation(&shFileOp) == 0;
 }
 
+BOOL SHRenameDirectory(LPCTSTR lpszFromPath, LPCTSTR lpszToPath)
+{
+	TCHAR szDirectoryPath[MAX_PATH + 2];
+
+	LPTSTR lpDirectoryName = szDirectoryPath;
+
+	int nLen = _tcslen(lpszFromPath);
+	_tcscpy_s(lpDirectoryName, _countof(szDirectoryPath), lpszFromPath);
+	lpDirectoryName[nLen]		=_T('\0');
+	lpDirectoryName[nLen+1]	=_T('\0');
+
+	SHFILEOPSTRUCT FileOp;
+	ZeroMemory((void*)&FileOp,sizeof(SHFILEOPSTRUCT));
+
+	FileOp.fFlags= FOF_NOCONFIRMATION | FOF_SILENT;
+	FileOp.hNameMappings= NULL;
+	FileOp.hwnd= NULL;
+	FileOp.lpszProgressTitle= NULL;
+	FileOp.pFrom= lpDirectoryName;
+	FileOp.pTo= lpszToPath;
+	FileOp.wFunc= FO_RENAME;
+
+	return SHFileOperation(&FileOp) == 0;
+}
+
 // 检查一个文件是否是64位的
 BOOL CheckFileIsX64(LPCTSTR lpszFilePath)
 {

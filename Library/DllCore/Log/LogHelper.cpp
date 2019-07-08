@@ -66,6 +66,10 @@ void QLogImpl::WriteLog(LOG_LEVEL LogLevel, LPCTSTR lpszLogInfo)
 
 QLogHelper::QLogHelper(LPCSTR lpszFileName, LONG lFileLine)
 {
+#ifdef _DEBUG
+	m_bDbg = TRUE;
+#endif
+
 	m_bLogToFile = TRUE;
 	m_strFileName = lpszFileName;
 	m_nFileLine = lFileLine;

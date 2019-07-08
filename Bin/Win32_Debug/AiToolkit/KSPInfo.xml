@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="List" value="scrollstepsize=&quot;50&quot; vscrollbar=&quot;true&quot; hscrollbar=&quot;true&quot; itemalign=&quot;left&quot; itemaltbk=&quot;true&quot; itemtextpadding=&quot;5,0,0,0&quot; itemlinecolor=&quot;#FF939393&quot;" />
+	<Default name="ListHeaderItem" value="sepimage=&quot;file=&apos;ListHeadSep.png&apos;&quot; sepwidth=&quot;1&quot;"/>
+	<Default name="Combo" value="textpadding=&quot;4,1,1,1&quot; normalimage=&quot;file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;&quot; hotimage=&quot;file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;&quot; pushedimage=&quot;file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot; focusedimage=&quot;file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot;" />
+	<Style name="Radio" value="disabledtextcolor=&quot;#FFA7A6AA&quot; font=&quot;0&quot; align=&quot;center&quot; normalimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;0,0,15,15&apos; dest=&apos;0,5,15,20&apos;&quot; hotimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;15,0,30,15&apos; dest=&apos;0,5,15,20&apos;&quot; pushedimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;30,0,45,15&apos; dest=&apos;0,5,15,20&apos;&quot; selectedimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;75,0,90,15&apos; dest=&apos;0,5,15,20&apos;&quot; selectedpressimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;90,0,105,15&apos; dest=&apos;0,5,15,20&apos;&quot;" />
+	<Style name="OptionTab" value="normalimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;0,0,109,32&apos; &quot; hotimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;109,0,218,32&apos; &quot; selectedimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;218,0,327,32&apos;&quot;" />
+	<VerticalLayout name="VLayout">
+		<TabLayout name="KSPWizard" Padding="1,0,1,1">
+			<VerticalLayout virtualwnd="kspinfo" name="VLayoutKSPInfo" inset="0,0,0,2">
+				<Control height="5" />
+				<GroupLayout height="100">
+					<Label text="请选择发布包:" font="1" align="right" float="true" pos="15,15,150,45" textcolor="#FF000000"/>
+					<Edit2 name="ReleaseFilePath" font="1" watertext="请选择已发布软件包" float="true" readonly="true" pos="160,15,650,45" textpadding="4,6,4,3" textcolor="#FF000000"/>
+					<Label text="平台版本架构:" font="1" align="right" float="true" pos="15,50,150,85" textcolor="#FF000000"/>
+					<Label name="PackageVersion" text="未选择已发布软件包，请先选择软件包" font="1" align="left" float="true" pos="160,50,650,85" textcolor="#FF000000"/>
+					<Button name="LookupFile" align="center" font="1" float="true" text="浏览..." pos="660,13,760,47"/>
+					<Button name="BtnUnzipFile" align="center" font="1" float="true" text="解压" pos="770,13,870,47"/>
+				</GroupLayout>
+				<GroupLayout height="100">
+					<Label text="搜索内核版本:" font="1" align="right" float="true" pos="15,15,150,45" textcolor="#FF000000"/>
+					<Edit2 name="SupportKernel" font="1" float="true" watertext="请输入Linux内核基版版本号" pos="160,15,650,45" textpadding="4,6,4,3" textcolor="#FF000000"/>
+					<Label text="内核版本:" font="1" align="right" float="true" pos="15,50,150,80" textcolor="#FF000000"/>
+					<Edit2 name="KernelVersion" font="1" watertext="请输入Linux系统`uname -r`的内容" float="true" pos="160,50,650,80" textpadding="4,6,4,3" textcolor="#FF000000"/>
+					<Button name="BtnTryVersion" align="center" font="1" float="true" text="克隆版本" pos="660,48,760,82"/>
+					<Button name="BtnExport" align="center" font="1" float="true" text="导出版本" pos="770,48,870,82"/>
+				</GroupLayout>
+				<GroupLayout >
+					<List name="snmpList" header="hidden" itemfont="0" menu="true" multiselect="false" >
+						<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;" menu="true">						
+							<ListHeaderItem text="序号" width="150"/>
+							<ListHeaderItem text="事件" />
+							<ListHeaderItem text="内容" width="50"/>
+						</ListHeader>
+					</List>
+				</GroupLayout>
+			</VerticalLayout>
+		</TabLayout>
+	</VerticalLayout>
+</Window>

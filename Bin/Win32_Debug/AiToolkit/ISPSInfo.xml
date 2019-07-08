@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window>
+	<Default name="VScrollBar" value="showscrollbar=&quot;false&quot; width=&quot;10&quot; showbutton1=&quot;false&quot; showbutton2=&quot;false&quot; thumbnormalimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;0,0,10,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbhotimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;10,0,20,42&apos; corner=&apos;5,5,5,5&apos;&quot; thumbpushedimage=&quot;file=&apos;vscrollbarthumb.png&apos; source=&apos;20,0,30,42&apos; corner=&apos;5,5,5,5&apos;&quot; bknormalimage=&quot;file=&apos;vscrollbar_bkg.png&apos; corner=&apos;5,5,5,5&apos;&quot;" />
+	<Default name="List" value="scrollstepsize=&quot;50&quot; vscrollbar=&quot;true&quot; hscrollbar=&quot;true&quot; itemalign=&quot;left&quot; itemaltbk=&quot;true&quot; itemtextpadding=&quot;5,0,0,0&quot; itemlinecolor=&quot;#FF939393&quot;" />
+	<Default name="ListHeaderItem" value="sepimage=&quot;file=&apos;ListHeadSep.png&apos;&quot; sepwidth=&quot;1&quot;"/>
+	<Default name="Combo" value="textpadding=&quot;4,1,1,1&quot; normalimage=&quot;file=&apos;combo.png&apos; source=&apos;0,0,100,22&apos; corner=&apos;2,2,20,2&apos;&quot; hotimage=&quot;file=&apos;combo.png&apos; source=&apos;0,22,100,44&apos; corner=&apos;2,2,22,2&apos;&quot; pushedimage=&quot;file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot; focusedimage=&quot;file=&apos;combo.png&apos; source=&apos;0,44,100,66&apos; corner=&apos;2,2,22,2&apos;&quot;" />
+	<Style name="Radio" value="disabledtextcolor=&quot;#FFA7A6AA&quot; font=&quot;0&quot; align=&quot;center&quot; normalimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;0,0,15,15&apos; dest=&apos;0,5,15,20&apos;&quot; hotimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;15,0,30,15&apos; dest=&apos;0,5,15,20&apos;&quot; pushedimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;30,0,45,15&apos; dest=&apos;0,5,15,20&apos;&quot; selectedimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;75,0,90,15&apos; dest=&apos;0,5,15,20&apos;&quot; selectedpressimage=&quot;file=&apos;checkbox_icon.png&apos; source=&apos;90,0,105,15&apos; dest=&apos;0,5,15,20&apos;&quot;" />
+	<Style name="OptionTab" value="normalimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;0,0,109,32&apos; &quot; hotimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;109,0,218,32&apos; &quot; selectedimage=&quot;file=&apos;subtab_btn.png&apos; source=&apos;218,0,327,32&apos;&quot;" />
+	<Style name="CheckRadio" value="normalimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;0,0,15,15&apos;&quot; hotimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;15,0,30,15&apos;&quot; pushedimage=&quot;ile=&apos;CheckBox.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;30,0,45,15&apos;&quot; selectedimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;60,0,75,15&apos;&quot; selectedhotimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;75,0,90,15&apos;&quot; selectedpressimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;90,0,105,15&apos;&quot;" />
+	<VerticalLayout name="VLayout">
+		<VerticalLayout name="VLayoutNet" height="30" bkimage="subtab_bg.png" >
+			<Option name="OptionUI1" font="0" text="调试模块" tooltip="调试模块" userdata="0" style="OptionTab" float="true" pos="15,2,85,30" group="device" selected="true"/>
+			<Option name="OptionUI2" font="0" text="群联" tooltip="群联" userdata="1" style="OptionTab" float="true" pos="97,2,167,30" group="device" />
+			<!-- <Option name="OptionUI3" font="0" text="路由状态" tooltip="路由状态" userdata="2" style="OptionTab" float="true" pos="179,2,249,30" group="network"/> -->
+			<!-- <Option name="OptionUI4" font="0" text="服务提供" tooltip="服务提供" userdata="3" style="OptionTab" float="true" pos="261,2,331,30" group="network" /> -->
+			<!-- <Option name="OptionUI5" font="0" text="主机扫描" tooltip="主机扫描" userdata="4" style="OptionTab" float="true" pos="343,2,413,30" group="network" /> -->
+			<!-- <Option name="OptionUI6" font="0" text="网络抓包" tooltip="网络抓包" userdata="5" float="true" pos="425,1,495,30" group="network" /> -->
+            <!-- <Option name="OptionUI7" font="0" text="电脑门诊" tooltip="电脑门诊" userdata="6" float="true" pos="507,1,577,30" group="network" /> -->
+			<!-- <Option name="OptionUI8" font="0" text="无线网络" tooltip="无线网络" userdata="5" style="OptionTab" float="true" pos="425,2,495,30" group="network" />-->  <!--"589,1,659,30"--> 
+			<!-- <Option name="OptionUI9" font="0" text="SNMP" tooltip="SNMP" userdata="6" style="OptionTab" float="true" pos="507,2,577,30" group="network" /> -->
+		</VerticalLayout>
+		<TabLayout name="ISPSWizard" Padding="1,0,1,1">
+			<VerticalLayout virtualwnd="debug" name="VLayoutDebugInfo" inset="0,0,0,2">
+				<Control height="5" />
+				<GroupLayout height="135" font="1" text="调试便携设备">
+					<Label text="调试开关:" font="1" align="right" float="true" pos="15,25,150,45" textcolor="#FF000000"/>
+					<Option name="STEnable" font="1" text="开启" tooltip="启用输出日志" float="true" style="CheckRadio" pos="160,25,250,45" group="sttool" align="left" textpadding="16,0,0,0" textcolor="#FF000000"/>
+					<Option name="STDisable" font="1" text="关闭" tooltip="关闭输出日志" floag="true" style="CheckRadio" pos="260,25,350,45" group="sttool" align="left" textpadding="16,0,0,0" textcolor="#FF000000"/>
+					<Label text="日志类型:" font="1" align="right" float="true" pos="15,55,150,75" textcolor="#FF000000"/>
+					<Option name="LogFatal" font="1" text="FATAL" tooltip="启用输出Fatal类型日志" float="true" style="CheckRadio" pos="160,55,250,75" align="left" textpadding="16,0,0,0" textcolor="#FF000000"/>
+					<Option name="LogError" font="1" text="ERROR" tooltip="启用输出Error类型日志" floag="true" style="CheckRadio" pos="260,55,350,75" align="left" textpadding="16,0,0,0" textcolor="#FF000000"/>
+					<Option name="LogWarn" font="1" text="WARN" tooltip="启用输出Warn类型日志" float="true" style="CheckRadio" pos="360,55,450,75" align="left" textpadding="16,0,0,0" textcolor="#FF000000"/>
+					<Option name="LogInfo" font="1" text="INFO" tooltip="启用输出Info类型日志" floag="true" style="CheckRadio" pos="460,55,550,75" align="left" textpadding="16,0,0,0" textcolor="#FF000000"/>
+					<Option name="LogDebug" font="1" text="DEBUG" tooltip="启用输出Debug类型日志" float="true" style="CheckRadio" pos="560,55,650,75" align="left" textpadding="16,0,0,0" textcolor="#FF000000"/>
+					<Label text="操作:" font="1" align="right" float="true" pos="15,90,150,110" textcolor="#FF000000"/>
+					<Button name="BtnAll" align="center" font="1" float="true" text="全选" pos="160,83,250,118"/>
+					<Button name="BtnSave" align="center" font="1" float="true" text="保存" pos="260,83,350,118"/>
+				</GroupLayout>
+				<GroupLayout height="130" font="1" text="调试管理程序">
+					<Label text="调试开关:" font="1" align="right" float="true" pos="15,25,150,45" textcolor="#FF000000"/>
+					<Option name="MPEnable" font="1" text="开启" tooltip="启用管理程序输出日志" float="true" style="CheckRadio" pos="160,25,250,45" group="mptool" align="left" textpadding="16,0,0,0" textcolor="#FF000000"/>
+					<Option name="MPDisable" font="1" text="关闭" tooltip="关闭管理程序输出日志" floag="true" style="CheckRadio" pos="260,25,350,45" group="mptool" align="left" textpadding="16,0,0,0" textcolor="#FF000000"/>
+					<Label text="日志类型:" font="1" align="right" float="true" pos="15,55,150,75" textcolor="#FF000000"/>
+					<Option name="LogCheck" font="1" text="Check" tooltip="启用输出Check类型日志" float="true" style="CheckRadio" pos="160,55,250,75" align="left" textpadding="16,0,0,0" textcolor="#FF000000"/>
+					<Option name="LogNotify" font="1" text="Notify" tooltip="启用输出Notify类型日志" floag="true" style="CheckRadio" pos="260,55,350,75" align="left" textpadding="16,0,0,0" textcolor="#FF000000"/>
+					<Option name="LogExcep" font="1" text="Excep" tooltip="启用输出Execp类型日志" float="true" style="CheckRadio" pos="360,55,450,75" align="left" textpadding="16,0,0,0" textcolor="#FF000000"/>
+					<Label text="操作:" font="1" align="right" float="true" pos="15,90,150,110" textcolor="#FF000000"/>
+					<Button name="BtnMPAll" align="center" font="1" float="true" text="全选" pos="160,83,250,118"/>
+					<Button name="BtnMPSave" align="center" font="1" float="true" text="保存" pos="260,83,350,118"/>
+				</GroupLayout>
+			</VerticalLayout>
+			<VerticalLayout virtualwnd="phison" name="VLayoutPhisonInfo" inset="0,0,0,2">
+				<Control height="5" />
+				<GroupLayout height="100">
+					<Label text="U盘盘符:" font="1" align="right" float="true" pos="15,15,150,45" textcolor="#FF000000"/>
+					<Combo name="DiskDrive" font="0" float="true" pos="160,15,250,45" >
+					</Combo>
+					<Button name="BtnRefresh" align="center" font="1" float="true" text="刷新" pos="260,14,350,46"/>
+					<Button name="BtnRead" align="center" font="1" float="true" text="只读" pos="360,14,480,46"/>
+					<Button name="BtnReadTmp" align="center" font="1" float="true" text="临时只读" pos="360,49,480,81"/>
+					<Button name="BtnWrite" align="center" font="1" float="true" text="读写" pos="490,14,610,46"/>
+					<Button name="BtnWriteTmp" align="center" font="1" float="true" text="临时读写" pos="490,49,610,81"/>
+					<Button name="BtnFormat" align="center" font="1" float="true" text="格式化" pos="620,14,740,46"/>
+					<Button name="BtnAdjust" align="center" font="1" float="true" text="调整分区" pos="620,49,740,81"/>
+				</GroupLayout>
+			</VerticalLayout>
+		</TabLayout>
+	</VerticalLayout>
+</Window>

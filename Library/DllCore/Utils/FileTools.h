@@ -24,6 +24,14 @@
 DLL_API BOOL SHDeleteDirectory(LPCTSTR lpszPathName);
 
 /************************************************************************/
+/* 函  数  名：SHDeleteDirectory                                                               */
+/* 函数功能：删除目录，包括子目录															   */
+/* 输入参数：lpszPathName 需要删除的目录											   */
+/* 返  回 值：删除成功返回TRUE，失败返回FALSE									   */
+/************************************************************************/
+DLL_API BOOL SHRenameDirectory(LPCTSTR lpszFromPath, LPCTSTR lpszToPath);
+
+/************************************************************************/
 /* 函  数  名：CheckFileIsX64                                                                     */
 /* 函数功能：检测指定应用程序是否是64位应用程序									   */
 /* 输入参数：lpszFilePath 需要检测文件的绝对路径									   */

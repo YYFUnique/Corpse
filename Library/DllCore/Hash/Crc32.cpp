@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "crc32.h"
 //#include "Winsock2.h"
-
+// Crc32 转换为16进制需要的存储空间
+#define CRC32_LEN 8
+// 字符串结束符
+#define CRC32_NULL 1
+#define CRC32_BUFFER (CRC32_LEN+CRC32_NULL)
 // Static CRC table
 const DWORD CCRC32::Crc32Table[256] =
 {
@@ -110,7 +114,7 @@ CCRC32::CCRC32()
 
 void CCRC32::GetHashHexText(const BYTE* pHashBuffer,LPTSTR szHashText) 
 {
-	_stprintf_s(szHashText, 8, _T("%08X"), ~dwCrc32);
+	_stprintf_s(szHashText, CRC32_BUFFER, _T("%08X"), ~dwCrc32);
 } 
  
 void CCRC32::GetHashHexText(const BYTE* pHashBuffer,CString& szHashText)

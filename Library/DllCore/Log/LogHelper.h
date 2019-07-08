@@ -75,5 +75,8 @@ private:
 #define LOG(fmt, ...)	((void)0)
 #endif
 
+// 强制输出内容
 #define LOG_PRINT(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(fmt, ##__VA_ARGS__)
+
+// 当程序处于调试版本时，输入内容
 #define LOG_PRINT_DBG(fmt, ...) QLogHelper(__FILE__, __LINE__).VLogDbg(fmt, ##__VA_ARGS__)
