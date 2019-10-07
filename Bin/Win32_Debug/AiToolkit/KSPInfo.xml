@@ -21,20 +21,23 @@
 				<GroupLayout height="100">
 					<Label text="搜索内核版本:" font="1" align="right" float="true" pos="15,15,150,45" textcolor="#FF000000"/>
 					<Edit2 name="SupportKernel" font="1" float="true" watertext="请输入Linux内核基版版本号" pos="160,15,650,45" textpadding="4,6,4,3" textcolor="#FF000000"/>
+					<Button name="BtnAddPlugin" align="center" font="1" float="true" text="添加" tooltip="添加内核模块到克隆列表中" pos="660,15,760,45"/>
 					<Label text="内核版本:" font="1" align="right" float="true" pos="15,50,150,80" textcolor="#FF000000"/>
 					<Edit2 name="KernelVersion" font="1" watertext="请输入Linux系统`uname -r`的内容" float="true" pos="160,50,650,80" textpadding="4,6,4,3" textcolor="#FF000000"/>
 					<Button name="BtnTryVersion" align="center" font="1" float="true" text="克隆版本" pos="660,48,760,82"/>
 					<Button name="BtnExport" align="center" font="1" float="true" text="导出版本" pos="770,48,870,82"/>
 				</GroupLayout>
-				<GroupLayout >
-					<List name="snmpList" header="hidden" itemfont="0" menu="true" multiselect="false" >
+				<HorizontalLayout name="VLayoutCert">
+					<Control width="5"/>
+					<FileList bordersize="1" bordercolor="#FFCDCDCD" name="KSPList" itemfont="0" menu="true" multiselect="false" >
 						<ListHeader bkimage="file=&apos;listheadbk.png&apos; corner=&apos;1,1,1,1&apos;" menu="true">						
-							<ListHeaderItem text="序号" width="150"/>
-							<ListHeaderItem text="事件" />
-							<ListHeaderItem text="内容" width="50"/>
+							<ListHeaderItem text="序号" width="100"/>
+							<ListHeaderItem text="名称" />
+							<ListHeaderItem text="操作" width="100"/>
 						</ListHeader>
-					</List>
-				</GroupLayout>
+					</FileList>
+					<Control width="5"/>
+				</HorizontalLayout>
 			</VerticalLayout>
 		</TabLayout>
 	</VerticalLayout>

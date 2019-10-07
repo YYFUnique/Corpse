@@ -19,6 +19,7 @@ DUI_END_MESSAGE_MAP()
 void CKSPManager::ClearVirtualWnd(CNotifyPump* pNotifyPump)
 {
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_KSPINFO);
+	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_KVM);
 }
 
 void CKSPManager::SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPaintManager)
@@ -27,6 +28,9 @@ void CKSPManager::SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPain
 
 	m_KSPInfo.SetPaintManager(pPaintManager);
 	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_KSPINFO, &m_KSPInfo);
+
+	m_KvmSec.SetPaintManager(pPaintManager);
+	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_KVM, &m_KvmSec);
 }
 
 BOOL CKSPManager::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -50,4 +54,9 @@ void CKSPManager::OnSelectChanged( TNotifyUI &msg )
 
 	if (pMsgNotify)
 		m_pPaintManager->SendNotify(pMsgNotify, DUI_MSGTYPE_LOADITEM);
+}
+
+void CKSPManager::OnKSPMenu(CControlUI* pControl)
+{
+	m_KSPInfo.OnKSPMenu(pControl);
 }

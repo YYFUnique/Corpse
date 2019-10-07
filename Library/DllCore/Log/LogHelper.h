@@ -20,12 +20,14 @@
 
 typedef enum tagLOG_LEVEL
 {
-	LOG_LEVEL_ERR		=	0,
-	LOG_LEVEL_WAR	= 1,
-	LOG_LEVEL_APP		= 2,
-	LOG_LEVEL_PRO		= 3,
-	LOG_LEVEL_INFO	= 4,
-	LOG_LEVEL_ALL		= 5,
+	LOG_LEVEL_FATAL  = 0,
+	LOG_LEVEL_ERR		=	1,
+	LOG_LEVEL_WAR	= 2,
+	LOG_LEVEL_APP		= 3,
+	LOG_LEVEL_PRO		= 4,
+	LOG_LEVEL_INFO	= 5,
+	LOG_LEVEL_DBG     = 6,
+	LOG_LEVEL_ALL		= 7,
 }LOG_LEVEL;
 
 class DLL_API QLogImpl
@@ -63,11 +65,13 @@ private:
 	static BOOL m_bDbg;
 };
 
+#define QLOG_DBG(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_DBG, fmt, ##__VA_ARGS__)
 #define QLOG_INFO(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_INFO, fmt, ##__VA_ARGS__)
 #define QLOG_PRO(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_PRO, fmt, ##__VA_ARGS__)
 #define QLOG_APP(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_APP, fmt, ##__VA_ARGS__)
 #define QLOG_WAR(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_WAR, fmt, ##__VA_ARGS__)
 #define QLOG_ERR(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_ERR, fmt, ##__VA_ARGS__)
+#define QLOG_FATAL(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_FATAL, fmt, ##__VA_ARGS__)
 
 #ifdef _DEBUG
 #define LOG(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(fmt, ##__VA_ARGS__)
@@ -80,3 +84,9 @@ private:
 
 // 当程序处于调试版本时，输入内容
 #define LOG_PRINT_DBG(fmt, ...) QLogHelper(__FILE__, __LINE__).VLogDbg(fmt, ##__VA_ARGS__)
+
+#ifdef _DEBUG
+#define TRACE(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(fmt, ##__VA_ARGS__)
+#else
+#define TRACE(fmt, ...)	((void)0)
+#endif

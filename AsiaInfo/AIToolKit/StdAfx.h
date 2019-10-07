@@ -23,11 +23,17 @@ using namespace DuiLib;
 #include <DllCore/Utils/StdPtr.h>
 #include <DllCore/File/FileSystemWatcher.h>
 
-
 #include <CommDlg.h>
 
 #include "Helper/XUnzip.h"
 #include "Helper/XZip.h"
+
+#include "DuiLib/Utils/Utils.h"
+#include "Helper/TypePtrArray.h"
+#include "Helper/FileWatcher/DirectoryChanges.h"
+#include "Helper/FileWatcher/DelayedDirectoryChangeHandler.h"
+#include "Helper/FileWatcher/DirectoryChangeHandlerEx.h"
+
 
 #include "Wnd/ListViewWnd.h"
 #include "Utils/UIFileList.h"
@@ -37,5 +43,3 @@ using namespace DuiLib;
 #include "MacroDefine.h"
 #include "UserDefine.h"
 #include "WndLib.h"
-
-

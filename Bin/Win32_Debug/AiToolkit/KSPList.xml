@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window>
+	<FileListItem>
+		<HorizontalLayout>
+			<Label name="Index" text="" textpadding="3,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="PluginName" text="" textpadding="5,0,0,0"/>
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<Label name="BtnDel" text="--" align="center"/>
+		</HorizontalLayout>
+	</FileListItem>
+</Window>

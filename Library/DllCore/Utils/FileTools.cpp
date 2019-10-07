@@ -20,8 +20,12 @@ BOOL SHDeleteDirectory(LPCTSTR lpszPathName)
 	TCHAR szPathName[MAX_PATH+1];
 	ZeroMemory(szPathName, _countof(szPathName));
 
+	DWORD dwLen = _tcslen(lpszPathName);
 	//由于pFrom需要双终结符，故采用此方式
-	_tcsncpy_s(szPathName, _countof(szPathName), lpszPathName, _tcslen(lpszPathName));
+	_tcsncpy_s(szPathName, _countof(szPathName), lpszPathName, dwLen);
+
+	if (dwLen+1 < MAX_PATH)
+		szPathName[dwLen+1] = _T('\0');
 
 	shFileOp.wFunc    = FO_DELETE;
 	shFileOp.pFrom   = szPathName;

@@ -4,6 +4,8 @@
 #include "DllCore/Utils/FileTools.h"
 
 #define DELAY_TIME 20*1000
+#define APP_LIST_ITEM_INFO _T("KSPList.xml")
+#define APPLICATION_MENU _T("KSPMenu.xml")
 
 CKSPInfo::CKSPInfo()
 {
@@ -48,6 +50,7 @@ DUI_BEGIN_MESSAGE_MAP(CKSPInfo, CNotifyPump)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_REFRESH, OnRefresh)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_LOADITEM, OnLoadItem)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_RETURN, OnReturn)
+	DUI_ON_MSGTYPE(DUI_MSGTYPE_MENU, OnMenu)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_KILLFOCUS, OnKillFocus)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_TEXTCHANGED, OnTextChanged)
 DUI_END_MESSAGE_MAP()
@@ -89,6 +92,8 @@ void CKSPInfo::OnClick(TNotifyUI& msg)
 		LookupPackageFile();
 	else if (msg.pSender->GetName() == _T("BtnUnzipFile"))
 		UnpackageFile();
+	else if (msg.pSender->GetName() == _T("BtnAddPlugin"))
+		OnAddPlugin();
 }
 
 void CKSPInfo::OnRefresh(TNotifyUI& msg)
@@ -118,6 +123,56 @@ void CKSPInfo::OnReturn(TNotifyUI& msg)
 {
 	if (msg.pSender->GetName() == _T("SupportKernel"))
 		m_pListView->ShowWindow(false);
+}
+
+void CKSPInfo::OnMenu(TNotifyUI& msg)
+{
+	if (msg.pSender->GetName() == _T("KSPList"))
+	{
+		CListUI* pList = (CListUI*)msg.pSender;
+		if (pList->GetCurSel() == -1)
+			return;
+
+		CMenuWnd* pMenu = new CMenuWnd;
+		CDuiPoint pt = msg.ptMouse;
+		ClientToScreen(m_pPaintManager->GetPaintWindow(), &pt);
+		STRINGorID strXmlFile(APPLICATION_MENU);
+		pMenu->Init(NULL,strXmlFile, pt,m_pPaintManager);
+	}
+}
+
+void CKSPInfo::OnKSPMenu(CControlUI* pControl)
+{
+	CListUI* pKSPList = (CListUI*)m_pPaintManager->FindControl(_T("KSPList"));
+	if (pKSPList->GetCurSel() == -1)
+		return;
+
+	CDuiString strItemName = pControl->GetName();
+
+	CFileListItemUI* pItem = (CFileListItemUI*)pKSPList->GetItemAt(pKSPList->GetCurSel());
+	if (strItemName == _T("Del"))
+	{
+		pKSPList->RemoveAt(pKSPList->GetCurSel());
+		CDuiString strPluginName = pItem->GetSubControlText(_T("PluginName"));
+		for (int n=0; n<m_strKernelPluginList.GetCount(); ++n)
+		{
+			LPCTSTR lpszPluginName = m_strKernelPluginList.GetAt(n);
+			if (strPluginName.CompareNoCase(lpszPluginName) == 0)
+			{
+				m_strKernelPluginList.RemoveAt(n);
+				break;
+			}
+		}
+
+		//更新序列号
+		for (int n=0; n<pKSPList->GetCount(); ++n)
+		{
+			CFileListItemUI* pItem = (CFileListItemUI*)pKSPList->GetItemAt(n);
+			CString strIndex;
+			strIndex.Format(_T("%d"), n+1);
+			pItem->SetSubControlText(_T("Index"), strIndex);
+		}
+	}
 }
 
 void CKSPInfo::OnKillFocus(TNotifyUI& msg)
@@ -151,8 +206,9 @@ void CKSPInfo::OnTextChanged(TNotifyUI& msg)
 		for (int n=0; n<m_strKernelPackageList.GetSize(); ++n)
 		{
 			const CString& strKernelPack = m_strKernelPackageList.GetAt(n);
-			if (strKernelPack.Find(strKernelVersion) != -1)
-				m_pListView->Add(strKernelPack);
+			if (strKernelPack.IsEmpty() || StrStrI(strKernelPack, strKernelVersion) == NULL)
+				continue;
+			m_pListView->Add(strKernelPack);
 		}
 
 		m_pListView->ResizeWnd();
@@ -297,11 +353,9 @@ BOOL CKSPInfo::GetNoDepPackage(LPCTSTR lpszSourcePackageFile, CString& strNoDepP
 
 void CKSPInfo::ClonePackage()
 {
-	CEditUI2* pSourceFile = (CEditUI2*)m_pPaintManager->FindControl(_T("SupportKernel"));
-
 	CEditUI2* pTargetFile = (CEditUI2*)m_pPaintManager->FindControl(_T("KernelVersion"));
 
-	if (pSourceFile->GetText().IsEmpty() != FALSE)
+	if (m_strKernelPluginList.GetCount() == 0)
 	{
 		MessageBox(m_pPaintManager->GetPaintWindow(), _T("请输入Linux内核基版版本号"), _T("提示"), MB_OK | MB_ICONINFORMATION);
 		return;
@@ -313,26 +367,54 @@ void CKSPInfo::ClonePackage()
 		return;
 	}
 
-	CString strTargetPackageName;
-
 	TCHAR szWorkDir[MAX_PATH];
 	GetCurrentDirectory(_countof(szWorkDir), szWorkDir);
 	SetCurrentDirectory(m_strReleasePath);
 
+	for (int n=0; n<m_strKernelPluginList.GetCount(); ++n)
+	{
+		LPCTSTR lpszPluginName = m_strKernelPluginList.GetAt(n);
+		if (ClonePluginToNewName(lpszPluginName) == FALSE)
+		{
+			MessageBox(m_pPaintManager->GetPaintWindow(), _T("没有找到依赖包，请确认依赖包存在！"), _T("提示"), MB_OK | MB_ICONINFORMATION);
+			break;
+		}
+	}
+
+	SetCurrentDirectory(szWorkDir);
+}
+
+void CKSPInfo::ExportPackage()
+{
+	CLabelUI* pPackageVersion = (CLabelUI*)m_pPaintManager->FindControl(_T("PackageVersion"));
+
+	CString strAgentPackage;
+	strAgentPackage.Format(_T("Agent-%s.zip"), pPackageVersion->GetText());
+
+	TCHAR szTargetAgentFilePath[MAX_PATH];
+	PathCombine(szTargetAgentFilePath, m_strReleasePath, strAgentPackage);
+
+	CParseDsp::PackageFile(m_strReleasePath, szTargetAgentFilePath);
+}
+
+BOOL CKSPInfo::ClonePluginToNewName(LPCTSTR lpszBasedPlugin)
+{
+	CString strTargetPackageName;
 	CString strNoDepPackage;
-	if (GetNoDepPackage(pSourceFile->GetText(), strNoDepPackage) != FALSE)
+	if (GetNoDepPackage(lpszBasedPlugin, strNoDepPackage) != FALSE)
 	{
 		CString strDepluaPlugin;
 		GetDepluaPlugin(strNoDepPackage, strDepluaPlugin);
 
 		CLabelUI* pPackageVersion = (CLabelUI*)m_pPaintManager->FindControl(_T("PackageVersion"));
-		
+
+		CEditUI2* pTargetFile = (CEditUI2*)m_pPaintManager->FindControl(_T("KernelVersion"));
 		CString strPackage = pTargetFile->GetText().GetData();
 		strPackage.Replace(_T("."), _T("_"));
 		strPackage.Replace(_T("-"), _T("_"));
 		strPackage.Replace(_T(" "), _T("_"));
 
-		strTargetPackageName.Format(_T("%s-%s-%s.dsp"), strDepluaPlugin, strPackage, pPackageVersion->GetText().GetData());
+		strTargetPackageName.Format(_T("%s_%s-%s.dsp"), strDepluaPlugin, strPackage, pPackageVersion->GetText().GetData());
 
 		TCHAR szTargetFilePath[MAX_PATH];
 		PathCombine(szTargetFilePath, m_strReleasePath, strTargetPackageName);
@@ -352,28 +434,17 @@ void CKSPInfo::ClonePackage()
 		CParseDsp::UnPackageFile(szTempDir, strNoDepPackage);
 
 		//rename directory to real version name
-		RenameDirectoryToNewName(szTempDir, strPackage);
+		CString strKernelPackage = pTargetFile->GetText().GetData();
+		RenameDirectoryToNewName(szTempDir, strKernelPackage);
 
 		CParseDsp::PackageFile(szTempDir, szTargetFilePath);
 
 		//delete temp dir
 		SHDeleteDirectory(szTempDir);
-	}
 
-	SetCurrentDirectory(szWorkDir);
-}
-
-void CKSPInfo::ExportPackage()
-{
-	CLabelUI* pPackageVersion = (CLabelUI*)m_pPaintManager->FindControl(_T("PackageVersion"));
-
-	CString strAgentPackage;
-	strAgentPackage.Format(_T("Agent-%s.zip"), pPackageVersion->GetText());
-
-	TCHAR szTargetAgentFilePath[MAX_PATH];
-	PathCombine(szTargetAgentFilePath, m_strReleasePath, strAgentPackage);
-
-	CParseDsp::PackageFile(m_strReleasePath, szTargetAgentFilePath);
+		return TRUE;
+	} 
+	return FALSE;
 }
 
 void CKSPInfo::LookupPackageFile()
@@ -415,6 +486,8 @@ void CKSPInfo::LookupPackageFile()
 	strReleasePackageFileName.TrimRight(_T(".zip"));
 
 	pPackageVersion->SetText(strReleasePackageFileName);
+
+	SetEvent(m_hFileEvent);
 }
 
 void CKSPInfo::UnpackageFile()
@@ -436,6 +509,57 @@ void CKSPInfo::UnpackageFile()
 	}
 
 	CParseDsp::UnPackageFile(m_strReleasePath, pReleaseFilePath->GetText());
+}
+
+void CKSPInfo::OnAddPlugin()
+{
+	CEditUI2* pSupportKernel = (CEditUI2*)m_pPaintManager->FindControl(_T("SupportKernel"));
+	CString strPluginName = pSupportKernel->GetText();
+	if (strPluginName.IsEmpty())
+	{
+		MessageBox(m_pPaintManager->GetPaintWindow(), _T("搜索内核版本不能为空，请输入后重试！"), _T("提示"), MB_OK | MB_ICONINFORMATION);
+		return ;
+	}
+
+	for (int n=0; n<m_strKernelPluginList.GetCount(); ++n)
+	{
+		LPCTSTR lpszPluginName = m_strKernelPluginList.GetAt(n);
+		if (strPluginName.CompareNoCase(lpszPluginName) == 0)
+			return;
+	}
+
+	//刷新列表
+	CListUI* pList = (CListUI*)m_pPaintManager->FindControl(_T("KSPList"));
+	CreateNewAppItem(pList, strPluginName);
+	m_strKernelPluginList.Add(strPluginName);
+}
+
+void CKSPInfo::CreateNewAppItem(CListUI* pList, LPCTSTR lpszPluginName)
+{
+	CFileListItemUI* pFileItem = NULL;
+	if (m_DialogBuilder.GetMarkup()->IsValid() == false)
+		pFileItem = (CFileListItemUI*)m_DialogBuilder.Create(APP_LIST_ITEM_INFO, 0, &m_RootBuilder, m_pPaintManager);
+	else
+		pFileItem = (CFileListItemUI*)m_DialogBuilder.Create(&m_RootBuilder, m_pPaintManager);
+
+	pList->Add(pFileItem);
+	pFileItem->SetFixedHeight(33);
+
+	const TListInfoUI* pListInfo = pList->GetListInfo();
+
+	CLabelUI* pLabelIndex = (CLabelUI*)pFileItem->FindSubControl(_T("Index"));
+	CString strIndex;
+	strIndex.Format(_T("%d"), pList->GetCount());
+	pLabelIndex->SetText(strIndex);
+	pLabelIndex->SetFont(pListInfo->nFont);
+	pLabelIndex->SetForeColor(pListInfo->dwTextColor);
+	pLabelIndex->AppendTextStyle(DT_END_ELLIPSIS);
+
+	CLabelUI* pPluginName = (CLabelUI*)pFileItem->FindSubControl(_T("PluginName"));
+	pPluginName->SetText(lpszPluginName);
+	pPluginName->SetFont(pListInfo->nFont);
+	pPluginName->SetForeColor(pListInfo->dwTextColor);
+	pPluginName->AppendTextStyle(DT_END_ELLIPSIS);
 }
 
 BOOL CKSPInfo::RenameDirectoryToNewName(LPCTSTR lpszBaseDirectoryName, LPCTSTR lpszDirectoryNewName)

@@ -40,6 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="$(SolutionDir)AsiaInfo\AIToolKit\"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -115,6 +116,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="$(SolutionDir)AsiaInfo\AIToolKit\"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -213,6 +215,10 @@
 					RelativePath=".\Helper\XZip.cpp"
 					>
 				</File>
+				<Filter
+					Name="FileWatcher"
+					>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="VirtualWnd"
@@ -224,6 +230,10 @@
 				<Filter
 					Name="ISPS"
 					>
+					<File
+						RelativePath=".\VirtualWnd\ISPS\DeviceTag.cpp"
+						>
+					</File>
 					<File
 						RelativePath=".\VirtualWnd\ISPS\ISPSDebug.cpp"
 						>
@@ -272,6 +282,14 @@
 				<Filter
 					Name="DSA"
 					>
+					<File
+						RelativePath=".\VirtualWnd\DSA\DSDebug.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\DSA\DSManager.cpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="KSP"
@@ -282,6 +300,22 @@
 					</File>
 					<File
 						RelativePath=".\VirtualWnd\KSP\KSPManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\KSP\KvmSec.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="FileMonitor"
+					>
+					<File
+						RelativePath=".\VirtualWnd\FileMonitor\FileManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\FileMonitor\FileMonitor.cpp"
 						>
 					</File>
 				</Filter>
@@ -307,6 +341,22 @@
 				</File>
 				<File
 					RelativePath=".\Utils\UIFileList.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\UIPlatform.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="libModule"
+				>
+				<File
+					RelativePath=".\libModule\UIClient.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\libModule\UIModule.cpp"
 					>
 				</File>
 			</Filter>
@@ -351,6 +401,10 @@
 					RelativePath=".\Helper\XZip.h"
 					>
 				</File>
+				<Filter
+					Name="FileWatcher"
+					>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="VirtualWnd"
@@ -362,6 +416,10 @@
 				<Filter
 					Name="ISPS"
 					>
+					<File
+						RelativePath=".\VirtualWnd\ISPS\DeviceTag.h"
+						>
+					</File>
 					<File
 						RelativePath=".\VirtualWnd\ISPS\ISPSDebug.h"
 						>
@@ -398,10 +456,38 @@
 							>
 						</File>
 					</Filter>
+					<Filter
+						Name="PR"
+						>
+						<File
+							RelativePath=".\VirtualWnd\ISPS\PR\Win32\include\hk_data.h"
+							>
+						</File>
+						<File
+							RelativePath=".\VirtualWnd\ISPS\PR\Win32\include\hk_error.h"
+							>
+						</File>
+						<File
+							RelativePath=".\VirtualWnd\ISPS\PR\Win32\include\hk_rkacde.h"
+							>
+						</File>
+						<File
+							RelativePath=".\VirtualWnd\ISPS\PR\Win32\include\hkeyapi.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 				<Filter
 					Name="DSA"
 					>
+					<File
+						RelativePath=".\VirtualWnd\DSA\DSDebug.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\DSA\DSManager.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="KSP"
@@ -412,6 +498,22 @@
 					</File>
 					<File
 						RelativePath=".\VirtualWnd\KSP\KSPManager.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\KSP\KvmSec.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="FileMonitor"
+					>
+					<File
+						RelativePath=".\VirtualWnd\FileMonitor\FileManager.h"
+						>
+					</File>
+					<File
+						RelativePath=".\VirtualWnd\FileMonitor\FileMonitor.h"
 						>
 					</File>
 				</Filter>
@@ -437,6 +539,26 @@
 				</File>
 				<File
 					RelativePath=".\Utils\UIFileList.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Utils\UIPlatform.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="libModule"
+				>
+				<File
+					RelativePath=".\libModule\UIClient.h"
+					>
+				</File>
+				<File
+					RelativePath=".\libModule\UICommon.h"
+					>
+				</File>
+				<File
+					RelativePath=".\libModule\UIModule.h"
 					>
 				</File>
 			</Filter>

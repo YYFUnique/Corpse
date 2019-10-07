@@ -16,6 +16,7 @@ public:
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     void EnsureVisible(int iIndex);
+	void ComboListClick(TNotifyUI& msg);
     void Scroll(int dx, int dy);
 	virtual void Notify(TNotifyUI& msg);
 #if(_WIN32_WINNT >= 0x0501)
@@ -82,6 +83,8 @@ void CComboWnd::Notify(TNotifyUI& msg)
 {
 	if (msg.sType == DUI_MSGTYPE_WINDOWINIT)
 		EnsureVisible(m_pOwner->GetCurSel());
+    else if (msg.sType == DUI_MSGTYPE_ITEMCLICK)
+        ComboListClick(msg);
 }
 
 LPCTSTR CComboWnd::GetWindowClassName() const
@@ -131,7 +134,7 @@ LRESULT CComboWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         m_pOwner->SetPos(m_pOwner->GetPos());
         m_pOwner->SetFocus();
     }
-    else if( uMsg == WM_LBUTTONUP ) {
+    else if( uMsg == WM_LBUTTONUP || uMsg == WM_RBUTTONUP) {
         POINT pt = { 0 };
         ::GetCursorPos(&pt);
         ::ScreenToClient(m_pm.GetPaintWindow(), &pt);
@@ -195,6 +198,11 @@ void CComboWnd::EnsureVisible(int iIndex)
 	else if( rcItem.bottom > rcList.bottom && rcItem.top < rcList.bottom)  dx = rcItem.bottom - rcList.bottom + 2;
     else if( rcItem.top < rcList.top ) dx = rcItem.top - rcList.top - 2;
     Scroll(0, dx);
+}
+
+void CComboWnd::ComboListClick(TNotifyUI& msg)
+{
+	m_pOwner->m_pManager->SendNotify(m_pOwner, msg.sType, msg.wParam, msg.lParam);
 }
 
 void CComboWnd::Scroll(int dx, int dy)
@@ -502,6 +510,7 @@ bool CComboUI::Activate()
 {
     if( !CControlUI::Activate() ) return false;
     if( m_pWindow ) return true;
+	if (m_pManager != NULL) m_pManager->SendNotify(this, DUI_MSGTYPE_PREDROPDOWN);
     m_pWindow = new CComboWnd();
     ASSERT(m_pWindow);
     m_pWindow->Init(this);
@@ -844,6 +853,10 @@ void CComboUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
             m_ListInfo.uTextStyle |= DT_RIGHT;
         }
     }
+	else if (_tcsicmp(pstrName, _T("itemendellipsis")) == 0) {
+		if( _tcsicmp(pstrValue, _T("true")) == 0 ) m_ListInfo.uTextStyle |= DT_END_ELLIPSIS;
+		else m_ListInfo.uTextStyle &= ~DT_END_ELLIPSIS;
+	}
 	else if( _tcscmp(pstrName, _T("itemtextpadding")) == 0 ) {
         RECT rcTextPadding = { 0 };
         LPTSTR pstr = NULL;

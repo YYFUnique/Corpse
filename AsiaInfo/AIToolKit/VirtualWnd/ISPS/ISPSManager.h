@@ -17,6 +17,7 @@ protected:
 private:
 	CPhison					m_Phison;
 	CISPSDebug			m_Debug;
+	CDeviceTag				m_DeviceTag;
 	CISPSInterfaceTest	m_InterfaceTest;
 
 	CPaintManagerUI* m_pPaintManager;

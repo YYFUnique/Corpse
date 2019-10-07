@@ -9,9 +9,9 @@
 	<Style name="CheckRadio" value="normalimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;0,0,15,15&apos;&quot; hotimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;15,0,30,15&apos;&quot; pushedimage=&quot;ile=&apos;CheckBox.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;30,0,45,15&apos;&quot; selectedimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;60,0,75,15&apos;&quot; selectedhotimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;75,0,90,15&apos;&quot; selectedpressimage=&quot;file=&apos;CheckBox.png&apos; dest=&apos;0,2,15,17&apos; source=&apos;90,0,105,15&apos;&quot;" />
 	<VerticalLayout name="VLayout">
 		<VerticalLayout name="VLayoutNet" height="30" bkimage="subtab_bg.png" >
-			<Option name="OptionUI1" font="0" text="调试模块" tooltip="调试模块" userdata="0" style="OptionTab" float="true" pos="15,2,85,30" group="device" selected="true"/>
-			<Option name="OptionUI2" font="0" text="群联" tooltip="群联" userdata="1" style="OptionTab" float="true" pos="97,2,167,30" group="device" />
-			<!-- <Option name="OptionUI3" font="0" text="路由状态" tooltip="路由状态" userdata="2" style="OptionTab" float="true" pos="179,2,249,30" group="network"/> -->
+			<Option name="OptionUI1" font="0" text="调试模块" tooltip="调试模块" userdata="0" style="OptionTab" float="true" pos="15,2,85,30" group="isps" selected="true"/>
+			<Option name="OptionUI2" font="0" text="群联" tooltip="群联" userdata="1" style="OptionTab" float="true" pos="97,2,167,30" group="isps" />
+			<Option name="OptionUI3" font="0" text="设备标签" tooltip="设备标签" userdata="2" style="OptionTab" float="true" pos="179,2,249,30" group="isps" />
 			<!-- <Option name="OptionUI4" font="0" text="服务提供" tooltip="服务提供" userdata="3" style="OptionTab" float="true" pos="261,2,331,30" group="network" /> -->
 			<!-- <Option name="OptionUI5" font="0" text="主机扫描" tooltip="主机扫描" userdata="4" style="OptionTab" float="true" pos="343,2,413,30" group="network" /> -->
 			<!-- <Option name="OptionUI6" font="0" text="网络抓包" tooltip="网络抓包" userdata="5" float="true" pos="425,1,495,30" group="network" /> -->
@@ -62,6 +62,43 @@
 					<Button name="BtnWriteTmp" align="center" font="1" float="true" text="临时读写" pos="490,49,610,81"/>
 					<Button name="BtnFormat" align="center" font="1" float="true" text="格式化" pos="620,14,740,46"/>
 					<Button name="BtnAdjust" align="center" font="1" float="true" text="调整分区" pos="620,49,740,81"/>
+				</GroupLayout>
+			</VerticalLayout>
+			<VerticalLayout virtualwnd="devicetag" name="VLayoutPhisonInfo" inset="0,0,0,2">
+				<Control height="5" />
+				<GroupLayout height="120" font="1" text="设备标签解析">
+					<Label text="设备标签:" font="1" align="right" float="true" pos="15,25,150,55" textcolor="#FF000000"/>
+					<Edit2 name="DeviceTag" font="1" watertext="硬件设备序列号" float="true" pos="160,25,650,55" textpadding="4,6,4,3" textcolor="#FF000000"/>
+					<Label text="DeviceIDTag:" font="1" align="right" float="true" pos="15,60,150,95" textcolor="#FF000000"/>
+					<Label name="DeviceIDTag" text="" font="1" align="left" float="true" pos="160,60,650,95" textcolor="#FF000000"/>
+				</GroupLayout>
+				<GroupLayout height="550" font="1" text="License解析">
+					<Label text="License:" font="1" align="right" float="true" pos="15,25,150,55" textcolor="#FF000000"/>
+					<Edit2 name="LicenseTag" font="1" watertext="硬件设备序列号" float="true" pos="160,25,650,55" textpadding="4,6,4,3" textcolor="#FF000000"/>
+					<Label text="ProdCode:" font="1" align="right" float="true" pos="15,60,150,95" textcolor="#FF000000"/>
+					<Label name="ProdCode" text="" font="1" align="left" float="true" pos="160,60,260,95" textcolor="#FF000000"/>
+					<Label text="FeatureName:" font="1" align="right" float="true" pos="15,100,150,135" textcolor="#FF000000"/>
+					<Label name="FeatureName" font="1" align="left" float="true" pos="160,100,260,135" textcolor="#FF000000"/>
+					<Label text="DeviceID:" font="1" align="right" float="true" pos="15,140,150,175" textcolor="#FF000000"/>
+					<Label name="DeviceID" font="1" align="left" float="true" pos="160,140,260,175" textcolor="#FF000000"/>
+					<Label text="OSType:"  font="1" align="right" float="true" pos="15,180,150,215" textcolor="#FF000000"/>
+					<Label name="OSType" font="1" align="left" float="true" pos="160,180,260,215" textcolor="#FF000000"/>
+					<Label text="LangVerion:" font="1" align="right" float="true" pos="15,220,150,255" textcolor="#FF000000"/>
+					<Label name="LangVerion" font="1" align="left" float="true" pos="160,220,260,255" textcolor="#FF000000"/>
+					<Label text="BUCode:" font="1" align="right" float="true" pos="300,60,440,95" textcolor="#FF000000"/>
+					<Label name="BUCode" font="1" align="left" float="true" pos="450,60,550,95" textcolor="#FF000000"/>
+					<Label text="ExtraMonth:" font="1" align="right" float="true" pos="300,100,440,135" textcolor="#FF000000"/>
+					<Label name="ExtraMonth" font="1" align="left" float="true" pos="450,100,550,135" textcolor="#FF000000"/>
+					<Label text="ExpireDate:" font="1" align="right" float="true" pos="300,140,440,175" textcolor="#FF000000"/>
+					<Label name="ExpireDate" font="1" align="left" float="true" pos="450,140,550,175" textcolor="#FF000000"/>
+					<Label text="LicSerialNo:" font="1" align="right" float="true" pos="300,180,440,215" textcolor="#FF000000"/>
+					<Label name="LicSerialNo" font="1" align="left" float="true" pos="450,180,550,215" textcolor="#FF000000"/>
+					<Label text="AllowNumber:" font="1" align="right" float="true" pos="300,220,440,255" textcolor="#FF000000"/>
+					<Label name="AllowNumber" font="1" align="left" float="true" pos="450,220,550,255" textcolor="#FF000000"/>
+					<Label text="LicUpdateFlag:" font="1" align="right" float="true" pos="600,60,700,95" textcolor="#FF000000"/>
+					<Label name="LicUpdateFlag" font="1" align="left" float="true" pos="710,60,800,95" textcolor="#FF000000"/>
+					<Label text="LicType:"  font="1" align="right" float="true" pos="600,100,700,135" textcolor="#FF000000" />
+					<Label name="LicType" font="1" align="left" float="true" pos="710,100,800,135" textcolor="#FF000000"/>
 				</GroupLayout>
 			</VerticalLayout>
 		</TabLayout>

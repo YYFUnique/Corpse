@@ -2163,7 +2163,7 @@ void CListLabelElementUI::DoEvent(TEventUI& event)
     {
 	     return;
     }
-    if( event.Type == UIEVENT_BUTTONUP )
+    if( event.Type == UIEVENT_BUTTONUP || event.Type == UIEVENT_RBUTTONUP)
     {
 		if (IsEnabled())
 	    	m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMCLICK);

@@ -2,12 +2,19 @@
 #include "AIToolKit.h"
 #include "Resource.h"
 #include "DllCore/Utils/TextTools.h"
+#include "Utils/ControlBuilder.h"
+
+#include "libModule/UIClient.h"
 
 #define		TIMER_PCHUNTER_ID			0x1000
 #define		WM_TRAYICON					WM_USER+0x1000
 
 CAIToolkit::CAIToolkit()
 {
+	m_pUIPlatform = NULL;
+	AddVirtualWnd(VIRTUAL_WND_DSAGENT, &m_DSMgr);
+	m_DSMgr.SetVirtualWnd(this, &m_PaintManager);
+
 	AddVirtualWnd(VIRTUAL_WND_KSP, &m_KSPMgr);
 	m_KSPMgr.SetVirtualWnd(this, &m_PaintManager);
 
@@ -17,6 +24,12 @@ CAIToolkit::CAIToolkit()
 
 CAIToolkit::~CAIToolkit()
 {
+	if (m_pUIPlatform != NULL)
+	{
+		delete m_pUIPlatform;
+		m_pUIPlatform = NULL;
+	}
+	RemoveVirtualWnd(VIRTUAL_WND_DSAGENT);
 	RemoveVirtualWnd(VIRTUAL_WND_KSP);
 	RemoveVirtualWnd(VIRTUAL_WND_INTERFACE);
 }
@@ -31,6 +44,12 @@ void CAIToolkit::OnFinalMessage(HWND hWnd)
 {
 	__super::OnFinalMessage(hWnd);
 	delete this;
+}
+
+CControlUI* CAIToolkit::CreateControl(LPCTSTR pstrClass)
+{
+	CControlBuilder RootBuilder;
+	return RootBuilder.CreateControl(pstrClass);
 }
 
 LPCTSTR CAIToolkit::GetWindowClassName() const
@@ -59,12 +78,31 @@ CDuiString CAIToolkit::GetSkinFile()
 
 CDuiString CAIToolkit::GetSkinFolder()
 {
+#ifdef _DEBUG
 	return _T("AIToolKit");
+#else
+	return _T("");
+#endif
 }
 
 void CAIToolkit::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
+
+	m_pUIPlatform = new UIPlatform(_T("AiToolkit"));
+	if (m_pUIPlatform->RunAsync() == FALSE)
+	{
+		delete m_pUIPlatform;
+		m_pUIPlatform = NULL;
+	}
+
+
+	UIClient client(*m_pUIPlatform);
+	client.IsUIModuleInit();
+
+	CHorizontalLayoutUI* pControl = (CHorizontalLayoutUI*)m_PaintManager.FindControl(_T("TabSwitch"));
+	if (pControl)
+		m_PaintManager.SendNotify(pControl->GetItemAt(0), DUI_MSGTYPE_SELECTCHANGED);
 }
 
 void CAIToolkit::OnClick(TNotifyUI& msg)
@@ -121,6 +159,24 @@ void CAIToolkit::OnSelectChanged(TNotifyUI& msg)
 	}
 }
 
+LRESULT CAIToolkit::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	LRESULT bRes = FALSE;
+	bHandled = TRUE;
+	switch(uMsg)
+	{
+	case WM_MENUCLICK:
+		bRes = OnMenuClick(wParam, lParam);
+		break;
+	default:
+		bHandled = FALSE;
+	}
+
+	if (bHandled) return bRes;
+
+	return WindowImplBase::HandleCustomMessage(uMsg,wParam,lParam,bHandled);
+}
+
 LRESULT CAIToolkit::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (m_dwSelectOption == WIZARD_ID_KSP)
@@ -148,6 +204,21 @@ LRESULT CAIToolkit::OnKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHa
 		lRes =  __super::OnKeyDown(uMsg, wParam, lParam, bHandled);
 
 	return lRes;
+}
+
+LRESULT CAIToolkit::OnMenuClick(WPARAM wParam, LPARAM lParam)
+{
+	CControlUI* pControl = (CControlUI*)lParam;
+	ASSERT(pControl);
+	if (pControl == NULL)
+		return FALSE;
+
+	//获取菜单对应根节点的控件名称
+	CDuiString strMenuName = pControl->GetManager()->GetRoot()->GetName();
+	if (strMenuName == _T("KSPMenu"))
+		m_KSPMgr.OnKSPMenu(pControl);
+
+	return TRUE;
 }
 
 LRESULT CAIToolkit::OnF5Down(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)

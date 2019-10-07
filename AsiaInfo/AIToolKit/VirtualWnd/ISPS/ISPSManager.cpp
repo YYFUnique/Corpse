@@ -19,6 +19,7 @@ void CISPSManager::ClearVirtualWnd(CNotifyPump* pNotifyPump)
 {
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_ISPSPHISON);
 	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_ISPSDEBUG);
+	pNotifyPump->RemoveVirtualWnd(VIRTUAL_WND_DEVICETAG);
 }
 
 void CISPSManager::SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPaintManager)
@@ -30,6 +31,9 @@ void CISPSManager::SetVirtualWnd(CNotifyPump* pNotifyPump, CPaintManagerUI* pPai
 
 	m_Debug.SetPaintManager(pPaintManager);
 	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_ISPSDEBUG, &m_Debug);
+
+	m_DeviceTag.SetPaintManager(pPaintManager);
+	pNotifyPump->AddVirtualWnd(VIRTUAL_WND_DEVICETAG, &m_DeviceTag);
 }
 
 void CISPSManager::OnSelectChanged( TNotifyUI &msg )

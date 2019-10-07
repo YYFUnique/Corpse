@@ -51,6 +51,7 @@ public:
 protected:
 	static DWORD WINAPI Routine(LPVOID lParam);
 
+	static UINT CALLBACK DispathMessage(LPVOID lParam);
 private:
 	HANDLE m_hFile;
 	HANDLE m_hThread;
@@ -58,6 +59,7 @@ private:
 	DWORD	m_dwNotifyFilter;
 	BOOL		m_bWatchSubtree;
 	BOOL		m_bRequestStop;
+	CString		m_strMonitorPath;
 
 	LPVOID	m_DealFunParam;
 	LPDEALFUNCTION m_DealFun;

@@ -820,15 +820,15 @@ namespace DuiLib
 		return (int) _tcslen(m_pstr); 
 	}
 
-	 CDuiString::operator LPCTSTR() const 
+	CDuiString::operator LPCTSTR() const 
 	{ 
 		return m_pstr; 
 	}
 
-	 CDuiString::operator LPCTSTR()
-	 {
+	CDuiString::operator LPCTSTR()
+	{
 		 return m_pstr;
-	 }
+	}
 
 	void CDuiString::Append(LPCTSTR pstr)
 	{

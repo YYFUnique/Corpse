@@ -515,6 +515,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Security\CryptoApi.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Security\RemoteThreadInject.cpp"
 					>
 				</File>
@@ -536,6 +540,22 @@
 				>
 				<File
 					RelativePath=".\Desktop\ToggleDesktopHelper.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="IPC"
+				>
+				<File
+					RelativePath=".\IPC\PipeClient.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IPC\PipeCommon.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\IPC\PipeServer.cpp"
 					>
 				</File>
 			</Filter>
@@ -817,6 +837,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Security\CryptoApi.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Security\RemoteThreadInject.h"
 					>
 				</File>
@@ -838,6 +862,22 @@
 				>
 				<File
 					RelativePath=".\Desktop\ToggleDesktopHelper.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="IPC"
+				>
+				<File
+					RelativePath=".\IPC\PipeClient.h"
+					>
+				</File>
+				<File
+					RelativePath=".\IPC\PipeCommon.h"
+					>
+				</File>
+				<File
+					RelativePath=".\IPC\PipeServer.h"
 					>
 				</File>
 			</Filter>

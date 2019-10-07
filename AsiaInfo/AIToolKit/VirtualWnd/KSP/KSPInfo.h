@@ -7,6 +7,7 @@ public:
 	~CKSPInfo();
 
 public:
+	void OnKSPMenu(CControlUI* pControl);
 	void SetPaintManager(CPaintManagerUI* pPaintMgr);
 	BOOL HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandle);
 protected:
@@ -20,16 +21,21 @@ protected:
 protected:
 	DUI_DECLARE_MESSAGE_MAP()
 	void OnClick(TNotifyUI& msg);
+	void OnMenu(TNotifyUI& msg);
 	void OnLoadItem(TNotifyUI& msg);
 	void OnRefresh(TNotifyUI& msg);
 	void OnReturn(TNotifyUI& msg);
 	void OnKillFocus(TNotifyUI& msg);
 	void OnTextChanged(TNotifyUI& msg);
+	
 protected:
 	void ClonePackage();
 	void ExportPackage();
 	void LookupPackageFile();
 	void UnpackageFile();
+	void OnAddPlugin();
+	BOOL ClonePluginToNewName(LPCTSTR lpszBasedPlugin);
+	void CreateNewAppItem(CListUI* pList, LPCTSTR lpszPluginName);
 private:
 	static UINT ThreadProc(LPVOID lParam);
 protected:
@@ -40,6 +46,7 @@ protected:
 	HANDLE					m_hThread;
 	CString						m_strReleasePath;
 	CStdArray				m_strKernelPackageList;
+	CStdArray				m_strKernelPluginList;
 
 	BOOL					   m_bLoad;
 	CControlBuilder	   m_RootBuilder;

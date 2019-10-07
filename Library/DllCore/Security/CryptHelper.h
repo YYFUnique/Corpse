@@ -21,6 +21,14 @@ typedef enum tagCERT_LOCALTION
 	CERT_LOCALTION_LOCAL_MACHINE		= 1,
 }CERT_LOCALTION;
 
+#ifdef LS_STATIC_LIB_CALL
+#define DLL_API 
+#elif defined  DLL_EXPORTS
+#define DLL_API __declspec(dllexport)
+#else
+#define DLL_API __declspec(dllimport)
+#endif
+
 class DLL_API CCryptHelper
 {
 public:
@@ -59,6 +67,10 @@ public:
 
 	BOOL SetCertSubjectName(LPCTSTR lpszSubjectName, CERT_NAME_BLOB* pSubjectIssuerBlob);
 
+	/************************************************************************/
+	/* 函数名称：ExportPublicKey							                                           */
+	/* 函数参数：导出公钥																				   */
+	/************************************************************************/
 	BOOL ExportPublicKey(CERT_PUBLIC_KEY_INFO* pCertPublicKeyInfo, DWORD* pdwLen);
 
 	/************************************************************************/

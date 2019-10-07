@@ -20,9 +20,12 @@ BOOL CParseDsp::Init(LPCTSTR lpszDepluaContent)
 		if (_tcsnicmp(lpszDepluaContent, lpszReturnObject, _tcslen(lpszReturnObject)) != 0)
 			break;
 
+		CString strDepluaContent(lpszDepluaContent);
+		strDepluaContent.Replace(_T("\""), _T(""));
+
 		TCHAR szDeplua[MAX_PATH];
 		TCHAR szType[MAX_PATH];
-		_stscanf_s(lpszDepluaContent, _T("return {%[^=]={type=\"%[^\"]}"), 
+		_stscanf_s(strDepluaContent, _T("return {%[^=]={type=%[^}]}"), 
 																			szDeplua, _countof(szDeplua),
 																			szType, _countof(szType));
 
