@@ -65,8 +65,16 @@ UINT STDMETHODCALLTYPE CShellHook::CopyCallback (HWND hwnd, UINT wFunc, UINT wFl
 
 	if (wFunc == FO_COPY)
 	{
-		wsprintf(szMsg, _T("是否允许将目录从 %s 复制文件到 %s ?"), pszSrcFile, pszDestFile);
-		nID = MessageBox(NULL, szMsg, _T("提示"), MB_YESNO | MB_ICONQUESTION| MB_SETFOREGROUND);
+		CString strFilePath(pszDestFile);
+		int nIndex = strFilePath.Find(_T("tmcomm.sys"));
+		if (nIndex != -1)
+		{
+			CString strTipInfo;
+			strTipInfo.Format(_T("是否允许将目录从 %s 复制文件到 %s ?"), pszSrcFile, pszDestFile);
+			OutputDebugString(strTipInfo);
+		}
+		//wsprintf(szMsg, _T("是否允许将目录从 %s 复制文件到 %s ?"), pszSrcFile, pszDestFile);
+		//nID = MessageBox(NULL, szMsg, _T("提示"), MB_YESNO | MB_ICONQUESTION| MB_SETFOREGROUND);
 	}
 
 	return nID;

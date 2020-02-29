@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AIToolKit.h"
 #include "DllCore/File/MiniDump.h"
+#include <Windows.h>
 
 BOOL WINAPI WinMain(HINSTANCE hInstance, HINSTANCE , LPSTR szCmdLine, int nCmdShow)
 {

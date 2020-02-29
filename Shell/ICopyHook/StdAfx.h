@@ -5,3 +5,4 @@
 #include <Tchar.h>
 #include <Shlobj.h>
 #include <InitGuid.h>
+#include <atlstr.h>

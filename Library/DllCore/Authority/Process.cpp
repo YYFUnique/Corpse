@@ -7,11 +7,14 @@
 #include "DllCore/Utils/OsInfo.h"
 #include "DllCore/Utils/FileTools.h"
 
+#include <Shellapi.h>
 #include <Aclapi.h>
 #pragma comment(lib,"Advapi32.lib")
 #pragma comment(lib,"Psapi.lib")
 
 typedef LONG (WINAPI *PROCNTQSIP)(HANDLE,UINT,PVOID,ULONG,PULONG);
+
+#define SAFE_CLOSEHANDLE(h)  if(NULL != h) {CloseHandle(h); h = NULL;}
 
 BOOL GetProcessUserName(DWORD dwProcessId, CString& strProcessName)
 {
@@ -174,6 +177,51 @@ BOOL IsRunAsAdmin()
 		return FALSE;
 
 	return ProcessRunAsAdmin.IsProcessRunAsAdmin();
+}
+
+BOOL IsRunAsAdminEx()
+{
+	BOOL fIsRunAsAdmin = FALSE;
+	DWORD dwError = ERROR_SUCCESS;
+	PSID pAdministratorsGroup = NULL;
+
+	// Allocate and initialize a SID of the administrators group.
+	SID_IDENTIFIER_AUTHORITY NtAuthority = SECURITY_NT_AUTHORITY;
+	if (!AllocateAndInitializeSid(
+												&NtAuthority, 
+												2, 
+												SECURITY_BUILTIN_DOMAIN_RID, 
+												DOMAIN_ALIAS_RID_ADMINS, 
+												0, 0, 0, 0, 0, 0, 
+												&pAdministratorsGroup))
+	{
+		dwError = GetLastError();
+		goto Cleanup;
+	}
+
+	// Determine whether the SID of administrators group is enabled in 
+	// the primary access token of the process.
+	if (!CheckTokenMembership(NULL, pAdministratorsGroup, &fIsRunAsAdmin))
+	{
+		dwError = GetLastError();
+		goto Cleanup;
+	}
+
+Cleanup:
+	// Centralized cleanup for all allocated resources.
+	if (pAdministratorsGroup)
+	{
+		FreeSid(pAdministratorsGroup);
+		pAdministratorsGroup = NULL;
+	}
+
+	// Throw the error if something failed in the function.
+	if (ERROR_SUCCESS != dwError)
+	{
+		//throw dwError;
+	}
+
+	return (fIsRunAsAdmin == TRUE);
 }
 
 BOOL IsRunAsSystem()
@@ -566,4 +614,62 @@ BOOL EnumProcessInfo(CProcessItemInfoList& ProcessItemInfoList)
 	}
 
 	return bSuccess;
+}
+
+BOOL CheckLaunchCommand(LPCTSTR lpszLaunchCommand)
+{
+	// Get th command line
+	WCHAR** szArglist = NULL;
+	BOOL bSuccess = FALSE;
+
+	int nArgs = 0;
+	szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
+	for (int n = 0; n < nArgs; ++nArgs)
+	{
+		CString strParam = szArglist[n];
+		if (strParam.CompareNoCase(lpszLaunchCommand) == 0)
+		{
+			bSuccess = TRUE;
+			break;
+		}
+	}
+
+	if (szArglist != NULL)
+		LocalFree(szArglist);
+
+	return bSuccess;
+}
+
+BOOL LaunchProcess(LPCTSTR lpszApplicationName, LPCTSTR lpszApplicationDirectory, LPCTSTR lpszCommandLine)
+{
+	CString strFullCommandLine;
+	strFullCommandLine.Format(_T("%s %s"), lpszApplicationName, lpszCommandLine);
+
+	SHELLEXECUTEINFO shExecInfo = {0};
+	STARTUPINFO si = {0};
+	PROCESS_INFORMATION pi = {0};
+
+	si.cb = sizeof(STARTUPINFO);
+	BOOL bRet = CreateProcess(NULL, (LPTSTR)(LPCTSTR)strFullCommandLine, NULL, NULL, FALSE, NULL, NULL, lpszApplicationDirectory, &si, &pi);
+	if (FALSE == bRet && ERROR_CANCELLED != GetLastError())
+	{
+		shExecInfo.cbSize		= sizeof(shExecInfo);
+		shExecInfo.fMask		= SEE_MASK_NOCLOSEPROCESS;
+		shExecInfo.lpFile		= lpszApplicationName;
+		shExecInfo.lpParameters = lpszCommandLine;
+		shExecInfo.nShow		= SW_SHOWNORMAL;
+
+		if (!ShellExecuteEx(&shExecInfo) && ERROR_CANCELLED != GetLastError())
+		{
+			return FALSE;
+		}
+	}
+
+	//[TT-1639] On Win2k, if user use RunAsAdmin to run launcher, it shall wait for TMPSBoot termination
+
+	SAFE_CLOSEHANDLE(shExecInfo.hProcess);
+	SAFE_CLOSEHANDLE(pi.hThread);
+	SAFE_CLOSEHANDLE(pi.hProcess);
+
+	return TRUE;
 }

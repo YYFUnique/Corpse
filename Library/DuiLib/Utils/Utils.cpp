@@ -674,6 +674,12 @@ namespace DuiLib
 		return true;
 	}
 
+	bool CStdPtrArray::RemoveAll()
+	{
+		Empty();
+		return true;
+	}
+
 	int CStdPtrArray::Find(LPVOID pData) const
 	{
 		for( int i = 0; i < m_nCount; i++ ) if( m_ppVoid[i] == pData ) return i;

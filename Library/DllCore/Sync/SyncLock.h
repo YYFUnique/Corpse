@@ -1,8 +1,5 @@
 #pragma once
 
-//#include "base/base_export.h"
-//#include "base/base_config.h"
-
 #ifdef LS_STATIC_LIB_CALL
 #define DLL_API 
 #elif defined  DLL_EXPORTS

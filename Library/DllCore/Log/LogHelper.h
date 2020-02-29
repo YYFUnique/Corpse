@@ -30,6 +30,13 @@ typedef enum tagLOG_LEVEL
 	LOG_LEVEL_ALL		= 7,
 }LOG_LEVEL;
 
+typedef enum LOG_TYPE
+{
+	LOG_TYPE_DISABLE	=	0,
+	LOG_TYPE_TOFILE			=	1,
+	LOG_TYPE_DBGVIEW	=	2,
+}LOG_TYPE;
+
 class DLL_API QLogImpl
 {
 public:
@@ -55,6 +62,8 @@ public:
 	void VLog(LPCTSTR lpszFormat,...);
 	void VLog(LOG_LEVEL LogLevel, LPCTSTR lpszFormat,...);
 	void VLogDbg(LPCTSTR lpszFormat, ...);
+public:
+	static void SetLogType(LOG_TYPE LogType);
 	static void SetDbgMode(BOOL bEnable = TRUE);
 private:	
 	BOOL			m_bLogToFile;
@@ -63,6 +72,7 @@ private:
 	CString			m_strLogInfo;
 	LOG_LEVEL	m_LogLevel;
 	static BOOL m_bDbg;
+	static LOG_TYPE m_sLogType;
 };
 
 #define QLOG_DBG(fmt, ...) QLogHelper(__FILE__, __LINE__).VLog(LOG_LEVEL_DBG, fmt, ##__VA_ARGS__)

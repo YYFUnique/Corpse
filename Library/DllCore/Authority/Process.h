@@ -67,6 +67,14 @@ DLL_API BOOL GetProcessCommandLine(DWORD dwPid,CString& strCmdLine);
 DLL_API BOOL IsRunAsAdmin();
 
 /************************************************************************/
+// 函数名称：IsRunAsAdminEx
+// 函数功能：判断是否以管理员权限运行
+// 函数参数：无
+// 返  回 值：如果以管理员权限允许返回TRUE，否则返回FALSE
+/************************************************************************/
+DLL_API BOOL IsRunAsAdminEx();
+
+/************************************************************************/
 // 函数名称：IsRunAsSystem
 // 函数功能：判断是否以服务权限允许
 // 函数参数：无
@@ -97,3 +105,11 @@ DLL_API BOOL GetPriorityClass(DWORD dwPid,CString& strPricrityDescribe);
 // 返  回 值：如果执行成功，则返回对应文件的图标在ImgList中的索引
 /************************************************************************/
 DLL_API BOOL EnumProcessInfo(CProcessItemInfoList& ProcessItemInfoList);
+
+/************************************************************************/
+// 函数名称：CheckLaunchCommand
+// 函数功能：检测启动参数中是否有指定项
+// 函数参数：lpszLaunchCommand 要检测的参数名
+// 返  回 值：如果执行成功，否则返回FALSE
+/************************************************************************/
+DLL_API BOOL CheckLaunchCommand(LPCTSTR lpszLaunchCommand);

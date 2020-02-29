@@ -158,6 +158,11 @@ BOOL CSingleLock::Unlock(LONG lCount, LPLONG lpPrevCount /* = NULL */)
 	return !m_bAcquired;
 }
 
+BOOL CSingleLock::IsLocked()
+{
+	return m_bAcquired;
+}
+
 CEvent::CEvent(BOOL bInitiallyOwn /* = FALSE */, BOOL bManualReset /* = FALSE */, 
 						LPCTSTR lpszNAme /* = NULL */, LPSECURITY_ATTRIBUTES lpsaAttribute /* = NULL */)
 	: CSyncObject(lpszNAme)

@@ -161,6 +161,7 @@ namespace DuiLib
 		bool SetAt(int iIndex, LPVOID pData);
 		bool InsertAt(int iIndex, LPVOID pData);
 		bool Remove(int iIndex);
+		bool RemoveAll();
 		int GetSize() const;
 		LPVOID* GetData();
 

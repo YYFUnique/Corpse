@@ -5,6 +5,7 @@
 #include <atltime.h>
 
 BOOL QLogHelper::m_bDbg = FALSE;
+LOG_TYPE QLogHelper::m_sLogType = LOG_TYPE_DISABLE;
 
 QLogImpl* QLogImpl::GetInstance()
 {
@@ -42,7 +43,7 @@ void QLogImpl::WriteLog(LOG_LEVEL LogLevel, LPCTSTR lpszLogInfo)
 		DWORD dwMovePointer = SetFilePointer(hLogFile, 0, 0, FILE_END);
 
 #if UNICODE
-		//返回值为空，表示移动文件指针距离为0，也就是打开空文件，需要给文件头添加0xFF,0xFE
+		// 返回值为空，表示移动文件指针距离为0，也就是打开空文件，需要给文件头添加0xFF,0xFE
 		if (dwMovePointer == NULL)
 		{
 			CHAR szUTF8Head[] = {(char)0xFF,(char)0xFE};
@@ -80,9 +81,15 @@ QLogHelper::~QLogHelper()
 	if (m_bLogToFile == FALSE)
 		return;
 
+	if (m_sLogType == LOG_TYPE_DISABLE)
+		return;
+
 	LPCTSTR lpszLogLevel = _T("INFO");
 	switch (m_LogLevel)
 	{
+	case LOG_LEVEL_FATAL:
+			lpszLogLevel = _T("FATAL");
+		break;
 	case LOG_LEVEL_ERR:
 			lpszLogLevel = _T("ERROR");
 		break;
@@ -90,27 +97,36 @@ QLogHelper::~QLogHelper()
 			lpszLogLevel = _T("WARN");
 		break;
 	case LOG_LEVEL_APP:
-			lpszLogLevel = _T("APP");
+			lpszLogLevel = _T("APPS");
 		break;
 	case LOG_LEVEL_PRO:
-			lpszLogLevel = _T("PROJECT");
+			lpszLogLevel = _T("PROJ");
 		break;
 	case LOG_LEVEL_INFO:
 			lpszLogLevel = _T("INFO");
+		break;
+	case LOG_LEVEL_DBG:
+			lpszLogLevel = _T(" DBG");
 		break;
 	default:
 			ASSERT(FALSE);
 		break;
 	}
 
-	CString strTipMsg;
-	SYSTEMTIME SysTime;
-	GetLocalTime(&SysTime);
-	strTipMsg.Format(_T("[%s][%5d][%02d:%02d:%02d:%03d]:%s\r\n"),
-								lpszLogLevel,GetCurrentProcessId(),SysTime.wHour,SysTime.wMinute,
-								SysTime.wSecond,SysTime.wMilliseconds, m_strLogInfo);
-	
-	QLogImpl::GetInstance()->WriteLog(m_LogLevel, strTipMsg);
+	if (m_sLogType != LOG_TYPE_DISABLE)
+	{
+		CString strTipMsg;
+		SYSTEMTIME SysTime;
+		GetLocalTime(&SysTime);
+		strTipMsg.Format(_T("[%s][%5d][%02d:%02d:%02d:%03d]:%s\r\n"),
+										lpszLogLevel,GetCurrentProcessId(),SysTime.wHour,SysTime.wMinute,
+										SysTime.wSecond,SysTime.wMilliseconds, m_strLogInfo);
+
+		if (m_sLogType & LOG_TYPE_TOFILE)
+			QLogImpl::GetInstance()->WriteLog(m_LogLevel, strTipMsg);
+		if (m_sLogType & LOG_TYPE_DBGVIEW)
+			OutputDebugString(strTipMsg);
+	}
 }
 
 void QLogHelper::VLog(LOG_LEVEL LogLevel, LPCTSTR lpszFormat,...)
@@ -120,6 +136,11 @@ void QLogHelper::VLog(LOG_LEVEL LogLevel, LPCTSTR lpszFormat,...)
 	m_LogLevel = LogLevel;
 	m_strLogInfo.FormatV(lpszFormat,paralist);
 	m_strLogInfo.TrimRight(_T("\r\n"));
+}
+
+void QLogHelper::SetLogType(LOG_TYPE LogType)
+{
+	m_sLogType = LogType;
 }
 
 void QLogHelper::VLog(LPCTSTR lpszFormat,...)
