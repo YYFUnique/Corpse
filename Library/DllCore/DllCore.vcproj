@@ -495,6 +495,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Log\DebugLog.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Log\LogHelper.cpp"
 					>
 				</File>
@@ -556,6 +560,14 @@
 				</File>
 				<File
 					RelativePath=".\IPC\PipeServer.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="System"
+				>
+				<File
+					RelativePath=".\System\EnviromentVariable.cpp"
 					>
 				</File>
 			</Filter>
@@ -817,6 +829,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Log\DebugLog.h"
+					>
+				</File>
+				<File
 					RelativePath=".\Log\LogHelper.h"
 					>
 				</File>
@@ -878,6 +894,14 @@
 				</File>
 				<File
 					RelativePath=".\IPC\PipeServer.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="System"
+				>
+				<File
+					RelativePath=".\System\EnviromentVariable.h"
 					>
 				</File>
 			</Filter>

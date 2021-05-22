@@ -94,7 +94,7 @@ void CWkeBrowser::InitWindow()
  		pWke->SetClientHandler(&m_pWkeHandler);
 		//m_pWke->SetFile(_T("Html/index.html")msg.pSender->GetText().GetData());
 		//m_pWke->SetURL(L"http://mudcu.be/sketchpad/"); //一个漂亮的网站，大家可以自己试试
-		pWke->Navigate(_T("http://www.baidu.com"));
+		pWke->Navigate(_T("https://10.21.143.3:8443"));
 	}
 	/*CWebBrowserUI* pWeb = static_cast<CWebBrowserUI*>(m_PaintManager.FindControl(_T("ie2")));
 	m_pWebBrowserEventHandler = new CWebBrowserEventHandler;

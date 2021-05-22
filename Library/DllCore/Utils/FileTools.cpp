@@ -166,6 +166,13 @@ CString GetVersionText(DWORD dwVersion)
 	return strVersion;
 }
 
+CString GetLongVersionText(FILE_VERSION& FileVersion)
+{
+	CString strVersion;
+	strVersion.Format(_T("V%d.%d.%d.%d"),FileVersion.wMajorVersion, FileVersion.wMiniVersion, FileVersion.wServerPack, FileVersion.wBuildNum);
+	return strVersion;
+}
+
 DWORD GetFileVersion(LPCTSTR lpszFilePath)
 {
 	DWORD dwVersion=0x1000000;//1.0.0.0
@@ -195,6 +202,43 @@ DWORD GetFileVersion(LPCTSTR lpszFilePath)
 	}
 
 	return dwVersion;
+}
+
+FILE_VERSION GetFileLongVersion(LPCTSTR lpszFilePath)
+{
+	FILE_VERSION FileVersion;
+	FileVersion.wMajorVersion = 1;
+	FileVersion.wMiniVersion   = 0;
+	FileVersion.wServerPack     = 0;
+	FileVersion.wBuildNum      = 0;
+
+	//如果文件不存在，则返回默认文件版本
+	if (PathFileExists(lpszFilePath) == FALSE)
+		return FileVersion;
+
+	DWORD dwHandle = 0;
+	VS_FIXEDFILEINFO* pVersion = NULL;
+	DWORD dwVersionSize = GetFileVersionInfoSize(lpszFilePath, &dwHandle);
+
+	if (dwVersionSize > 0)
+	{
+		LPVOID lpData = LocalAlloc(LMEM_ZEROINIT, dwVersionSize);
+
+		if (GetFileVersionInfo(lpszFilePath, dwHandle, dwVersionSize, lpData))
+		{
+			UINT uLen = 0;
+			if (VerQueryValue(lpData, _T("\\"), (void **)&pVersion, &uLen))
+			{
+				FileVersion.wMajorVersion = HIWORD(pVersion->dwFileVersionMS);
+				FileVersion.wMiniVersion   = LOWORD(pVersion->dwFileVersionMS);
+				FileVersion.wServerPack     = HIWORD(pVersion->dwFileVersionLS);
+				FileVersion.wBuildNum      = LOWORD(pVersion->dwFileVersionLS);
+			}			
+		}
+		LocalFree(lpData);
+	}
+
+	return FileVersion;
 }
 
 BOOL GetFileVersionEx(LPCTSTR lpszFilePath, LPCTSTR lpszFileField, CString& strFileVersionInfo)

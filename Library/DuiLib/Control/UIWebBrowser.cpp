@@ -106,6 +106,11 @@ STDMETHODIMP DuiLib::CWebBrowserUI::Invoke( DISPID dispIdMember, REFIID riid, LC
 			pDispParams->rgvarg[1].bstrVal,
 			pDispParams->rgvarg[0].bstrVal);
 		break;
+	case DISPID_DOCUMENTCOMPLETE:
+		 DocumentComplete2(
+			 pDispParams->rgvarg[1].pdispVal,
+			 pDispParams->rgvarg[0].pvarVal);
+		break;
 // 	case DISPID_PROPERTYCHANGE:
 // 		if (pDispParams->cArgs>0 && pDispParams->rgvarg[0].vt == VT_BSTR) {
 // 			TRACE(_T("PropertyChange(%s)\n"), pDispParams->rgvarg[0].bstrVal);
@@ -214,6 +219,14 @@ void DuiLib::CWebBrowserUI::NavigateComplete2( IDispatch *pDisp,VARIANT *&url )
 	if (m_pWebBrowserEventHandler)
 	{
 		m_pWebBrowserEventHandler->NavigateComplete2(pDisp,url);
+	}
+}
+
+void DuiLib::CWebBrowserUI::DocumentComplete2(IDispatch* pDisp, VARIANT* &url)
+{
+	if (m_pWebBrowserEventHandler)
+	{
+		m_pWebBrowserEventHandler->DocumentComplete2(pDisp,url);
 	}
 }
 

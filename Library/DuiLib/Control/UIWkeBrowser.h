@@ -3,7 +3,7 @@
 #include "Utils/wke.h"
 namespace DuiLib
 {
-	class UILIB_API CWkeBrowserUI : public CControlUI ,public _wkeBufHandler 
+	class UILIB_API CWkeBrowserUI : public CControlUI
 	{
 	public:
 		CWkeBrowserUI(void);

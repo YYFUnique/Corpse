@@ -6,6 +6,7 @@
 #include "DllCore/Utils/ErrorInfo.h"
 #include "DllCore/Authority/Process.h"
 #include "DllCore/Log/LogHelper.h"
+#include "DllCore/Utils/FileTools.h"
 
 #define		TIMER_PCHUNTER_ID			0x1000
 #define		WM_TRAYICON					WM_USER+0x1000
@@ -145,6 +146,10 @@ UILIB_RESOURCETYPE CPCHunter::GetResourceType() const
 void CPCHunter::InitWindow()
 {
 	SetIcon(IDI_MAINFRAME);
+
+	FILE_VERSION FileVersion = GetFileLongVersion(_T("E:\\ISPS\\PrepareHA_SC\\WorkingImage\\x64\\ISPSCore.exe"));
+
+	CString strFileVersion = GetLongVersionText(FileVersion);
 
 	CHorizontalLayoutUI* pControl = (CHorizontalLayoutUI*)m_PaintManager.FindControl(_T("TabSwitch"));
 	if (pControl)

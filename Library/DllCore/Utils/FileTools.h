@@ -15,6 +15,14 @@
 #define			FILE_VERSION_CompanyName _T("CompanyName")
 #define			FILE_VERSION_ProductName		_T("ProductName")
 
+typedef struct tagFILE_VERSION
+{
+	WORD wMajorVersion;
+	WORD wMiniVersion;
+	WORD wServerPack;
+	WORD wBuildNum;
+}FILE_VERSION;
+
 /************************************************************************/
 /* 函  数  名：SHDeleteDirectory                                                               */
 /* 函数功能：删除目录，包括子目录															   */
@@ -47,6 +55,14 @@ DLL_API BOOL CheckFileIsX64(LPCTSTR lpszFilePath);
 /************************************************************************/
 DLL_API DWORD GetFileVersion(LPCTSTR lpszFilePath);
 
+/************************************************************************/
+/* 函  数  名：GetFileLongVersion                                                             */
+/* 函数功能：获取指定文件的文件版本号													   */
+/* 输入参数：lpszFilePath 程序文件绝对路径											   */
+/* 返  回 值：如果文件存在，则返回文件版本号，如果不存在，返回v1.0      */
+/************************************************************************/
+DLL_API FILE_VERSION GetFileLongVersion(LPCTSTR lpszFilePath);
+
 DLL_API BOOL GetFileVersionEx(LPCTSTR lpszFilePath, LPCTSTR lpszFileVersion, CString& strFileVersionInfo);
 
 /************************************************************************/
@@ -56,6 +72,14 @@ DLL_API BOOL GetFileVersionEx(LPCTSTR lpszFilePath, LPCTSTR lpszFileVersion, CSt
 /* 返  回 值：返回转换后的字符串版本号													   */
 /************************************************************************/
 DLL_API CString GetVersionText(DWORD dwVersion);
+
+/************************************************************************/
+/* 函  数  名：GetVersionText                                                                    */
+/* 函数功能：将整形版本号内容转换为字符串类型										   */
+/* 输入参数：dwVersion 需要转换的整形版本号										   */
+/* 返  回 值：返回转换后的字符串版本号													   */
+/************************************************************************/
+DLL_API CString GetLongVersionText(FILE_VERSION& FileVersion);
 
 /************************************************************************/
 /* 函  数  名：GetModuleFileVersion                                                         */

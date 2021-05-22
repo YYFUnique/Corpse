@@ -186,6 +186,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LrpcClient.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LrpcServer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Rpc.cpp"
 				>
 			</File>
@@ -213,6 +221,14 @@
 			</File>
 			<File
 				RelativePath=".\libRpc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LrpcClient.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LrpcServer.h"
 				>
 			</File>
 			<File

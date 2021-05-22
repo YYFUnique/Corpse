@@ -46,8 +46,8 @@
 		</HorizontalLayout>
         <HorizontalLayout name="HorizontalLayoutUI4" float="false">
 			<TabLayout name="TabWizard" inset="1,0,1,0" >
-				<!--<WkeBrowser name="ie" url="http://10.1.1.131:8000"/>-->
-				<WebBrowser name="ie2" clsid="{8856F961-340A-11D0-A96B-00C04FD705A2}" delaycreate="false"/>
+				<WkeBrowser name="ie" url="http://10.1.1.131:8000"/>
+				<!--<WebBrowser name="ie2" clsid="{8856F961-340A-11D0-A96B-00C04FD705A2}" delaycreate="false"/>-->
 			</TabLayout>
         </HorizontalLayout>
         <HorizontalLayout name="HorizontalLayoutUI5" float="false" height="22" bkimage="statusbar.png">
